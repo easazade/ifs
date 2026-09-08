@@ -1,4 +1,4 @@
-import AnimatedLogo from '../components/AnimatedLogo.jsx';
+import AnimatedLogo from '../components/AnimatedLogo';
 
 function PageNotFound() {
   return (

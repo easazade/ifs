@@ -1,11 +1,18 @@
 import { createRemoteResolver, generate } from 'json-schema-faker';
+import type { JsonSchema } from 'json-schema-faker';
 import { access, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 
 const ENTITIES_DIR = 'src/entities';
 const SCHEMA_BASE_PATH = '/schemas/v1/entities/';
 
-const schemaResolutionAttempts = new Map();
+interface ResolutionAttempts {
+  localPaths: string[];
+  usedLocalPath?: string;
+  usedRemote?: boolean;
+}
+
+const schemaResolutionAttempts = new Map<string, ResolutionAttempts>();
 const localSchemaById = await indexLocalSchemas(ENTITIES_DIR);
 const remoteSchemaResolver = createRemoteResolver();
 
@@ -24,7 +31,7 @@ for (const schemaDir of schemaDirs) {
     const schemaFileContent = await readFile(schemaFilePath, 'utf8');
 
     // json-schema-faker needs a parsed schema object, and generate() returns a Promise.
-    const schema = JSON.parse(schemaFileContent);
+    const schema = JSON.parse(schemaFileContent) as JsonSchema;
     const fakeObject = await generate(schema, { refResolver: resolveLocalSchemaReferenceFirst });
 
     // Node's writeFile creates the file, but not missing parent folders (like Dart's File.writeAsString without recursive directory creation).
@@ -37,7 +44,7 @@ for (const schemaDir of schemaDirs) {
 }
 
 // Custom resolver mirrors hosted schema URLs to repo files before network fallback.
-async function resolveLocalSchemaReferenceFirst(refUrl) {
+async function resolveLocalSchemaReferenceFirst(refUrl: string): Promise<JsonSchema> {
   const attempts = getResolutionAttempts(refUrl);
   attempts.localPaths = localSchemaCandidates(refUrl);
 
@@ -54,15 +61,15 @@ async function resolveLocalSchemaReferenceFirst(refUrl) {
     return await remoteSchemaResolver(refUrl);
   } catch (error) {
     if (error && typeof error === 'object') {
-      error.source = refUrl;
+      Object.assign(error, { source: refUrl });
     }
 
     throw error;
   }
 }
 
-async function indexLocalSchemas(rootDir) {
-  const schemaById = new Map();
+async function indexLocalSchemas(rootDir: string) {
+  const schemaById = new Map<string, string>();
   const entries = await readdir(rootDir, { withFileTypes: true });
 
   for (const entry of entries) {
@@ -73,9 +80,9 @@ async function indexLocalSchemas(rootDir) {
     const schemaPath = join(rootDir, entry.name, `${entry.name}.schema.json`);
 
     try {
-      const schema = JSON.parse(await readFile(schemaPath, 'utf8'));
+      const schema = JSON.parse(await readFile(schemaPath, 'utf8')) as JsonSchema;
 
-      if (schema.$id) {
+      if (typeof schema === 'object' && schema.$id) {
         schemaById.set(schema.$id, schemaPath);
       }
     } catch {
@@ -86,7 +93,7 @@ async function indexLocalSchemas(rootDir) {
   return schemaById;
 }
 
-function localSchemaCandidates(refUrl) {
+function localSchemaCandidates(refUrl: string) {
   const candidates = [];
   const refUrlWithoutHash = stripHash(refUrl);
   const indexedPath = localSchemaById.get(refUrlWithoutHash);
@@ -110,7 +117,7 @@ function localSchemaCandidates(refUrl) {
   return [...new Set(candidates)];
 }
 
-function formatExampleGenerationError(schemaFilePath, error) {
+function formatExampleGenerationError(schemaFilePath: string, error: unknown) {
   const refUrl = extractRefUrl(error);
   const attempts = refUrl ? schemaResolutionAttempts.get(refUrl) : undefined;
   const lines = [
@@ -136,34 +143,39 @@ function formatExampleGenerationError(schemaFilePath, error) {
   }
 
   lines.push(
-    `Why failed: ${error?.message || error}`,
+    `Why failed: ${error instanceof Error ? error.message : String(error)}`,
     'Fix: add the referenced schema locally, fix the $ref URL/path, or make the remote schema reachable.'
   );
 
   return lines.join('\n');
 }
 
-function extractRefUrl(error) {
-  const message = error?.message || '';
+function extractRefUrl(error: unknown) {
+  const source =
+    error && typeof error === 'object' && 'source' in error && typeof error.source === 'string'
+      ? error.source
+      : undefined;
+  const message = error instanceof Error ? error.message : '';
   const unresolvedRefMatch = message.match(/Unresolved \$ref: (\S+)/);
   const fetchMatch = message.match(/(?:fetch|schema from) (https?:\/\/\S+)/);
 
-  return error?.source || unresolvedRefMatch?.[1] || fetchMatch?.[1];
+  return source || unresolvedRefMatch?.[1] || fetchMatch?.[1];
 }
 
-function getResolutionAttempts(url) {
-  if (!schemaResolutionAttempts.has(url)) {
-    schemaResolutionAttempts.set(url, { localPaths: [], usedLocalPath: undefined, usedRemote: false });
-  }
+function getResolutionAttempts(url: string): ResolutionAttempts {
+  const existing = schemaResolutionAttempts.get(url);
+  if (existing) return existing;
 
-  return schemaResolutionAttempts.get(url);
+  const attempts: ResolutionAttempts = { localPaths: [], usedRemote: false };
+  schemaResolutionAttempts.set(url, attempts);
+  return attempts;
 }
 
-function stripHash(url) {
-  return url.split('#')[0];
+function stripHash(url: string) {
+  return url.split('#', 1)[0] ?? url;
 }
 
-async function fileExists(path) {
+async function fileExists(path: string) {
   try {
     await access(path);
     return true;

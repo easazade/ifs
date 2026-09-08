@@ -1,43 +1,37 @@
-import PropTypes from 'prop-types';
 import { useId, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import type { NavLinkRenderProps } from 'react-router-dom';
 
-const applyClasses = (...classes) => classes.filter(Boolean).join(' ');
-
-function validateItems(items, componentName, propFullName) {
-  if (!Array.isArray(items)) {
-    return new Error(`${componentName}: ${propFullName} must be an array.`);
-  }
-  for (const [i, item] of items.entries()) {
-    const path = `${propFullName}[${i}]`;
-    if (!item || typeof item !== 'object' || Array.isArray(item))
-      return new Error(`${componentName}: ${path} must be an object.`);
-    if (typeof item.label !== 'string' || !item.label.trim())
-      return new Error(`${componentName}: ${path}.label must be a non-empty string.`);
-    if (typeof item.href !== 'string' || !item.href.trim())
-      return new Error(`${componentName}: ${path}.href must be a non-empty string.`);
-    if ('children' in item) {
-      const err = validateItems(item.children, componentName, `${path}.children`);
-      if (err) return err;
-    }
-  }
-  return null;
+// Recursive props describe every nesting level, like a Dart model with List<SidebarItem> children.
+export interface SidebarItem {
+  label: string;
+  href: string;
+  children?: SidebarItem[];
 }
 
-const itemPropType = PropTypes.exact({
-  label: PropTypes.string.isRequired,
-  href: PropTypes.string.isRequired,
-  children(props, propName, componentName, _location, propFullName) {
-    if (!(propName in props) || props[propName] == null) return null;
-    return validateItems(props[propName], componentName, propFullName ?? propName);
-  },
-});
-
-function itemContainsPath(item, pathname) {
-  return item.href === pathname || item.children?.some((child) => itemContainsPath(child, pathname));
+export interface SidebarSectionProps {
+  title: string;
+  items: SidebarItem[];
+  className?: string;
 }
 
-function SidebarChevron({ expanded }) {
+interface SidebarSectionItemsProps {
+  items: SidebarItem[];
+  nested?: boolean;
+}
+
+interface SidebarSectionItemProps {
+  item: SidebarItem;
+  nested: boolean;
+}
+
+const applyClasses = (...classes: (string | false | undefined)[]) => classes.filter(Boolean).join(' ');
+
+function itemContainsPath(item: SidebarItem, pathname: string): boolean {
+  return item.href === pathname || (item.children?.some((child) => itemContainsPath(child, pathname)) ?? false);
+}
+
+function SidebarChevron({ expanded }: { expanded: boolean }) {
   return (
     <svg
       className={applyClasses('h-3.5 w-3.5 transition-transform duration-150', expanded && 'rotate-90')}
@@ -55,9 +49,7 @@ function SidebarChevron({ expanded }) {
   );
 }
 
-SidebarChevron.propTypes = { expanded: PropTypes.bool.isRequired };
-
-function SidebarSectionItems({ items, nested = false }) {
+function SidebarSectionItems({ items, nested = false }: SidebarSectionItemsProps) {
   return (
     <ul className={applyClasses('m-0 flex list-none flex-col p-0', nested && 'pl-4')}>
       {items.map((item) => (
@@ -69,18 +61,14 @@ function SidebarSectionItems({ items, nested = false }) {
   );
 }
 
-SidebarSectionItems.propTypes = {
-  items: PropTypes.arrayOf(itemPropType).isRequired,
-  nested: PropTypes.bool,
-};
-
-function SidebarSectionItem({ item, nested }) {
+function SidebarSectionItem({ item, nested }: SidebarSectionItemProps) {
   const { pathname } = useLocation();
-  const hasChildren = item.children?.length > 0;
-  const hasActiveDescendant = hasChildren && item.children.some((child) => itemContainsPath(child, pathname));
+  const children = item.children ?? [];
+  const hasChildren = children.length > 0;
+  const hasActiveDescendant = children.some((child) => itemContainsPath(child, pathname));
   const [isExpanded, setIsExpanded] = useState(pathname === item.href || hasActiveDescendant);
 
-  const linkClassName = ({ isActive }) =>
+  const linkClassName = ({ isActive }: NavLinkRenderProps) =>
     applyClasses(
       'block flex-1 rounded-md px-2 py-1 text-base leading-6 transition-colors hover:bg-surface-primary hover:text-text',
       nested ? 'text-text-secondary' : 'text-text',
@@ -106,17 +94,12 @@ function SidebarSectionItem({ item, nested }) {
           </button>
         )}
       </div>
-      {hasChildren && isExpanded && <SidebarSectionItems items={item.children} nested />}
+      {hasChildren && isExpanded && <SidebarSectionItems items={children} nested />}
     </div>
   );
 }
 
-SidebarSectionItem.propTypes = {
-  item: itemPropType.isRequired,
-  nested: PropTypes.bool.isRequired,
-};
-
-export function SidebarSection({ title, items, className = '' }) {
+export function SidebarSection({ title, items, className = '' }: SidebarSectionProps) {
   const headingId = useId();
   return (
     <section
@@ -130,9 +113,3 @@ export function SidebarSection({ title, items, className = '' }) {
     </section>
   );
 }
-
-SidebarSection.propTypes = {
-  title: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(itemPropType).isRequired,
-  className: PropTypes.string,
-};

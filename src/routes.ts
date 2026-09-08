@@ -11,7 +11,7 @@ export const ROUTES = Object.freeze({
   WELCOME: `/${SEGMENTS.WELCOME}`,
   PROTOCOL: `/${SEGMENTS.PROTOCOL}`,
   HOW_IT_WORKS: `/${SEGMENTS.HOW_IT_WORKS}`,
-  PROTOCOL_DETAIL: (id) => `/${SEGMENTS.PROTOCOL}/${id}`,
+  PROTOCOL_DETAIL: (id: string) => `/${SEGMENTS.PROTOCOL}/${id}`,
   ABOUT: `/${SEGMENTS.ABOUT}`,
   FAQ: `/${SEGMENTS.FAQ}`,
 });

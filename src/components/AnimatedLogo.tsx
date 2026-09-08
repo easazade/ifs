@@ -9,8 +9,12 @@ import { useRef } from 'react';
 
 gsap.registerPlugin(useGSAP);
 
-function AnimatedLogo({ dotColor = 'bg-primary' }) {
-  const container = useRef(null);
+interface AnimatedLogoProps {
+  dotColor?: string;
+}
+
+function AnimatedLogo({ dotColor = 'bg-primary' }: AnimatedLogoProps) {
+  const container = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {

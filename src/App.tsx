@@ -4,13 +4,13 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { MainLayout } from './layouts/MainLayout';
 import { AboutPage } from './pages/AboutPage';
-import { FAQPage } from './pages/FAQPage.jsx';
-import { WelcomePage } from './pages/WelcomePage.jsx';
-import HowItWorksPage from './pages/HowItWorksPage.jsx';
-import PageNotFound from './pages/PageNotFound.jsx';
+import { FAQPage } from './pages/FAQPage';
+import { WelcomePage } from './pages/WelcomePage';
+import HowItWorksPage from './pages/HowItWorksPage';
+import PageNotFound from './pages/PageNotFound';
 import { ProtocolPage } from './pages/ProtocolPage';
-import { TestPage } from './pages/TestPage.jsx';
-import { ROUTES as r, SEGMENTS as s } from './routes.js';
+import { TestPage } from './pages/TestPage';
+import { ROUTES as r, SEGMENTS as s } from './routes';
 
 const App = () => {
   return (

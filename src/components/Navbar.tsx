@@ -2,10 +2,10 @@
  * Design-system based navbar with logo, nav links, and search.
  */
 import { NavLink } from 'react-router-dom';
-import { ROUTES } from '../routes.js';
-import AnimatedLogo from './AnimatedLogo.jsx';
+import { ROUTES } from '../routes';
+import AnimatedLogo from './AnimatedLogo';
 
-const navLinkClass = (isActive) =>
+const navLinkClass = (isActive: boolean) =>
   [
     'text-sm font-medium transition-colors',
     isActive ? 'text-primary font-semibold' : 'text-text-secondary hover:text-text',

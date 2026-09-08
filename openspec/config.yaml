@@ -3,12 +3,12 @@ schema: spec-driven
 context: |
   Project: IFS Standards, a standards/specification site for the Individual Freedom System (IFS), a governance model where sovereignty stays with individuals and authority is delegated dynamically.
   Product focus: define schemas, protocols, and rules for dynamic consent, asset traceability, modular rule-setting, and transparent governance.
-  Tech stack: JavaScript, React 19, Vite 8, React Router 7, Tailwind CSS v4 via @tailwindcss/vite, GSAP via @gsap/react.
-  Architecture: client-side React app with BrowserRouter in src/main.jsx, route map in src/App.jsx and src/routes.js, shared shell in src/layouts/MainLayout.jsx, and current protocol content in static data under src/data/protocols.js.
+  Tech stack: TypeScript (strict), React 19, Vite 8, React Router 7, Tailwind CSS v4 via @tailwindcss/vite, GSAP via @gsap/react.
+  Architecture: client-side React app with BrowserRouter in src/main.tsx, route map in src/App.tsx and src/routes.ts, shared shell in src/layouts/MainLayout.tsx, and current protocol content in static data under src/data/protocols.ts.
   Design system: design/design-system.lib.pen is shared source of truth for Pencil components and tokens; all design/*.pen files should import it.
   Styling conventions: preserve existing editorial/minimal visual language, use defined design tokens and Tailwind inline classes, avoid hardcoded colors, use HEX in design files, and regenerate CSS tokens with npm run tokens:code when Pencil tokens change.
   Engineering conventions: prefer small focused changes, keep existing patterns unless there is a clear need, and do not add backward-compatibility code unless persisted behavior or external consumers require it.
-  Validation: no automated test suite is configured yet; default verification is npm run lint and npm run build, plus manual route/UI checks when behavior changes.
+  Validation: run npm run typecheck, npm run lint, npm test, and npm run build, plus manual route/UI checks when behavior changes. Vitest tests live in tests/; README.md records the pre-existing entity-schema collection failure.
 
 rules:
   proposal:

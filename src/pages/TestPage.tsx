@@ -1,9 +1,10 @@
 import { LinkBox } from '../components/LinkBox';
-import { SidebarSection } from '../components/SidebarSection.jsx';
-import { ROUTES } from '../routes.js';
+import { SidebarSection } from '../components/SidebarSection';
+import type { SidebarItem } from '../components/SidebarSection';
+import { ROUTES } from '../routes';
 import Welcome from '../mdx/pages/welcome.mdx';
 
-const testSidebarItems = [
+const testSidebarItems: SidebarItem[] = [
   {
     label: 'Introduction',
     href: ROUTES.WELCOME,

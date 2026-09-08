@@ -2,15 +2,17 @@
  * Grouped sidebar data mirrors the design-system hierarchy while reusing route helpers.
  */
 import { PROTOCOLS } from '../data/protocols';
-import { ROUTES } from '../routes.js';
-import { SidebarSection } from './SidebarSection.jsx';
+import { ROUTES } from '../routes';
+import { SidebarSection } from './SidebarSection';
+import type { SidebarSectionProps } from './SidebarSection';
 
 const protocolItems = PROTOCOLS.map((protocol) => ({
   label: protocol.title,
   href: ROUTES.PROTOCOL_DETAIL(protocol.id),
 }));
 
-const sidebarSections = [
+const firstProtocol = protocolItems[0];
+const sidebarSections: SidebarSectionProps[] = [
   {
     title: 'Overview',
     items: [
@@ -20,11 +22,11 @@ const sidebarSections = [
   },
   {
     title: 'System',
-    items: protocolItems.length
+    items: firstProtocol
       ? [
           {
             label: 'Protocols',
-            href: protocolItems[0].href,
+            href: firstProtocol.href,
             children: protocolItems,
           },
         ]

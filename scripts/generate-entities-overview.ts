@@ -1,5 +1,40 @@
+import type { JSONSchema7, JSONSchema7Definition } from 'json-schema';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
+
+// These types describe the schema metadata and graph used by the overview renderer.
+interface Entity {
+  id: string;
+  key: string;
+  title: string;
+  filePath: string;
+  schema: JSONSchema7;
+}
+
+interface Relation {
+  source: Entity;
+  target: Entity;
+  propertyPath: string;
+  kind: '$ref' | 'id';
+  isArray: boolean;
+}
+
+interface DiagramRelation extends Relation {
+  primary: Relation;
+  parent: Entity;
+  child: Entity;
+  cardinality: '}o--o{' | '||--o{' | '||--||';
+  fields: Relation[];
+}
+
+interface SchemaRef {
+  value: string;
+  path: string[];
+  isArray: boolean;
+}
+
+type EntityIndex = Map<string, Entity>;
+type SchemaProperties = NonNullable<JSONSchema7['properties']>;
 
 const ENTITIES_DIR = 'src/entities';
 const OUTPUT_PATH = join(ENTITIES_DIR, 'overview.md');
@@ -12,7 +47,7 @@ const relations = collectRelations(entities, entityByRef);
 await writeFile(OUTPUT_PATH, renderOverview(entities, relations));
 console.log(`Generated ${OUTPUT_PATH} from ${schemaFiles.length} schemas.`);
 
-async function findSchemaFiles(dir) {
+async function findSchemaFiles(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });
   const files = await Promise.all(
     entries.map(async (entry) => {
@@ -29,10 +64,10 @@ async function findSchemaFiles(dir) {
   return files.flat().sort();
 }
 
-async function readEntities(files) {
+async function readEntities(files: string[]): Promise<Entity[]> {
   const entities = await Promise.all(
     files.map(async (filePath) => {
-      const schema = JSON.parse(await readFile(filePath, 'utf8'));
+      const schema = JSON.parse(await readFile(filePath, 'utf8')) as JSONSchema7;
       const fallbackName = basename(filePath, '.schema.json');
       const title = schema.title || toTitleCase(fallbackName);
 
@@ -49,8 +84,8 @@ async function readEntities(files) {
   return entities.sort((left, right) => left.title.localeCompare(right.title));
 }
 
-function indexEntitiesByRef(entities) {
-  const byRef = new Map();
+function indexEntitiesByRef(entities: Entity[]): EntityIndex {
+  const byRef: EntityIndex = new Map();
 
   for (const entity of entities) {
     byRef.set(stripHash(entity.schema.$id || ''), entity);
@@ -61,9 +96,9 @@ function indexEntitiesByRef(entities) {
   return byRef;
 }
 
-function collectRelations(entities, entityByRef) {
-  const relations = [];
-  const relationKeys = new Set();
+function collectRelations(entities: Entity[], entityByRef: EntityIndex): DiagramRelation[] {
+  const relations: Relation[] = [];
+  const relationKeys = new Set<string>();
 
   for (const entity of entities) {
     const properties = entity.schema.properties || {};
@@ -78,7 +113,7 @@ function collectRelations(entities, entityByRef) {
           target,
           propertyPath: [propertyName, ...ref.path].join('.'),
           kind: '$ref',
-          isArray: ref.isArray || propertySchema.type === 'array',
+          isArray: ref.isArray || (typeof propertySchema === 'object' && propertySchema.type === 'array'),
         });
       }
     }
@@ -94,7 +129,8 @@ function collectRelations(entities, entityByRef) {
         target,
         propertyPath: propertyName,
         kind: 'id',
-        isArray: propertyName.endsWith('Ids') || propertySchema.type === 'array',
+        isArray:
+          propertyName.endsWith('Ids') || (typeof propertySchema === 'object' && propertySchema.type === 'array'),
       });
     }
   }
@@ -106,8 +142,8 @@ function collectRelations(entities, entityByRef) {
   );
 }
 
-function mergeDiagramRelations(relations) {
-  const relationsByEntityPair = new Map();
+function mergeDiagramRelations(relations: Relation[]): DiagramRelation[] {
+  const relationsByEntityPair = new Map<string, Relation[]>();
 
   for (const relation of relations) {
     const key = [relation.source.id, relation.target.id].sort().join('|');
@@ -119,8 +155,9 @@ function mergeDiagramRelations(relations) {
   return [...relationsByEntityPair.values()].map(mergeRelationGroup);
 }
 
-function mergeRelationGroup(group) {
+function mergeRelationGroup(group: Relation[]): DiagramRelation {
   const primary = group.toSorted((left, right) => relationRank(right) - relationRank(left))[0];
+  if (!primary) throw new Error('Cannot merge an empty relation group');
   const arrayDirections = group.filter((relation) => relation.isArray);
   const hasManyToMany = arrayDirections.some(
     (relation) =>
@@ -159,26 +196,27 @@ function mergeRelationGroup(group) {
   return { ...primary, primary, parent: primary.source, child: primary.target, cardinality: '||--||', fields: group };
 }
 
-function relationRank(relation) {
+function relationRank(relation: Relation) {
   // Prefer embedded $ref fields over mirrored id fields; prefer collection labels over singular labels.
   return (relation.kind === '$ref' ? 2 : 0) + (relation.isArray ? 1 : 0);
 }
 
 // Recursive schema walking is like traversing a Flutter widget tree: keep path + array context as you go down.
-function findRefs(schema, path = [], isArray = false) {
+function findRefs(schema: JSONSchema7Definition, path: string[] = [], isArray = false): SchemaRef[] {
   if (!schema || typeof schema !== 'object') return [];
 
-  const refs = [];
+  const refs: SchemaRef[] = [];
 
   if (schema.$ref) {
     refs.push({ value: schema.$ref, path, isArray });
   }
 
   if (schema.items) {
-    refs.push(...findRefs(schema.items, path, true));
+    const items = Array.isArray(schema.items) ? schema.items : [schema.items];
+    for (const item of items) refs.push(...findRefs(item, path, true));
   }
 
-  for (const compositionKey of ['anyOf', 'oneOf', 'allOf']) {
+  for (const compositionKey of ['anyOf', 'oneOf', 'allOf'] as const) {
     for (const [index, childSchema] of (schema[compositionKey] || []).entries()) {
       refs.push(...findRefs(childSchema, [...path, compositionKey, String(index)], isArray));
     }
@@ -191,7 +229,7 @@ function findRefs(schema, path = [], isArray = false) {
   return refs;
 }
 
-function addRelation(relations, relationKeys, relation) {
+function addRelation(relations: Relation[], relationKeys: Set<string>, relation: Relation) {
   const key = [relation.source.id, relation.target.id, relation.propertyPath, relation.kind].join('|');
 
   if (relationKeys.has(key)) return;
@@ -200,7 +238,7 @@ function addRelation(relations, relationKeys, relation) {
   relations.push(relation);
 }
 
-function resolveRef(ref, entityByRef) {
+function resolveRef(ref: string, entityByRef: EntityIndex): Entity | undefined {
   const refWithoutHash = stripHash(ref);
 
   if (entityByRef.has(refWithoutHash)) {
@@ -216,7 +254,11 @@ function resolveRef(ref, entityByRef) {
 }
 
 // Paired fields like `outcomeId` + `outcome` should share one FK relation.
-function resolveSiblingRefForIdProperty(propertyName, properties, entityByRef) {
+function resolveSiblingRefForIdProperty(
+  propertyName: string,
+  properties: SchemaProperties,
+  entityByRef: EntityIndex
+): Entity | undefined {
   if (!/(Id|Ids)$/.test(propertyName) || propertyName === 'id' || propertyName === 'ifsId') {
     return undefined;
   }
@@ -229,7 +271,7 @@ function resolveSiblingRefForIdProperty(propertyName, properties, entityByRef) {
   return siblingRef ? resolveRef(siblingRef.value, entityByRef) : undefined;
 }
 
-function inferEntityFromIdProperty(propertyName, entities) {
+function inferEntityFromIdProperty(propertyName: string, entities: Entity[]): Entity | undefined {
   if (!/(Id|Ids)$/.test(propertyName) || propertyName === 'id' || propertyName === 'ifsId') {
     return undefined;
   }
@@ -238,11 +280,11 @@ function inferEntityFromIdProperty(propertyName, entities) {
   return entities.find((entity) => stem === entity.key || stem.endsWith(entity.key));
 }
 
-function renderOverview(entities, relations) {
+function renderOverview(entities: Entity[], relations: DiagramRelation[]) {
   const lines = [
     '# Entities Overview',
     '',
-    '<!-- GENERATED BY scripts/generate-entities-overview.mjs. DO NOT EDIT BY HAND. -->',
+    '<!-- GENERATED BY scripts/generate-entities-overview.ts. DO NOT EDIT BY HAND. -->',
     '',
     `Generated from \`${ENTITIES_DIR}/**/*.schema.json\`.`,
     '',
@@ -278,7 +320,7 @@ function renderOverview(entities, relations) {
   return lines.join('\n');
 }
 
-function renderEntity(entity, relations, entities) {
+function renderEntity(entity: Entity, relations: DiagramRelation[], entities: Entity[]) {
   const lines = [`  ${entity.id} {`];
   const properties = entity.schema.properties || {};
   const required = new Set(entity.schema.required || []);
@@ -310,11 +352,11 @@ function renderEntity(entity, relations, entities) {
   return lines;
 }
 
-function renderRelation(relation) {
+function renderRelation(relation: DiagramRelation) {
   return `  ${relation.parent.id} ${relation.cardinality} ${relation.child.id} : ${renderRelationLabel(relation)}`;
 }
 
-function renderRelationLabel(relation) {
+function renderRelationLabel(relation: DiagramRelation) {
   const mirrorFields = relation.fields.filter((field) => field !== relation.primary);
   const fkFields = mirrorFields.filter((field) => field.kind === 'id').map((field) => field.propertyPath);
   const otherFields = mirrorFields.filter((field) => field.kind !== 'id').map((field) => field.propertyPath);
@@ -331,7 +373,8 @@ function renderRelationLabel(relation) {
   return labelParts.join('_');
 }
 
-function toMermaidType(schema) {
+function toMermaidType(schema: JSONSchema7Definition) {
+  if (typeof schema === 'boolean') return 'unknown';
   if (schema.$ref) return 'object';
   if (Array.isArray(schema.type)) return sanitizeType(schema.type.join('_or_'));
   if (schema.enum) return 'string';
@@ -343,40 +386,43 @@ function toMermaidType(schema) {
   return 'string';
 }
 
-function formatAttributeComment(schema, isRequired) {
+function formatAttributeComment(schema: JSONSchema7Definition, isRequired: boolean) {
+  if (typeof schema === 'boolean') return isRequired ? 'required' : 'optional';
   const parts = [];
   if (isRequired) parts.push('required');
   if (schema.format) parts.push(schema.format);
-  if (schema.items?.$ref) parts.push(`${toTitleCase(basename(stripHash(schema.items.$ref), '.schema.json'))}[]`);
+  if (schema.items && !Array.isArray(schema.items) && typeof schema.items === 'object' && schema.items.$ref) {
+    parts.push(`${toTitleCase(basename(stripHash(schema.items.$ref), '.schema.json'))}[]`);
+  }
   if (schema.$ref) parts.push(toTitleCase(basename(stripHash(schema.$ref), '.schema.json')));
   return escapeMermaidComment(parts.join(', ') || 'optional');
 }
 
-function sanitizeAttributeName(name) {
+function sanitizeAttributeName(name: string) {
   return name.replace(/[^A-Za-z0-9_]/g, '_');
 }
 
-function sanitizeRelationLabel(label) {
+function sanitizeRelationLabel(label: string) {
   return label.replace(/[^A-Za-z0-9_]/g, '_');
 }
 
-function sanitizeType(type) {
+function sanitizeType(type: string) {
   return type.replace(/[^A-Za-z0-9_]/g, '_');
 }
 
-function toMermaidEntityId(name) {
+function toMermaidEntityId(name: string) {
   return normalizeName(name)
     .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
     .toUpperCase();
 }
 
-function normalizeName(value) {
+function normalizeName(value: string) {
   return String(value)
     .toLowerCase()
     .replace(/[^a-z0-9]/g, '');
 }
 
-function toTitleCase(value) {
+function toTitleCase(value: string) {
   return String(value)
     .replace(/\.schema\.json$/, '')
     .replace(/[-_]+/g, ' ')
@@ -384,10 +430,10 @@ function toTitleCase(value) {
     .replace(/\s+/g, '');
 }
 
-function stripHash(value) {
-  return String(value).split('#')[0];
+function stripHash(value: string) {
+  return value.split('#', 1)[0] ?? value;
 }
 
-function escapeMermaidComment(value) {
+function escapeMermaidComment(value: string) {
   return String(value).replace(/"/g, "'");
 }

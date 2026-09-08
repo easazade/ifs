@@ -2,11 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
-import { createAjv } from './utils/createAjv.js';
+import type { AnySchema } from 'ajv';
+import { createAjv } from './utils/createAjv';
 
 const ENTITIES_DIR = 'src/entities';
 
-function readJson(path) {
+function readJson(path: string): unknown {
   return JSON.parse(readFileSync(path, 'utf8'));
 }
 
@@ -15,7 +16,7 @@ async function listEntityNames() {
   return entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name);
 }
 
-async function listExampleFiles(entityName, kind) {
+async function listExampleFiles(entityName: string, kind: 'valid' | 'invalid') {
   const examplesDir = join(ENTITIES_DIR, entityName, 'examples', kind);
 
   try {
@@ -24,7 +25,7 @@ async function listExampleFiles(entityName, kind) {
       .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
       .map((entry) => join(examplesDir, entry.name));
   } catch (error) {
-    if (error.code === 'ENOENT') return [];
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') return [];
     throw error;
   }
 }
@@ -43,7 +44,7 @@ describe('entity schemas', () => {
   for (const { entityName, validExamples, invalidExamples } of entityExamples) {
     describe(entityName, () => {
       const schemaPath = join(ENTITIES_DIR, entityName, `${entityName}.schema.json`);
-      const schema = readJson(schemaPath);
+      const schema = readJson(schemaPath) as AnySchema;
       const ajv = createAjv();
       const validate = ajv.compile(schema);
 

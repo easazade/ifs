@@ -7,9 +7,11 @@
 import { Outlet } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { Sidebar } from '../components/Sidebar';
-import PropTypes from 'prop-types';
+interface MainLayoutProps {
+  showSideBar?: boolean;
+}
 
-export function MainLayout({ showSideBar = true }) {
+export function MainLayout({ showSideBar = true }: MainLayoutProps) {
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background">
       <Navbar />
@@ -24,7 +26,3 @@ export function MainLayout({ showSideBar = true }) {
     </div>
   );
 }
-
-MainLayout.propTypes = {
-  showSideBar: PropTypes.bool,
-};

@@ -1,11 +1,17 @@
 import { compileFromFile } from 'json-schema-to-typescript';
+import type { JSONSchema7 } from 'json-schema';
 import { access, readdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 
 const ENTITIES_DIR = 'src/entities';
 const SCHEMA_BASE_PATH = '/schemas/v1/entities/';
 
-const schemaResolutionAttempts = new Map();
+interface ResolutionAttempts {
+  localPaths: string[];
+  usedLocalPath?: string;
+}
+
+const schemaResolutionAttempts = new Map<string, ResolutionAttempts>();
 const localSchemaById = await indexLocalSchemas(ENTITIES_DIR);
 
 const schemas = await readdir(ENTITIES_DIR, { withFileTypes: true });
@@ -27,7 +33,7 @@ for (const schemaDir of schemas) {
         resolve: {
           localHttpFirst: {
             order: 1,
-            canRead: ({ url }) => isHttpUrl(url),
+            canRead: ({ url }: { url: string }) => isHttpUrl(url),
             read: readLocalSchemaReference,
           },
         },
@@ -42,7 +48,7 @@ for (const schemaDir of schemas) {
 }
 
 // Custom resolver mirrors hosted schema URLs to repo files before network fallback.
-async function readLocalSchemaReference({ url }) {
+async function readLocalSchemaReference({ url }: { url: string }) {
   const attempts = getResolutionAttempts(url);
   attempts.localPaths = localSchemaCandidates(url);
 
@@ -58,8 +64,8 @@ async function readLocalSchemaReference({ url }) {
   );
 }
 
-async function indexLocalSchemas(rootDir) {
-  const schemaById = new Map();
+async function indexLocalSchemas(rootDir: string) {
+  const schemaById = new Map<string, string>();
   const entries = await readdir(rootDir, { withFileTypes: true });
 
   for (const entry of entries) {
@@ -70,7 +76,7 @@ async function indexLocalSchemas(rootDir) {
     const schemaPath = join(rootDir, entry.name, `${entry.name}.schema.json`);
 
     try {
-      const schema = JSON.parse(await readFile(schemaPath, 'utf8'));
+      const schema = JSON.parse(await readFile(schemaPath, 'utf8')) as JSONSchema7;
 
       if (schema.$id) {
         schemaById.set(schema.$id, schemaPath);
@@ -83,7 +89,7 @@ async function indexLocalSchemas(rootDir) {
   return schemaById;
 }
 
-function localSchemaCandidates(refUrl) {
+function localSchemaCandidates(refUrl: string) {
   const candidates = [];
   const refUrlWithoutHash = stripHash(refUrl);
   const indexedPath = localSchemaById.get(refUrlWithoutHash);
@@ -107,8 +113,11 @@ function localSchemaCandidates(refUrl) {
   return [...new Set(candidates)];
 }
 
-function formatSchemaGenerationError(schemaFilePath, error) {
-  const refUrl = error?.source;
+function formatSchemaGenerationError(schemaFilePath: string, error: unknown) {
+  const refUrl =
+    error && typeof error === 'object' && 'source' in error && typeof error.source === 'string'
+      ? error.source
+      : undefined;
   const attempts = refUrl ? schemaResolutionAttempts.get(refUrl) : undefined;
   const lines = [
     '',
@@ -133,30 +142,31 @@ function formatSchemaGenerationError(schemaFilePath, error) {
   }
 
   lines.push(
-    `Why failed: ${error?.message || error}`,
+    `Why failed: ${error instanceof Error ? error.message : String(error)}`,
     'Fix: add the referenced schema locally, fix the $ref URL/path, or make the remote schema reachable.'
   );
 
   return lines.join('\n');
 }
 
-function getResolutionAttempts(url) {
-  if (!schemaResolutionAttempts.has(url)) {
-    schemaResolutionAttempts.set(url, { localPaths: [], usedLocalPath: undefined });
-  }
+function getResolutionAttempts(url: string): ResolutionAttempts {
+  const existing = schemaResolutionAttempts.get(url);
+  if (existing) return existing;
 
-  return schemaResolutionAttempts.get(url);
+  const attempts: ResolutionAttempts = { localPaths: [] };
+  schemaResolutionAttempts.set(url, attempts);
+  return attempts;
 }
 
-function isHttpUrl(value) {
+function isHttpUrl(value: string) {
   return /^https?:\/\//.test(value);
 }
 
-function stripHash(url) {
-  return url.split('#')[0];
+function stripHash(url: string) {
+  return url.split('#', 1)[0] ?? url;
 }
 
-async function fileExists(path) {
+async function fileExists(path: string) {
   try {
     await access(path);
     return true;

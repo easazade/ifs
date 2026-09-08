@@ -3,12 +3,12 @@
  */
 import { Link, useParams } from 'react-router-dom';
 import { getProtocolById } from '../data/protocols';
-import { ROUTES } from '../routes.js';
+import { ROUTES } from '../routes';
 
 const codeClass = 'rounded bg-surface-muted px-1.5 py-0.5 font-mono text-sm text-text';
 
 export function ProtocolPage() {
-  const { protocolId } = useParams();
+  const { protocolId } = useParams<'protocolId'>();
   const protocol = getProtocolById(protocolId);
 
   if (!protocol) {

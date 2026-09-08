@@ -3,7 +3,14 @@
  */
 import { Link } from 'react-router-dom';
 
-export function LinkBox({ title, description, href, iconGlyph = '↗' }) {
+interface LinkBoxProps {
+  title: string;
+  description: string;
+  href: string;
+  iconGlyph?: string;
+}
+
+export function LinkBox({ title, description, href, iconGlyph = '↗' }: LinkBoxProps) {
   return (
     <Link
       to={href}

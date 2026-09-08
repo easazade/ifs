@@ -22,7 +22,9 @@
 ## Commands
 
 - `npm run dev` - Start Vite dev server
-- `npm run build` - Production build to `dist/`
+- `npm run build` - Type-check, then production build to `dist/`
+- `npm run typecheck` - Strict TypeScript checks for app, scripts, configs, and tests
+- `npm test` - Run Vitest tests
 - `npm run preview` - Serve production build locally
 - `npm run lint` - Run ESLint
 - `npm run format` - Format with Prettier
@@ -30,16 +32,18 @@
 
 ## Key Files
 
-- **Entry**: `src/main.jsx` - React app with BrowserRouter
-- **Routes**: `src/routes.js` - Route definitions
-- **Data**: `src/data/protocols.js` - Protocol data source
-- **Layout**: `src/layouts/MainLayout.jsx` - Navbar + Sidebar wrapper
+- **Entry**: `src/main.tsx` - React app with BrowserRouter
+- **Routes**: `src/routes.ts` - Route definitions
+- **Data**: `src/data/protocols.ts` - Protocol data source
+- **Layout**: `src/layouts/MainLayout.tsx` - Navbar + Sidebar wrapper
+- **TypeScript**: `tsconfig.app.json` and `tsconfig.node.json` share `tsconfig.base.json`
 
 ## Notes
 
 - Tailwind v4 uses `@tailwindcss/vite` plugin (not the old postcss approach)
 - GSAP animations via `@gsap/react` hook
-- No tests configured
+- Vitest tests live in `tests/`; see README.md for the pre-existing entity-schema collection failure
+- Use `.tsx` for JSX components and `.ts` for other code; run generators through `tsx`
 
 ## Rules (IMPORTANT)
 

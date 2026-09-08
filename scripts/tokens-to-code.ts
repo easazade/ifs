@@ -17,7 +17,16 @@ const cssFooter = `
 @import './custom.css';
 `;
 
-function formatTokenValue(name, token) {
+interface DesignToken {
+  type: string;
+  value: unknown;
+}
+
+interface TokenDocument {
+  variables?: Record<string, DesignToken>;
+}
+
+function formatTokenValue(name: string, token: DesignToken) {
   if (token.type === 'number') {
     // Match CSS units to the token category while keeping the token names unchanged.
     if (/^duration-/.test(name)) return `${token.value}ms`;
@@ -36,7 +45,7 @@ function formatTokenValue(name, token) {
   return String(token.value);
 }
 
-function buildThemeBlock(variables) {
+function buildThemeBlock(variables: Record<string, DesignToken>) {
   const lines = Object.entries(variables)
     .sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
     .map(([name, token]) => `  --${name}: ${formatTokenValue(name, token)};`);
@@ -46,7 +55,7 @@ function buildThemeBlock(variables) {
 
 async function main() {
   const tokensPenContent = await readFile(tokensPenPath, 'utf8');
-  const { variables } = JSON.parse(tokensPenContent);
+  const { variables } = JSON.parse(tokensPenContent) as TokenDocument;
 
   if (!variables || typeof variables !== 'object') {
     throw new Error('No variables found in design/design-system.lib.pen');
