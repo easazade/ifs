@@ -1,4 +1,6 @@
 packages:
-  - "web"
-  - "api"
+  - "ifs-standards"
   - "packages/*"
+
+allowBuilds:
+  esbuild: true
