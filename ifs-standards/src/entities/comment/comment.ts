@@ -12,7 +12,7 @@ export interface Comment {
   /**
    * Entity type discriminator. Always "Comment" for Comment entities.
    */
-  entityType: "Comment";
+  entityType: 'Comment';
   /**
    * Id of the object this object is derived from.
    */

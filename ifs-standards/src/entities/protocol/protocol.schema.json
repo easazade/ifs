@@ -32,11 +32,5 @@
       "format": "date-time"
     }
   },
-  "required": [
-    "id",
-    "createdAt",
-    "ifsId",
-    "entityType",
-    "entityDocumentationUrl"
-  ]
+  "required": ["id", "createdAt", "ifsId", "entityType", "entityDocumentationUrl"]
 }

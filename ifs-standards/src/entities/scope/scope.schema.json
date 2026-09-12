@@ -104,24 +104,16 @@
   ],
   "anyOf": [
     {
-      "required": [
-        "locations"
-      ]
+      "required": ["locations"]
     },
     {
-      "required": [
-        "groups"
-      ]
+      "required": ["groups"]
     },
     {
-      "required": [
-        "objects"
-      ]
+      "required": ["objects"]
     },
     {
-      "required": [
-        "entities"
-      ]
+      "required": ["entities"]
     }
   ]
 }

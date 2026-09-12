@@ -12,7 +12,7 @@ export interface Protocol {
   /**
    * Entity type discriminator. Always "Protocol" for Protocol entities.
    */
-  entityType: "Protocol";
+  entityType: 'Protocol';
   /**
    * Id of the object this object is derived from.
    */

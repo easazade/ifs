@@ -45,7 +45,7 @@ export interface Delegation {
   /**
    * Lifecycle state of the delegation.
    */
-  state: "active" | "revoked" | "expired";
+  state: 'active' | 'revoked' | 'expired';
   /**
    * Timestamp when this delegation was revoked, if applicable.
    */
@@ -71,7 +71,7 @@ export interface Permission {
   /**
    * Entity type discriminator. Always "Permission" for Permission entities.
    */
-  entityType: "Permission";
+  entityType: 'Permission';
   /**
    * Id of the object this object is derived from.
    */
@@ -109,7 +109,7 @@ export interface Permission {
   /**
    * Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked.
    */
-  state: "granted" | "under-review" | "revoked" | "drafted";
+  state: 'granted' | 'under-review' | 'revoked' | 'drafted';
   /**
    * Timestamp when this permission record was created.
    */
@@ -184,5 +184,5 @@ export interface Action {
   /**
    * Lifecycle state of the action.
    */
-  state: "drafted" | "under-review" | "active" | "suspended" | "revoked" | "deprecated";
+  state: 'drafted' | 'under-review' | 'active' | 'suspended' | 'revoked' | 'deprecated';
 }

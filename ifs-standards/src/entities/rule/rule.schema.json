@@ -37,12 +37,5 @@
       "description": "Timestamp when this rule record was last updated."
     }
   },
-  "required": [
-    "id",
-    "ifsId",
-    "entityType",
-    "entityDocumentationUrl",
-    "createdAt",
-    "updatedAt"
-  ]
+  "required": ["id", "ifsId", "entityType", "entityDocumentationUrl", "createdAt", "updatedAt"]
 }

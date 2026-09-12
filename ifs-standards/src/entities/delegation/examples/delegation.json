@@ -12,11 +12,7 @@
     "entityType": "Permission",
     "basedOn": "1o9Sys",
     "entityDocumentationUrl": "https://demo.net/data/resource/resource",
-    "actionIds": [
-      "c",
-      "s2F6RkP6i",
-      "kyhyuOFGeY"
-    ],
+    "actionIds": ["c", "s2F6RkP6i", "kyhyuOFGeY"],
     "memberId": "s",
     "scopeId": "iOI",
     "scope": {},

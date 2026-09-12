@@ -57,14 +57,7 @@
     },
     "state": {
       "type": "string",
-      "enum": [
-        "drafted",
-        "under-review",
-        "active",
-        "suspended",
-        "revoked",
-        "expired"
-      ],
+      "enum": ["drafted", "under-review", "active", "suspended", "revoked", "expired"],
       "description": "Lifecycle state of the role."
     },
     "createdAt": {

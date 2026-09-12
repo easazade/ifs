@@ -60,12 +60,7 @@
     },
     "state": {
       "type": "string",
-      "enum": [
-        "granted",
-        "under-review",
-        "revoked",
-        "drafted"
-      ],
+      "enum": ["granted", "under-review", "revoked", "drafted"],
       "description": "Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked."
     },
     "createdAt": {

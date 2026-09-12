@@ -14,7 +14,7 @@ export type ChangeItem = {
   /**
    * Entity type discriminator. Always "ChangeItem" for ChangeItem entities.
    */
-  entityType: "ChangeItem";
+  entityType: 'ChangeItem';
   /**
    * Id of the object this object is derived from.
    */
@@ -30,7 +30,7 @@ export type ChangeItem = {
   /**
    * Type of operation this item proposes for the target object.
    */
-  operation: "update" | "create" | "delete" | "replace";
+  operation: 'update' | 'create' | 'delete' | 'replace';
   /**
    * Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.
    */
@@ -74,7 +74,7 @@ export type Scope = {
   /**
    * Entity type discriminator. Always "Scope" for Scope entities.
    */
-  entityType: "Scope";
+  entityType: 'Scope';
   /**
    * Id of the object this object is derived from.
    */
@@ -144,7 +144,7 @@ export interface Change {
   /**
    * Entity type discriminator. Always "Change" for Change entities.
    */
-  entityType: "Change";
+  entityType: 'Change';
   /**
    * Id of the object this object is derived from.
    */
@@ -202,7 +202,7 @@ export interface Change {
   /**
    * Lifecycle status of the change.
    */
-  status: "drafted" | "closed" | "open" | "rejected" | "approved" | "merged";
+  status: 'drafted' | 'closed' | 'open' | 'rejected' | 'approved' | 'merged';
   /**
    * URL showing a diff for all changed objects, similar to a GitHub pull request diff.
    */
@@ -276,7 +276,7 @@ export interface Decision {
   /**
    * Current lifecycle state of the decision.
    */
-  state: "open" | "closed" | "rejected" | "cancelled";
+  state: 'open' | 'closed' | 'rejected' | 'cancelled';
   /**
    * Id of previous revision of this decision, If this decision is a modified version of another decision.
    */
@@ -383,7 +383,7 @@ export interface Decision1 {
   /**
    * Current lifecycle state of the decision.
    */
-  state: "open" | "closed" | "rejected" | "cancelled";
+  state: 'open' | 'closed' | 'rejected' | 'cancelled';
   /**
    * Id of previous revision of this decision, If this decision is a modified version of another decision.
    */
@@ -471,7 +471,7 @@ export interface Member {
   /**
    * Entity type discriminator. Always "Member" for Member entities.
    */
-  entityType: "Member";
+  entityType: 'Member';
   /**
    * URL for documentation about this entity.
    */
@@ -508,7 +508,7 @@ export interface Role {
   /**
    * Entity type discriminator. Always "Role" for Role entities.
    */
-  entityType: "Role";
+  entityType: 'Role';
   /**
    * Id of the object this object is derived from.
    */
@@ -541,7 +541,7 @@ export interface Role {
   /**
    * Lifecycle state of the role.
    */
-  state: "drafted" | "under-review" | "active" | "suspended" | "revoked" | "expired";
+  state: 'drafted' | 'under-review' | 'active' | 'suspended' | 'revoked' | 'expired';
   /**
    * Timestamp when this role record was created.
    */
@@ -568,7 +568,7 @@ export interface Permission {
   /**
    * Entity type discriminator. Always "Permission" for Permission entities.
    */
-  entityType: "Permission";
+  entityType: 'Permission';
   /**
    * Id of the object this object is derived from.
    */
@@ -606,7 +606,7 @@ export interface Permission {
   /**
    * Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked.
    */
-  state: "granted" | "under-review" | "revoked" | "drafted";
+  state: 'granted' | 'under-review' | 'revoked' | 'drafted';
   /**
    * Timestamp when this permission record was created.
    */
@@ -681,7 +681,7 @@ export interface Action {
   /**
    * Lifecycle state of the action.
    */
-  state: "drafted" | "under-review" | "active" | "suspended" | "revoked" | "deprecated";
+  state: 'drafted' | 'under-review' | 'active' | 'suspended' | 'revoked' | 'deprecated';
 }
 export interface Vote {
   /**
@@ -773,7 +773,7 @@ export interface Comment {
   /**
    * Entity type discriminator. Always "Comment" for Comment entities.
    */
-  entityType: "Comment";
+  entityType: 'Comment';
   /**
    * Id of the object this object is derived from.
    */
@@ -804,7 +804,7 @@ export interface ReviewComment {
   /**
    * Entity type discriminator. Always "ReviewComment" for ReviewComment entities.
    */
-  entityType: "ReviewComment";
+  entityType: 'ReviewComment';
   /**
    * Id of the object this object is derived from.
    */
@@ -838,7 +838,7 @@ export interface Member1 {
   /**
    * Entity type discriminator. Always "Member" for Member entities.
    */
-  entityType: "Member";
+  entityType: 'Member';
   /**
    * URL for documentation about this entity.
    */

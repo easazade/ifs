@@ -4,11 +4,7 @@
   "entityType": "Scope",
   "entityDocumentationUrl": "https://example.com/api",
   "name": "1o9Sys",
-  "entities": [
-    "5hc1s2F6R",
-    "P",
-    "i8kyhyuOFG"
-  ],
+  "entities": ["5hc1s2F6R", "P", "i8kyhyuOFG"],
   "parentScopeId": "0qks3riO",
   "boundaryRules": {},
   "createdAt": "2003-02-02T07:40:39Z",

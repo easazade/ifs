@@ -17,7 +17,7 @@ export type Scope = {
   /**
    * Entity type discriminator. Always "Scope" for Scope entities.
    */
-  entityType: "Scope";
+  entityType: 'Scope';
   /**
    * Id of the object this object is derived from.
    */
@@ -87,7 +87,7 @@ export interface Role {
   /**
    * Entity type discriminator. Always "Role" for Role entities.
    */
-  entityType: "Role";
+  entityType: 'Role';
   /**
    * Id of the object this object is derived from.
    */
@@ -120,7 +120,7 @@ export interface Role {
   /**
    * Lifecycle state of the role.
    */
-  state: "drafted" | "under-review" | "active" | "suspended" | "revoked" | "expired";
+  state: 'drafted' | 'under-review' | 'active' | 'suspended' | 'revoked' | 'expired';
   /**
    * Timestamp when this role record was created.
    */
@@ -147,7 +147,7 @@ export interface Permission {
   /**
    * Entity type discriminator. Always "Permission" for Permission entities.
    */
-  entityType: "Permission";
+  entityType: 'Permission';
   /**
    * Id of the object this object is derived from.
    */
@@ -185,7 +185,7 @@ export interface Permission {
   /**
    * Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked.
    */
-  state: "granted" | "under-review" | "revoked" | "drafted";
+  state: 'granted' | 'under-review' | 'revoked' | 'drafted';
   /**
    * Timestamp when this permission record was created.
    */
@@ -260,5 +260,5 @@ export interface Action {
   /**
    * Lifecycle state of the action.
    */
-  state: "drafted" | "under-review" | "active" | "suspended" | "revoked" | "deprecated";
+  state: 'drafted' | 'under-review' | 'active' | 'suspended' | 'revoked' | 'deprecated';
 }

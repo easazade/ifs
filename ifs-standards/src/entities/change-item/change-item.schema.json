@@ -33,37 +33,23 @@
     },
     "operation": {
       "type": "string",
-      "enum": [
-        "update",
-        "create",
-        "delete",
-        "replace"
-      ],
+      "enum": ["update", "create", "delete", "replace"],
       "description": "Type of operation this item proposes for the target object."
     },
     "targetRef": {
-      "type": [
-        "string",
-        "null"
-      ],
+      "type": ["string", "null"],
       "format": "ifs-ref",
       "default": "ifs://object/current-target",
       "description": "Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet."
     },
     "baseRef": {
-      "type": [
-        "string",
-        "null"
-      ],
+      "type": ["string", "null"],
       "format": "ifs-ref",
       "default": "ifs://object/current-target@v1",
       "description": "IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations."
     },
     "proposedRef": {
-      "type": [
-        "string",
-        "null"
-      ],
+      "type": ["string", "null"],
       "format": "ifs-ref",
       "default": "ifs://change/change_1/proposed/current-target",
       "description": "IFS reference to the proposed object or version produced by this change item. Null for delete operations."
@@ -104,9 +90,7 @@
             "const": "create"
           }
         },
-        "required": [
-          "operation"
-        ]
+        "required": ["operation"]
       },
       "then": {
         "properties": {
@@ -130,9 +114,7 @@
             "const": "delete"
           }
         },
-        "required": [
-          "operation"
-        ]
+        "required": ["operation"]
       },
       "then": {
         "properties": {
@@ -154,15 +136,10 @@
       "if": {
         "properties": {
           "operation": {
-            "enum": [
-              "update",
-              "replace"
-            ]
+            "enum": ["update", "replace"]
           }
         },
-        "required": [
-          "operation"
-        ]
+        "required": ["operation"]
       },
       "then": {
         "properties": {

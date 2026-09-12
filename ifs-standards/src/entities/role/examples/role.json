@@ -15,10 +15,7 @@
     "name": "nXp97",
     "locations": [],
     "groups": [],
-    "entities": [
-      "fp1XXnfjz",
-      "r2t41"
-    ],
+    "entities": ["fp1XXnfjz", "r2t41"],
     "boundaryRules": {},
     "createdAt": "2011-04-07T06:55:57Z",
     "updatedAt": "2004-04-03T00:47:23Z",
@@ -32,10 +29,7 @@
       "entityType": "Permission",
       "basedOn": "A2O",
       "entityDocumentationUrl": "https://test.org/api/resource",
-      "actionIds": [
-        "NheYiS",
-        "NsH"
-      ],
+      "actionIds": ["NheYiS", "NsH"],
       "memberId": "k",
       "scopeId": "",
       "state": "under-review",

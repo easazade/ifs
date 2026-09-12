@@ -250,9 +250,7 @@
   "number": 687,
   "merged": true,
   "hasConflict": false,
-  "links": [
-    "https://example.com/data/api/v1"
-  ],
+  "links": ["https://example.com/data/api/v1"],
   "createdAt": "2021-01-25T22:20:54Z",
   "updatedAt": "2026-08-15T14:26:12Z",
   "mergedAt": "2029-08-02T14:35:09Z",

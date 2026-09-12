@@ -66,14 +66,7 @@
     },
     "state": {
       "type": "string",
-      "enum": [
-        "drafted",
-        "under-review",
-        "active",
-        "suspended",
-        "revoked",
-        "deprecated"
-      ],
+      "enum": ["drafted", "under-review", "active", "suspended", "revoked", "deprecated"],
       "description": "Lifecycle state of the action."
     }
   },

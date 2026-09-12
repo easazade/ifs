@@ -125,11 +125,7 @@
       "entityType": "Permission",
       "basedOn": "8ND",
       "entityDocumentationUrl": "https://test.org/data",
-      "actionIds": [
-        "O",
-        "KKzMJW2yV",
-        "pj3x7FN"
-      ],
+      "actionIds": ["O", "KKzMJW2yV", "pj3x7FN"],
       "actions": [],
       "scopeId": "haWWntUc",
       "scope": {},

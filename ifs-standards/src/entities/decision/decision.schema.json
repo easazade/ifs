@@ -33,12 +33,7 @@
     },
     "state": {
       "type": "string",
-      "enum": [
-        "open",
-        "closed",
-        "rejected",
-        "cancelled"
-      ],
+      "enum": ["open", "closed", "rejected", "cancelled"],
       "description": "Current lifecycle state of the decision."
     },
     "previousRevisionId": {
