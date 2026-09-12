@@ -1,6 +1,7 @@
 packages:
   - "ifs-standards"
-  - "packages/*"
+  - "prototype"
+  - "prototype-api"
 
 allowBuilds:
   esbuild: true

@@ -4,6 +4,7 @@
     "lint": {
       "dependsOn": ["^eslint"]
     },
+    "dev": {},
     "test": {}
   }
 }
