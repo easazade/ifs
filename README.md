@@ -1,3 +1,5 @@
+# IFS
+
 ## What Is IFS?
 
 IFS, the Individual Freedom System, is a governance model built on a simple but radical idea: power should never permanently leave the individual. Instead of surrendering authority to rulers, parties, institutions, or fixed election cycles, people delegate specific responsibilities to others only when they choose to—and they can limit, monitor, change, or revoke that delegation at any time.
@@ -13,3 +15,31 @@ Most governance systems ask people to trade freedom for coordination. Monarchies
 In an IFS system, decision power follows impact. If a choice affects only you, it belongs to you. If it affects a neighborhood, that neighborhood gains the voice. If it affects a wider region, participation scales to the people touched by the outcome. This keeps freedom from becoming isolation, and collective action from becoming domination. Authority is contextual, proportional, and continuously accountable.
 
 IFS also turns transparency into a foundation rather than a promise. Delegated power, responsibilities, decisions, and resource flows must be visible and traceable, so people can understand how outcomes are produced and act when something fails. The result is a living governance system: one that can adapt in real time, assign stewardship without surrender, manage shared resources responsibly, and evolve as people learn, participate, and refine the rules that shape their lives.
+
+## Contribution Guide
+
+### Commit Messages
+
+Run `pnpm install` at the repository root after cloning to install dependencies and enable the Husky Git hooks.
+
+Commits must follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```text
+type: description
+type(scope): description
+```
+
+The type and description are required; scope is optional and unrestricted. Allowed types: `feat` (feature), `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, and `revert`.
+
+Examples:
+
+```text
+feat: add delegation support
+fix(prototype-api): handle missing permissions
+docs(standards): clarify consent rules
+feat(api)!: change the delegation response format
+```
+
+The `commit-msg` hook rejects messages that do not match, including default merge/revert messages; give those commits a conventional message too. No extra subject-case or length restrictions are imposed.
+
+Hooks run locally and can be bypassed with Git's `--no-verify`; they are not server-side enforcement.
