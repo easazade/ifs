@@ -1,0 +1,2 @@
+# Keep migration history tied to SQLite.
+provider = "sqlite"

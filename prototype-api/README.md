@@ -1,114 +1,90 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# IFS Prototype API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS backend using **Prisma ORM 7 + SQLite**. Use the workspace's pinned pnpm version and Node.js 24 LTS (Prisma requires Node 20.19+, 22.12+, or 24+; the workspace uses Node 24).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Local setup
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+Run from the monorepo root:
 
 ```bash
-$ npm install
+pnpm install
+# Optional: copy prototype-api/.env.example to prototype-api/.env to customize settings.
+pnpm --filter prototype-api db:setup
+pnpm --filter prototype-api dev
 ```
 
-## Compile and run the project
+The API listens on `http://localhost:3000` by default. `GET /` returns `Hello World!`.
+
+`db:setup` generates Prisma Client and applies committed migrations without resetting data. On first setup it creates `prototype-api/prisma/dev.db`. No external database server is needed. pnpm's workspace build allowlist permits the Prisma engine scripts and the `better-sqlite3` native build; if no prebuilt binary is available, a working native compiler/Python toolchain is required.
+
+### Current scope
+
+Database infrastructure is configured; **no IFS domain models or tables are defined yet**. The existing `/member` routes remain Nest scaffold placeholders, not persisted CRUD. Use `/backend-entity <name>` in Pi to implement a resource from its existing `ifs-standards/src/entities/` schema. Do not treat the infrastructure tests' temporary SQL table as a domain model.
+
+## Database configuration
+
+| Variable       | Default                | Meaning                    |
+| -------------- | ---------------------- | -------------------------- |
+| `DATABASE_URL` | `file:./prisma/dev.db` | Local SQLite database file |
+| `PORT`         | `3000`                 | HTTP port                  |
+
+`prototype-api/.env` is loaded by both the CLI and application. Already-set environment variables take precedence. SQLite relative paths resolve against **`prototype-api/`**, not `prisma/` or the shell's current directory. Absolute `file:/absolute/path/database.db` paths are also supported. Parent directories for custom database paths must already exist. URL query strings/fragments are unsupported; `file::memory:` is available for explicitly nonpersistent use, not migration-based setup.
+
+The CLI and compiled application share the same URL resolver in `src/prisma/database.config.ts`. `.env`, generated Prisma Client files, SQLite database files, and their journal/WAL sidecars are ignored by Git. Keep backups outside the source tree as appropriate; do not commit database contents.
+
+## Prisma layout
+
+- `prisma/schema.prisma`: SQLite datasource and Prisma model definitions.
+- `prisma.config.ts`: CLI schema/migration paths and resolved database URL.
+- `prisma/migrations/`: committed migration history; currently only the SQLite provider lock, since there are no domain models yet.
+- `src/generated/prisma/`: generated ESM TypeScript client; never edit manually.
+- `src/prisma/prisma.module.ts`: global module exporting one shared client per Nest application.
+- `src/prisma/prisma.service.ts`: injectable client; connects during initialization and disconnects during shutdown. Bootstrap enables shutdown hooks.
+
+Inject `PrismaService` into resource services, then use the generated model delegates after adding models. DTOs and runtime JSON Schema validation remain separate from Prisma types. Do not instantiate a client per request or pass unvalidated HTTP bodies straight into Prisma operations.
+
+## Schema changes and migrations
+
+After implementing an approved IFS model in `prisma/schema.prisma`, run from the root against your **local development database only**:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+pnpm --filter prototype-api db:validate
+pnpm --filter prototype-api db:migrate --name add_entity --create-only
+# Inspect the generated SQL for destructive changes / SQLite table rebuilds.
+pnpm --filter prototype-api db:deploy
+pnpm --filter prototype-api db:generate
 ```
 
-## Run tests
+Commit schema changes and generated migration source files together. Prisma 7 migration commands do not automatically regenerate the client. Never accept reset prompts or use `migrate reset` / destructive `db push` flags unless intentionally discarding a confirmed disposable database. `migrate dev` uses a shadow database and may detect drift; stop and investigate instead of resetting valuable data.
+
+Additional commands:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+pnpm --filter prototype-api db:status
+pnpm --filter prototype-api db:studio
 ```
 
-## Deployment
+All database commands target the configured `DATABASE_URL`. Verify it before migrating or editing data in Studio. No migrations run automatically at application startup.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Build and run
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+pnpm --filter prototype-api build
+pnpm --filter prototype-api start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Build, development, and test scripts generate Prisma Client explicitly, so they work on a fresh checkout without checking in generated code. The Nest build compiles the generated client into `dist/generated/prisma/`. Keep the package layout (`dist/`, `prisma/`, `package.json`, runtime dependencies) intact when running compiled output. Provide a persistent writable SQLite location for deployed instances; do not place the database on ephemeral storage or share a local file across replicas. Apply reviewed migrations separately with `db:deploy` using an installation that includes the Prisma CLI.
 
-## Observability
+## Verification
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+```bash
+pnpm --filter prototype-api db:validate
+pnpm --filter prototype-api lint
+pnpm --filter prototype-api build
+pnpm --filter prototype-api test
+pnpm --filter prototype-api test:e2e
+```
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+Database tests use unique temporary SQLite files, never the development database. They verify real reads/writes, updates/deletes, persistence across connections, transaction rollback, Nest shutdown cleanup, and URL resolution. E2E tests run `prisma migrate deploy` against a disposable database and verify the application connects to that same file. With no domain models yet, this checks migration-command wiring, not domain migration behavior.
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observer](https://observer.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+The inherited Member scaffold currently produces unused-parameter lint warnings. The inherited Observe module still contains placeholder telemetry credentials; configure it separately if telemetry is needed.

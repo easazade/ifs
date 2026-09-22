@@ -1,0 +1,14 @@
+generator client {
+  provider               = "prisma-client"
+  output                 = "../src/generated/prisma"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// Add IFS models through /backend-entity <name>, using the standards schemas.
+// Infrastructure setup intentionally does not invent domain models.

@@ -7,6 +7,7 @@ async function bootstrap() {
     routeConflictPolicy: { duplicate: 'error', shadow: 'warn' },
     // routeResolutionStrategy: 'specificity',
   });
+  app.enableShutdownHooks();
   await app.listen(process.env.PORT ?? 3000);
 }
 
