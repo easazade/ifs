@@ -1,7 +1,7 @@
 export default {
   parserPreset: "conventional-changelog-conventionalcommits",
   defaultIgnores: false,
-  // Enforce the format only; scopes are optional and unrestricted.
+  // Scopes are optional; when provided, use a workspace package name.
   rules: {
     "type-empty": [2, "never"],
     "type-enum": [
@@ -22,6 +22,7 @@ export default {
         "agent",
       ],
     ],
+    "scope-enum": [2, "always", ["ifs-standards", "prototype", "prototype-api"]],
     "subject-empty": [2, "never"],
   },
 };

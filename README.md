@@ -29,15 +29,17 @@ type: description
 type(scope): description
 ```
 
-The type and description are required; scope is optional and unrestricted. Allowed types: `feat` (feature), `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, and `revert`.
+The type and description are required. Scope is optional, but when provided must be a workspace package name: `ifs-standards`, `prototype`, or `prototype-api`. Omit the scope for repository-wide changes. When adding or renaming a workspace package, update `scope-enum` in `commitlint.config.mjs` and this list.
+
+Allowed types: `feat` (feature), `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`, and `agent`.
 
 Examples:
 
 ```text
 feat: add delegation support
 fix(prototype-api): handle missing permissions
-docs(standards): clarify consent rules
-feat(api)!: change the delegation response format
+docs(ifs-standards): clarify consent rules
+feat(prototype-api)!: change the delegation response format
 ```
 
 The `commit-msg` hook rejects messages that do not match, including default merge/revert messages; give those commits a conventional message too. No extra subject-case or length restrictions are imposed.
