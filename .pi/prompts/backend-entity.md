@@ -24,15 +24,6 @@ Build a working, database-backed prototype of the IFS standards, usable by a Rea
 - Prisma schema models define persistence and relations. Request/response DTOs are separate NestJS HTTP contracts, not Prisma models or generated Prisma input/output types. Reuse the project's validation tooling or ask which to use if undecided.
 - The API contract pipeline is already decided: the `@nestjs/swagger` compiler plugin adds metadata during Nest compilation, `SwaggerModule.createDocument()` creates OpenAPI, and Orval generates the `@ifs/api-client` workspace package. Preserve this pipeline; do not introduce a second generator or hand-maintained client.
 
-## Interaction rules
-
-- Always use Pi's `ask` tool for every user-facing question, including entity-name requests, ambiguity resolution, implementation questionnaires, follow-ups, and approvals. This applies during the existence gate and all later steps.
-- Never substitute plain-chat questions or `pi-questions-helper` questionnaires. Batch independent questions in one `ask` call using its `questions` array; resolve gate blockers before asking implementation questions.
-- Give each question a stable `id`, concise `question`, and meaningful `options`. Use `description` for context, mappings, and approval plans. Use `multi: true` only when multiple selections are valid. For free-form details, explain how to use the tool's built-in custom-answer/Other input; do not add an `Other` option yourself.
-- Wait for the tool's answers and parse selected options and custom answers by question ID. A cancelled or unanswered question is not approval. Obtain sufficient answers and explicit approval before writes.
-- If `ask` is unavailable, report the blocker and stop; do not fall back to chat questions.
-- Keep any required trace footer in accompanying assistant text, not as a question.
-
 ## 1. Mandatory read-only existence gate
 
 Complete this gate before questionnaires about implementation, scaffolding, dependency installation, generation, database access, or any writes.
@@ -55,7 +46,7 @@ After the gate passes, inspect read-only:
 - Existing controller routes, DTOs, persistence models, services, and shared utilities. Search registrations too; a partially scaffolded resource is an update, not a reason to generate duplicates.
 - Git status/diff so existing user changes remain intact.
 
-After read-only inspection, briefly state the resolved schema path, whether this is creation or update, and the proposed field/relation mapping. Submit all needed questions together in one `ask` call. The numbered list below defines question topics, not chat output format. Do not write files; wait for the tool's answers.
+First response: briefly state the resolved schema path, whether this is creation or update, and the proposed field/relation mapping. Ask all needed questions together as a numbered list so `pi-questions-helper` can collect one answer batch. Do not write files; stop and wait. Include any required trace footer after the questions.
 
 Tailor questions to actual gaps. Reuse established configuration and requirements instead of asking the user to repeat them:
 
@@ -67,7 +58,7 @@ Tailor questions to actual gaps. Reuse established configuration and requirement
 6. Ask about unresolved frontend/API needs only when relevant: route compatibility, list pagination, allowed development origins, or existing authentication/authorization conventions. Do not invent governance rules from schema descriptions.
 7. Approve the concrete file/change plan, including dependencies, shared infrastructure, related models, migrations, OpenAPI DTOs/decorators, and regenerated client artifacts? Explicitly flag breaking route/field changes, operation-ID/client-export changes, and potentially destructive database changes.
 
-Parse the answers returned by `ask`. If answers are incomplete or conflicting, submit only missing follow-ups through `ask` and wait for the result. If approval was withheld, present the final plan and obtain approval through `ask` before writes. Do not treat code-generation approval as permission to drop data or migrate a shared/production database.
+Parse the user's answer batch, including `Here are my answers to your questions:` drafts. If answers are incomplete or conflicting, ask only missing follow-ups and wait. If approval was withheld, present the final plan and obtain approval before writes. Do not treat code-generation approval as permission to drop data or migrate a shared/production database.
 
 ## 3. Schema-to-backend contract
 

@@ -38,26 +38,24 @@ Use only existing `*.schema.json` files in `ifs-standards/src/entities/` as styl
 
 ## Interaction flow
 
-Do not create or update files immediately. First interview the user in one batch using Pi's `ask` tool.
+Do not create or update files immediately. First interview the user in one batch so `pi-questions-helper` can extract every question and help the user answer them at once.
 
 Important interaction rules:
 
-- Always use the `ask` tool for every user-facing question, including clarifications, follow-ups, and approval requests. Never substitute plain-chat questions or `pi-questions-helper` questionnaires.
-- After read-only inspection, send all needed initial questions in one `ask` call using its `questions` array. The numbered lists below define question content, not chat output format.
-- Give each question a stable `id`, concise `question`, and meaningful `options`. Use `description` for context, property examples, and proposed plans. Use `multi: true` only when multiple selections are valid. For free-form details, explain how to enter them through the tool's built-in custom-answer/Other input; do not add an `Other` option yourself.
-- Wait for the tool's answers before proceeding. Parse selected options and custom answers by question ID. A cancelled or unanswered question is not approval.
-- Do not create or update files before sufficient answers and explicit approval are received.
+- In the first assistant response, ask all needed questions together as a numbered list.
+- After the numbered questions, stop and wait for the user's next message.
+- Do not create or update files in the first response.
+- The next user message may be a `pi-questions-helper` draft such as "Here are my answers to your questions:". Parse those answers.
 - If answers are sufficient and the user granted final approval, proceed directly to schema creation or update.
-- If required answers are missing or ambiguous, ask only the missing follow-up questions through `ask` and wait for the result.
-- If the user did not grant final approval, present the final property plan and request approval through `ask` before writing files.
-- If `ask` is unavailable, report the blocker and stop; do not fall back to chat questions.
-- If project rules require a trace footer, include it in accompanying assistant text, not as a question.
+- If required answers are missing or ambiguous, ask only the missing follow-up questions and wait.
+- If the user did not grant final approval, present the final property plan and ask for approval before writing files.
+- If project rules require a trace footer, include it after the numbered questions.
 
 ### Step 1: First response questionnaire
 
 First check whether `ifs-standards/src/entities/<kebab-case-entity-name>/<kebab-case-entity-name>.schema.json` exists.
 
-If it does not exist, briefly restate what you understand about the entity from the name and specification, then submit this creation questionnaire through `ask` and wait for its answers:
+If it does not exist, briefly restate what you understand about the entity from the name and specification, then ask this numbered creation questionnaire and wait:
 
 1. Is this meaning correct? If not, what should change?
 2. What user-defined properties should this entity include? Reply with one property per line using `name: type - description`, or say `none`.
@@ -67,7 +65,7 @@ If it does not exist, briefly restate what you understand about the entity from 
 6. Should the schema be strict with `additionalProperties: false`, or flexible with `additionalProperties: true`? Reply `strict` or `flexible`.
 7. Do you approve me to create the schema file(s) immediately after applying your answers and any requested inference? Reply `yes` or `no`.
 
-If it exists, read the existing schema first, briefly summarize current fields, then submit only this update questionnaire through `ask` and wait for its answers:
+If it exists, read the existing schema first, briefly summarize current fields, then ask only this update questionnaire and wait:
 
 1. What should change? List fields to add/change/remove using `name: type - description`, or describe the desired behavior.
 2. Should existing compatible fields stay unchanged? Reply `yes` unless you want removals/renames.
@@ -163,7 +161,7 @@ After approved schema file creation/update is complete, run from the monorepo ro
 pnpm --filter ifs-standards entities
 ```
 
-Important: run this only at the end of the approved creation/update run. Do not run it during the first questionnaire response. In the normal create flow, run it only after the user grants approval through `ask` and schema files have been written.
+Important: run this only at the end of the approved creation/update run. Do not run it during the first questionnaire response. In the normal create flow, this means run it on the second assistant turn after the user answers approval with `yes` and schema files have been written.
 
 ## Output after creation/update
 
