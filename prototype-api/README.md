@@ -17,9 +17,47 @@ The API listens on `http://localhost:3000` by default. `GET /` returns `Hello Wo
 
 `db:setup` generates Prisma Client and applies committed migrations without resetting data. On first setup it creates `prototype-api/prisma/dev.db`. No external database server is needed. pnpm's workspace build allowlist permits the Prisma engine scripts and the `better-sqlite3` native build; if no prebuilt binary is available, a working native compiler/Python toolchain is required.
 
+## Swagger and OpenAPI
+
+After starting the API, visit:
+
+- `http://localhost:3000/docs`: Swagger UI.
+- `http://localhost:3000/docs-json`: live OpenAPI JSON.
+
+`src/openapi.ts` is shared by bootstrap and the standalone exporter so both use the same contract configuration. Run from the repository root:
+
+```bash
+pnpm openapi:generate
+# Writes prototype-api/openapi.json after a Prisma generation + Nest build.
+
+pnpm client:generate
+# Exports a fresh contract, runs Orval, and builds @ifs/api-client.
+
+pnpm --filter @ifs/api-client generate
+# Client only, using the existing prototype-api/openapi.json.
+```
+
+Export runs `dist/generate-openapi.js`, not the untransformed TypeScript source. It creates the Nest container but does not call `app.init()` or `app.listen()`, then closes it: no HTTP server, database connection, or migration is required. Constructors still run, so future providers must avoid network/database side effects in constructors. A configured `DATABASE_URL` must still be a syntactically valid SQLite URL.
+
+Commit `openapi.json` and `api-client/src/generated/api.ts` alongside API changes; never edit generated files manually. `api-client/dist/` is ignored build output. The client is a private workspace ESM package with JavaScript and TypeScript declarations, already listed as a dependency of `prototype`. See [client usage and runtime URL configuration](../api-client/README.md).
+
+### What the compiler plugin does
+
+The `@nestjs/swagger` plugin in `nest-cli.json` augments the compiled code with Swagger metadata: DTO property types, required/optional flags, inferred responses, and descriptions from comments. It **does not write OpenAPI JSON or generate a client**. `SwaggerModule.createDocument()` produces OpenAPI; the exporter writes JSON; Orval reads that JSON and generates a Fetch-based TypeScript client. `esmCompatible` is enabled for this ESM project.
+
+For future endpoints:
+
+- Use concrete DTO classes in `*.dto.ts` / `*.entity.ts`, not erased interfaces or Prisma types, for request/response schemas.
+- Add explicit return types and unique `@ApiOperation({ operationId: '...' })` values for stable client names.
+- Import mapped DTO helpers such as `PartialType` from `@nestjs/swagger`, not `@nestjs/mapped-types`.
+- Use explicit Swagger decorators for unions, generic wrappers, errors, authentication, or anything the plugin cannot infer. Match actual content types; `GET /` is explicitly documented as `text/plain`, not JSON.
+- This is documentation/type generation, **not runtime validation**. No validation library is currently configured; `classValidatorShim` is disabled. Add validation separately if needed.
+
+Swagger is currently exposed without authentication, matching this prototype's API. Protect or disable documentation separately if deploying a non-public API.
+
 ### Current scope
 
-Database infrastructure is configured; **no IFS domain models or tables are defined yet**. The existing `/member` routes remain Nest scaffold placeholders, not persisted CRUD. Use `/backend-entity <name>` in Pi to implement a resource from its existing `ifs-standards/src/entities/` schema. Do not treat the infrastructure tests' temporary SQL table as a domain model.
+Database infrastructure is configured; **no IFS domain models or tables are defined yet**. The only current endpoint is the `GET /` greeting. Use `/backend-entity <name>` in Pi to implement a resource from its existing `ifs-standards/src/entities/` schema. Do not treat the infrastructure tests' temporary SQL table as a domain model.
 
 ## Database configuration
 
@@ -83,8 +121,12 @@ pnpm --filter prototype-api lint
 pnpm --filter prototype-api build
 pnpm --filter prototype-api test
 pnpm --filter prototype-api test:e2e
+pnpm --filter prototype-api test:openapi
+pnpm --filter @ifs/api-client test
 ```
 
 Database tests use unique temporary SQLite files, never the development database. They verify real reads/writes, updates/deletes, persistence across connections, transaction rollback, Nest shutdown cleanup, and URL resolution. E2E tests run `prisma migrate deploy` against a disposable database and verify the application connects to that same file. With no domain models yet, this checks migration-command wiring, not domain migration behavior.
 
-The inherited Member scaffold currently produces unused-parameter lint warnings. The inherited Observe module still contains placeholder telemetry credentials; configure it separately if telemetry is needed.
+Swagger E2E tests cover `/docs` and `/docs-json`. `test:openapi` exercises the real Nest compiler plugin and checks that standalone export is deterministic and does not open SQLite; ordinary Vitest source transforms do not run that plugin. Client tests cover package imports, plain-text responses, runtime base URLs, headers, and cancellation.
+
+The inherited Observe module still contains placeholder telemetry credentials; configure it separately if telemetry is needed.

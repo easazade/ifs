@@ -22,7 +22,11 @@ export default {
         "agent",
       ],
     ],
-    "scope-enum": [2, "always", ["ifs-standards", "prototype", "prototype-api"]],
+    "scope-enum": [
+      2,
+      "always",
+      ["ifs-standards", "prototype", "prototype-api", "@ifs/api-client"],
+    ],
     "subject-empty": [2, "never"],
   },
 };

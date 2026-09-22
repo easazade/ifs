@@ -1,0 +1,29 @@
+{
+  "name": "@ifs/api-client",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "generate": "orval --config orval.config.ts && pnpm build",
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc -p tsconfig.check.json",
+    "test": "pnpm build && node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "orval": "8.35.0",
+    "prettier": "^3.4.2",
+    "typescript": "~6.0.2"
+  }
+}

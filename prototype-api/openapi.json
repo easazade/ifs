@@ -1,0 +1,39 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The API greeting.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Hello World!"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Return the prototype API greeting.",
+        "tags": [
+          "app"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "IFS Prototype API",
+    "description": "OpenAPI contract for the IFS prototype backend.",
+    "version": "0.0.1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {}
+  }
+}

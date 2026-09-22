@@ -7,6 +7,20 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
+## Backend API client
+
+The generated `@ifs/api-client` workspace package is available to import:
+
+```ts
+import { getHello } from '@ifs/api-client';
+
+const { data, status } = await getHello();
+```
+
+Run `pnpm client:generate` from the repository root after backend contract changes. This exports OpenAPI, generates the client with Orval, and builds its JavaScript/types. The prototype's `dev` / `build` commands also build the committed client source automatically.
+
+In development, `/api` is proxied to `http://localhost:3000`; run the Nest API separately. Swagger UI is at `http://localhost:3000/docs`. Production needs a reverse proxy or an explicit backend base URL. See [client configuration and usage](../api-client/README.md).
+
 ## Formatting and linting
 
 Prettier settings and ESLint rule groups match `ifs-standards`. Run from the repository root:

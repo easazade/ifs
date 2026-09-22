@@ -9,6 +9,7 @@ import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { AppModule } from './../src/app.module.js';
 import { PrismaService } from './../src/prisma/prisma.service.js';
+import { setupSwagger } from './../src/openapi.js';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
@@ -34,6 +35,7 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    setupSwagger(app);
     await app.init();
   }, 30_000);
 
@@ -42,6 +44,25 @@ describe('AppController (e2e)', () => {
       .get('/')
       .expect(200)
       .expect('Hello World!');
+  });
+
+  it('/docs (GET) serves Swagger UI', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/docs')
+      .expect(200);
+    expect(response.text).toContain('Swagger UI');
+  });
+
+  it('/docs-json (GET) describes the actual plain-text response', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/docs-json')
+      .expect(200);
+    const operation = response.body.paths['/'].get;
+    expect(operation.operationId).toBe('getHello');
+    expect(operation.responses['200'].content['text/plain'].schema).toEqual({
+      type: 'string',
+      example: 'Hello World!',
+    });
   });
 
   it('connects the application to the configured SQLite database', async () => {
