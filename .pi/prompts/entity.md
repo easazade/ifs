@@ -11,15 +11,24 @@ Initial entity specification:
 ${@:2}
 ```
 
+## Monorepo scope and paths
+
+This prompt manages IFS Standards entities only, not entities in other workspace packages.
+
+- Locate the monorepo root containing `pnpm-workspace.yaml` and `ifs-standards/package.json`. All repository paths below are relative to that root, not the prompt directory or the current working directory.
+- Read and follow `ifs-standards/AGENTS.md` before inspecting schemas or asking the questionnaire.
+- Keep all schema creation, updates, and style-reference lookups inside `ifs-standards/src/entities/`.
+- Run the generation command from the monorepo root. If the current working directory differs, explicitly set the command's working directory or change to the monorepo root first.
+
 ## Goal
 
 Create or update this source file:
 
-- `src/entities/<kebab-case-entity-name>/<kebab-case-entity-name>.schema.json`
+- `ifs-standards/src/entities/<kebab-case-entity-name>/<kebab-case-entity-name>.schema.json`
 
 Do not create or manually edit an `.mdx` file for the entity. Do not read `.mdx` files as input or use them to decide schema changes.
 
-Use only existing `*.schema.json` files in `src/entities/` as style references before creating or updating schema files. If the target schema already exists, read it first and preserve compatible existing fields unless the user asks to change/remove them.
+Use only existing `*.schema.json` files in `ifs-standards/src/entities/` as style references before creating or updating schema files. If the target schema already exists, read it first and preserve compatible existing fields unless the user asks to change/remove them.
 
 ## Source of truth
 
@@ -44,7 +53,7 @@ Important interaction rules:
 
 ### Step 1: First response questionnaire
 
-First check whether `src/entities/<kebab-case-entity-name>/<kebab-case-entity-name>.schema.json` exists.
+First check whether `ifs-standards/src/entities/<kebab-case-entity-name>/<kebab-case-entity-name>.schema.json` exists.
 
 If it does not exist, briefly restate what you understand about the entity from the name and specification, then ask this numbered creation questionnaire and wait:
 
@@ -81,11 +90,11 @@ After the user answers:
 
 1. Parse each user-defined property name, type, format/enum/items if present, and description.
 2. Parse the common properties answer. Add all common properties for `all`, no common properties for `none`, or only the listed common properties for `some: ...`. The `basedOn` common property is an optional string identifying the id of the object this object is derived from. The `entityDocumentationUrl` common property is a string URI for documentation about this entity.
-3. For any `object`, `array<object>`, PascalCase type, or description suggesting another entity object, check `src/entities/` for a matching `*.schema.json` file before writing files. Match both singular and plural names, e.g. `permissions` -> `permission`, `roles` -> `role`. Ignore `.mdx` files completely.
+3. For any `object`, `array<object>`, PascalCase type, or description suggesting another entity object, check `ifs-standards/src/entities/` for a matching `*.schema.json` file before writing files. Match both singular and plural names, e.g. `permissions` -> `permission`, `roles` -> `role`. Ignore `.mdx` files completely.
 4. Treat `Id` suffix fields (`scopeId`, `memberId`, `parentScopeId`, etc.) as identifier fields by default, not reference fields. Do not mark them with `format: "ifs-ref"` unless the user explicitly says that specific field is a reference string.
 5. Treat a field as a reference string only when the user explicitly marks it as a reference/ref, or when its purpose is clearly a heterogeneous pointer to external objects/resources that should stay a plain string. Reference string fields must remain `type: "string"` or `array<string>` and use `format: "ifs-ref"`.
 6. Treat each entity schema as one database object type. If a property represents a relation to another database object/entity type, reference that entity type with `$ref`; do not embed the related object's shape inside the current entity schema.
-7. If the referenced entity exists, use a JSON Schema `$ref` to that entity schema `$id`. If the referenced entity does not exist, create a basic schema for it under `src/entities/<kebab-case-related-entity>/<kebab-case-related-entity>.schema.json` and then `$ref` it. The basic related-entity schema must include only the selected common properties unless the user supplied more details.
+7. If the referenced entity exists, use a JSON Schema `$ref` to that entity schema `$id`. If the referenced entity does not exist, create a basic schema for it under `ifs-standards/src/entities/<kebab-case-related-entity>/<kebab-case-related-entity>.schema.json` and then `$ref` it. The basic related-entity schema must include only the selected common properties unless the user supplied more details.
 8. If a property is arbitrary embedded value/config data and not a database object/entity relationship, keep it as `type: object` with appropriate `additionalProperties` and document why it is not a `$ref`.
 9. If entity-object relation vs identifier vs reference-string intent is ambiguous, ask a concise follow-up before writing files.
 10. If the user answered `yes` to inference:
@@ -93,7 +102,7 @@ After the user answers:
 - Think through the entity in the IFS context.
 - Add likely required fields unless contradicted by the user.
 - Add useful optional fields unless contradicted by the user.
-- Add possible relations to other entities under `src/entities/` when useful.
+- Add possible relations to other entities under `ifs-standards/src/entities/` when useful.
 - If a useful relation targets a missing entity, create a basic related-entity schema for it and reference it.
 - Do not infer `Id` suffix fields as `ifs-ref`; keep them as normal identifiers unless explicitly specified.
 - Explain inferred fields and relations in the final report.
@@ -146,21 +155,21 @@ Do not write `.mdx` documentation directly. If docs, examples, classes, indexes,
 
 ### Step 4: Regenerate derived entity artifacts
 
-After approved schema file creation/update is complete, run:
+After approved schema file creation/update is complete, run from the monorepo root:
 
 ```bash
-npm run entities
+pnpm --filter ifs-standards entities
 ```
 
 Important: run this only at the end of the approved creation/update run. Do not run it during the first questionnaire response. In the normal create flow, this means run it on the second assistant turn after the user answers approval with `yes` and schema files have been written.
 
 ## Output after creation/update
 
-After writing schema files and running `npm run entities`, report:
+After writing schema files and running `pnpm --filter ifs-standards entities`, report:
 
 - Created or updated files, including any basic related-entity schemas
 - Final properties
 - Required fields
 - Any inferred fields or relations
 - Any missing related entities created as basic schemas
-- `npm run entities` result
+- `pnpm --filter ifs-standards entities` result
