@@ -24,7 +24,7 @@ afterEach(() => {
 });
 
 function fixture(withDtos = true) {
-  const root = mkdtempSync(join(tmpdir(), 'ifs-service-generator-'));
+  const root = mkdtempSync(join(tmpdir(), 'ifs-resource-generator-'));
   temporaryDirectories.push(root);
 
   const temporaryApi = join(root, 'prototype-api');
@@ -40,8 +40,8 @@ function fixture(withDtos = true) {
   mkdirSync(entityDirectory, { recursive: true });
   mkdirSync(join(temporaryApi, 'prisma'), { recursive: true });
   cpSync(
-    join(apiRoot, 'scripts', 'generate-service.mjs'),
-    join(scriptsDirectory, 'generate-service.mjs'),
+    join(apiRoot, 'scripts', 'generate-resource.mjs'),
+    join(scriptsDirectory, 'generate-resource.mjs'),
   );
   cpSync(
     join(
@@ -81,12 +81,12 @@ function writeDtos(temporaryApi: string) {
 function run(temporaryApi: string, entity = 'member') {
   return spawnSync(
     process.execPath,
-    ['scripts/generate-service.mjs', entity, '--skip-format'],
+    ['scripts/generate-resource.mjs', entity, '--skip-format'],
     { cwd: temporaryApi, encoding: 'utf8' },
   );
 }
 
-describe('service generator', () => {
+describe('resource generator', () => {
   it('rejects entities that are not defined by IFS standards', () => {
     const temporaryApi = fixture();
     const result = run(temporaryApi, 'unknown-entity');
@@ -114,15 +114,37 @@ describe('service generator', () => {
     expect(firstSource).toContain('private readonly prisma: PrismaService');
     expect(firstSource).toContain('this.prisma.member.findMany()');
     expect(firstSource).toContain('Prisma.MemberCreateInput');
+
+    const controllerSource = readFileSync(
+      join(temporaryApi, 'src', 'member', 'member.controller.ts'),
+      'utf8',
+    );
+    expect(controllerSource).toContain("@Controller('members')");
+    expect(controllerSource).toContain("operationId: 'createMember'");
+    expect(controllerSource).toContain(
+      '@ApiCreatedResponse({ type: MemberResponseDto })',
+    );
+    expect(controllerSource).toContain('@ApiBody({ type: CreateMemberDto })');
+    expect(controllerSource).toContain("@ApiParam({ name: 'id'");
+
+    const moduleSource = readFileSync(
+      join(temporaryApi, 'src', 'member', 'member.module.ts'),
+      'utf8',
+    );
+    expect(moduleSource).toContain('controllers: [MemberController]');
+    expect(moduleSource).toContain('providers: [MemberService]');
+
+    const resourcesSource = readFileSync(
+      join(temporaryApi, 'src', 'generated-resources.module.ts'),
+      'utf8',
+    );
+    expect(resourcesSource).toContain('import { MemberModule }');
+    expect(resourcesSource).toContain('imports: [MemberModule]');
   });
 
   it('runs the all-DTO generator when DTOs are missing', () => {
     const temporaryApi = fixture(false);
-    const generatorPath = join(
-      temporaryApi,
-      'scripts',
-      'generate-dtos.mjs',
-    );
+    const generatorPath = join(temporaryApi, 'scripts', 'generate-dtos.mjs');
     writeFileSync(
       generatorPath,
       `import { mkdirSync, writeFileSync } from 'node:fs';\nimport { join } from 'node:path';\nconst root = process.cwd();\nconst dto = join(root, 'src', 'member', 'dto');\nmkdirSync(dto, { recursive: true });\nfor (const [file, name] of [['create-member.dto.ts', 'CreateMemberDto'], ['update-member.dto.ts', 'UpdateMemberDto'], ['member-response.dto.ts', 'MemberResponseDto']]) writeFileSync(join(dto, file), \`export class \${name} {}\\n\`);\nwriteFileSync(join(root, 'generator-ran'), 'yes');\n`,
@@ -135,6 +157,26 @@ describe('service generator', () => {
     expect(
       existsSync(join(temporaryApi, 'src', 'member', 'member.service.ts')),
     ).toBe(true);
+  });
+
+  it('does not overwrite a hand-written controller', () => {
+    const temporaryApi = fixture();
+    const controllerPath = join(
+      temporaryApi,
+      'src',
+      'member',
+      'member.controller.ts',
+    );
+    mkdirSync(dirname(controllerPath), { recursive: true });
+    writeFileSync(controllerPath, 'export class MemberController {}\n');
+
+    const result = run(temporaryApi);
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('Refusing to overwrite controller');
+    expect(readFileSync(controllerPath, 'utf8')).toBe(
+      'export class MemberController {}\n',
+    );
   });
 
   it('does not overwrite a hand-written service', () => {

@@ -41,6 +41,22 @@ test('compiled OpenAPI export is deterministic and does not open SQLite or a por
       operation.responses['200'].content['text/plain'].schema.type,
       'string',
     );
+    const createMember = JSON.parse(exported).paths['/members'].post;
+    assert.equal(createMember.operationId, 'createMember');
+    assert.equal(
+      createMember.requestBody.content['application/json'].schema.$ref,
+      '#/components/schemas/CreateMemberDto',
+    );
+    assert.equal(
+      createMember.responses['201'].content['application/json'].schema.$ref,
+      '#/components/schemas/MemberResponseDto',
+    );
+
+    const getMember = JSON.parse(exported).paths['/members/{id}'].get;
+    assert.equal(getMember.operationId, 'getMember');
+    assert.equal(getMember.parameters[0].name, 'id');
+    assert.equal(getMember.parameters[0].required, true);
+    assert.ok(getMember.responses['404']);
     assert.deepEqual(await readdir(directory), []);
   } finally {
     await rm(directory, { recursive: true, force: true });

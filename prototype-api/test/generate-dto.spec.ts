@@ -36,10 +36,8 @@ function fixture() {
     join(apiRoot, 'scripts', 'generate-dto.mjs'),
     join(temporaryApi, 'scripts', 'generate-dto.mjs'),
   );
-  cpSync(
-    join(apiRoot, 'prisma', 'schema.prisma'),
-    join(temporaryApi, 'prisma', 'schema.prisma'),
-  );
+  // Keep fixture independent from generated models committed in the real schema.
+  writeFileSync(join(temporaryApi, 'prisma', 'schema.prisma'), '');
 
   for (const entity of ['member', 'role', 'permission', 'scope']) {
     const entityDirectory = join(standardsEntities, entity);

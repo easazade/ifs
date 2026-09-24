@@ -260,6 +260,16 @@ function decoratorFor(property, required) {
     options.push(`maxLength: ${property.maxLength}`);
   if (property.pattern)
     options.push(`pattern: ${JSON.stringify(property.pattern)}`);
+  if (property.default !== undefined)
+    options.push(`default: ${JSON.stringify(property.default)}`);
+  if (Array.isArray(property.examples) && property.examples.length)
+    options.push(`examples: ${JSON.stringify(property.examples)}`);
+  if (property.deprecated === true) options.push('deprecated: true');
+  if (typeof property.minItems === 'number')
+    options.push(`minItems: ${property.minItems}`);
+  if (typeof property.maxItems === 'number')
+    options.push(`maxItems: ${property.maxItems}`);
+  if (property.uniqueItems === true) options.push('uniqueItems: true');
 
   const relatedClass = relationClass(property);
   if (relatedClass) {

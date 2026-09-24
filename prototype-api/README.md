@@ -41,6 +41,8 @@ Export runs `dist/generate-openapi.js`, not the untransformed TypeScript source.
 
 Commit `openapi.json` and `api-client/src/generated/api.ts` alongside API changes; never edit generated files manually. `api-client/dist/` is ignored build output. The client is a private workspace ESM package with JavaScript and TypeScript declarations, already listed as a dependency of `prototype`. See [client usage and runtime URL configuration](../api-client/README.md).
 
+Generated resources are wired into OpenAPI automatically. `resource:generate` creates a Swagger-decorated controller, Nest module, Prisma-backed service, and refreshes `src/generated-resources.module.ts`. `AppModule` imports that registry, so generated operations appear in `openapi.json` and Orval without hand-editing module metadata.
+
 ### What the compiler plugin does
 
 The `@nestjs/swagger` plugin in `nest-cli.json` augments the compiled code with Swagger metadata: DTO property types, required/optional flags, inferred responses, and descriptions from comments. It **does not write OpenAPI JSON or generate a client**. `SwaggerModule.createDocument()` produces OpenAPI; the exporter writes JSON; Orval reads that JSON and generates a Fetch-based TypeScript client. `esmCompatible` is enabled for this ESM project.
@@ -57,7 +59,7 @@ Swagger is currently exposed without authentication, matching this prototype's A
 
 ### Current scope
 
-Database infrastructure is configured; **no IFS domain models or tables are defined yet**. The only current endpoint is the `GET /` greeting. Use `/backend-entity <name>` in Pi to implement a resource from its existing `ifs-standards/src/entities/` schema. Do not treat the infrastructure tests' temporary SQL table as a domain model.
+Database infrastructure and generated IFS models are configured. The API currently exposes the `GET /` greeting plus generated resources registered through `GeneratedResourcesModule`; inspect `openapi.json` for the current operation set.
 
 ## Database configuration
 
@@ -93,6 +95,21 @@ pnpm --filter prototype-api dto:generate ../ifs-standards/src/entities/member/me
 It creates `create`, `update`, and `response` DTOs under `src/<entity>/dto/`, upserts an idempotent generated model block in `prisma/schema.prisma`, formats the Prisma schema, and regenerates Prisma Client. Use `--skip-prisma-generate` when only source generation is wanted.
 
 Generate dependencies first. Before writing anything, the generator verifies that every entity referenced by `$ref` already has a Prisma model and response DTO; otherwise it exits with a list of missing artifacts. `$ref` properties become typed DTO properties and named Prisma relations. Referenced arrays use list relations with generated inverse fields. Single references use a matching `<property>Id` string when compatible or a generated relation ID. Primitive arrays and embedded objects remain Prisma `Json`. Flexible schemas receive an optional `extensions Json` field. Review generated relation ownership and delete behavior before migration; the generator intentionally does not create or apply migrations.
+
+## Generate an OpenAPI resource
+
+After DTO/model generation, generate one resource or all resources in dependency order:
+
+```bash
+pnpm --filter prototype-api resource:generate member
+pnpm --filter prototype-api resource:generate:all
+```
+
+Each resource includes explicit stable `operationId` values, request body/parameter metadata, success/error responses, response DTO types, and tags required for reliable client generation. Generated controllers expose plural CRUD routes such as `/members`. Files carrying the generator marker are replaced idempotently; the script refuses to overwrite hand-written controllers, modules, or services.
+
+The generated Prisma service casts DTO relation shapes to Prisma inputs. Review and customize relation writes/includes before treating generated CRUD behavior as production-ready; the Swagger contract and API client generation remain deterministic.
+
+After endpoint changes, run `pnpm client:generate` and commit both generated contract/client files.
 
 ## Schema changes and migrations
 

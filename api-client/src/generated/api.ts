@@ -7,6 +7,314 @@
  */
 import { getApiBaseUrl } from '../config.js';
 
+/**
+ * Lifecycle state of the action.
+ */
+export type ActionResponseDtoState =
+  (typeof ActionResponseDtoState)[keyof typeof ActionResponseDtoState];
+
+export const ActionResponseDtoState = {
+  drafted: 'drafted',
+  'under-review': 'under-review',
+  active: 'active',
+  suspended: 'suspended',
+  revoked: 'revoked',
+  deprecated: 'deprecated',
+} as const;
+
+export interface ActionResponseDto {
+  /** Globally unique identifier for this action. */
+  id: string;
+  /** IFS system identifier for this Action. */
+  ifsId: string;
+  /** Entity category for this object, normally Action. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this action record was created. */
+  createdAt: string;
+  /** Timestamp when this action record was last updated. */
+  updatedAt: string;
+  /** Human-readable name of the action. */
+  name: string;
+  /** Stable unique name used by IFS implementations to identify this action. */
+  uniqueName: string;
+  /** Whether a member or role must hold an applicable permission before performing this action. */
+  requiresPermission: boolean;
+  /** Describes the action. */
+  description: string;
+  /** Instructions for how to perform the action. */
+  instructions?: string;
+  /** Additional notes about this action. */
+  notes?: string;
+  /** Warnings, risks, or constraints to review before performing this action. */
+  warnings?: string;
+  /** Lifecycle state of the action. */
+  state: ActionResponseDtoState;
+}
+
+/**
+ * Entity type discriminator. Always "Permission" for Permission entities.
+ */
+export type PermissionResponseDtoEntityType =
+  (typeof PermissionResponseDtoEntityType)[keyof typeof PermissionResponseDtoEntityType];
+
+export const PermissionResponseDtoEntityType = {
+  Permission: 'Permission',
+} as const;
+
+/**
+ * Scope object describing the system, project, process, area, or other bounded context where this permission applies.
+ */
+export type PermissionResponseDtoScope = { [key: string]: unknown };
+
+/**
+ * Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked.
+ */
+export type PermissionResponseDtoState =
+  (typeof PermissionResponseDtoState)[keyof typeof PermissionResponseDtoState];
+
+export const PermissionResponseDtoState = {
+  granted: 'granted',
+  'under-review': 'under-review',
+  revoked: 'revoked',
+  drafted: 'drafted',
+} as const;
+
+export interface PermissionResponseDto {
+  /** Globally unique identifier for this permission. */
+  id: string;
+  /** IFS system identifier for this Permission. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Permission" for Permission entities. */
+  entityType: PermissionResponseDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** ID list of actions that this permission allows */
+  actionIds: string[];
+  /** List of actions that this permission allows */
+  actions?: ActionResponseDto[];
+  /** Identifier of the member receiving this permission. */
+  memberId?: string;
+  /** Identifier of the role receiving this permission. */
+  roleId?: string;
+  /** Identifier of the scope object where this permission applies. */
+  scopeId: string;
+  /** Scope object describing the system, project, process, area, or other bounded context where this permission applies. */
+  scope?: PermissionResponseDtoScope;
+  /** Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked. */
+  state: PermissionResponseDtoState;
+  /** Timestamp when this permission record was created. */
+  createdAt: string;
+  /** Timestamp when this permission record was last updated. */
+  updatedAt?: string;
+  /** Optional timestamp after which this permission no longer applies. */
+  expiresAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Member" for Member entities.
+ */
+export type CreateMemberDtoEntityType =
+  (typeof CreateMemberDtoEntityType)[keyof typeof CreateMemberDtoEntityType];
+
+export const CreateMemberDtoEntityType = {
+  Member: 'Member',
+} as const;
+
+export interface CreateMemberDto {
+  /** Globally unique identifier for this member. */
+  id: string;
+  /** IFS system identifier for this Member. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Member" for Member entities. */
+  entityType: CreateMemberDtoEntityType;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Human-readable name of the member. */
+  name: string;
+  permissions: PermissionResponseDto[];
+  /** Whether this member is considered an owner of the system. */
+  isOwner: boolean;
+  /** Timestamp when this member record was created. */
+  createdAt: string;
+  /** Timestamp when this member record was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Scope" for Scope entities.
+ */
+export type ScopeResponseDtoEntityType =
+  (typeof ScopeResponseDtoEntityType)[keyof typeof ScopeResponseDtoEntityType];
+
+export const ScopeResponseDtoEntityType = {
+  Scope: 'Scope',
+} as const;
+
+/**
+ * Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific.
+ */
+export type ScopeResponseDtoBoundaryRules = { [key: string]: unknown };
+
+export interface ScopeResponseDto {
+  /** Globally unique identifier for this scope. */
+  id: string;
+  /** IFS system identifier for this Scope. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Scope" for Scope entities. */
+  entityType: ScopeResponseDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Human-readable name of the scope. */
+  name: string;
+  /** Optional human-readable explanation of what this scope includes and excludes. */
+  description?: string;
+  /** Location identifiers or names included in this scope. Kept as strings for now. */
+  locations?: string[];
+  /** Group identifiers or names included in this scope. Kept as strings for now. */
+  groups?: string[];
+  /** Object identifiers or names included in this scope. Kept as strings for now. */
+  objects?: string[];
+  /** Entity identifiers or names included in this scope. Kept as strings for now. */
+  entities?: string[];
+  /** Identifier of a broader parent scope, when this scope is nested inside another scope. */
+  parentScopeId?: string;
+  /** Identifiers of narrower child scopes contained by this scope. */
+  childScopeIds?: string[];
+  /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
+  boundaryRules?: ScopeResponseDtoBoundaryRules;
+  /** Timestamp when this scope record was created. */
+  createdAt: string;
+  /** Timestamp when this scope record was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Role" for Role entities.
+ */
+export type RoleResponseDtoEntityType =
+  (typeof RoleResponseDtoEntityType)[keyof typeof RoleResponseDtoEntityType];
+
+export const RoleResponseDtoEntityType = {
+  Role: 'Role',
+} as const;
+
+/**
+ * Lifecycle state of the role.
+ */
+export type RoleResponseDtoState =
+  (typeof RoleResponseDtoState)[keyof typeof RoleResponseDtoState];
+
+export const RoleResponseDtoState = {
+  drafted: 'drafted',
+  'under-review': 'under-review',
+  active: 'active',
+  suspended: 'suspended',
+  revoked: 'revoked',
+  expired: 'expired',
+} as const;
+
+export interface RoleResponseDto {
+  /** Globally unique identifier for this role. */
+  id: string;
+  /** IFS system identifier for this Role. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Role" for Role entities. */
+  entityType: RoleResponseDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Human-readable name of the role. */
+  name: string;
+  /** Optional human-readable explanation of what this role is for. */
+  description?: string;
+  /** Identifier of the member acting through this role. */
+  memberId: string;
+  /** Identifier of the scope where this role has authority. */
+  scopeId: string;
+  /** Scope entity describing where this role applies. */
+  scope: ScopeResponseDto;
+  /** Permission entities bundled into this role. */
+  permissions: PermissionResponseDto[];
+  /** Lifecycle state of the role. */
+  state: RoleResponseDtoState;
+  /** Timestamp when this role record was created. */
+  createdAt: string;
+  /** Timestamp when this role record was last updated. */
+  updatedAt: string;
+  /** Optional timestamp after which this role no longer applies. */
+  expiresAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Member" for Member entities.
+ */
+export type MemberResponseDtoEntityType =
+  (typeof MemberResponseDtoEntityType)[keyof typeof MemberResponseDtoEntityType];
+
+export const MemberResponseDtoEntityType = {
+  Member: 'Member',
+} as const;
+
+export interface MemberResponseDto {
+  /** Globally unique identifier for this member. */
+  id: string;
+  /** IFS system identifier for this Member. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Member" for Member entities. */
+  entityType: MemberResponseDtoEntityType;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Human-readable name of the member. */
+  name: string;
+  readonly roles: readonly RoleResponseDto[];
+  permissions: PermissionResponseDto[];
+  /** Whether this member is considered an owner of the system. */
+  isOwner: boolean;
+  /** Timestamp when this member record was created. */
+  createdAt: string;
+  /** Timestamp when this member record was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Member" for Member entities.
+ */
+export type UpdateMemberDtoEntityType =
+  (typeof UpdateMemberDtoEntityType)[keyof typeof UpdateMemberDtoEntityType];
+
+export const UpdateMemberDtoEntityType = {
+  Member: 'Member',
+} as const;
+
+export interface UpdateMemberDto {
+  /** Globally unique identifier for this member. */
+  id?: string;
+  /** IFS system identifier for this Member. */
+  ifsId?: string;
+  /** Entity type discriminator. Always "Member" for Member entities. */
+  entityType?: UpdateMemberDtoEntityType;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Human-readable name of the member. */
+  name?: string;
+  permissions?: PermissionResponseDto[];
+  /** Whether this member is considered an owner of the system. */
+  isOwner?: boolean;
+  /** Timestamp when this member record was created. */
+  createdAt?: string;
+  /** Timestamp when this member record was last updated. */
+  updatedAt?: string;
+}
+
 export type getHelloResponse200 = {
   data: string;
   status: 200;
@@ -36,4 +344,268 @@ export const getHello = async (
 
   const data: getHelloResponse['data'] = body !== null ? body : '';
   return { data, status: res.status, headers: res.headers } as getHelloResponse;
+};
+
+export type createMemberResponse201 = {
+  data: MemberResponseDto;
+  status: 201;
+};
+
+export type createMemberResponseSuccess = createMemberResponse201 & {
+  headers: Headers;
+};
+export type createMemberResponse = createMemberResponseSuccess;
+
+export const getCreateMemberUrl = () => {
+  return `${getApiBaseUrl()}/members`;
+};
+
+/**
+ * @summary Create a Member.
+ */
+export const createMember = async (
+  createMemberDto: CreateMemberDto,
+  options?: RequestInit,
+): Promise<createMemberResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateMemberUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createMemberDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createMemberResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createMemberResponse;
+};
+
+export type listMembersResponse200 = {
+  data: MemberResponseDto[];
+  status: 200;
+};
+
+export type listMembersResponseSuccess = listMembersResponse200 & {
+  headers: Headers;
+};
+export type listMembersResponse = listMembersResponseSuccess;
+
+export const getListMembersUrl = () => {
+  return `${getApiBaseUrl()}/members`;
+};
+
+/**
+ * @summary List Member records.
+ */
+export const listMembers = async (
+  options?: RequestInit,
+): Promise<listMembersResponse> => {
+  const res = await fetch(getListMembersUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listMembersResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listMembersResponse;
+};
+
+export type getMemberResponse200 = {
+  data: MemberResponseDto;
+  status: 200;
+};
+
+export type getMemberResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getMemberResponseSuccess = getMemberResponse200 & {
+  headers: Headers;
+};
+export type getMemberResponseError = getMemberResponse404 & {
+  headers: Headers;
+};
+
+export type getMemberResponse =
+  getMemberResponseSuccess | getMemberResponseError;
+
+export const getGetMemberUrl = (id: string) => {
+  return `${getApiBaseUrl()}/members/${id}`;
+};
+
+/**
+ * @summary Get a Member by ID.
+ */
+export const getMember = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getMemberResponse> => {
+  const res = await fetch(getGetMemberUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getMemberResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getMemberResponse;
+};
+
+export type updateMemberResponse200 = {
+  data: MemberResponseDto;
+  status: 200;
+};
+
+export type updateMemberResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateMemberResponseSuccess = updateMemberResponse200 & {
+  headers: Headers;
+};
+export type updateMemberResponseError = updateMemberResponse404 & {
+  headers: Headers;
+};
+
+export type updateMemberResponse =
+  updateMemberResponseSuccess | updateMemberResponseError;
+
+export const getUpdateMemberUrl = (id: string) => {
+  return `${getApiBaseUrl()}/members/${id}`;
+};
+
+/**
+ * @summary Update a Member.
+ */
+export const updateMember = async (
+  id: string,
+  updateMemberDto: UpdateMemberDto,
+  options?: RequestInit,
+): Promise<updateMemberResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateMemberUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateMemberDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateMemberResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateMemberResponse;
+};
+
+export type deleteMemberResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteMemberResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteMemberResponseSuccess = deleteMemberResponse204 & {
+  headers: Headers;
+};
+export type deleteMemberResponseError = deleteMemberResponse404 & {
+  headers: Headers;
+};
+
+export type deleteMemberResponse =
+  deleteMemberResponseSuccess | deleteMemberResponseError;
+
+export const getDeleteMemberUrl = (id: string) => {
+  return `${getApiBaseUrl()}/members/${id}`;
+};
+
+/**
+ * @summary Delete a Member.
+ */
+export const deleteMember = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteMemberResponse> => {
+  const res = await fetch(getDeleteMemberUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteMemberResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteMemberResponse;
 };

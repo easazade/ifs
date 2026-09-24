@@ -23,6 +23,165 @@
           "app"
         ]
       }
+    },
+    "/members": {
+      "post": {
+        "operationId": "createMember",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMemberDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Member.",
+        "tags": [
+          "members"
+        ]
+      },
+      "get": {
+        "operationId": "listMembers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MemberResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Member records.",
+        "tags": [
+          "members"
+        ]
+      }
+    },
+    "/members/{id}": {
+      "get": {
+        "operationId": "getMember",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Member ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Member not found."
+          }
+        },
+        "summary": "Get a Member by ID.",
+        "tags": [
+          "members"
+        ]
+      },
+      "patch": {
+        "operationId": "updateMember",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Member ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMemberDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Member not found."
+          }
+        },
+        "summary": "Update a Member.",
+        "tags": [
+          "members"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteMember",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Member ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Member deleted."
+          },
+          "404": {
+            "description": "Member not found."
+          }
+        },
+        "summary": "Delete a Member.",
+        "tags": [
+          "members"
+        ]
+      }
     }
   },
   "info": {
@@ -34,6 +193,572 @@
   "tags": [],
   "servers": [],
   "components": {
-    "schemas": {}
+    "schemas": {
+      "ActionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this action."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Action."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Action."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this action record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this action record was last updated.",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the action."
+          },
+          "uniqueName": {
+            "type": "string",
+            "description": "Stable unique name used by IFS implementations to identify this action."
+          },
+          "requiresPermission": {
+            "type": "boolean",
+            "description": "Whether a member or role must hold an applicable permission before performing this action."
+          },
+          "description": {
+            "type": "string",
+            "description": "Describes the action."
+          },
+          "instructions": {
+            "type": "string",
+            "description": "Instructions for how to perform the action."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional notes about this action."
+          },
+          "warnings": {
+            "type": "string",
+            "description": "Warnings, risks, or constraints to review before performing this action."
+          },
+          "state": {
+            "enum": [
+              "drafted",
+              "under-review",
+              "active",
+              "suspended",
+              "revoked",
+              "deprecated"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the action."
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "name",
+          "uniqueName",
+          "requiresPermission",
+          "description",
+          "state"
+        ]
+      },
+      "PermissionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this permission."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Permission."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Permission\" for Permission entities.",
+            "enum": [
+              "Permission"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "actionIds": {
+            "description": "ID list of actions that this permission allows",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "actions": {
+            "description": "List of actions that this permission allows",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActionResponseDto"
+            }
+          },
+          "memberId": {
+            "type": "string",
+            "description": "Identifier of the member receiving this permission."
+          },
+          "roleId": {
+            "type": "string",
+            "description": "Identifier of the role receiving this permission."
+          },
+          "scopeId": {
+            "type": "string",
+            "description": "Identifier of the scope object where this permission applies."
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Scope object describing the system, project, process, area, or other bounded context where this permission applies."
+          },
+          "state": {
+            "enum": [
+              "granted",
+              "under-review",
+              "revoked",
+              "drafted"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this permission record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this permission record was last updated.",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Optional timestamp after which this permission no longer applies.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "actionIds",
+          "scopeId",
+          "state",
+          "createdAt",
+          "expiresAt"
+        ]
+      },
+      "CreateMemberDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this member."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Member."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Member\" for Member entities.",
+            "enum": [
+              "Member"
+            ]
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the member."
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionResponseDto"
+            }
+          },
+          "isOwner": {
+            "type": "boolean",
+            "description": "Whether this member is considered an owner of the system."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this member record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this member record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "name",
+          "permissions",
+          "isOwner",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ScopeResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this scope.",
+            "format": "uuid"
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Scope."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Scope\" for Scope entities.",
+            "enum": [
+              "Scope"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the scope."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional human-readable explanation of what this scope includes and excludes."
+          },
+          "locations": {
+            "description": "Location identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "Group identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "objects": {
+            "description": "Object identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "entities": {
+            "description": "Entity identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "parentScopeId": {
+            "type": "string",
+            "description": "Identifier of a broader parent scope, when this scope is nested inside another scope."
+          },
+          "childScopeIds": {
+            "description": "Identifiers of narrower child scopes contained by this scope.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "boundaryRules": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this scope record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this scope record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "RoleResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this role.",
+            "format": "uuid"
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Role."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Role\" for Role entities.",
+            "enum": [
+              "Role"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the role."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional human-readable explanation of what this role is for."
+          },
+          "memberId": {
+            "type": "string",
+            "description": "Identifier of the member acting through this role."
+          },
+          "scopeId": {
+            "type": "string",
+            "description": "Identifier of the scope where this role has authority."
+          },
+          "scope": {
+            "description": "Scope entity describing where this role applies.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScopeResponseDto"
+              }
+            ]
+          },
+          "permissions": {
+            "description": "Permission entities bundled into this role.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionResponseDto"
+            }
+          },
+          "state": {
+            "enum": [
+              "drafted",
+              "under-review",
+              "active",
+              "suspended",
+              "revoked",
+              "expired"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the role."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this role record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this role record was last updated.",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Optional timestamp after which this role no longer applies.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "name",
+          "memberId",
+          "scopeId",
+          "scope",
+          "permissions",
+          "state",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MemberResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this member."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Member."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Member\" for Member entities.",
+            "enum": [
+              "Member"
+            ]
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the member."
+          },
+          "roles": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleResponseDto"
+            }
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionResponseDto"
+            }
+          },
+          "isOwner": {
+            "type": "boolean",
+            "description": "Whether this member is considered an owner of the system."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this member record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this member record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "name",
+          "roles",
+          "permissions",
+          "isOwner",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateMemberDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this member."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Member."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Member\" for Member entities.",
+            "enum": [
+              "Member"
+            ]
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the member."
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionResponseDto"
+            }
+          },
+          "isOwner": {
+            "type": "boolean",
+            "description": "Whether this member is considered an owner of the system."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this member record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this member record was last updated.",
+            "format": "date-time"
+          }
+        }
+      }
+    }
   }
 }

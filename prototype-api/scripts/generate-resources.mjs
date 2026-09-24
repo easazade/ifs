@@ -13,7 +13,7 @@ const generationOrderPath = join(
   'scripts',
   'generate-order.json',
 );
-const generatorPath = join(apiRoot, 'scripts', 'generate-service.mjs');
+const generatorPath = join(apiRoot, 'scripts', 'generate-resource.mjs');
 
 function readGenerationOrder() {
   let generationOrder;
@@ -53,7 +53,7 @@ try {
 
   for (const [index, entity] of generationOrder.entries()) {
     console.log(
-      `\n[${index + 1}/${generationOrder.length}] Generating ${entity}Service...`,
+      `\n[${index + 1}/${generationOrder.length}] Generating ${entity} resource...`,
     );
     execFileSync(process.execPath, [generatorPath, entity], {
       cwd: apiRoot,
@@ -61,7 +61,7 @@ try {
     });
   }
 
-  console.log(`\nGenerated ${generationOrder.length} services in order.`);
+  console.log(`\nGenerated ${generationOrder.length} resources in order.`);
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error));
   process.exitCode = 1;
