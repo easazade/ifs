@@ -13,7 +13,8 @@
     "clean": "rm -rf node_modules && rm package-lock.json",
     "tokens:code": "tsx scripts/tokens-to-code.ts",
     "entities:order": "tsx scripts/generate-entity-order.ts",
-    "entities": "tsx scripts/generate-entity-order.ts && tsx scripts/generate-entities-overview.ts && tsx scripts/schema-to-class.ts && tsx scripts/generate-valid-examples.ts",
+    "entities:relations": "tsx scripts/generate-entity-relations.ts",
+    "entities": "tsx scripts/generate-entity-order.ts && tsx scripts/generate-entity-relations.ts && tsx scripts/generate-entities-overview.ts && tsx scripts/schema-to-class.ts && tsx scripts/generate-valid-examples.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },

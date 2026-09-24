@@ -11,17 +11,18 @@ npm run dev
 
 The application uses React, TypeScript, Vite, Tailwind CSS v4, and MDX.
 
-| Command               | Purpose                                                                                   |
-| --------------------- | ----------------------------------------------------------------------------------------- |
-| `npm run typecheck`   | Strict TypeScript checks for the app, generated entity types, scripts, configs, and tests |
-| `npm run build`       | Type-check, then create the production bundle in `dist/`                                  |
-| `npm run lint`        | ESLint with TypeScript and React rules                                                    |
-| `npm test`            | Run Vitest tests                                                                          |
-| `npm run test:watch`  | Watch tests                                                                               |
-| `npm run preview`     | Serve the production bundle locally                                                       |
-| `npm run format`      | Format source, tests, scripts, and TypeScript configs                                     |
-| `npm run entities`    | Regenerate entity overview, TypeScript interfaces, and examples                           |
-| `npm run tokens:code` | Regenerate CSS from the existing design token library                                     |
+| Command                      | Purpose                                                                                   |
+| ---------------------------- | ----------------------------------------------------------------------------------------- |
+| `npm run typecheck`          | Strict TypeScript checks for the app, generated entity types, scripts, configs, and tests |
+| `npm run build`              | Type-check, then create the production bundle in `dist/`                                  |
+| `npm run lint`               | ESLint with TypeScript and React rules                                                    |
+| `npm test`                   | Run Vitest tests                                                                          |
+| `npm run test:watch`         | Watch tests                                                                               |
+| `npm run preview`            | Serve the production bundle locally                                                       |
+| `npm run format`             | Format source, tests, scripts, and TypeScript configs                                     |
+| `npm run entities`           | Regenerate entity order, relations, overview, TypeScript interfaces, and examples         |
+| `npm run entities:relations` | Regenerate `scripts/entity-relations.json` from direct entity schema references           |
+| `npm run tokens:code`        | Regenerate CSS from the existing design token library                                     |
 
 Use `.tsx` for JSX components and `.ts` for other code. The app and Node tooling have separate TypeScript configs sharing `tsconfig.base.json`. See [NOTES.md](NOTES.md#typescript-workflow-and-null-safety) for TypeScript concepts and Flutter/Dart comparisons.
 

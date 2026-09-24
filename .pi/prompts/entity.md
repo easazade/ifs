@@ -161,16 +161,6 @@ After approved schema file creation/update is complete, run from the monorepo ro
 pnpm --filter ifs-standards entities
 ```
 
-After every other required script or validation has finished, always run this as the final command:
-
-```bash
-pnpm --filter ifs-standards entities:order
-```
-
-This final command runs `ifs-standards/scripts/generate-entity-order.ts`, which regenerates `ifs-standards/scripts/generate-order.json`. The JSON file is generated output, not an executable script. Run the command even though the `entities` command also generates the order earlier in its pipeline, so `generate-order.json` is refreshed after all other scripts.
-
-Important: run these only at the end of the approved creation/update run. Do not run them during the first questionnaire response. In the normal create flow, this means run them on the second assistant turn after the user answers approval with `yes` and schema files have been written. `pnpm --filter ifs-standards entities:order` must remain the last command.
-
 ## Output after creation/update
 
 After writing schema files, regenerating derived artifacts, and finally regenerating `generate-order.json`, report:
@@ -181,4 +171,3 @@ After writing schema files, regenerating derived artifacts, and finally regenera
 - Any inferred fields or relations
 - Any missing related entities created as basic schemas
 - `pnpm --filter ifs-standards entities` result
-- Final `pnpm --filter ifs-standards entities:order` result

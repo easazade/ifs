@@ -1,0 +1,17 @@
+{
+  "Action": [],
+  "Change": ["ChangeItem", "Comment", "Decision", "Member", "ReviewComment"],
+  "ChangeItem": [],
+  "Comment": [],
+  "Decision": ["Decision", "Member", "Rule", "Vote"],
+  "Delegation": ["Permission"],
+  "Label": [],
+  "Member": ["Permission", "Role"],
+  "Permission": ["Action"],
+  "Protocol": [],
+  "ReviewComment": [],
+  "Role": ["Permission", "Scope"],
+  "Rule": [],
+  "Scope": [],
+  "Vote": []
+}
