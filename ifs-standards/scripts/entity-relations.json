@@ -1,16 +1,36 @@
 {
   "Action": [],
-  "Change": ["ChangeItem", "Comment", "Decision", "Member", "ReviewComment"],
+  "Change": [
+    { "property": "authors", "type": "Member" },
+    { "property": "changes", "type": "ChangeItem" },
+    { "property": "comments", "type": "Comment" },
+    { "property": "decision", "type": "Decision" },
+    { "property": "mainAuthor", "type": "Member" },
+    { "property": "reviewComments", "type": "ReviewComment" },
+    { "property": "reviewers", "type": "Member" }
+  ],
   "ChangeItem": [],
   "Comment": [],
-  "Decision": ["Decision", "Member", "Rule", "Vote"],
-  "Delegation": ["Permission"],
+  "Decision": [
+    { "property": "affectedMembers", "type": "Member" },
+    { "property": "eligibleMembers", "type": "Member" },
+    { "property": "previousRevision", "type": "Decision" },
+    { "property": "rules", "type": "Rule" },
+    { "property": "votes", "type": "Vote" }
+  ],
+  "Delegation": [{ "property": "permission", "type": "Permission" }],
   "Label": [],
-  "Member": ["Permission", "Role"],
-  "Permission": ["Action"],
+  "Member": [
+    { "property": "permissions", "type": "Permission" },
+    { "property": "roles", "type": "Role" }
+  ],
+  "Permission": [{ "property": "actions", "type": "Action" }],
   "Protocol": [],
   "ReviewComment": [],
-  "Role": ["Permission", "Scope"],
+  "Role": [
+    { "property": "permissions", "type": "Permission" },
+    { "property": "scope", "type": "Scope" }
+  ],
   "Rule": [],
   "Scope": [],
   "Vote": []

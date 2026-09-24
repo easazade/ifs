@@ -9,7 +9,6 @@ const PROJECT_DIR = join(SCRIPTS_DIR, '..');
 const ENTITIES_DIR = join(PROJECT_DIR, 'src/entities');
 const OUTPUT_PATH = join(SCRIPTS_DIR, 'entity-relations.json');
 
-// A Set models unique direct edges in the entity graph, similar to a Dart Set<String>.
 interface EntitySchema {
   name: string;
   schemaId?: string;
@@ -17,7 +16,13 @@ interface EntitySchema {
   schema: JSONSchema7;
 }
 
-type EntityRelations = Record<string, string[]>;
+// Like a Dart record, this preserves both ends of each property-level relation.
+interface EntityRelation {
+  property: string;
+  type: string;
+}
+
+type EntityRelations = Record<string, EntityRelation[]>;
 
 const schemaFiles = await findSchemaFiles(ENTITIES_DIR);
 const entities = await readEntities(schemaFiles);
@@ -73,14 +78,23 @@ function indexEntities(entities: EntitySchema[]): Map<string, EntitySchema> {
 function buildRelations(entities: EntitySchema[], entityByReference: Map<string, EntitySchema>): EntityRelations {
   return Object.fromEntries(
     entities.map((entity) => {
-      const relatedEntities = new Set<string>();
+      const relationsByPropertyAndType = new Map<string, EntityRelation>();
 
-      for (const reference of collectReferences(entity.schema)) {
-        const relatedEntity = resolveEntityReference(reference, entity, entityByReference);
-        if (relatedEntity) relatedEntities.add(relatedEntity.name);
+      for (const [property, propertySchema] of Object.entries(entity.schema.properties ?? {})) {
+        for (const reference of collectReferences(propertySchema)) {
+          const relatedEntity = resolveEntityReference(reference, entity, entityByReference);
+          if (!relatedEntity) continue;
+
+          const relation = { property, type: relatedEntity.name };
+          relationsByPropertyAndType.set(`${property}\0${relatedEntity.name}`, relation);
+        }
       }
 
-      return [entity.name, [...relatedEntities].sort((left, right) => left.localeCompare(right))];
+      const entityRelations = [...relationsByPropertyAndType.values()].sort(
+        (left, right) => left.property.localeCompare(right.property) || left.type.localeCompare(right.type)
+      );
+
+      return [entity.name, entityRelations];
     })
   );
 }
