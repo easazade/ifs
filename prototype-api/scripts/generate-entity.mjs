@@ -449,10 +449,12 @@ function renderPrismaModel(
 function upsertPrismaModel(prismaSource, modelName, model) {
   const escaped = modelName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const block = new RegExp(
-    `\\n?// <generated:model ${escaped} source="[^"]+">[\\s\\S]*?// </generated:model ${escaped}>\\n?`,
+    `// <generated:model ${escaped} source="[^"]+">[\\s\\S]*?// </generated:model ${escaped}>`,
   );
-  const withoutOldBlock = prismaSource.replace(block, '\n');
-  return `${withoutOldBlock.trimEnd()}\n\n${model}\n`;
+
+  // Replace in place so regeneration does not create noisy model-order diffs.
+  if (block.test(prismaSource)) return prismaSource.replace(block, model);
+  return `${prismaSource.trimEnd()}\n\n${model}\n`;
 }
 
 function findModel(prismaSource, modelName) {

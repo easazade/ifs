@@ -147,6 +147,26 @@ describe('entity generator', () => {
     ).toBe(firstPrismaSchema);
   });
 
+  it('keeps an existing generated model in its original position', () => {
+    const temporaryApi = fixture();
+    addRelatedArtifacts(temporaryApi);
+    run(temporaryApi);
+
+    appendFileSync(
+      join(temporaryApi, 'prisma', 'schema.prisma'),
+      '\nmodel AuditLog {\n  id String @id\n}\n',
+    );
+    run(temporaryApi);
+
+    const prismaSchema = readFileSync(
+      join(temporaryApi, 'prisma', 'schema.prisma'),
+      'utf8',
+    );
+    expect(prismaSchema.indexOf('model Member')).toBeLessThan(
+      prismaSchema.indexOf('model AuditLog'),
+    );
+  });
+
   it('uses a matching ID property for a required single relation', () => {
     const temporaryApi = fixture();
     appendFileSync(
