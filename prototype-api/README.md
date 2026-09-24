@@ -92,7 +92,7 @@ pnpm --filter prototype-api entity:generate ../ifs-standards/src/entities/member
 
 It creates `create`, `update`, and `response` DTOs under `src/<entity>/dto/`, upserts an idempotent generated model block in `prisma/schema.prisma`, formats the Prisma schema, and regenerates Prisma Client. Use `--skip-prisma-generate` when only source generation is wanted.
 
-JSON Schema scalar fields map to Prisma scalars. Arrays, objects, and `$ref` values map to Prisma `Json` because a JSON Schema reference does not define relation ownership, foreign keys, or delete behavior. Replace those fields with reviewed Prisma relations when relation semantics are known. Flexible schemas receive an optional `extensions Json` field for preserving additional properties. The generator intentionally does not create or apply migrations.
+Generate dependencies first. Before writing anything, the generator verifies that every entity referenced by `$ref` already has a Prisma model and response DTO; otherwise it exits with a list of missing artifacts. `$ref` properties become typed DTO properties and named Prisma relations. Referenced arrays use list relations with generated inverse fields. Single references use a matching `<property>Id` string when compatible or a generated relation ID. Primitive arrays and embedded objects remain Prisma `Json`. Flexible schemas receive an optional `extensions Json` field. Review generated relation ownership and delete behavior before migration; the generator intentionally does not create or apply migrations.
 
 ## Schema changes and migrations
 

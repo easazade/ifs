@@ -12,3 +12,26 @@ datasource db {
 
 // Add IFS models through /backend-entity <name>, using the standards schemas.
 // Infrastructure setup intentionally does not invent domain models.
+
+// <generated:model Scope source="../ifs-standards/src/entities/scope/scope.schema.json">
+model Scope {
+  id                     String  @id
+  ifsId                  String
+  entityType             String
+  basedOn                String?
+  entityDocumentationUrl String
+  name                   String
+  description            String?
+  locations              Json?
+  groups                 Json?
+  objects                Json?
+  entities               Json?
+  parentScopeId          String?
+  childScopeIds          Json?
+  boundaryRules          Json?
+  createdAt              String
+  updatedAt              String
+  extensions             Json?
+}
+
+// </generated:model Scope>

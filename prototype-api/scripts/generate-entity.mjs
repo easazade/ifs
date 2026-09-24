@@ -98,14 +98,128 @@ function isNullable(property) {
   return Array.isArray(property.type) && property.type.includes('null');
 }
 
+function propertyRef(property) {
+  return property.$ref ?? property.items?.$ref;
+}
+
+function referencedEntityName(ref) {
+  const schemaFile = basename(ref.split('#')[0]);
+  if (!schemaFile.endsWith('.schema.json')) {
+    throw new Error(`Unsupported non-entity $ref: ${ref}`);
+  }
+  return schemaFile.slice(0, -'.schema.json'.length);
+}
+
+function relationInfo(property) {
+  const ref = propertyRef(property);
+  if (!ref) return undefined;
+
+  const entityName = referencedEntityName(ref);
+  const schemaPath = join(
+    entitiesRoot,
+    entityName,
+    `${entityName}.schema.json`,
+  );
+  const schema = readSchema(schemaPath);
+  return {
+    ref,
+    entityName,
+    modelName: pascalCase(schema.title),
+    isArray: scalarTypes(property)[0] === 'array',
+  };
+}
+
+function collectRelations(schema) {
+  return Object.entries(schema.properties)
+    .filter(([, property]) => propertyRef(property))
+    .map(([propertyName, property]) => ({
+      propertyName,
+      property,
+      ...relationInfo(property),
+    }));
+}
+
+function modelExists(prismaSource, modelName) {
+  return new RegExp(`(^|\\n)model\\s+${modelName}\\s*\\{`).test(prismaSource);
+}
+
+function generatedModelExists(prismaSource, modelName) {
+  return prismaSource.includes(`// <generated:model ${modelName} source=`);
+}
+
+function assertDependencies(prismaSource, relations, modelName) {
+  const missingModels = [
+    ...new Set(
+      relations
+        .filter((relation) => relation.modelName !== modelName)
+        .filter((relation) => !modelExists(prismaSource, relation.modelName))
+        .map((relation) => relation.modelName),
+    ),
+  ];
+
+  if (missingModels.length) {
+    throw new Error(
+      `Cannot generate ${modelName}. Required related Prisma models do not exist: ${missingModels.join(', ')}. Generate those models first.`,
+    );
+  }
+
+  const incompatibleModels = [
+    ...new Set(
+      relations
+        .filter((relation) => relation.modelName !== modelName)
+        .filter((relation) => {
+          const model = findModel(prismaSource, relation.modelName);
+          return !model || !/^\s*id\s+String\s+[^\n]*@id/m.test(model.text);
+        })
+        .map((relation) => relation.modelName),
+    ),
+  ];
+  if (incompatibleModels.length) {
+    throw new Error(
+      `Cannot generate ${modelName}. Related Prisma models must expose id String @id: ${incompatibleModels.join(', ')}.`,
+    );
+  }
+
+  const missingDtos = [
+    ...new Set(
+      relations
+        .filter((relation) => relation.modelName !== modelName)
+        .filter(
+          (relation) =>
+            !existsSync(
+              join(
+                apiRoot,
+                'src',
+                relation.entityName,
+                'dto',
+                `${relation.entityName}-response.dto.ts`,
+              ),
+            ),
+        )
+        .map((relation) => `${relation.modelName}ResponseDto`),
+    ),
+  ];
+
+  if (missingDtos.length) {
+    throw new Error(
+      `Cannot generate ${modelName} DTOs. Required related response DTOs do not exist: ${missingDtos.join(', ')}. Generate those entities first.`,
+    );
+  }
+}
+
+function relationClass(property) {
+  const relation = relationInfo(property);
+  return relation ? `${relation.modelName}ResponseDto` : undefined;
+}
+
 function propertyType(property) {
-  if (property.$ref) return 'Record<string, unknown>';
+  const relationType = relationClass(property);
+  if (property.$ref) return relationType;
 
   const [type] = scalarTypes(property);
   if (type === 'array') {
     const item = property.items ?? {};
-    const itemType = item.$ref ? 'Record<string, unknown>' : propertyType(item);
-    return `Array<${itemType}>`;
+    return `Array<${relationType ?? propertyType(item)}>`;
   }
   if (type === 'string' && property.const !== undefined)
     return JSON.stringify(property.const);
@@ -147,14 +261,14 @@ function decoratorFor(property, required) {
   if (property.pattern)
     options.push(`pattern: ${JSON.stringify(property.pattern)}`);
 
-  const ref = property.$ref ?? property.items?.$ref;
-  if (ref) {
+  const relatedClass = relationClass(property);
+  if (relatedClass) {
     options.push(
-      property.type === 'array'
-        ? "type: 'object', isArray: true, additionalProperties: true"
-        : "type: 'object', additionalProperties: true",
+      scalarTypes(property)[0] === 'array'
+        ? `type: () => [${relatedClass}]`
+        : `type: () => ${relatedClass}`,
     );
-  } else if (property.type === 'array') {
+  } else if (scalarTypes(property)[0] === 'array') {
     const itemType = propertyType(property.items ?? {});
     const swaggerType =
       itemType === 'string'
@@ -165,19 +279,37 @@ function decoratorFor(property, required) {
             ? 'Boolean'
             : "'object'";
     options.push(`type: [${swaggerType}]`);
-  } else if (
-    scalarTypes(property)[0] === 'object' ||
-    property.$ref ||
-    !property.type
-  ) {
+  } else if (scalarTypes(property)[0] === 'object' || !property.type) {
     options.push("type: 'object'", 'additionalProperties: true');
   }
 
   return `@${decorator}({ ${options.join(', ')} })`;
 }
 
+function dtoImports(properties, entityName, modelName, className) {
+  const imports = new Map();
+  for (const [, property] of properties) {
+    const relation = relationInfo(property);
+    if (!relation) continue;
+
+    const relatedClass = `${relation.modelName}ResponseDto`;
+    if (relatedClass === className) continue;
+
+    const importPath =
+      relation.modelName === modelName
+        ? `./${entityName}-response.dto.js`
+        : `../../${relation.entityName}/dto/${relation.entityName}-response.dto.js`;
+    imports.set(relatedClass, importPath);
+  }
+  return [...imports.entries()].sort(([left], [right]) =>
+    left.localeCompare(right),
+  );
+}
+
 function renderClass({
   className,
+  entityName,
+  modelName,
   properties,
   required,
   additionalProperties,
@@ -190,8 +322,13 @@ function renderClass({
           : []),
       ]
     : ['ApiPropertyOptional'];
+  const imports = dtoImports(properties, entityName, modelName, className);
   const lines = [
     `import { ${decorators.join(', ')} } from '@nestjs/swagger';`,
+    ...imports.map(
+      ([importName, importPath]) =>
+        `import { ${importName} } from '${importPath}';`,
+    ),
     '',
     `export class ${className} {`,
   ];
@@ -207,18 +344,14 @@ function renderClass({
     );
   }
 
-  if (additionalProperties) {
-    lines.push('  [key: string]: unknown;', '');
-  }
-
+  if (additionalProperties) lines.push('  [key: string]: unknown;', '');
   lines.push('}', '');
   return lines.join('\n');
 }
 
-function prismaType(property) {
+function prismaScalarType(property) {
   const [type] = scalarTypes(property);
-  if (property.$ref || type === 'array' || type === 'object' || !type)
-    return 'Json';
+  if (type === 'array' || type === 'object' || !type) return 'Json';
   if (type === 'string') return 'String';
   if (type === 'integer') return 'Int';
   if (type === 'number') return 'Float';
@@ -228,19 +361,80 @@ function prismaType(property) {
   );
 }
 
-function renderPrismaModel(schema, modelName, sourcePath) {
+function relationName(modelName, propertyName) {
+  return `${modelName}_${propertyName}`;
+}
+
+function extractInboundRelationBlocks(prismaSource, modelName) {
+  const model = findModel(prismaSource, modelName);
+  if (!model) return [];
+  return [
+    ...model.text.matchAll(
+      /  \/\/ <generated:inverse ([^>]+)>[\s\S]*?  \/\/ <\/generated:inverse \1>/g,
+    ),
+  ]
+    .filter((match) => !match[1].startsWith(`${modelName}_`))
+    .map((match) => match[0]);
+}
+
+function renderPrismaModel(
+  schema,
+  modelName,
+  sourcePath,
+  relations,
+  inboundBlocks,
+) {
   const required = new Set(schema.required ?? []);
+  const relationByProperty = new Map(
+    relations.map((relation) => [relation.propertyName, relation]),
+  );
   const fields = [];
 
   for (const [name, property] of Object.entries(schema.properties)) {
-    const optional = required.has(name) && !isNullable(property) ? '' : '?';
-    const id = name === 'id' ? ' @id' : '';
-    fields.push(`  ${name} ${prismaType(property)}${optional}${id}`);
+    const relation = relationByProperty.get(name);
+    if (!relation) {
+      const optional = required.has(name) && !isNullable(property) ? '' : '?';
+      const id = name === 'id' ? ' @id' : '';
+      fields.push(`  ${name} ${prismaScalarType(property)}${optional}${id}`);
+      continue;
+    }
+
+    const namedRelation = relationName(modelName, name);
+    if (relation.isArray) {
+      fields.push(
+        `  ${name} ${relation.modelName}[] @relation("${namedRelation}")`,
+      );
+      continue;
+    }
+
+    const candidateId = `${name}Id`;
+    const candidateProperty = schema.properties[candidateId];
+    const candidateMatches =
+      candidateProperty &&
+      !propertyRef(candidateProperty) &&
+      scalarTypes(candidateProperty)[0] === 'string';
+    const relationRequired = required.has(name) && !isNullable(property);
+    const candidateRequired =
+      candidateMatches &&
+      required.has(candidateId) &&
+      !isNullable(candidateProperty);
+    const foreignKey =
+      candidateMatches && candidateRequired === relationRequired
+        ? candidateId
+        : `${name}RelationId`;
+
+    if (foreignKey !== candidateId) {
+      fields.push(`  ${foreignKey} String${relationRequired ? '' : '?'}`);
+    }
+    fields.push(
+      `  ${name} ${relation.modelName}${relationRequired ? '' : '?'} @relation("${namedRelation}", fields: [${foreignKey}], references: [id])`,
+    );
   }
 
   if (schema.additionalProperties !== false && !schema.properties.extensions) {
     fields.push('  extensions Json?');
   }
+  if (inboundBlocks.length) fields.push('', ...inboundBlocks);
 
   const source = relative(apiRoot, sourcePath).replaceAll('\\', '/');
   return [
@@ -261,6 +455,58 @@ function upsertPrismaModel(prismaSource, modelName, model) {
   return `${withoutOldBlock.trimEnd()}\n\n${model}\n`;
 }
 
+function findModel(prismaSource, modelName) {
+  const match = new RegExp(`(^|\\n)model\\s+${modelName}\\s*\\{`).exec(
+    prismaSource,
+  );
+  if (!match) return undefined;
+
+  const start = match.index + match[1].length;
+  const close = prismaSource.indexOf('\n}', start);
+  if (close < 0) throw new Error(`Could not parse Prisma model ${modelName}.`);
+  const end = close + 2;
+  return { start, end, text: prismaSource.slice(start, end) };
+}
+
+function removeOutgoingInverseBlocks(prismaSource, modelName) {
+  const escaped = modelName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return prismaSource.replace(
+    new RegExp(
+      `\\n?  // <generated:inverse ${escaped}_[^>]+>[\\s\\S]*?  // </generated:inverse ${escaped}_[^>]+>`,
+      'g',
+    ),
+    '',
+  );
+}
+
+function upsertInverseRelation(prismaSource, relation, sourceModelName) {
+  const namedRelation = relationName(sourceModelName, relation.propertyName);
+  const escapedRelation = namedRelation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  prismaSource = prismaSource.replace(
+    new RegExp(
+      `\\n?  // <generated:inverse ${escapedRelation}>[\\s\\S]*?  // </generated:inverse ${escapedRelation}>`,
+    ),
+    '',
+  );
+  const fieldName = `relationFrom${sourceModelName}${pascalCase(relation.propertyName)}`;
+  const block = [
+    `  // <generated:inverse ${namedRelation}>`,
+    `  ${fieldName} ${sourceModelName}[] @relation("${namedRelation}")`,
+    `  // </generated:inverse ${namedRelation}>`,
+  ].join('\n');
+
+  const target = findModel(prismaSource, relation.modelName);
+  if (!target) {
+    throw new Error(`Required Prisma model disappeared: ${relation.modelName}`);
+  }
+  const updatedTarget = `${target.text.slice(0, -2).trimEnd()}\n${block}\n}`;
+  return (
+    prismaSource.slice(0, target.start) +
+    updatedTarget +
+    prismaSource.slice(target.end)
+  );
+}
+
 export function generateEntity(schemaPathInput, options = {}) {
   const schemaPath = resolveSchemaPath(schemaPathInput);
   const schema = readSchema(schemaPath);
@@ -268,6 +514,18 @@ export function generateEntity(schemaPathInput, options = {}) {
   const modelName = pascalCase(schema.title || entityName);
   const dtoDir = join(apiRoot, 'src', entityName, 'dto');
   const required = new Set(schema.required ?? []);
+  const relations = collectRelations(schema);
+  let prismaSource = readFileSync(prismaSchemaPath, 'utf8');
+
+  assertDependencies(prismaSource, relations, modelName);
+  if (
+    modelExists(prismaSource, modelName) &&
+    !generatedModelExists(prismaSource, modelName)
+  ) {
+    throw new Error(
+      `Prisma model ${modelName} already exists but is not managed by this generator. Refusing to overwrite it.`,
+    );
+  }
 
   const createProperties = Object.entries(schema.properties).filter(
     ([, property]) => !property.readOnly,
@@ -275,45 +533,56 @@ export function generateEntity(schemaPathInput, options = {}) {
   const responseProperties = Object.entries(schema.properties).filter(
     ([, property]) => !property.writeOnly,
   );
+  const classOptions = {
+    entityName,
+    modelName,
+    required,
+    additionalProperties: schema.additionalProperties !== false,
+  };
+
+  const createDto = renderClass({
+    ...classOptions,
+    className: `Create${modelName}Dto`,
+    properties: createProperties,
+  });
+  const responseDto = renderClass({
+    ...classOptions,
+    className: `${modelName}ResponseDto`,
+    properties: responseProperties,
+  });
+  const updateDto = [
+    `import { PartialType } from '@nestjs/swagger';`,
+    `import { Create${modelName}Dto } from './create-${entityName}.dto.js';`,
+    '',
+    `export class Update${modelName}Dto extends PartialType(Create${modelName}Dto) {}`,
+    '',
+  ].join('\n');
+
+  const inboundBlocks = extractInboundRelationBlocks(prismaSource, modelName);
+  prismaSource = removeOutgoingInverseBlocks(prismaSource, modelName);
+  const prismaModel = renderPrismaModel(
+    schema,
+    modelName,
+    schemaPath,
+    relations,
+    inboundBlocks,
+  );
+  prismaSource = upsertPrismaModel(prismaSource, modelName, prismaModel);
+  for (const relation of relations) {
+    prismaSource = upsertInverseRelation(prismaSource, relation, modelName);
+  }
 
   mkdirSync(dtoDir, { recursive: true });
-  writeFileSync(
-    join(dtoDir, `create-${entityName}.dto.ts`),
-    renderClass({
-      className: `Create${modelName}Dto`,
-      properties: createProperties,
-      required,
-      additionalProperties: schema.additionalProperties !== false,
-    }),
-  );
-  writeFileSync(
-    join(dtoDir, `update-${entityName}.dto.ts`),
-    [
-      `import { PartialType } from '@nestjs/swagger';`,
-      `import { Create${modelName}Dto } from './create-${entityName}.dto.js';`,
-      '',
-      `export class Update${modelName}Dto extends PartialType(Create${modelName}Dto) {}`,
-      '',
-    ].join('\n'),
-  );
-  writeFileSync(
-    join(dtoDir, `${entityName}-response.dto.ts`),
-    renderClass({
-      className: `${modelName}ResponseDto`,
-      properties: responseProperties,
-      required,
-      additionalProperties: schema.additionalProperties !== false,
-    }),
-  );
-
-  const prismaSource = readFileSync(prismaSchemaPath, 'utf8');
-  const prismaModel = renderPrismaModel(schema, modelName, schemaPath);
-  writeFileSync(
-    prismaSchemaPath,
-    upsertPrismaModel(prismaSource, modelName, prismaModel),
-  );
+  writeFileSync(join(dtoDir, `create-${entityName}.dto.ts`), createDto);
+  writeFileSync(join(dtoDir, `update-${entityName}.dto.ts`), updateDto);
+  writeFileSync(join(dtoDir, `${entityName}-response.dto.ts`), responseDto);
+  writeFileSync(prismaSchemaPath, prismaSource);
 
   if (!options.skipPrismaGenerate) {
+    execFileSync('pnpm', ['exec', 'prettier', '--write', dtoDir], {
+      cwd: apiRoot,
+      stdio: 'inherit',
+    });
     execFileSync('pnpm', ['exec', 'prisma', 'format'], {
       cwd: apiRoot,
       stdio: 'inherit',
@@ -324,12 +593,7 @@ export function generateEntity(schemaPathInput, options = {}) {
     });
   }
 
-  return {
-    schemaPath,
-    dtoDir,
-    modelName,
-    prismaSchemaPath,
-  };
+  return { schemaPath, dtoDir, modelName, prismaSchemaPath };
 }
 
 function main() {
