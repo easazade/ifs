@@ -25,7 +25,7 @@ afterEach(() => {
 });
 
 function fixture() {
-  const root = mkdtempSync(join(tmpdir(), 'ifs-entity-generator-'));
+  const root = mkdtempSync(join(tmpdir(), 'ifs-dto-generator-'));
   temporaryDirectories.push(root);
 
   const temporaryApi = join(root, 'prototype-api');
@@ -33,8 +33,8 @@ function fixture() {
   mkdirSync(join(temporaryApi, 'scripts'), { recursive: true });
   mkdirSync(join(temporaryApi, 'prisma'), { recursive: true });
   cpSync(
-    join(apiRoot, 'scripts', 'generate-entity.mjs'),
-    join(temporaryApi, 'scripts', 'generate-entity.mjs'),
+    join(apiRoot, 'scripts', 'generate-dto.mjs'),
+    join(temporaryApi, 'scripts', 'generate-dto.mjs'),
   );
   cpSync(
     join(apiRoot, 'prisma', 'schema.prisma'),
@@ -82,17 +82,17 @@ function addRelatedArtifacts(temporaryApi: string) {
 function run(temporaryApi: string, entity = 'member') {
   return execFileSync(
     process.execPath,
-    ['scripts/generate-entity.mjs', entity, '--skip-prisma-generate'],
+    ['scripts/generate-dto.mjs', entity, '--skip-prisma-generate'],
     { cwd: temporaryApi },
   );
 }
 
-describe('entity generator', () => {
+describe('DTO generator', () => {
   it('fails before writing when related Prisma models are missing', () => {
     const temporaryApi = fixture();
     const result = spawnSync(
       process.execPath,
-      ['scripts/generate-entity.mjs', 'member', '--skip-prisma-generate'],
+      ['scripts/generate-dto.mjs', 'member', '--skip-prisma-generate'],
       { cwd: temporaryApi, encoding: 'utf8' },
     );
 

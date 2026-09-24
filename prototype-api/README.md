@@ -86,8 +86,8 @@ Inject `PrismaService` into resource services, then use the generated model dele
 Run the generator with an entity name or JSON Schema path:
 
 ```bash
-pnpm --filter prototype-api entity:generate member
-pnpm --filter prototype-api entity:generate ../ifs-standards/src/entities/member/member.schema.json
+pnpm --filter prototype-api dto:generate member
+pnpm --filter prototype-api dto:generate ../ifs-standards/src/entities/member/member.schema.json
 ```
 
 It creates `create`, `update`, and `response` DTOs under `src/<entity>/dto/`, upserts an idempotent generated model block in `prisma/schema.prisma`, formats the Prisma schema, and regenerates Prisma Client. Use `--skip-prisma-generate` when only source generation is wanted.

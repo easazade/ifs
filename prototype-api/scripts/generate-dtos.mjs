@@ -13,7 +13,7 @@ const generationOrderPath = join(
   'scripts',
   'generate-order.json',
 );
-const generatorPath = join(apiRoot, 'scripts', 'generate-entity.mjs');
+const generatorPath = join(apiRoot, 'scripts', 'generate-dto.mjs');
 
 function readGenerationOrder() {
   let generationOrder;
@@ -61,7 +61,7 @@ try {
     });
   }
 
-  console.log(`\nGenerated ${generationOrder.length} entities in order.`);
+  console.log(`\nGenerated DTOs for ${generationOrder.length} entities in order.`);
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error));
   process.exitCode = 1;

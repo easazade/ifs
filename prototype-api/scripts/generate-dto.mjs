@@ -13,7 +13,7 @@ const prismaSchemaPath = join(apiRoot, 'prisma', 'schema.prisma');
 function usage(message) {
   if (message) console.error(`Error: ${message}\n`);
   console.error(
-    'Usage: pnpm --filter prototype-api entity:generate <entity-name|schema-path> [--skip-prisma-generate]',
+    'Usage: pnpm --filter prototype-api dto:generate <entity-name|schema-path> [--skip-prisma-generate]',
   );
   process.exitCode = message ? 1 : 0;
 }
@@ -202,7 +202,7 @@ function assertDependencies(prismaSource, relations, modelName) {
 
   if (missingDtos.length) {
     throw new Error(
-      `Cannot generate ${modelName} DTOs. Required related response DTOs do not exist: ${missingDtos.join(', ')}. Generate those entities first.`,
+      `Cannot generate ${modelName} DTOs. Required related response DTOs do not exist: ${missingDtos.join(', ')}. Generate those DTOs first.`,
     );
   }
 }
@@ -509,7 +509,7 @@ function upsertInverseRelation(prismaSource, relation, sourceModelName) {
   );
 }
 
-export function generateEntity(schemaPathInput, options = {}) {
+export function generateDto(schemaPathInput, options = {}) {
   const schemaPath = resolveSchemaPath(schemaPathInput);
   const schema = readSchema(schemaPath);
   const entityName = kebabCase(basename(schemaPath, '.schema.json'));
@@ -614,7 +614,7 @@ function main() {
     return usage('Expected exactly one entity name or schema path.');
 
   try {
-    const result = generateEntity(positional[0], { skipPrismaGenerate });
+    const result = generateDto(positional[0], { skipPrismaGenerate });
     console.log(
       `Generated ${result.modelName} DTOs in ${relative(workspaceRoot, result.dtoDir)}`,
     );

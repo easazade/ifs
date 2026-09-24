@@ -30,8 +30,8 @@
     "db:deploy": "prisma migrate deploy",
     "db:status": "prisma migrate status",
     "db:studio": "prisma studio",
-    "entity:generate": "node scripts/generate-entity.mjs",
-    "entity:generate:all": "node scripts/generate-entities.mjs",
+    "dto:generate": "node scripts/generate-dto.mjs",
+    "dto:generate:all": "node scripts/generate-dtos.mjs",
     "service:generate": "node scripts/generate-service.mjs",
     "service:generate:all": "node scripts/generate-services.mjs"
   },

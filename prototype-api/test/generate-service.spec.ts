@@ -116,12 +116,12 @@ describe('service generator', () => {
     expect(firstSource).toContain('Prisma.MemberCreateInput');
   });
 
-  it('runs the all-entity generator when DTOs are missing', () => {
+  it('runs the all-DTO generator when DTOs are missing', () => {
     const temporaryApi = fixture(false);
     const generatorPath = join(
       temporaryApi,
       'scripts',
-      'generate-entities.mjs',
+      'generate-dtos.mjs',
     );
     writeFileSync(
       generatorPath,
