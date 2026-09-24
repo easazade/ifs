@@ -44,6 +44,7 @@ export class ChangeItemResponseDto {
       'Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.',
     format: 'ifs-ref',
     nullable: true,
+    default: 'ifs://object/current-target',
   })
   targetRef: string | null;
 
@@ -52,6 +53,7 @@ export class ChangeItemResponseDto {
       'IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.',
     format: 'ifs-ref',
     nullable: true,
+    default: 'ifs://object/current-target@v1',
   })
   baseRef: string | null;
 
@@ -60,6 +62,7 @@ export class ChangeItemResponseDto {
       'IFS reference to the proposed object or version produced by this change item. Null for delete operations.',
     format: 'ifs-ref',
     nullable: true,
+    default: 'ifs://change/change_1/proposed/current-target',
   })
   proposedRef: string | null;
 

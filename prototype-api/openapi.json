@@ -24,6 +24,1119 @@
         ]
       }
     },
+    "/actions": {
+      "post": {
+        "operationId": "createAction",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateActionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Action.",
+        "tags": [
+          "actions"
+        ]
+      },
+      "get": {
+        "operationId": "listActions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Action records.",
+        "tags": [
+          "actions"
+        ]
+      }
+    },
+    "/actions/{id}": {
+      "get": {
+        "operationId": "getAction",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Action ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Action not found."
+          }
+        },
+        "summary": "Get a Action by ID.",
+        "tags": [
+          "actions"
+        ]
+      },
+      "patch": {
+        "operationId": "updateAction",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Action ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateActionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Action not found."
+          }
+        },
+        "summary": "Update a Action.",
+        "tags": [
+          "actions"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteAction",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Action ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Action deleted."
+          },
+          "404": {
+            "description": "Action not found."
+          }
+        },
+        "summary": "Delete a Action.",
+        "tags": [
+          "actions"
+        ]
+      }
+    },
+    "/changes": {
+      "post": {
+        "operationId": "createChange",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChangeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Change.",
+        "tags": [
+          "changes"
+        ]
+      },
+      "get": {
+        "operationId": "listChanges",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChangeResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Change records.",
+        "tags": [
+          "changes"
+        ]
+      }
+    },
+    "/changes/{id}": {
+      "get": {
+        "operationId": "getChange",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Change ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Change not found."
+          }
+        },
+        "summary": "Get a Change by ID.",
+        "tags": [
+          "changes"
+        ]
+      },
+      "patch": {
+        "operationId": "updateChange",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Change ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChangeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Change not found."
+          }
+        },
+        "summary": "Update a Change.",
+        "tags": [
+          "changes"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteChange",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Change ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Change deleted."
+          },
+          "404": {
+            "description": "Change not found."
+          }
+        },
+        "summary": "Delete a Change.",
+        "tags": [
+          "changes"
+        ]
+      }
+    },
+    "/change-items": {
+      "post": {
+        "operationId": "createChangeItem",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChangeItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeItemResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a ChangeItem.",
+        "tags": [
+          "change-items"
+        ]
+      },
+      "get": {
+        "operationId": "listChangeItems",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChangeItemResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List ChangeItem records.",
+        "tags": [
+          "change-items"
+        ]
+      }
+    },
+    "/change-items/{id}": {
+      "get": {
+        "operationId": "getChangeItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ChangeItem ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeItemResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ChangeItem not found."
+          }
+        },
+        "summary": "Get a ChangeItem by ID.",
+        "tags": [
+          "change-items"
+        ]
+      },
+      "patch": {
+        "operationId": "updateChangeItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ChangeItem ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChangeItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeItemResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ChangeItem not found."
+          }
+        },
+        "summary": "Update a ChangeItem.",
+        "tags": [
+          "change-items"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteChangeItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ChangeItem ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "ChangeItem deleted."
+          },
+          "404": {
+            "description": "ChangeItem not found."
+          }
+        },
+        "summary": "Delete a ChangeItem.",
+        "tags": [
+          "change-items"
+        ]
+      }
+    },
+    "/comments": {
+      "post": {
+        "operationId": "createComment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Comment.",
+        "tags": [
+          "comments"
+        ]
+      },
+      "get": {
+        "operationId": "listComments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommentResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Comment records.",
+        "tags": [
+          "comments"
+        ]
+      }
+    },
+    "/comments/{id}": {
+      "get": {
+        "operationId": "getComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Comment ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Comment not found."
+          }
+        },
+        "summary": "Get a Comment by ID.",
+        "tags": [
+          "comments"
+        ]
+      },
+      "patch": {
+        "operationId": "updateComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Comment ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Comment not found."
+          }
+        },
+        "summary": "Update a Comment.",
+        "tags": [
+          "comments"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Comment ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Comment deleted."
+          },
+          "404": {
+            "description": "Comment not found."
+          }
+        },
+        "summary": "Delete a Comment.",
+        "tags": [
+          "comments"
+        ]
+      }
+    },
+    "/decisions": {
+      "post": {
+        "operationId": "createDecision",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDecisionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecisionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Decision.",
+        "tags": [
+          "decisions"
+        ]
+      },
+      "get": {
+        "operationId": "listDecisions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DecisionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Decision records.",
+        "tags": [
+          "decisions"
+        ]
+      }
+    },
+    "/decisions/{id}": {
+      "get": {
+        "operationId": "getDecision",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Decision ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecisionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Decision not found."
+          }
+        },
+        "summary": "Get a Decision by ID.",
+        "tags": [
+          "decisions"
+        ]
+      },
+      "patch": {
+        "operationId": "updateDecision",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Decision ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDecisionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecisionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Decision not found."
+          }
+        },
+        "summary": "Update a Decision.",
+        "tags": [
+          "decisions"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteDecision",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Decision ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Decision deleted."
+          },
+          "404": {
+            "description": "Decision not found."
+          }
+        },
+        "summary": "Delete a Decision.",
+        "tags": [
+          "decisions"
+        ]
+      }
+    },
+    "/delegations": {
+      "post": {
+        "operationId": "createDelegation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDelegationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelegationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Delegation.",
+        "tags": [
+          "delegations"
+        ]
+      },
+      "get": {
+        "operationId": "listDelegations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DelegationResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Delegation records.",
+        "tags": [
+          "delegations"
+        ]
+      }
+    },
+    "/delegations/{id}": {
+      "get": {
+        "operationId": "getDelegation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Delegation ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelegationResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Delegation not found."
+          }
+        },
+        "summary": "Get a Delegation by ID.",
+        "tags": [
+          "delegations"
+        ]
+      },
+      "patch": {
+        "operationId": "updateDelegation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Delegation ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDelegationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelegationResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Delegation not found."
+          }
+        },
+        "summary": "Update a Delegation.",
+        "tags": [
+          "delegations"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteDelegation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Delegation ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Delegation deleted."
+          },
+          "404": {
+            "description": "Delegation not found."
+          }
+        },
+        "summary": "Delete a Delegation.",
+        "tags": [
+          "delegations"
+        ]
+      }
+    },
+    "/labels": {
+      "post": {
+        "operationId": "createLabel",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLabelDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LabelResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Label.",
+        "tags": [
+          "labels"
+        ]
+      },
+      "get": {
+        "operationId": "listLabels",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LabelResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Label records.",
+        "tags": [
+          "labels"
+        ]
+      }
+    },
+    "/labels/{id}": {
+      "get": {
+        "operationId": "getLabel",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Label ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LabelResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Label not found."
+          }
+        },
+        "summary": "Get a Label by ID.",
+        "tags": [
+          "labels"
+        ]
+      },
+      "patch": {
+        "operationId": "updateLabel",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Label ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLabelDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LabelResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Label not found."
+          }
+        },
+        "summary": "Update a Label.",
+        "tags": [
+          "labels"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteLabel",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Label ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Label deleted."
+          },
+          "404": {
+            "description": "Label not found."
+          }
+        },
+        "summary": "Delete a Label.",
+        "tags": [
+          "labels"
+        ]
+      }
+    },
     "/members": {
       "post": {
         "operationId": "createMember",
@@ -182,6 +1295,1119 @@
           "members"
         ]
       }
+    },
+    "/permissions": {
+      "post": {
+        "operationId": "createPermission",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePermissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Permission.",
+        "tags": [
+          "permissions"
+        ]
+      },
+      "get": {
+        "operationId": "listPermissions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PermissionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Permission records.",
+        "tags": [
+          "permissions"
+        ]
+      }
+    },
+    "/permissions/{id}": {
+      "get": {
+        "operationId": "getPermission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Permission ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Permission not found."
+          }
+        },
+        "summary": "Get a Permission by ID.",
+        "tags": [
+          "permissions"
+        ]
+      },
+      "patch": {
+        "operationId": "updatePermission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Permission ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePermissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Permission not found."
+          }
+        },
+        "summary": "Update a Permission.",
+        "tags": [
+          "permissions"
+        ]
+      },
+      "delete": {
+        "operationId": "deletePermission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Permission ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Permission deleted."
+          },
+          "404": {
+            "description": "Permission not found."
+          }
+        },
+        "summary": "Delete a Permission.",
+        "tags": [
+          "permissions"
+        ]
+      }
+    },
+    "/protocols": {
+      "post": {
+        "operationId": "createProtocol",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProtocolDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtocolResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Protocol.",
+        "tags": [
+          "protocols"
+        ]
+      },
+      "get": {
+        "operationId": "listProtocols",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProtocolResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Protocol records.",
+        "tags": [
+          "protocols"
+        ]
+      }
+    },
+    "/protocols/{id}": {
+      "get": {
+        "operationId": "getProtocol",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Protocol ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtocolResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Protocol not found."
+          }
+        },
+        "summary": "Get a Protocol by ID.",
+        "tags": [
+          "protocols"
+        ]
+      },
+      "patch": {
+        "operationId": "updateProtocol",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Protocol ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProtocolDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtocolResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Protocol not found."
+          }
+        },
+        "summary": "Update a Protocol.",
+        "tags": [
+          "protocols"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteProtocol",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Protocol ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Protocol deleted."
+          },
+          "404": {
+            "description": "Protocol not found."
+          }
+        },
+        "summary": "Delete a Protocol.",
+        "tags": [
+          "protocols"
+        ]
+      }
+    },
+    "/review-comments": {
+      "post": {
+        "operationId": "createReviewComment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReviewCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewCommentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a ReviewComment.",
+        "tags": [
+          "review-comments"
+        ]
+      },
+      "get": {
+        "operationId": "listReviewComments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReviewCommentResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List ReviewComment records.",
+        "tags": [
+          "review-comments"
+        ]
+      }
+    },
+    "/review-comments/{id}": {
+      "get": {
+        "operationId": "getReviewComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ReviewComment ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewCommentResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ReviewComment not found."
+          }
+        },
+        "summary": "Get a ReviewComment by ID.",
+        "tags": [
+          "review-comments"
+        ]
+      },
+      "patch": {
+        "operationId": "updateReviewComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ReviewComment ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReviewCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewCommentResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ReviewComment not found."
+          }
+        },
+        "summary": "Update a ReviewComment.",
+        "tags": [
+          "review-comments"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteReviewComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ReviewComment ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "ReviewComment deleted."
+          },
+          "404": {
+            "description": "ReviewComment not found."
+          }
+        },
+        "summary": "Delete a ReviewComment.",
+        "tags": [
+          "review-comments"
+        ]
+      }
+    },
+    "/roles": {
+      "post": {
+        "operationId": "createRole",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Role.",
+        "tags": [
+          "roles"
+        ]
+      },
+      "get": {
+        "operationId": "listRoles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoleResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Role records.",
+        "tags": [
+          "roles"
+        ]
+      }
+    },
+    "/roles/{id}": {
+      "get": {
+        "operationId": "getRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Role ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role not found."
+          }
+        },
+        "summary": "Get a Role by ID.",
+        "tags": [
+          "roles"
+        ]
+      },
+      "patch": {
+        "operationId": "updateRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Role ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role not found."
+          }
+        },
+        "summary": "Update a Role.",
+        "tags": [
+          "roles"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Role ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Role deleted."
+          },
+          "404": {
+            "description": "Role not found."
+          }
+        },
+        "summary": "Delete a Role.",
+        "tags": [
+          "roles"
+        ]
+      }
+    },
+    "/rules": {
+      "post": {
+        "operationId": "createRule",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRuleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuleResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Rule.",
+        "tags": [
+          "rules"
+        ]
+      },
+      "get": {
+        "operationId": "listRules",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RuleResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Rule records.",
+        "tags": [
+          "rules"
+        ]
+      }
+    },
+    "/rules/{id}": {
+      "get": {
+        "operationId": "getRule",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Rule ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuleResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Rule not found."
+          }
+        },
+        "summary": "Get a Rule by ID.",
+        "tags": [
+          "rules"
+        ]
+      },
+      "patch": {
+        "operationId": "updateRule",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Rule ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRuleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuleResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Rule not found."
+          }
+        },
+        "summary": "Update a Rule.",
+        "tags": [
+          "rules"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteRule",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Rule ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Rule deleted."
+          },
+          "404": {
+            "description": "Rule not found."
+          }
+        },
+        "summary": "Delete a Rule.",
+        "tags": [
+          "rules"
+        ]
+      }
+    },
+    "/scopes": {
+      "post": {
+        "operationId": "createScope",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateScopeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScopeResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Scope.",
+        "tags": [
+          "scopes"
+        ]
+      },
+      "get": {
+        "operationId": "listScopes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScopeResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Scope records.",
+        "tags": [
+          "scopes"
+        ]
+      }
+    },
+    "/scopes/{id}": {
+      "get": {
+        "operationId": "getScope",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Scope ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScopeResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Scope not found."
+          }
+        },
+        "summary": "Get a Scope by ID.",
+        "tags": [
+          "scopes"
+        ]
+      },
+      "patch": {
+        "operationId": "updateScope",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Scope ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScopeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScopeResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Scope not found."
+          }
+        },
+        "summary": "Update a Scope.",
+        "tags": [
+          "scopes"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteScope",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Scope ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Scope deleted."
+          },
+          "404": {
+            "description": "Scope not found."
+          }
+        },
+        "summary": "Delete a Scope.",
+        "tags": [
+          "scopes"
+        ]
+      }
+    },
+    "/votes": {
+      "post": {
+        "operationId": "createVote",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVoteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoteResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Vote.",
+        "tags": [
+          "votes"
+        ]
+      },
+      "get": {
+        "operationId": "listVotes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VoteResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Vote records.",
+        "tags": [
+          "votes"
+        ]
+      }
+    },
+    "/votes/{id}": {
+      "get": {
+        "operationId": "getVote",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Vote ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoteResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Vote not found."
+          }
+        },
+        "summary": "Get a Vote by ID.",
+        "tags": [
+          "votes"
+        ]
+      },
+      "patch": {
+        "operationId": "updateVote",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Vote ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVoteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoteResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Vote not found."
+          }
+        },
+        "summary": "Update a Vote.",
+        "tags": [
+          "votes"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteVote",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Vote ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Vote deleted."
+          },
+          "404": {
+            "description": "Vote not found."
+          }
+        },
+        "summary": "Delete a Vote.",
+        "tags": [
+          "votes"
+        ]
+      }
     }
   },
   "info": {
@@ -194,6 +2420,95 @@
   "servers": [],
   "components": {
     "schemas": {
+      "CreateActionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this action."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Action."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Action."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this action record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this action record was last updated.",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the action."
+          },
+          "uniqueName": {
+            "type": "string",
+            "description": "Stable unique name used by IFS implementations to identify this action."
+          },
+          "requiresPermission": {
+            "type": "boolean",
+            "description": "Whether a member or role must hold an applicable permission before performing this action."
+          },
+          "description": {
+            "type": "string",
+            "description": "Describes the action."
+          },
+          "instructions": {
+            "type": "string",
+            "description": "Instructions for how to perform the action."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional notes about this action."
+          },
+          "warnings": {
+            "type": "string",
+            "description": "Warnings, risks, or constraints to review before performing this action."
+          },
+          "state": {
+            "enum": [
+              "drafted",
+              "under-review",
+              "active",
+              "suspended",
+              "revoked",
+              "deprecated"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the action."
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "name",
+          "uniqueName",
+          "requiresPermission",
+          "description",
+          "state"
+        ]
+      },
       "ActionResponseDto": {
         "type": "object",
         "properties": {
@@ -283,22 +2598,98 @@
           "state"
         ]
       },
-      "PermissionResponseDto": {
+      "UpdateActionDto": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this permission."
+            "description": "Globally unique identifier for this action."
           },
           "ifsId": {
             "type": "string",
-            "description": "IFS system identifier for this Permission."
+            "description": "IFS system identifier for this Action."
           },
           "entityType": {
             "type": "string",
-            "description": "Entity type discriminator. Always \"Permission\" for Permission entities.",
+            "description": "Entity category for this object, normally Action."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this action record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this action record was last updated.",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the action."
+          },
+          "uniqueName": {
+            "type": "string",
+            "description": "Stable unique name used by IFS implementations to identify this action."
+          },
+          "requiresPermission": {
+            "type": "boolean",
+            "description": "Whether a member or role must hold an applicable permission before performing this action."
+          },
+          "description": {
+            "type": "string",
+            "description": "Describes the action."
+          },
+          "instructions": {
+            "type": "string",
+            "description": "Instructions for how to perform the action."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional notes about this action."
+          },
+          "warnings": {
+            "type": "string",
+            "description": "Warnings, risks, or constraints to review before performing this action."
+          },
+          "state": {
             "enum": [
-              "Permission"
+              "drafted",
+              "under-review",
+              "active",
+              "suspended",
+              "revoked",
+              "deprecated"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the action."
+          }
+        }
+      },
+      "ChangeItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this change item."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this ChangeItem."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"ChangeItem\" for ChangeItem entities.",
+            "enum": [
+              "ChangeItem"
             ]
           },
           "basedOn": {
@@ -310,60 +2701,53 @@
             "description": "URL for documentation about this entity.",
             "format": "uri"
           },
-          "actionIds": {
-            "description": "ID list of actions that this permission allows",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "actions": {
-            "description": "List of actions that this permission allows",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ActionResponseDto"
-            }
-          },
-          "memberId": {
+          "resourceType": {
             "type": "string",
-            "description": "Identifier of the member receiving this permission."
+            "description": "Resource category for this change item, such as rule, scope, protocol, record, or resource."
           },
-          "roleId": {
-            "type": "string",
-            "description": "Identifier of the role receiving this permission."
-          },
-          "scopeId": {
-            "type": "string",
-            "description": "Identifier of the scope object where this permission applies."
-          },
-          "scope": {
-            "type": "object",
-            "additionalProperties": true,
-            "description": "Scope object describing the system, project, process, area, or other bounded context where this permission applies."
-          },
-          "state": {
+          "operation": {
             "enum": [
-              "granted",
-              "under-review",
-              "revoked",
-              "drafted"
+              "update",
+              "create",
+              "delete",
+              "replace"
             ],
             "type": "string",
-            "description": "Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked."
+            "description": "Type of operation this item proposes for the target object."
+          },
+          "targetRef": {
+            "type": "string",
+            "nullable": true,
+            "description": "Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.",
+            "format": "ifs-ref",
+            "default": "ifs://object/current-target"
+          },
+          "baseRef": {
+            "type": "string",
+            "nullable": true,
+            "description": "IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.",
+            "format": "ifs-ref",
+            "default": "ifs://object/current-target@v1"
+          },
+          "proposedRef": {
+            "type": "string",
+            "nullable": true,
+            "description": "IFS reference to the proposed object or version produced by this change item. Null for delete operations.",
+            "format": "ifs-ref",
+            "default": "ifs://change/change_1/proposed/current-target"
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional human-readable note explaining this specific item."
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this permission record was created.",
+            "description": "Timestamp when this change item was created.",
             "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
-            "description": "Timestamp when this permission record was last updated.",
-            "format": "date-time"
-          },
-          "expiresAt": {
-            "type": "string",
-            "description": "Optional timestamp after which this permission no longer applies.",
+            "description": "Timestamp when this change item was last updated.",
             "format": "date-time"
           }
         },
@@ -372,69 +2756,11 @@
           "ifsId",
           "entityType",
           "entityDocumentationUrl",
-          "actionIds",
-          "scopeId",
-          "state",
-          "createdAt",
-          "expiresAt"
-        ]
-      },
-      "CreateMemberDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Globally unique identifier for this member."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Member."
-          },
-          "entityType": {
-            "type": "string",
-            "description": "Entity type discriminator. Always \"Member\" for Member entities.",
-            "enum": [
-              "Member"
-            ]
-          },
-          "entityDocumentationUrl": {
-            "type": "string",
-            "description": "URL for documentation about this entity.",
-            "format": "uri"
-          },
-          "name": {
-            "type": "string",
-            "description": "Human-readable name of the member."
-          },
-          "permissions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PermissionResponseDto"
-            }
-          },
-          "isOwner": {
-            "type": "boolean",
-            "description": "Whether this member is considered an owner of the system."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this member record was created.",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "description": "Timestamp when this member record was last updated.",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "id",
-          "ifsId",
-          "entityType",
-          "entityDocumentationUrl",
-          "name",
-          "permissions",
-          "isOwner",
+          "resourceType",
+          "operation",
+          "targetRef",
+          "baseRef",
+          "proposedRef",
           "createdAt",
           "updatedAt"
         ]
@@ -538,6 +2864,102 @@
           "name",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "PermissionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this permission."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Permission."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Permission\" for Permission entities.",
+            "enum": [
+              "Permission"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "actionIds": {
+            "description": "ID list of actions that this permission allows",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "actions": {
+            "description": "List of actions that this permission allows",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActionResponseDto"
+            }
+          },
+          "memberId": {
+            "type": "string",
+            "description": "Identifier of the member receiving this permission."
+          },
+          "roleId": {
+            "type": "string",
+            "description": "Identifier of the role receiving this permission."
+          },
+          "scopeId": {
+            "type": "string",
+            "description": "Identifier of the scope object where this permission applies."
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Scope object describing the system, project, process, area, or other bounded context where this permission applies."
+          },
+          "state": {
+            "enum": [
+              "granted",
+              "under-review",
+              "revoked",
+              "drafted"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this permission record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this permission record was last updated.",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Optional timestamp after which this permission no longer applies.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "actionIds",
+          "scopeId",
+          "state",
+          "createdAt",
+          "expiresAt"
         ]
       },
       "RoleResponseDto": {
@@ -710,6 +3132,1943 @@
           "updatedAt"
         ]
       },
+      "VoteResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this vote."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Vote."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Vote."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this vote record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this vote record was last updated.",
+            "format": "date-time"
+          },
+          "decisionId": {
+            "type": "string",
+            "description": "Identifier of the decision this vote participates in."
+          },
+          "memberId": {
+            "type": "string",
+            "description": "Identifier of the member who cast or owns this vote."
+          },
+          "value": {
+            "type": "string",
+            "description": "Vote value recorded for the decision, such as an implementation-defined choice or consent signal."
+          },
+          "previousRevisionId": {
+            "type": "string",
+            "description": "Identifier of the previous revision of this vote, if this vote amends an earlier vote."
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "decisionId",
+          "memberId",
+          "value"
+        ]
+      },
+      "RuleResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this rule."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Rule."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Rule."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this rule record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this rule record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "DecisionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this decision."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Decision."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Decision."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources.",
+            "format": "ifs-ref"
+          },
+          "state": {
+            "enum": [
+              "open",
+              "closed",
+              "rejected",
+              "cancelled"
+            ],
+            "type": "string",
+            "description": "Current lifecycle state of the decision."
+          },
+          "previousRevisionId": {
+            "type": "string",
+            "description": "Id of previous revision of this decision, If this decision is a modified version of another decision."
+          },
+          "previousRevision": {
+            "description": "Current outcome of the decision, if the decision has produced an outcome at least once.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DecisionResponseDto"
+              }
+            ]
+          },
+          "eligibleMembers": {
+            "description": "Member entities eligible to participate in this decision.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "affectedMembers": {
+            "description": "Member entities affected by this decision under the IFS scope rule.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "votes": {
+            "description": "Vote entities cast directly by members or by delegates acting on their behalf.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VoteResponseDto"
+            }
+          },
+          "rules": {
+            "description": "Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RuleResponseDto"
+            }
+          },
+          "eligibleMemberCount": {
+            "type": "number",
+            "description": "Snapshot count of members eligible to participate.",
+            "minimum": 0
+          },
+          "affectedMemberCount": {
+            "type": "number",
+            "description": "Snapshot count of members affected by this decision.",
+            "minimum": 0
+          },
+          "voteCount": {
+            "type": "number",
+            "description": "Snapshot count of votes currently recorded for this decision.",
+            "minimum": 0
+          },
+          "delegateVoteCount": {
+            "type": "number",
+            "description": "Snapshot count of votes cast by delegates on behalf of eligible members.",
+            "minimum": 0
+          },
+          "openedAt": {
+            "type": "string",
+            "description": "Timestamp when this decision opened for participation.",
+            "format": "date-time"
+          },
+          "closedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision closed.",
+            "format": "date-time"
+          },
+          "cancelledAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision was cancelled.",
+            "format": "date-time"
+          },
+          "verifiedAt": {
+            "type": "string",
+            "description": "Optional timestamp when participation, vote data, or outcome was verified.",
+            "format": "date-time"
+          },
+          "approvedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision produced an approved outcome.",
+            "format": "date-time"
+          },
+          "rejectedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision was rejected or produced a rejected outcome.",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this decision record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this decision record was last updated.",
+            "format": "date-time"
+          },
+          "decidedAt": {
+            "type": "string",
+            "description": "Timestamp when this decision record was decided.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "subject",
+          "state",
+          "eligibleMembers",
+          "affectedMembers",
+          "votes",
+          "eligibleMemberCount",
+          "affectedMemberCount",
+          "voteCount",
+          "openedAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CommentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this comment."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Comment."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Comment\" for Comment entities.",
+            "enum": [
+              "Comment"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this comment was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this comment was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ReviewCommentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this review comment."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this ReviewComment."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"ReviewComment\" for ReviewComment entities.",
+            "enum": [
+              "ReviewComment"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this review comment was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this review comment was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateChangeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this change."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Change."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Change\" for Change entities.",
+            "enum": [
+              "Change"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string",
+            "description": "Human-readable title summarizing the proposed change."
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed explanation of what this change proposes and why it is needed."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Short explanation of what this change proposes and why it is needed."
+          },
+          "reason": {
+            "type": "string",
+            "description": "explanation of why this change is being proposed."
+          },
+          "changes": {
+            "description": "ChangeItem entities describing each proposed object-level operation in this change.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChangeItemResponseDto"
+            }
+          },
+          "decision": {
+            "description": "Current decision about this change",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DecisionResponseDto"
+              }
+            ]
+          },
+          "comments": {
+            "description": "Recent Comment entities for this change, such as the first page of comments.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommentResponseDto"
+            }
+          },
+          "commentsUrl": {
+            "type": "string",
+            "description": "URL where the full comment thread for this change can be fetched or viewed.",
+            "format": "uri"
+          },
+          "reviewComments": {
+            "description": "ReviewComment entities tied to changed objects, fields, records, or diff entries.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewCommentResponseDto"
+            }
+          },
+          "authors": {
+            "description": "Member entities that authored or co-authored this change.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "mainAuthorId": {
+            "type": "string",
+            "description": "Identifier of the primary member responsible for this change."
+          },
+          "mainAuthor": {
+            "description": "Primary member responsible for this change.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MemberResponseDto"
+              }
+            ]
+          },
+          "reviewers": {
+            "description": "Member entities requested or assigned to review this change.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "status": {
+            "enum": [
+              "drafted",
+              "closed",
+              "open",
+              "rejected",
+              "approved",
+              "merged"
+            ],
+            "type": "string",
+            "description": "Lifecycle status of the change."
+          },
+          "diffUrl": {
+            "type": "string",
+            "description": "URL showing a diff for all changed objects, similar to a GitHub pull request diff.",
+            "format": "uri"
+          },
+          "number": {
+            "type": "number",
+            "description": "Human-friendly sequence number for this change inside the relevant system or scope.",
+            "minimum": 1
+          },
+          "labels": {
+            "description": "Label assigned to this change.",
+            "examples": [
+              "main-system:fix",
+              "ali:needs-urgent-attention"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "merged": {
+            "type": "boolean",
+            "description": "Whether this change has been merged into the target system state.",
+            "default": false
+          },
+          "hasConflict": {
+            "type": "boolean",
+            "description": "Whether this change currently conflicts with another change or with the target system state.",
+            "default": false
+          },
+          "links": {
+            "description": "Any links related to this change.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this change was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this change was last updated.",
+            "format": "date-time"
+          },
+          "mergedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this change was merged.",
+            "format": "date-time"
+          },
+          "closedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this change was closed without being merged.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "title",
+          "description",
+          "reason",
+          "changes",
+          "authors",
+          "mainAuthorId",
+          "mainAuthor",
+          "status",
+          "number",
+          "merged",
+          "hasConflict",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ChangeResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this change."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Change."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Change\" for Change entities.",
+            "enum": [
+              "Change"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string",
+            "description": "Human-readable title summarizing the proposed change."
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed explanation of what this change proposes and why it is needed."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Short explanation of what this change proposes and why it is needed."
+          },
+          "reason": {
+            "type": "string",
+            "description": "explanation of why this change is being proposed."
+          },
+          "changes": {
+            "description": "ChangeItem entities describing each proposed object-level operation in this change.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChangeItemResponseDto"
+            }
+          },
+          "decision": {
+            "description": "Current decision about this change",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DecisionResponseDto"
+              }
+            ]
+          },
+          "comments": {
+            "description": "Recent Comment entities for this change, such as the first page of comments.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommentResponseDto"
+            }
+          },
+          "commentsUrl": {
+            "type": "string",
+            "description": "URL where the full comment thread for this change can be fetched or viewed.",
+            "format": "uri"
+          },
+          "reviewComments": {
+            "description": "ReviewComment entities tied to changed objects, fields, records, or diff entries.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewCommentResponseDto"
+            }
+          },
+          "authors": {
+            "description": "Member entities that authored or co-authored this change.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "mainAuthorId": {
+            "type": "string",
+            "description": "Identifier of the primary member responsible for this change."
+          },
+          "mainAuthor": {
+            "description": "Primary member responsible for this change.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MemberResponseDto"
+              }
+            ]
+          },
+          "reviewers": {
+            "description": "Member entities requested or assigned to review this change.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "status": {
+            "enum": [
+              "drafted",
+              "closed",
+              "open",
+              "rejected",
+              "approved",
+              "merged"
+            ],
+            "type": "string",
+            "description": "Lifecycle status of the change."
+          },
+          "diffUrl": {
+            "type": "string",
+            "description": "URL showing a diff for all changed objects, similar to a GitHub pull request diff.",
+            "format": "uri"
+          },
+          "number": {
+            "type": "number",
+            "description": "Human-friendly sequence number for this change inside the relevant system or scope.",
+            "minimum": 1
+          },
+          "labels": {
+            "description": "Label assigned to this change.",
+            "examples": [
+              "main-system:fix",
+              "ali:needs-urgent-attention"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "merged": {
+            "type": "boolean",
+            "description": "Whether this change has been merged into the target system state.",
+            "default": false
+          },
+          "hasConflict": {
+            "type": "boolean",
+            "description": "Whether this change currently conflicts with another change or with the target system state.",
+            "default": false
+          },
+          "links": {
+            "description": "Any links related to this change.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this change was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this change was last updated.",
+            "format": "date-time"
+          },
+          "mergedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this change was merged.",
+            "format": "date-time"
+          },
+          "closedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this change was closed without being merged.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "title",
+          "description",
+          "reason",
+          "changes",
+          "authors",
+          "mainAuthorId",
+          "mainAuthor",
+          "status",
+          "number",
+          "merged",
+          "hasConflict",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateChangeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this change."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Change."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Change\" for Change entities.",
+            "enum": [
+              "Change"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string",
+            "description": "Human-readable title summarizing the proposed change."
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed explanation of what this change proposes and why it is needed."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Short explanation of what this change proposes and why it is needed."
+          },
+          "reason": {
+            "type": "string",
+            "description": "explanation of why this change is being proposed."
+          },
+          "changes": {
+            "description": "ChangeItem entities describing each proposed object-level operation in this change.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChangeItemResponseDto"
+            }
+          },
+          "decision": {
+            "description": "Current decision about this change",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DecisionResponseDto"
+              }
+            ]
+          },
+          "comments": {
+            "description": "Recent Comment entities for this change, such as the first page of comments.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommentResponseDto"
+            }
+          },
+          "commentsUrl": {
+            "type": "string",
+            "description": "URL where the full comment thread for this change can be fetched or viewed.",
+            "format": "uri"
+          },
+          "reviewComments": {
+            "description": "ReviewComment entities tied to changed objects, fields, records, or diff entries.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewCommentResponseDto"
+            }
+          },
+          "authors": {
+            "description": "Member entities that authored or co-authored this change.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "mainAuthorId": {
+            "type": "string",
+            "description": "Identifier of the primary member responsible for this change."
+          },
+          "mainAuthor": {
+            "description": "Primary member responsible for this change.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MemberResponseDto"
+              }
+            ]
+          },
+          "reviewers": {
+            "description": "Member entities requested or assigned to review this change.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "status": {
+            "enum": [
+              "drafted",
+              "closed",
+              "open",
+              "rejected",
+              "approved",
+              "merged"
+            ],
+            "type": "string",
+            "description": "Lifecycle status of the change."
+          },
+          "diffUrl": {
+            "type": "string",
+            "description": "URL showing a diff for all changed objects, similar to a GitHub pull request diff.",
+            "format": "uri"
+          },
+          "number": {
+            "type": "number",
+            "description": "Human-friendly sequence number for this change inside the relevant system or scope.",
+            "minimum": 1
+          },
+          "labels": {
+            "description": "Label assigned to this change.",
+            "examples": [
+              "main-system:fix",
+              "ali:needs-urgent-attention"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "merged": {
+            "type": "boolean",
+            "description": "Whether this change has been merged into the target system state.",
+            "default": false
+          },
+          "hasConflict": {
+            "type": "boolean",
+            "description": "Whether this change currently conflicts with another change or with the target system state.",
+            "default": false
+          },
+          "links": {
+            "description": "Any links related to this change.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this change was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this change was last updated.",
+            "format": "date-time"
+          },
+          "mergedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this change was merged.",
+            "format": "date-time"
+          },
+          "closedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this change was closed without being merged.",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateChangeItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this change item."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this ChangeItem."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"ChangeItem\" for ChangeItem entities.",
+            "enum": [
+              "ChangeItem"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "resourceType": {
+            "type": "string",
+            "description": "Resource category for this change item, such as rule, scope, protocol, record, or resource."
+          },
+          "operation": {
+            "enum": [
+              "update",
+              "create",
+              "delete",
+              "replace"
+            ],
+            "type": "string",
+            "description": "Type of operation this item proposes for the target object."
+          },
+          "targetRef": {
+            "type": "string",
+            "nullable": true,
+            "description": "Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.",
+            "format": "ifs-ref",
+            "default": "ifs://object/current-target"
+          },
+          "baseRef": {
+            "type": "string",
+            "nullable": true,
+            "description": "IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.",
+            "format": "ifs-ref",
+            "default": "ifs://object/current-target@v1"
+          },
+          "proposedRef": {
+            "type": "string",
+            "nullable": true,
+            "description": "IFS reference to the proposed object or version produced by this change item. Null for delete operations.",
+            "format": "ifs-ref",
+            "default": "ifs://change/change_1/proposed/current-target"
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional human-readable note explaining this specific item."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this change item was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this change item was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "resourceType",
+          "operation",
+          "targetRef",
+          "baseRef",
+          "proposedRef",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateChangeItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this change item."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this ChangeItem."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"ChangeItem\" for ChangeItem entities.",
+            "enum": [
+              "ChangeItem"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "resourceType": {
+            "type": "string",
+            "description": "Resource category for this change item, such as rule, scope, protocol, record, or resource."
+          },
+          "operation": {
+            "enum": [
+              "update",
+              "create",
+              "delete",
+              "replace"
+            ],
+            "type": "string",
+            "description": "Type of operation this item proposes for the target object."
+          },
+          "targetRef": {
+            "type": "string",
+            "nullable": true,
+            "description": "Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.",
+            "format": "ifs-ref",
+            "default": "ifs://object/current-target"
+          },
+          "baseRef": {
+            "type": "string",
+            "nullable": true,
+            "description": "IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.",
+            "format": "ifs-ref",
+            "default": "ifs://object/current-target@v1"
+          },
+          "proposedRef": {
+            "type": "string",
+            "nullable": true,
+            "description": "IFS reference to the proposed object or version produced by this change item. Null for delete operations.",
+            "format": "ifs-ref",
+            "default": "ifs://change/change_1/proposed/current-target"
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional human-readable note explaining this specific item."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this change item was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this change item was last updated.",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateCommentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this comment."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Comment."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Comment\" for Comment entities.",
+            "enum": [
+              "Comment"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this comment was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this comment was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateCommentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this comment."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Comment."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Comment\" for Comment entities.",
+            "enum": [
+              "Comment"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this comment was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this comment was last updated.",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateDecisionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this decision."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Decision."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Decision."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources.",
+            "format": "ifs-ref"
+          },
+          "state": {
+            "enum": [
+              "open",
+              "closed",
+              "rejected",
+              "cancelled"
+            ],
+            "type": "string",
+            "description": "Current lifecycle state of the decision."
+          },
+          "previousRevisionId": {
+            "type": "string",
+            "description": "Id of previous revision of this decision, If this decision is a modified version of another decision."
+          },
+          "previousRevision": {
+            "description": "Current outcome of the decision, if the decision has produced an outcome at least once.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DecisionResponseDto"
+              }
+            ]
+          },
+          "eligibleMembers": {
+            "description": "Member entities eligible to participate in this decision.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "affectedMembers": {
+            "description": "Member entities affected by this decision under the IFS scope rule.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "votes": {
+            "description": "Vote entities cast directly by members or by delegates acting on their behalf.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VoteResponseDto"
+            }
+          },
+          "rules": {
+            "description": "Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RuleResponseDto"
+            }
+          },
+          "eligibleMemberCount": {
+            "type": "number",
+            "description": "Snapshot count of members eligible to participate.",
+            "minimum": 0
+          },
+          "affectedMemberCount": {
+            "type": "number",
+            "description": "Snapshot count of members affected by this decision.",
+            "minimum": 0
+          },
+          "voteCount": {
+            "type": "number",
+            "description": "Snapshot count of votes currently recorded for this decision.",
+            "minimum": 0
+          },
+          "delegateVoteCount": {
+            "type": "number",
+            "description": "Snapshot count of votes cast by delegates on behalf of eligible members.",
+            "minimum": 0
+          },
+          "openedAt": {
+            "type": "string",
+            "description": "Timestamp when this decision opened for participation.",
+            "format": "date-time"
+          },
+          "closedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision closed.",
+            "format": "date-time"
+          },
+          "cancelledAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision was cancelled.",
+            "format": "date-time"
+          },
+          "verifiedAt": {
+            "type": "string",
+            "description": "Optional timestamp when participation, vote data, or outcome was verified.",
+            "format": "date-time"
+          },
+          "approvedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision produced an approved outcome.",
+            "format": "date-time"
+          },
+          "rejectedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision was rejected or produced a rejected outcome.",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this decision record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this decision record was last updated.",
+            "format": "date-time"
+          },
+          "decidedAt": {
+            "type": "string",
+            "description": "Timestamp when this decision record was decided.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "subject",
+          "state",
+          "eligibleMembers",
+          "affectedMembers",
+          "votes",
+          "eligibleMemberCount",
+          "affectedMemberCount",
+          "voteCount",
+          "openedAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateDecisionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this decision."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Decision."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Decision."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources.",
+            "format": "ifs-ref"
+          },
+          "state": {
+            "enum": [
+              "open",
+              "closed",
+              "rejected",
+              "cancelled"
+            ],
+            "type": "string",
+            "description": "Current lifecycle state of the decision."
+          },
+          "previousRevisionId": {
+            "type": "string",
+            "description": "Id of previous revision of this decision, If this decision is a modified version of another decision."
+          },
+          "previousRevision": {
+            "description": "Current outcome of the decision, if the decision has produced an outcome at least once.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DecisionResponseDto"
+              }
+            ]
+          },
+          "eligibleMembers": {
+            "description": "Member entities eligible to participate in this decision.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "affectedMembers": {
+            "description": "Member entities affected by this decision under the IFS scope rule.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "votes": {
+            "description": "Vote entities cast directly by members or by delegates acting on their behalf.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VoteResponseDto"
+            }
+          },
+          "rules": {
+            "description": "Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RuleResponseDto"
+            }
+          },
+          "eligibleMemberCount": {
+            "type": "number",
+            "description": "Snapshot count of members eligible to participate.",
+            "minimum": 0
+          },
+          "affectedMemberCount": {
+            "type": "number",
+            "description": "Snapshot count of members affected by this decision.",
+            "minimum": 0
+          },
+          "voteCount": {
+            "type": "number",
+            "description": "Snapshot count of votes currently recorded for this decision.",
+            "minimum": 0
+          },
+          "delegateVoteCount": {
+            "type": "number",
+            "description": "Snapshot count of votes cast by delegates on behalf of eligible members.",
+            "minimum": 0
+          },
+          "openedAt": {
+            "type": "string",
+            "description": "Timestamp when this decision opened for participation.",
+            "format": "date-time"
+          },
+          "closedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision closed.",
+            "format": "date-time"
+          },
+          "cancelledAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision was cancelled.",
+            "format": "date-time"
+          },
+          "verifiedAt": {
+            "type": "string",
+            "description": "Optional timestamp when participation, vote data, or outcome was verified.",
+            "format": "date-time"
+          },
+          "approvedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision produced an approved outcome.",
+            "format": "date-time"
+          },
+          "rejectedAt": {
+            "type": "string",
+            "description": "Optional timestamp when this decision was rejected or produced a rejected outcome.",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this decision record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this decision record was last updated.",
+            "format": "date-time"
+          },
+          "decidedAt": {
+            "type": "string",
+            "description": "Timestamp when this decision record was decided.",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateDelegationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this delegation."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Delegation."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Delegation."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this delegation record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this delegation record was last updated.",
+            "format": "date-time"
+          },
+          "permissionId": {
+            "type": "string",
+            "description": "Identifier of the permission delegated from the delegator to the delegate."
+          },
+          "permission": {
+            "description": "Permission entity represented by permissionId when expanded by an implementation.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PermissionResponseDto"
+              }
+            ]
+          },
+          "delegatorRef": {
+            "type": "string",
+            "description": "Reference to the role or member delegating the permission.",
+            "format": "ifs-ref"
+          },
+          "delegateRef": {
+            "type": "string",
+            "description": "Reference to the role or member receiving the delegated permission.",
+            "format": "ifs-ref"
+          },
+          "state": {
+            "enum": [
+              "active",
+              "revoked",
+              "expired"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the delegation."
+          },
+          "revokedAt": {
+            "type": "string",
+            "description": "Timestamp when this delegation was revoked, if applicable.",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Optional timestamp after which this delegation no longer applies.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "permissionId",
+          "delegatorRef",
+          "delegateRef",
+          "state"
+        ]
+      },
+      "DelegationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this delegation."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Delegation."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Delegation."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this delegation record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this delegation record was last updated.",
+            "format": "date-time"
+          },
+          "permissionId": {
+            "type": "string",
+            "description": "Identifier of the permission delegated from the delegator to the delegate."
+          },
+          "permission": {
+            "description": "Permission entity represented by permissionId when expanded by an implementation.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PermissionResponseDto"
+              }
+            ]
+          },
+          "delegatorRef": {
+            "type": "string",
+            "description": "Reference to the role or member delegating the permission.",
+            "format": "ifs-ref"
+          },
+          "delegateRef": {
+            "type": "string",
+            "description": "Reference to the role or member receiving the delegated permission.",
+            "format": "ifs-ref"
+          },
+          "state": {
+            "enum": [
+              "active",
+              "revoked",
+              "expired"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the delegation."
+          },
+          "revokedAt": {
+            "type": "string",
+            "description": "Timestamp when this delegation was revoked, if applicable.",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Optional timestamp after which this delegation no longer applies.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "permissionId",
+          "delegatorRef",
+          "delegateRef",
+          "state"
+        ]
+      },
+      "UpdateDelegationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this delegation."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Delegation."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Delegation."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this delegation record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this delegation record was last updated.",
+            "format": "date-time"
+          },
+          "permissionId": {
+            "type": "string",
+            "description": "Identifier of the permission delegated from the delegator to the delegate."
+          },
+          "permission": {
+            "description": "Permission entity represented by permissionId when expanded by an implementation.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PermissionResponseDto"
+              }
+            ]
+          },
+          "delegatorRef": {
+            "type": "string",
+            "description": "Reference to the role or member delegating the permission.",
+            "format": "ifs-ref"
+          },
+          "delegateRef": {
+            "type": "string",
+            "description": "Reference to the role or member receiving the delegated permission.",
+            "format": "ifs-ref"
+          },
+          "state": {
+            "enum": [
+              "active",
+              "revoked",
+              "expired"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the delegation."
+          },
+          "revokedAt": {
+            "type": "string",
+            "description": "Timestamp when this delegation was revoked, if applicable.",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Optional timestamp after which this delegation no longer applies.",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateLabelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this label."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Label."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Label\" for Label entities.",
+            "enum": [
+              "Label"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this label was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this label was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "LabelResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this label."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Label."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Label\" for Label entities.",
+            "enum": [
+              "Label"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this label was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this label was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateLabelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this label."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Label."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Label\" for Label entities.",
+            "enum": [
+              "Label"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this label was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this label was last updated.",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateMemberDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this member."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Member."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Member\" for Member entities.",
+            "enum": [
+              "Member"
+            ]
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the member."
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionResponseDto"
+            }
+          },
+          "isOwner": {
+            "type": "boolean",
+            "description": "Whether this member is considered an owner of the system."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this member record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this member record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "name",
+          "permissions",
+          "isOwner",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "UpdateMemberDto": {
         "type": "object",
         "properties": {
@@ -756,6 +5115,964 @@
             "type": "string",
             "description": "Timestamp when this member record was last updated.",
             "format": "date-time"
+          }
+        }
+      },
+      "CreatePermissionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this permission."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Permission."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Permission\" for Permission entities.",
+            "enum": [
+              "Permission"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "actionIds": {
+            "description": "ID list of actions that this permission allows",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "actions": {
+            "description": "List of actions that this permission allows",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActionResponseDto"
+            }
+          },
+          "memberId": {
+            "type": "string",
+            "description": "Identifier of the member receiving this permission."
+          },
+          "roleId": {
+            "type": "string",
+            "description": "Identifier of the role receiving this permission."
+          },
+          "scopeId": {
+            "type": "string",
+            "description": "Identifier of the scope object where this permission applies."
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Scope object describing the system, project, process, area, or other bounded context where this permission applies."
+          },
+          "state": {
+            "enum": [
+              "granted",
+              "under-review",
+              "revoked",
+              "drafted"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this permission record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this permission record was last updated.",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Optional timestamp after which this permission no longer applies.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "actionIds",
+          "scopeId",
+          "state",
+          "createdAt",
+          "expiresAt"
+        ]
+      },
+      "UpdatePermissionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this permission."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Permission."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Permission\" for Permission entities.",
+            "enum": [
+              "Permission"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "actionIds": {
+            "description": "ID list of actions that this permission allows",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "actions": {
+            "description": "List of actions that this permission allows",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActionResponseDto"
+            }
+          },
+          "memberId": {
+            "type": "string",
+            "description": "Identifier of the member receiving this permission."
+          },
+          "roleId": {
+            "type": "string",
+            "description": "Identifier of the role receiving this permission."
+          },
+          "scopeId": {
+            "type": "string",
+            "description": "Identifier of the scope object where this permission applies."
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Scope object describing the system, project, process, area, or other bounded context where this permission applies."
+          },
+          "state": {
+            "enum": [
+              "granted",
+              "under-review",
+              "revoked",
+              "drafted"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this permission record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this permission record was last updated.",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Optional timestamp after which this permission no longer applies.",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateProtocolDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "identifier protocol."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Protocol."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Protocol\" for Protocol entities.",
+            "enum": [
+              "Protocol"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt"
+        ]
+      },
+      "ProtocolResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "identifier protocol."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Protocol."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Protocol\" for Protocol entities.",
+            "enum": [
+              "Protocol"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt"
+        ]
+      },
+      "UpdateProtocolDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "identifier protocol."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Protocol."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Protocol\" for Protocol entities.",
+            "enum": [
+              "Protocol"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateReviewCommentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this review comment."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this ReviewComment."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"ReviewComment\" for ReviewComment entities.",
+            "enum": [
+              "ReviewComment"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this review comment was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this review comment was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateReviewCommentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this review comment."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this ReviewComment."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"ReviewComment\" for ReviewComment entities.",
+            "enum": [
+              "ReviewComment"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this review comment was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this review comment was last updated.",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateRoleDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this role.",
+            "format": "uuid"
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Role."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Role\" for Role entities.",
+            "enum": [
+              "Role"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the role."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional human-readable explanation of what this role is for."
+          },
+          "memberId": {
+            "type": "string",
+            "description": "Identifier of the member acting through this role."
+          },
+          "scopeId": {
+            "type": "string",
+            "description": "Identifier of the scope where this role has authority."
+          },
+          "scope": {
+            "description": "Scope entity describing where this role applies.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScopeResponseDto"
+              }
+            ]
+          },
+          "permissions": {
+            "description": "Permission entities bundled into this role.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionResponseDto"
+            }
+          },
+          "state": {
+            "enum": [
+              "drafted",
+              "under-review",
+              "active",
+              "suspended",
+              "revoked",
+              "expired"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the role."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this role record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this role record was last updated.",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Optional timestamp after which this role no longer applies.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "name",
+          "memberId",
+          "scopeId",
+          "scope",
+          "permissions",
+          "state",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateRoleDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this role.",
+            "format": "uuid"
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Role."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Role\" for Role entities.",
+            "enum": [
+              "Role"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the role."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional human-readable explanation of what this role is for."
+          },
+          "memberId": {
+            "type": "string",
+            "description": "Identifier of the member acting through this role."
+          },
+          "scopeId": {
+            "type": "string",
+            "description": "Identifier of the scope where this role has authority."
+          },
+          "scope": {
+            "description": "Scope entity describing where this role applies.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScopeResponseDto"
+              }
+            ]
+          },
+          "permissions": {
+            "description": "Permission entities bundled into this role.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionResponseDto"
+            }
+          },
+          "state": {
+            "enum": [
+              "drafted",
+              "under-review",
+              "active",
+              "suspended",
+              "revoked",
+              "expired"
+            ],
+            "type": "string",
+            "description": "Lifecycle state of the role."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this role record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this role record was last updated.",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Optional timestamp after which this role no longer applies.",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateRuleDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this rule."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Rule."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Rule."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this rule record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this rule record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateRuleDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this rule."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Rule."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Rule."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this rule record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this rule record was last updated.",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateScopeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this scope.",
+            "format": "uuid"
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Scope."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Scope\" for Scope entities.",
+            "enum": [
+              "Scope"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the scope."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional human-readable explanation of what this scope includes and excludes."
+          },
+          "locations": {
+            "description": "Location identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "Group identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "objects": {
+            "description": "Object identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "entities": {
+            "description": "Entity identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "parentScopeId": {
+            "type": "string",
+            "description": "Identifier of a broader parent scope, when this scope is nested inside another scope."
+          },
+          "childScopeIds": {
+            "description": "Identifiers of narrower child scopes contained by this scope.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "boundaryRules": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this scope record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this scope record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateScopeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this scope.",
+            "format": "uuid"
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Scope."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Scope\" for Scope entities.",
+            "enum": [
+              "Scope"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the scope."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional human-readable explanation of what this scope includes and excludes."
+          },
+          "locations": {
+            "description": "Location identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "Group identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "objects": {
+            "description": "Object identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "entities": {
+            "description": "Entity identifiers or names included in this scope. Kept as strings for now.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "parentScopeId": {
+            "type": "string",
+            "description": "Identifier of a broader parent scope, when this scope is nested inside another scope."
+          },
+          "childScopeIds": {
+            "description": "Identifiers of narrower child scopes contained by this scope.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "boundaryRules": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this scope record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this scope record was last updated.",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateVoteDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this vote."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Vote."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Vote."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this vote record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this vote record was last updated.",
+            "format": "date-time"
+          },
+          "decisionId": {
+            "type": "string",
+            "description": "Identifier of the decision this vote participates in."
+          },
+          "memberId": {
+            "type": "string",
+            "description": "Identifier of the member who cast or owns this vote."
+          },
+          "value": {
+            "type": "string",
+            "description": "Vote value recorded for the decision, such as an implementation-defined choice or consent signal."
+          },
+          "previousRevisionId": {
+            "type": "string",
+            "description": "Identifier of the previous revision of this vote, if this vote amends an earlier vote."
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "decisionId",
+          "memberId",
+          "value"
+        ]
+      },
+      "UpdateVoteDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this vote."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Vote."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Vote."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this vote record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this vote record was last updated.",
+            "format": "date-time"
+          },
+          "decisionId": {
+            "type": "string",
+            "description": "Identifier of the decision this vote participates in."
+          },
+          "memberId": {
+            "type": "string",
+            "description": "Identifier of the member who cast or owns this vote."
+          },
+          "value": {
+            "type": "string",
+            "description": "Vote value recorded for the decision, such as an implementation-defined choice or consent signal."
+          },
+          "previousRevisionId": {
+            "type": "string",
+            "description": "Identifier of the previous revision of this vote, if this vote amends an earlier vote."
           }
         }
       }

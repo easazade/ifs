@@ -132,6 +132,7 @@ export class CreateChangeDto {
 
   @ApiPropertyOptional({
     description: 'Label assigned to this change.',
+    examples: ['main-system:fix', 'ali:needs-urgent-attention'],
     type: [String],
   })
   labels?: Array<string>;
@@ -139,12 +140,14 @@ export class CreateChangeDto {
   @ApiProperty({
     description:
       'Whether this change has been merged into the target system state.',
+    default: false,
   })
   merged: boolean;
 
   @ApiProperty({
     description:
       'Whether this change currently conflicts with another change or with the target system state.',
+    default: false,
   })
   hasConflict: boolean;
 

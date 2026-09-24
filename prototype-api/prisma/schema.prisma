@@ -122,31 +122,32 @@ model Role {
 
 // <generated:model Member source="../ifs-standards/src/entities/member/member.schema.json">
 model Member {
-  id                                  String       @id
-  ifsId                               String
-  entityType                          String
-  entityDocumentationUrl              String
-  name                                String
-  roles                               Role[]       @relation("Member_roles")
-  permissions                         Permission[] @relation("Member_permissions")
-  isOwner                             Boolean
-  createdAt                           String
-  updatedAt                           String
-  extensions                          Json?
+  id                     String       @id
+  ifsId                  String
+  entityType             String
+  entityDocumentationUrl String
+  name                   String
+  roles                  Role[]       @relation("Member_roles")
+  permissions            Permission[] @relation("Member_permissions")
+  isOwner                Boolean
+  createdAt              String
+  updatedAt              String
+  extensions             Json?
+
   // <generated:inverse Decision_eligibleMembers>
-  relationFromDecisionEligibleMembers Decision[]   @relation("Decision_eligibleMembers")
+  relationFromDecisionEligibleMembers Decision[] @relation("Decision_eligibleMembers")
   // </generated:inverse Decision_eligibleMembers>
   // <generated:inverse Decision_affectedMembers>
-  relationFromDecisionAffectedMembers Decision[]   @relation("Decision_affectedMembers")
+  relationFromDecisionAffectedMembers Decision[] @relation("Decision_affectedMembers")
   // </generated:inverse Decision_affectedMembers>
   // <generated:inverse Change_authors>
-  relationFromChangeAuthors           Change[]     @relation("Change_authors")
+  relationFromChangeAuthors           Change[]   @relation("Change_authors")
   // </generated:inverse Change_authors>
   // <generated:inverse Change_mainAuthor>
-  relationFromChangeMainAuthor        Change[]     @relation("Change_mainAuthor")
+  relationFromChangeMainAuthor        Change[]   @relation("Change_mainAuthor")
   // </generated:inverse Change_mainAuthor>
   // <generated:inverse Change_reviewers>
-  relationFromChangeReviewers         Change[]     @relation("Change_reviewers")
+  relationFromChangeReviewers         Change[]   @relation("Change_reviewers")
   // </generated:inverse Change_reviewers>
 }
 
@@ -298,33 +299,34 @@ model Delegation {
 
 // <generated:model Decision source="../ifs-standards/src/entities/decision/decision.schema.json">
 model Decision {
-  id                                   String     @id
-  ifsId                                String
-  entityType                           String
-  basedOn                              String?
-  entityDocumentationUrl               String
-  subject                              String
-  state                                String
-  previousRevisionId                   String?
-  previousRevision                     Decision?  @relation("Decision_previousRevision", fields: [previousRevisionId], references: [id])
-  eligibleMembers                      Member[]   @relation("Decision_eligibleMembers")
-  affectedMembers                      Member[]   @relation("Decision_affectedMembers")
-  votes                                Vote[]     @relation("Decision_votes")
-  rules                                Rule[]     @relation("Decision_rules")
-  eligibleMemberCount                  Int
-  affectedMemberCount                  Int
-  voteCount                            Int
-  delegateVoteCount                    Int?
-  openedAt                             String
-  closedAt                             String?
-  cancelledAt                          String?
-  verifiedAt                           String?
-  approvedAt                           String?
-  rejectedAt                           String?
-  createdAt                            String
-  updatedAt                            String
-  decidedAt                            String?
-  extensions                           Json?
+  id                     String    @id
+  ifsId                  String
+  entityType             String
+  basedOn                String?
+  entityDocumentationUrl String
+  subject                String
+  state                  String
+  previousRevisionId     String?
+  previousRevision       Decision? @relation("Decision_previousRevision", fields: [previousRevisionId], references: [id])
+  eligibleMembers        Member[]  @relation("Decision_eligibleMembers")
+  affectedMembers        Member[]  @relation("Decision_affectedMembers")
+  votes                  Vote[]    @relation("Decision_votes")
+  rules                  Rule[]    @relation("Decision_rules")
+  eligibleMemberCount    Int
+  affectedMemberCount    Int
+  voteCount              Int
+  delegateVoteCount      Int?
+  openedAt               String
+  closedAt               String?
+  cancelledAt            String?
+  verifiedAt             String?
+  approvedAt             String?
+  rejectedAt             String?
+  createdAt              String
+  updatedAt              String
+  decidedAt              String?
+  extensions             Json?
+
   // <generated:inverse Decision_previousRevision>
   relationFromDecisionPreviousRevision Decision[] @relation("Decision_previousRevision")
   // </generated:inverse Decision_previousRevision>

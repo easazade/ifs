@@ -33,7 +33,8 @@
     "dto:generate": "node scripts/generate-dto.mjs",
     "dto:generate:all": "node scripts/generate-dtos.mjs",
     "resource:generate": "node scripts/generate-resource.mjs",
-    "resource:generate:all": "node scripts/generate-resources.mjs"
+    "resource:generate:all": "node scripts/generate-resources.mjs",
+    "generate:all": "node scripts/generate-dtos.mjs && node scripts/generate-resources.mjs"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
