@@ -32,7 +32,8 @@
     "db:studio": "prisma studio",
     "entity:generate": "node scripts/generate-entity.mjs",
     "entity:generate:all": "node scripts/generate-entities.mjs",
-    "service:generate": "node scripts/generate-service.mjs"
+    "service:generate": "node scripts/generate-service.mjs",
+    "service:generate:all": "node scripts/generate-services.mjs"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
