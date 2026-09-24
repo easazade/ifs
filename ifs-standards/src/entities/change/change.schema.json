@@ -115,7 +115,7 @@
       "items": {
         "type": "string"
       },
-      "examples": ["main-system:fix", "ali:needs-urgent-attention"],
+      "examples": [["main-system:fix", "ali:needs-urgent-attention"]],
       "description": "Label assigned to this change."
     },
     "merged": {

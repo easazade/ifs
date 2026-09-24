@@ -262,8 +262,9 @@ function decoratorFor(property, required) {
     options.push(`pattern: ${JSON.stringify(property.pattern)}`);
   if (property.default !== undefined)
     options.push(`default: ${JSON.stringify(property.default)}`);
+  // OpenAPI 3.0 schemas accept one `example`; JSON Schema stores a list.
   if (Array.isArray(property.examples) && property.examples.length)
-    options.push(`examples: ${JSON.stringify(property.examples)}`);
+    options.push(`example: ${JSON.stringify(property.examples[0])}`);
   if (property.deprecated === true) options.push('deprecated: true');
   if (typeof property.minItems === 'number')
     options.push(`minItems: ${property.minItems}`);

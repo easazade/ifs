@@ -145,6 +145,32 @@ describe('DTO generator', () => {
     ).toBe(firstPrismaSchema);
   });
 
+  it('converts JSON Schema examples to an OpenAPI 3.0 example', () => {
+    const temporaryApi = fixture();
+    addRelatedArtifacts(temporaryApi);
+    const schemaPath = join(
+      temporaryApi,
+      '..',
+      'ifs-standards',
+      'src',
+      'entities',
+      'member',
+      'member.schema.json',
+    );
+    const schema = JSON.parse(readFileSync(schemaPath, 'utf8'));
+    schema.properties.name.examples = ['Alice', 'Bob'];
+    writeFileSync(schemaPath, `${JSON.stringify(schema, null, 2)}\n`);
+
+    run(temporaryApi);
+    const createDto = readFileSync(
+      join(temporaryApi, 'src', 'member', 'dto', 'create-member.dto.ts'),
+      'utf8',
+    );
+
+    expect(createDto).toContain('example: "Alice"');
+    expect(createDto).not.toContain('examples:');
+  });
+
   it('keeps an existing generated model in its original position', () => {
     const temporaryApi = fixture();
     addRelatedArtifacts(temporaryApi);

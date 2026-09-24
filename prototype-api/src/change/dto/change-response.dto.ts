@@ -132,7 +132,7 @@ export class ChangeResponseDto {
 
   @ApiPropertyOptional({
     description: 'Label assigned to this change.',
-    examples: ['main-system:fix', 'ali:needs-urgent-attention'],
+    example: ['main-system:fix', 'ali:needs-urgent-attention'],
     type: [String],
   })
   labels?: Array<string>;

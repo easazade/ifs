@@ -7,6 +7,82 @@
  */
 import { getApiBaseUrl } from '../config.js';
 
+// https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
+type IfEquals<X, Y, A = X, B = never> =
+  (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? A : B;
+
+type WritableKeys<T> = {
+  [P in keyof T]-?: IfEquals<
+    { [Q in P]: T[P] },
+    { -readonly [Q in P]: T[P] },
+    P
+  >;
+}[keyof T];
+
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I,
+) => void
+  ? I
+  : never;
+type DistributeReadOnlyOverUnions<T> = T extends any ? NonReadonly<T> : never;
+
+type Writable<T> = Pick<T, WritableKeys<T>>;
+type NonReadonly<T> = [T] extends [UnionToIntersection<T>]
+  ? {
+      [P in keyof Writable<T>]: T[P] extends object
+        ? NonReadonly<NonNullable<T[P]>>
+        : T[P];
+    }
+  : DistributeReadOnlyOverUnions<T>;
+
+/**
+ * Lifecycle state of the action.
+ */
+export type CreateActionDtoState =
+  (typeof CreateActionDtoState)[keyof typeof CreateActionDtoState];
+
+export const CreateActionDtoState = {
+  drafted: 'drafted',
+  'under-review': 'under-review',
+  active: 'active',
+  suspended: 'suspended',
+  revoked: 'revoked',
+  deprecated: 'deprecated',
+} as const;
+
+export interface CreateActionDto {
+  /** Globally unique identifier for this action. */
+  id: string;
+  /** IFS system identifier for this Action. */
+  ifsId: string;
+  /** Entity category for this object, normally Action. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this action record was created. */
+  createdAt: string;
+  /** Timestamp when this action record was last updated. */
+  updatedAt: string;
+  /** Human-readable name of the action. */
+  name: string;
+  /** Stable unique name used by IFS implementations to identify this action. */
+  uniqueName: string;
+  /** Whether a member or role must hold an applicable permission before performing this action. */
+  requiresPermission: boolean;
+  /** Describes the action. */
+  description: string;
+  /** Instructions for how to perform the action. */
+  instructions?: string;
+  /** Additional notes about this action. */
+  notes?: string;
+  /** Warnings, risks, or constraints to review before performing this action. */
+  warnings?: string;
+  /** Lifecycle state of the action. */
+  state: CreateActionDtoState;
+}
+
 /**
  * Lifecycle state of the action.
  */
@@ -53,6 +129,165 @@ export interface ActionResponseDto {
   warnings?: string;
   /** Lifecycle state of the action. */
   state: ActionResponseDtoState;
+}
+
+/**
+ * Lifecycle state of the action.
+ */
+export type UpdateActionDtoState =
+  (typeof UpdateActionDtoState)[keyof typeof UpdateActionDtoState];
+
+export const UpdateActionDtoState = {
+  drafted: 'drafted',
+  'under-review': 'under-review',
+  active: 'active',
+  suspended: 'suspended',
+  revoked: 'revoked',
+  deprecated: 'deprecated',
+} as const;
+
+export interface UpdateActionDto {
+  /** Globally unique identifier for this action. */
+  id?: string;
+  /** IFS system identifier for this Action. */
+  ifsId?: string;
+  /** Entity category for this object, normally Action. */
+  entityType?: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this action record was created. */
+  createdAt?: string;
+  /** Timestamp when this action record was last updated. */
+  updatedAt?: string;
+  /** Human-readable name of the action. */
+  name?: string;
+  /** Stable unique name used by IFS implementations to identify this action. */
+  uniqueName?: string;
+  /** Whether a member or role must hold an applicable permission before performing this action. */
+  requiresPermission?: boolean;
+  /** Describes the action. */
+  description?: string;
+  /** Instructions for how to perform the action. */
+  instructions?: string;
+  /** Additional notes about this action. */
+  notes?: string;
+  /** Warnings, risks, or constraints to review before performing this action. */
+  warnings?: string;
+  /** Lifecycle state of the action. */
+  state?: UpdateActionDtoState;
+}
+
+/**
+ * Entity type discriminator. Always "ChangeItem" for ChangeItem entities.
+ */
+export type ChangeItemResponseDtoEntityType =
+  (typeof ChangeItemResponseDtoEntityType)[keyof typeof ChangeItemResponseDtoEntityType];
+
+export const ChangeItemResponseDtoEntityType = {
+  ChangeItem: 'ChangeItem',
+} as const;
+
+/**
+ * Type of operation this item proposes for the target object.
+ */
+export type ChangeItemResponseDtoOperation =
+  (typeof ChangeItemResponseDtoOperation)[keyof typeof ChangeItemResponseDtoOperation];
+
+export const ChangeItemResponseDtoOperation = {
+  update: 'update',
+  create: 'create',
+  delete: 'delete',
+  replace: 'replace',
+} as const;
+
+export interface ChangeItemResponseDto {
+  /** Globally unique identifier for this change item. */
+  id: string;
+  /** IFS system identifier for this ChangeItem. */
+  ifsId: string;
+  /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
+  entityType: ChangeItemResponseDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
+  resourceType: string;
+  /** Type of operation this item proposes for the target object. */
+  operation: ChangeItemResponseDtoOperation;
+  /**
+   * Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.
+   * @nullable
+   */
+  targetRef: string | null;
+  /**
+   * IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.
+   * @nullable
+   */
+  baseRef: string | null;
+  /**
+   * IFS reference to the proposed object or version produced by this change item. Null for delete operations.
+   * @nullable
+   */
+  proposedRef: string | null;
+  /** Optional human-readable note explaining this specific item. */
+  description?: string;
+  /** Timestamp when this change item was created. */
+  createdAt: string;
+  /** Timestamp when this change item was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Scope" for Scope entities.
+ */
+export type ScopeResponseDtoEntityType =
+  (typeof ScopeResponseDtoEntityType)[keyof typeof ScopeResponseDtoEntityType];
+
+export const ScopeResponseDtoEntityType = {
+  Scope: 'Scope',
+} as const;
+
+/**
+ * Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific.
+ */
+export type ScopeResponseDtoBoundaryRules = { [key: string]: unknown };
+
+export interface ScopeResponseDto {
+  /** Globally unique identifier for this scope. */
+  id: string;
+  /** IFS system identifier for this Scope. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Scope" for Scope entities. */
+  entityType: ScopeResponseDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Human-readable name of the scope. */
+  name: string;
+  /** Optional human-readable explanation of what this scope includes and excludes. */
+  description?: string;
+  /** Location identifiers or names included in this scope. Kept as strings for now. */
+  locations?: string[];
+  /** Group identifiers or names included in this scope. Kept as strings for now. */
+  groups?: string[];
+  /** Object identifiers or names included in this scope. Kept as strings for now. */
+  objects?: string[];
+  /** Entity identifiers or names included in this scope. Kept as strings for now. */
+  entities?: string[];
+  /** Identifier of a broader parent scope, when this scope is nested inside another scope. */
+  parentScopeId?: string;
+  /** Identifiers of narrower child scopes contained by this scope. */
+  childScopeIds?: string[];
+  /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
+  boundaryRules?: ScopeResponseDtoBoundaryRules;
+  /** Timestamp when this scope record was created. */
+  createdAt: string;
+  /** Timestamp when this scope record was last updated. */
+  updatedAt: string;
 }
 
 /**
@@ -114,86 +349,6 @@ export interface PermissionResponseDto {
   updatedAt?: string;
   /** Optional timestamp after which this permission no longer applies. */
   expiresAt: string;
-}
-
-/**
- * Entity type discriminator. Always "Member" for Member entities.
- */
-export type CreateMemberDtoEntityType =
-  (typeof CreateMemberDtoEntityType)[keyof typeof CreateMemberDtoEntityType];
-
-export const CreateMemberDtoEntityType = {
-  Member: 'Member',
-} as const;
-
-export interface CreateMemberDto {
-  /** Globally unique identifier for this member. */
-  id: string;
-  /** IFS system identifier for this Member. */
-  ifsId: string;
-  /** Entity type discriminator. Always "Member" for Member entities. */
-  entityType: CreateMemberDtoEntityType;
-  /** URL for documentation about this entity. */
-  entityDocumentationUrl: string;
-  /** Human-readable name of the member. */
-  name: string;
-  permissions: PermissionResponseDto[];
-  /** Whether this member is considered an owner of the system. */
-  isOwner: boolean;
-  /** Timestamp when this member record was created. */
-  createdAt: string;
-  /** Timestamp when this member record was last updated. */
-  updatedAt: string;
-}
-
-/**
- * Entity type discriminator. Always "Scope" for Scope entities.
- */
-export type ScopeResponseDtoEntityType =
-  (typeof ScopeResponseDtoEntityType)[keyof typeof ScopeResponseDtoEntityType];
-
-export const ScopeResponseDtoEntityType = {
-  Scope: 'Scope',
-} as const;
-
-/**
- * Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific.
- */
-export type ScopeResponseDtoBoundaryRules = { [key: string]: unknown };
-
-export interface ScopeResponseDto {
-  /** Globally unique identifier for this scope. */
-  id: string;
-  /** IFS system identifier for this Scope. */
-  ifsId: string;
-  /** Entity type discriminator. Always "Scope" for Scope entities. */
-  entityType: ScopeResponseDtoEntityType;
-  /** Id of the object this object is derived from. */
-  basedOn?: string;
-  /** URL for documentation about this entity. */
-  entityDocumentationUrl: string;
-  /** Human-readable name of the scope. */
-  name: string;
-  /** Optional human-readable explanation of what this scope includes and excludes. */
-  description?: string;
-  /** Location identifiers or names included in this scope. Kept as strings for now. */
-  locations?: string[];
-  /** Group identifiers or names included in this scope. Kept as strings for now. */
-  groups?: string[];
-  /** Object identifiers or names included in this scope. Kept as strings for now. */
-  objects?: string[];
-  /** Entity identifiers or names included in this scope. Kept as strings for now. */
-  entities?: string[];
-  /** Identifier of a broader parent scope, when this scope is nested inside another scope. */
-  parentScopeId?: string;
-  /** Identifiers of narrower child scopes contained by this scope. */
-  childScopeIds?: string[];
-  /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
-  boundaryRules?: ScopeResponseDtoBoundaryRules;
-  /** Timestamp when this scope record was created. */
-  createdAt: string;
-  /** Timestamp when this scope record was last updated. */
-  updatedAt: string;
 }
 
 /**
@@ -285,6 +440,1025 @@ export interface MemberResponseDto {
   updatedAt: string;
 }
 
+export interface VoteResponseDto {
+  /** Globally unique identifier for this vote. */
+  id: string;
+  /** IFS system identifier for this Vote. */
+  ifsId: string;
+  /** Entity category for this object, normally Vote. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this vote record was created. */
+  createdAt: string;
+  /** Timestamp when this vote record was last updated. */
+  updatedAt: string;
+  /** Identifier of the decision this vote participates in. */
+  decisionId: string;
+  /** Identifier of the member who cast or owns this vote. */
+  memberId: string;
+  /** Vote value recorded for the decision, such as an implementation-defined choice or consent signal. */
+  value: string;
+  /** Identifier of the previous revision of this vote, if this vote amends an earlier vote. */
+  previousRevisionId?: string;
+}
+
+export interface RuleResponseDto {
+  /** Globally unique identifier for this rule. */
+  id: string;
+  /** IFS system identifier for this Rule. */
+  ifsId: string;
+  /** Entity category for this object, normally Rule. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this rule record was created. */
+  createdAt: string;
+  /** Timestamp when this rule record was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Current lifecycle state of the decision.
+ */
+export type DecisionResponseDtoState =
+  (typeof DecisionResponseDtoState)[keyof typeof DecisionResponseDtoState];
+
+export const DecisionResponseDtoState = {
+  open: 'open',
+  closed: 'closed',
+  rejected: 'rejected',
+  cancelled: 'cancelled',
+} as const;
+
+export interface DecisionResponseDto {
+  /** Globally unique identifier for this decision. */
+  id: string;
+  /** IFS system identifier for this Decision. */
+  ifsId: string;
+  /** Entity category for this object, normally Decision. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources. */
+  subject: string;
+  /** Current lifecycle state of the decision. */
+  state: DecisionResponseDtoState;
+  /** Id of previous revision of this decision, If this decision is a modified version of another decision. */
+  previousRevisionId?: string;
+  /** Current outcome of the decision, if the decision has produced an outcome at least once. */
+  previousRevision?: DecisionResponseDto;
+  /** Member entities eligible to participate in this decision. */
+  eligibleMembers: MemberResponseDto[];
+  /** Member entities affected by this decision under the IFS scope rule. */
+  affectedMembers: MemberResponseDto[];
+  /** Vote entities cast directly by members or by delegates acting on their behalf. */
+  votes: VoteResponseDto[];
+  /** Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision. */
+  rules?: RuleResponseDto[];
+  /**
+   * Snapshot count of members eligible to participate.
+   * @minimum 0
+   */
+  eligibleMemberCount: number;
+  /**
+   * Snapshot count of members affected by this decision.
+   * @minimum 0
+   */
+  affectedMemberCount: number;
+  /**
+   * Snapshot count of votes currently recorded for this decision.
+   * @minimum 0
+   */
+  voteCount: number;
+  /**
+   * Snapshot count of votes cast by delegates on behalf of eligible members.
+   * @minimum 0
+   */
+  delegateVoteCount?: number;
+  /** Timestamp when this decision opened for participation. */
+  openedAt: string;
+  /** Optional timestamp when this decision closed. */
+  closedAt?: string;
+  /** Optional timestamp when this decision was cancelled. */
+  cancelledAt?: string;
+  /** Optional timestamp when participation, vote data, or outcome was verified. */
+  verifiedAt?: string;
+  /** Optional timestamp when this decision produced an approved outcome. */
+  approvedAt?: string;
+  /** Optional timestamp when this decision was rejected or produced a rejected outcome. */
+  rejectedAt?: string;
+  /** Timestamp when this decision record was created. */
+  createdAt: string;
+  /** Timestamp when this decision record was last updated. */
+  updatedAt: string;
+  /** Timestamp when this decision record was decided. */
+  decidedAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Comment" for Comment entities.
+ */
+export type CommentResponseDtoEntityType =
+  (typeof CommentResponseDtoEntityType)[keyof typeof CommentResponseDtoEntityType];
+
+export const CommentResponseDtoEntityType = {
+  Comment: 'Comment',
+} as const;
+
+export interface CommentResponseDto {
+  /** Globally unique identifier for this comment. */
+  id: string;
+  /** IFS system identifier for this Comment. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Comment" for Comment entities. */
+  entityType: CommentResponseDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this comment was created. */
+  createdAt: string;
+  /** Timestamp when this comment was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "ReviewComment" for ReviewComment entities.
+ */
+export type ReviewCommentResponseDtoEntityType =
+  (typeof ReviewCommentResponseDtoEntityType)[keyof typeof ReviewCommentResponseDtoEntityType];
+
+export const ReviewCommentResponseDtoEntityType = {
+  ReviewComment: 'ReviewComment',
+} as const;
+
+export interface ReviewCommentResponseDto {
+  /** Globally unique identifier for this review comment. */
+  id: string;
+  /** IFS system identifier for this ReviewComment. */
+  ifsId: string;
+  /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
+  entityType: ReviewCommentResponseDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this review comment was created. */
+  createdAt: string;
+  /** Timestamp when this review comment was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Change" for Change entities.
+ */
+export type CreateChangeDtoEntityType =
+  (typeof CreateChangeDtoEntityType)[keyof typeof CreateChangeDtoEntityType];
+
+export const CreateChangeDtoEntityType = {
+  Change: 'Change',
+} as const;
+
+/**
+ * Lifecycle status of the change.
+ */
+export type CreateChangeDtoStatus =
+  (typeof CreateChangeDtoStatus)[keyof typeof CreateChangeDtoStatus];
+
+export const CreateChangeDtoStatus = {
+  drafted: 'drafted',
+  closed: 'closed',
+  open: 'open',
+  rejected: 'rejected',
+  approved: 'approved',
+  merged: 'merged',
+} as const;
+
+export interface CreateChangeDto {
+  /** Globally unique identifier for this change. */
+  id: string;
+  /** IFS system identifier for this Change. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Change" for Change entities. */
+  entityType: CreateChangeDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Human-readable title summarizing the proposed change. */
+  title: string;
+  /** Detailed explanation of what this change proposes and why it is needed. */
+  description: string;
+  /** Short explanation of what this change proposes and why it is needed. */
+  summary?: string;
+  /** explanation of why this change is being proposed. */
+  reason: string;
+  /** ChangeItem entities describing each proposed object-level operation in this change. */
+  changes: ChangeItemResponseDto[];
+  /** Current decision about this change */
+  decision?: DecisionResponseDto;
+  /** Recent Comment entities for this change, such as the first page of comments. */
+  comments?: CommentResponseDto[];
+  /** URL where the full comment thread for this change can be fetched or viewed. */
+  commentsUrl?: string;
+  /** ReviewComment entities tied to changed objects, fields, records, or diff entries. */
+  reviewComments?: ReviewCommentResponseDto[];
+  /** Member entities that authored or co-authored this change. */
+  authors: MemberResponseDto[];
+  /** Identifier of the primary member responsible for this change. */
+  mainAuthorId: string;
+  /** Primary member responsible for this change. */
+  mainAuthor: MemberResponseDto;
+  /** Member entities requested or assigned to review this change. */
+  reviewers?: MemberResponseDto[];
+  /** Lifecycle status of the change. */
+  status: CreateChangeDtoStatus;
+  /** URL showing a diff for all changed objects, similar to a GitHub pull request diff. */
+  diffUrl?: string;
+  /**
+   * Human-friendly sequence number for this change inside the relevant system or scope.
+   * @minimum 1
+   */
+  number: number;
+  /** Label assigned to this change. */
+  labels?: string[];
+  /** Whether this change has been merged into the target system state. */
+  merged: boolean;
+  /** Whether this change currently conflicts with another change or with the target system state. */
+  hasConflict: boolean;
+  /** Any links related to this change. */
+  links?: string[];
+  /** Timestamp when this change was created. */
+  createdAt: string;
+  /** Timestamp when this change was last updated. */
+  updatedAt: string;
+  /** Optional timestamp when this change was merged. */
+  mergedAt?: string;
+  /** Optional timestamp when this change was closed without being merged. */
+  closedAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Change" for Change entities.
+ */
+export type ChangeResponseDtoEntityType =
+  (typeof ChangeResponseDtoEntityType)[keyof typeof ChangeResponseDtoEntityType];
+
+export const ChangeResponseDtoEntityType = {
+  Change: 'Change',
+} as const;
+
+/**
+ * Lifecycle status of the change.
+ */
+export type ChangeResponseDtoStatus =
+  (typeof ChangeResponseDtoStatus)[keyof typeof ChangeResponseDtoStatus];
+
+export const ChangeResponseDtoStatus = {
+  drafted: 'drafted',
+  closed: 'closed',
+  open: 'open',
+  rejected: 'rejected',
+  approved: 'approved',
+  merged: 'merged',
+} as const;
+
+export interface ChangeResponseDto {
+  /** Globally unique identifier for this change. */
+  id: string;
+  /** IFS system identifier for this Change. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Change" for Change entities. */
+  entityType: ChangeResponseDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Human-readable title summarizing the proposed change. */
+  title: string;
+  /** Detailed explanation of what this change proposes and why it is needed. */
+  description: string;
+  /** Short explanation of what this change proposes and why it is needed. */
+  summary?: string;
+  /** explanation of why this change is being proposed. */
+  reason: string;
+  /** ChangeItem entities describing each proposed object-level operation in this change. */
+  changes: ChangeItemResponseDto[];
+  /** Current decision about this change */
+  decision?: DecisionResponseDto;
+  /** Recent Comment entities for this change, such as the first page of comments. */
+  comments?: CommentResponseDto[];
+  /** URL where the full comment thread for this change can be fetched or viewed. */
+  commentsUrl?: string;
+  /** ReviewComment entities tied to changed objects, fields, records, or diff entries. */
+  reviewComments?: ReviewCommentResponseDto[];
+  /** Member entities that authored or co-authored this change. */
+  authors: MemberResponseDto[];
+  /** Identifier of the primary member responsible for this change. */
+  mainAuthorId: string;
+  /** Primary member responsible for this change. */
+  mainAuthor: MemberResponseDto;
+  /** Member entities requested or assigned to review this change. */
+  reviewers?: MemberResponseDto[];
+  /** Lifecycle status of the change. */
+  status: ChangeResponseDtoStatus;
+  /** URL showing a diff for all changed objects, similar to a GitHub pull request diff. */
+  diffUrl?: string;
+  /**
+   * Human-friendly sequence number for this change inside the relevant system or scope.
+   * @minimum 1
+   */
+  number: number;
+  /** Label assigned to this change. */
+  labels?: string[];
+  /** Whether this change has been merged into the target system state. */
+  merged: boolean;
+  /** Whether this change currently conflicts with another change or with the target system state. */
+  hasConflict: boolean;
+  /** Any links related to this change. */
+  links?: string[];
+  /** Timestamp when this change was created. */
+  createdAt: string;
+  /** Timestamp when this change was last updated. */
+  updatedAt: string;
+  /** Optional timestamp when this change was merged. */
+  mergedAt?: string;
+  /** Optional timestamp when this change was closed without being merged. */
+  closedAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Change" for Change entities.
+ */
+export type UpdateChangeDtoEntityType =
+  (typeof UpdateChangeDtoEntityType)[keyof typeof UpdateChangeDtoEntityType];
+
+export const UpdateChangeDtoEntityType = {
+  Change: 'Change',
+} as const;
+
+/**
+ * Lifecycle status of the change.
+ */
+export type UpdateChangeDtoStatus =
+  (typeof UpdateChangeDtoStatus)[keyof typeof UpdateChangeDtoStatus];
+
+export const UpdateChangeDtoStatus = {
+  drafted: 'drafted',
+  closed: 'closed',
+  open: 'open',
+  rejected: 'rejected',
+  approved: 'approved',
+  merged: 'merged',
+} as const;
+
+export interface UpdateChangeDto {
+  /** Globally unique identifier for this change. */
+  id?: string;
+  /** IFS system identifier for this Change. */
+  ifsId?: string;
+  /** Entity type discriminator. Always "Change" for Change entities. */
+  entityType?: UpdateChangeDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Human-readable title summarizing the proposed change. */
+  title?: string;
+  /** Detailed explanation of what this change proposes and why it is needed. */
+  description?: string;
+  /** Short explanation of what this change proposes and why it is needed. */
+  summary?: string;
+  /** explanation of why this change is being proposed. */
+  reason?: string;
+  /** ChangeItem entities describing each proposed object-level operation in this change. */
+  changes?: ChangeItemResponseDto[];
+  /** Current decision about this change */
+  decision?: DecisionResponseDto;
+  /** Recent Comment entities for this change, such as the first page of comments. */
+  comments?: CommentResponseDto[];
+  /** URL where the full comment thread for this change can be fetched or viewed. */
+  commentsUrl?: string;
+  /** ReviewComment entities tied to changed objects, fields, records, or diff entries. */
+  reviewComments?: ReviewCommentResponseDto[];
+  /** Member entities that authored or co-authored this change. */
+  authors?: MemberResponseDto[];
+  /** Identifier of the primary member responsible for this change. */
+  mainAuthorId?: string;
+  /** Primary member responsible for this change. */
+  mainAuthor?: MemberResponseDto;
+  /** Member entities requested or assigned to review this change. */
+  reviewers?: MemberResponseDto[];
+  /** Lifecycle status of the change. */
+  status?: UpdateChangeDtoStatus;
+  /** URL showing a diff for all changed objects, similar to a GitHub pull request diff. */
+  diffUrl?: string;
+  /**
+   * Human-friendly sequence number for this change inside the relevant system or scope.
+   * @minimum 1
+   */
+  number?: number;
+  /** Label assigned to this change. */
+  labels?: string[];
+  /** Whether this change has been merged into the target system state. */
+  merged?: boolean;
+  /** Whether this change currently conflicts with another change or with the target system state. */
+  hasConflict?: boolean;
+  /** Any links related to this change. */
+  links?: string[];
+  /** Timestamp when this change was created. */
+  createdAt?: string;
+  /** Timestamp when this change was last updated. */
+  updatedAt?: string;
+  /** Optional timestamp when this change was merged. */
+  mergedAt?: string;
+  /** Optional timestamp when this change was closed without being merged. */
+  closedAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "ChangeItem" for ChangeItem entities.
+ */
+export type CreateChangeItemDtoEntityType =
+  (typeof CreateChangeItemDtoEntityType)[keyof typeof CreateChangeItemDtoEntityType];
+
+export const CreateChangeItemDtoEntityType = {
+  ChangeItem: 'ChangeItem',
+} as const;
+
+/**
+ * Type of operation this item proposes for the target object.
+ */
+export type CreateChangeItemDtoOperation =
+  (typeof CreateChangeItemDtoOperation)[keyof typeof CreateChangeItemDtoOperation];
+
+export const CreateChangeItemDtoOperation = {
+  update: 'update',
+  create: 'create',
+  delete: 'delete',
+  replace: 'replace',
+} as const;
+
+export interface CreateChangeItemDto {
+  /** Globally unique identifier for this change item. */
+  id: string;
+  /** IFS system identifier for this ChangeItem. */
+  ifsId: string;
+  /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
+  entityType: CreateChangeItemDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
+  resourceType: string;
+  /** Type of operation this item proposes for the target object. */
+  operation: CreateChangeItemDtoOperation;
+  /**
+   * Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.
+   * @nullable
+   */
+  targetRef: string | null;
+  /**
+   * IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.
+   * @nullable
+   */
+  baseRef: string | null;
+  /**
+   * IFS reference to the proposed object or version produced by this change item. Null for delete operations.
+   * @nullable
+   */
+  proposedRef: string | null;
+  /** Optional human-readable note explaining this specific item. */
+  description?: string;
+  /** Timestamp when this change item was created. */
+  createdAt: string;
+  /** Timestamp when this change item was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "ChangeItem" for ChangeItem entities.
+ */
+export type UpdateChangeItemDtoEntityType =
+  (typeof UpdateChangeItemDtoEntityType)[keyof typeof UpdateChangeItemDtoEntityType];
+
+export const UpdateChangeItemDtoEntityType = {
+  ChangeItem: 'ChangeItem',
+} as const;
+
+/**
+ * Type of operation this item proposes for the target object.
+ */
+export type UpdateChangeItemDtoOperation =
+  (typeof UpdateChangeItemDtoOperation)[keyof typeof UpdateChangeItemDtoOperation];
+
+export const UpdateChangeItemDtoOperation = {
+  update: 'update',
+  create: 'create',
+  delete: 'delete',
+  replace: 'replace',
+} as const;
+
+export interface UpdateChangeItemDto {
+  /** Globally unique identifier for this change item. */
+  id?: string;
+  /** IFS system identifier for this ChangeItem. */
+  ifsId?: string;
+  /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
+  entityType?: UpdateChangeItemDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
+  resourceType?: string;
+  /** Type of operation this item proposes for the target object. */
+  operation?: UpdateChangeItemDtoOperation;
+  /**
+   * Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.
+   * @nullable
+   */
+  targetRef?: string | null;
+  /**
+   * IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.
+   * @nullable
+   */
+  baseRef?: string | null;
+  /**
+   * IFS reference to the proposed object or version produced by this change item. Null for delete operations.
+   * @nullable
+   */
+  proposedRef?: string | null;
+  /** Optional human-readable note explaining this specific item. */
+  description?: string;
+  /** Timestamp when this change item was created. */
+  createdAt?: string;
+  /** Timestamp when this change item was last updated. */
+  updatedAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Comment" for Comment entities.
+ */
+export type CreateCommentDtoEntityType =
+  (typeof CreateCommentDtoEntityType)[keyof typeof CreateCommentDtoEntityType];
+
+export const CreateCommentDtoEntityType = {
+  Comment: 'Comment',
+} as const;
+
+export interface CreateCommentDto {
+  /** Globally unique identifier for this comment. */
+  id: string;
+  /** IFS system identifier for this Comment. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Comment" for Comment entities. */
+  entityType: CreateCommentDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this comment was created. */
+  createdAt: string;
+  /** Timestamp when this comment was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Comment" for Comment entities.
+ */
+export type UpdateCommentDtoEntityType =
+  (typeof UpdateCommentDtoEntityType)[keyof typeof UpdateCommentDtoEntityType];
+
+export const UpdateCommentDtoEntityType = {
+  Comment: 'Comment',
+} as const;
+
+export interface UpdateCommentDto {
+  /** Globally unique identifier for this comment. */
+  id?: string;
+  /** IFS system identifier for this Comment. */
+  ifsId?: string;
+  /** Entity type discriminator. Always "Comment" for Comment entities. */
+  entityType?: UpdateCommentDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this comment was created. */
+  createdAt?: string;
+  /** Timestamp when this comment was last updated. */
+  updatedAt?: string;
+}
+
+/**
+ * Current lifecycle state of the decision.
+ */
+export type CreateDecisionDtoState =
+  (typeof CreateDecisionDtoState)[keyof typeof CreateDecisionDtoState];
+
+export const CreateDecisionDtoState = {
+  open: 'open',
+  closed: 'closed',
+  rejected: 'rejected',
+  cancelled: 'cancelled',
+} as const;
+
+export interface CreateDecisionDto {
+  /** Globally unique identifier for this decision. */
+  id: string;
+  /** IFS system identifier for this Decision. */
+  ifsId: string;
+  /** Entity category for this object, normally Decision. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources. */
+  subject: string;
+  /** Current lifecycle state of the decision. */
+  state: CreateDecisionDtoState;
+  /** Id of previous revision of this decision, If this decision is a modified version of another decision. */
+  previousRevisionId?: string;
+  /** Current outcome of the decision, if the decision has produced an outcome at least once. */
+  previousRevision?: DecisionResponseDto;
+  /** Member entities eligible to participate in this decision. */
+  eligibleMembers: MemberResponseDto[];
+  /** Member entities affected by this decision under the IFS scope rule. */
+  affectedMembers: MemberResponseDto[];
+  /** Vote entities cast directly by members or by delegates acting on their behalf. */
+  votes: VoteResponseDto[];
+  /** Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision. */
+  rules?: RuleResponseDto[];
+  /**
+   * Snapshot count of members eligible to participate.
+   * @minimum 0
+   */
+  eligibleMemberCount: number;
+  /**
+   * Snapshot count of members affected by this decision.
+   * @minimum 0
+   */
+  affectedMemberCount: number;
+  /**
+   * Snapshot count of votes currently recorded for this decision.
+   * @minimum 0
+   */
+  voteCount: number;
+  /**
+   * Snapshot count of votes cast by delegates on behalf of eligible members.
+   * @minimum 0
+   */
+  delegateVoteCount?: number;
+  /** Timestamp when this decision opened for participation. */
+  openedAt: string;
+  /** Optional timestamp when this decision closed. */
+  closedAt?: string;
+  /** Optional timestamp when this decision was cancelled. */
+  cancelledAt?: string;
+  /** Optional timestamp when participation, vote data, or outcome was verified. */
+  verifiedAt?: string;
+  /** Optional timestamp when this decision produced an approved outcome. */
+  approvedAt?: string;
+  /** Optional timestamp when this decision was rejected or produced a rejected outcome. */
+  rejectedAt?: string;
+  /** Timestamp when this decision record was created. */
+  createdAt: string;
+  /** Timestamp when this decision record was last updated. */
+  updatedAt: string;
+  /** Timestamp when this decision record was decided. */
+  decidedAt?: string;
+}
+
+/**
+ * Current lifecycle state of the decision.
+ */
+export type UpdateDecisionDtoState =
+  (typeof UpdateDecisionDtoState)[keyof typeof UpdateDecisionDtoState];
+
+export const UpdateDecisionDtoState = {
+  open: 'open',
+  closed: 'closed',
+  rejected: 'rejected',
+  cancelled: 'cancelled',
+} as const;
+
+export interface UpdateDecisionDto {
+  /** Globally unique identifier for this decision. */
+  id?: string;
+  /** IFS system identifier for this Decision. */
+  ifsId?: string;
+  /** Entity category for this object, normally Decision. */
+  entityType?: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources. */
+  subject?: string;
+  /** Current lifecycle state of the decision. */
+  state?: UpdateDecisionDtoState;
+  /** Id of previous revision of this decision, If this decision is a modified version of another decision. */
+  previousRevisionId?: string;
+  /** Current outcome of the decision, if the decision has produced an outcome at least once. */
+  previousRevision?: DecisionResponseDto;
+  /** Member entities eligible to participate in this decision. */
+  eligibleMembers?: MemberResponseDto[];
+  /** Member entities affected by this decision under the IFS scope rule. */
+  affectedMembers?: MemberResponseDto[];
+  /** Vote entities cast directly by members or by delegates acting on their behalf. */
+  votes?: VoteResponseDto[];
+  /** Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision. */
+  rules?: RuleResponseDto[];
+  /**
+   * Snapshot count of members eligible to participate.
+   * @minimum 0
+   */
+  eligibleMemberCount?: number;
+  /**
+   * Snapshot count of members affected by this decision.
+   * @minimum 0
+   */
+  affectedMemberCount?: number;
+  /**
+   * Snapshot count of votes currently recorded for this decision.
+   * @minimum 0
+   */
+  voteCount?: number;
+  /**
+   * Snapshot count of votes cast by delegates on behalf of eligible members.
+   * @minimum 0
+   */
+  delegateVoteCount?: number;
+  /** Timestamp when this decision opened for participation. */
+  openedAt?: string;
+  /** Optional timestamp when this decision closed. */
+  closedAt?: string;
+  /** Optional timestamp when this decision was cancelled. */
+  cancelledAt?: string;
+  /** Optional timestamp when participation, vote data, or outcome was verified. */
+  verifiedAt?: string;
+  /** Optional timestamp when this decision produced an approved outcome. */
+  approvedAt?: string;
+  /** Optional timestamp when this decision was rejected or produced a rejected outcome. */
+  rejectedAt?: string;
+  /** Timestamp when this decision record was created. */
+  createdAt?: string;
+  /** Timestamp when this decision record was last updated. */
+  updatedAt?: string;
+  /** Timestamp when this decision record was decided. */
+  decidedAt?: string;
+}
+
+/**
+ * Lifecycle state of the delegation.
+ */
+export type CreateDelegationDtoState =
+  (typeof CreateDelegationDtoState)[keyof typeof CreateDelegationDtoState];
+
+export const CreateDelegationDtoState = {
+  active: 'active',
+  revoked: 'revoked',
+  expired: 'expired',
+} as const;
+
+export interface CreateDelegationDto {
+  /** Globally unique identifier for this delegation. */
+  id: string;
+  /** IFS system identifier for this Delegation. */
+  ifsId: string;
+  /** Entity category for this object, normally Delegation. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this delegation record was created. */
+  createdAt: string;
+  /** Timestamp when this delegation record was last updated. */
+  updatedAt?: string;
+  /** Identifier of the permission delegated from the delegator to the delegate. */
+  permissionId: string;
+  /** Permission entity represented by permissionId when expanded by an implementation. */
+  permission?: PermissionResponseDto;
+  /** Reference to the role or member delegating the permission. */
+  delegatorRef: string;
+  /** Reference to the role or member receiving the delegated permission. */
+  delegateRef: string;
+  /** Lifecycle state of the delegation. */
+  state: CreateDelegationDtoState;
+  /** Timestamp when this delegation was revoked, if applicable. */
+  revokedAt?: string;
+  /** Optional timestamp after which this delegation no longer applies. */
+  expiresAt?: string;
+}
+
+/**
+ * Lifecycle state of the delegation.
+ */
+export type DelegationResponseDtoState =
+  (typeof DelegationResponseDtoState)[keyof typeof DelegationResponseDtoState];
+
+export const DelegationResponseDtoState = {
+  active: 'active',
+  revoked: 'revoked',
+  expired: 'expired',
+} as const;
+
+export interface DelegationResponseDto {
+  /** Globally unique identifier for this delegation. */
+  id: string;
+  /** IFS system identifier for this Delegation. */
+  ifsId: string;
+  /** Entity category for this object, normally Delegation. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this delegation record was created. */
+  createdAt: string;
+  /** Timestamp when this delegation record was last updated. */
+  updatedAt?: string;
+  /** Identifier of the permission delegated from the delegator to the delegate. */
+  permissionId: string;
+  /** Permission entity represented by permissionId when expanded by an implementation. */
+  permission?: PermissionResponseDto;
+  /** Reference to the role or member delegating the permission. */
+  delegatorRef: string;
+  /** Reference to the role or member receiving the delegated permission. */
+  delegateRef: string;
+  /** Lifecycle state of the delegation. */
+  state: DelegationResponseDtoState;
+  /** Timestamp when this delegation was revoked, if applicable. */
+  revokedAt?: string;
+  /** Optional timestamp after which this delegation no longer applies. */
+  expiresAt?: string;
+}
+
+/**
+ * Lifecycle state of the delegation.
+ */
+export type UpdateDelegationDtoState =
+  (typeof UpdateDelegationDtoState)[keyof typeof UpdateDelegationDtoState];
+
+export const UpdateDelegationDtoState = {
+  active: 'active',
+  revoked: 'revoked',
+  expired: 'expired',
+} as const;
+
+export interface UpdateDelegationDto {
+  /** Globally unique identifier for this delegation. */
+  id?: string;
+  /** IFS system identifier for this Delegation. */
+  ifsId?: string;
+  /** Entity category for this object, normally Delegation. */
+  entityType?: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this delegation record was created. */
+  createdAt?: string;
+  /** Timestamp when this delegation record was last updated. */
+  updatedAt?: string;
+  /** Identifier of the permission delegated from the delegator to the delegate. */
+  permissionId?: string;
+  /** Permission entity represented by permissionId when expanded by an implementation. */
+  permission?: PermissionResponseDto;
+  /** Reference to the role or member delegating the permission. */
+  delegatorRef?: string;
+  /** Reference to the role or member receiving the delegated permission. */
+  delegateRef?: string;
+  /** Lifecycle state of the delegation. */
+  state?: UpdateDelegationDtoState;
+  /** Timestamp when this delegation was revoked, if applicable. */
+  revokedAt?: string;
+  /** Optional timestamp after which this delegation no longer applies. */
+  expiresAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Label" for Label entities.
+ */
+export type CreateLabelDtoEntityType =
+  (typeof CreateLabelDtoEntityType)[keyof typeof CreateLabelDtoEntityType];
+
+export const CreateLabelDtoEntityType = {
+  Label: 'Label',
+} as const;
+
+export interface CreateLabelDto {
+  /** Globally unique identifier for this label. */
+  id: string;
+  /** IFS system identifier for this Label. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Label" for Label entities. */
+  entityType: CreateLabelDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this label was created. */
+  createdAt: string;
+  /** Timestamp when this label was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Label" for Label entities.
+ */
+export type LabelResponseDtoEntityType =
+  (typeof LabelResponseDtoEntityType)[keyof typeof LabelResponseDtoEntityType];
+
+export const LabelResponseDtoEntityType = {
+  Label: 'Label',
+} as const;
+
+export interface LabelResponseDto {
+  /** Globally unique identifier for this label. */
+  id: string;
+  /** IFS system identifier for this Label. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Label" for Label entities. */
+  entityType: LabelResponseDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this label was created. */
+  createdAt: string;
+  /** Timestamp when this label was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Label" for Label entities.
+ */
+export type UpdateLabelDtoEntityType =
+  (typeof UpdateLabelDtoEntityType)[keyof typeof UpdateLabelDtoEntityType];
+
+export const UpdateLabelDtoEntityType = {
+  Label: 'Label',
+} as const;
+
+export interface UpdateLabelDto {
+  /** Globally unique identifier for this label. */
+  id?: string;
+  /** IFS system identifier for this Label. */
+  ifsId?: string;
+  /** Entity type discriminator. Always "Label" for Label entities. */
+  entityType?: UpdateLabelDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this label was created. */
+  createdAt?: string;
+  /** Timestamp when this label was last updated. */
+  updatedAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Member" for Member entities.
+ */
+export type CreateMemberDtoEntityType =
+  (typeof CreateMemberDtoEntityType)[keyof typeof CreateMemberDtoEntityType];
+
+export const CreateMemberDtoEntityType = {
+  Member: 'Member',
+} as const;
+
+export interface CreateMemberDto {
+  /** Globally unique identifier for this member. */
+  id: string;
+  /** IFS system identifier for this Member. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Member" for Member entities. */
+  entityType: CreateMemberDtoEntityType;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Human-readable name of the member. */
+  name: string;
+  permissions: PermissionResponseDto[];
+  /** Whether this member is considered an owner of the system. */
+  isOwner: boolean;
+  /** Timestamp when this member record was created. */
+  createdAt: string;
+  /** Timestamp when this member record was last updated. */
+  updatedAt: string;
+}
+
 /**
  * Entity type discriminator. Always "Member" for Member entities.
  */
@@ -313,6 +1487,554 @@ export interface UpdateMemberDto {
   createdAt?: string;
   /** Timestamp when this member record was last updated. */
   updatedAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Permission" for Permission entities.
+ */
+export type CreatePermissionDtoEntityType =
+  (typeof CreatePermissionDtoEntityType)[keyof typeof CreatePermissionDtoEntityType];
+
+export const CreatePermissionDtoEntityType = {
+  Permission: 'Permission',
+} as const;
+
+/**
+ * Scope object describing the system, project, process, area, or other bounded context where this permission applies.
+ */
+export type CreatePermissionDtoScope = { [key: string]: unknown };
+
+/**
+ * Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked.
+ */
+export type CreatePermissionDtoState =
+  (typeof CreatePermissionDtoState)[keyof typeof CreatePermissionDtoState];
+
+export const CreatePermissionDtoState = {
+  granted: 'granted',
+  'under-review': 'under-review',
+  revoked: 'revoked',
+  drafted: 'drafted',
+} as const;
+
+export interface CreatePermissionDto {
+  /** Globally unique identifier for this permission. */
+  id: string;
+  /** IFS system identifier for this Permission. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Permission" for Permission entities. */
+  entityType: CreatePermissionDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** ID list of actions that this permission allows */
+  actionIds: string[];
+  /** List of actions that this permission allows */
+  actions?: ActionResponseDto[];
+  /** Identifier of the member receiving this permission. */
+  memberId?: string;
+  /** Identifier of the role receiving this permission. */
+  roleId?: string;
+  /** Identifier of the scope object where this permission applies. */
+  scopeId: string;
+  /** Scope object describing the system, project, process, area, or other bounded context where this permission applies. */
+  scope?: CreatePermissionDtoScope;
+  /** Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked. */
+  state: CreatePermissionDtoState;
+  /** Timestamp when this permission record was created. */
+  createdAt: string;
+  /** Timestamp when this permission record was last updated. */
+  updatedAt?: string;
+  /** Optional timestamp after which this permission no longer applies. */
+  expiresAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Permission" for Permission entities.
+ */
+export type UpdatePermissionDtoEntityType =
+  (typeof UpdatePermissionDtoEntityType)[keyof typeof UpdatePermissionDtoEntityType];
+
+export const UpdatePermissionDtoEntityType = {
+  Permission: 'Permission',
+} as const;
+
+/**
+ * Scope object describing the system, project, process, area, or other bounded context where this permission applies.
+ */
+export type UpdatePermissionDtoScope = { [key: string]: unknown };
+
+/**
+ * Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked.
+ */
+export type UpdatePermissionDtoState =
+  (typeof UpdatePermissionDtoState)[keyof typeof UpdatePermissionDtoState];
+
+export const UpdatePermissionDtoState = {
+  granted: 'granted',
+  'under-review': 'under-review',
+  revoked: 'revoked',
+  drafted: 'drafted',
+} as const;
+
+export interface UpdatePermissionDto {
+  /** Globally unique identifier for this permission. */
+  id?: string;
+  /** IFS system identifier for this Permission. */
+  ifsId?: string;
+  /** Entity type discriminator. Always "Permission" for Permission entities. */
+  entityType?: UpdatePermissionDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** ID list of actions that this permission allows */
+  actionIds?: string[];
+  /** List of actions that this permission allows */
+  actions?: ActionResponseDto[];
+  /** Identifier of the member receiving this permission. */
+  memberId?: string;
+  /** Identifier of the role receiving this permission. */
+  roleId?: string;
+  /** Identifier of the scope object where this permission applies. */
+  scopeId?: string;
+  /** Scope object describing the system, project, process, area, or other bounded context where this permission applies. */
+  scope?: UpdatePermissionDtoScope;
+  /** Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked. */
+  state?: UpdatePermissionDtoState;
+  /** Timestamp when this permission record was created. */
+  createdAt?: string;
+  /** Timestamp when this permission record was last updated. */
+  updatedAt?: string;
+  /** Optional timestamp after which this permission no longer applies. */
+  expiresAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Protocol" for Protocol entities.
+ */
+export type CreateProtocolDtoEntityType =
+  (typeof CreateProtocolDtoEntityType)[keyof typeof CreateProtocolDtoEntityType];
+
+export const CreateProtocolDtoEntityType = {
+  Protocol: 'Protocol',
+} as const;
+
+export interface CreateProtocolDto {
+  /** identifier protocol. */
+  id: string;
+  /** IFS system identifier for this Protocol. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Protocol" for Protocol entities. */
+  entityType: CreateProtocolDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  createdAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Protocol" for Protocol entities.
+ */
+export type ProtocolResponseDtoEntityType =
+  (typeof ProtocolResponseDtoEntityType)[keyof typeof ProtocolResponseDtoEntityType];
+
+export const ProtocolResponseDtoEntityType = {
+  Protocol: 'Protocol',
+} as const;
+
+export interface ProtocolResponseDto {
+  /** identifier protocol. */
+  id: string;
+  /** IFS system identifier for this Protocol. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Protocol" for Protocol entities. */
+  entityType: ProtocolResponseDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  createdAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Protocol" for Protocol entities.
+ */
+export type UpdateProtocolDtoEntityType =
+  (typeof UpdateProtocolDtoEntityType)[keyof typeof UpdateProtocolDtoEntityType];
+
+export const UpdateProtocolDtoEntityType = {
+  Protocol: 'Protocol',
+} as const;
+
+export interface UpdateProtocolDto {
+  /** identifier protocol. */
+  id?: string;
+  /** IFS system identifier for this Protocol. */
+  ifsId?: string;
+  /** Entity type discriminator. Always "Protocol" for Protocol entities. */
+  entityType?: UpdateProtocolDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  createdAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "ReviewComment" for ReviewComment entities.
+ */
+export type CreateReviewCommentDtoEntityType =
+  (typeof CreateReviewCommentDtoEntityType)[keyof typeof CreateReviewCommentDtoEntityType];
+
+export const CreateReviewCommentDtoEntityType = {
+  ReviewComment: 'ReviewComment',
+} as const;
+
+export interface CreateReviewCommentDto {
+  /** Globally unique identifier for this review comment. */
+  id: string;
+  /** IFS system identifier for this ReviewComment. */
+  ifsId: string;
+  /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
+  entityType: CreateReviewCommentDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this review comment was created. */
+  createdAt: string;
+  /** Timestamp when this review comment was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "ReviewComment" for ReviewComment entities.
+ */
+export type UpdateReviewCommentDtoEntityType =
+  (typeof UpdateReviewCommentDtoEntityType)[keyof typeof UpdateReviewCommentDtoEntityType];
+
+export const UpdateReviewCommentDtoEntityType = {
+  ReviewComment: 'ReviewComment',
+} as const;
+
+export interface UpdateReviewCommentDto {
+  /** Globally unique identifier for this review comment. */
+  id?: string;
+  /** IFS system identifier for this ReviewComment. */
+  ifsId?: string;
+  /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
+  entityType?: UpdateReviewCommentDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this review comment was created. */
+  createdAt?: string;
+  /** Timestamp when this review comment was last updated. */
+  updatedAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Role" for Role entities.
+ */
+export type CreateRoleDtoEntityType =
+  (typeof CreateRoleDtoEntityType)[keyof typeof CreateRoleDtoEntityType];
+
+export const CreateRoleDtoEntityType = {
+  Role: 'Role',
+} as const;
+
+/**
+ * Lifecycle state of the role.
+ */
+export type CreateRoleDtoState =
+  (typeof CreateRoleDtoState)[keyof typeof CreateRoleDtoState];
+
+export const CreateRoleDtoState = {
+  drafted: 'drafted',
+  'under-review': 'under-review',
+  active: 'active',
+  suspended: 'suspended',
+  revoked: 'revoked',
+  expired: 'expired',
+} as const;
+
+export interface CreateRoleDto {
+  /** Globally unique identifier for this role. */
+  id: string;
+  /** IFS system identifier for this Role. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Role" for Role entities. */
+  entityType: CreateRoleDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Human-readable name of the role. */
+  name: string;
+  /** Optional human-readable explanation of what this role is for. */
+  description?: string;
+  /** Identifier of the member acting through this role. */
+  memberId: string;
+  /** Identifier of the scope where this role has authority. */
+  scopeId: string;
+  /** Scope entity describing where this role applies. */
+  scope: ScopeResponseDto;
+  /** Permission entities bundled into this role. */
+  permissions: PermissionResponseDto[];
+  /** Lifecycle state of the role. */
+  state: CreateRoleDtoState;
+  /** Timestamp when this role record was created. */
+  createdAt: string;
+  /** Timestamp when this role record was last updated. */
+  updatedAt: string;
+  /** Optional timestamp after which this role no longer applies. */
+  expiresAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Role" for Role entities.
+ */
+export type UpdateRoleDtoEntityType =
+  (typeof UpdateRoleDtoEntityType)[keyof typeof UpdateRoleDtoEntityType];
+
+export const UpdateRoleDtoEntityType = {
+  Role: 'Role',
+} as const;
+
+/**
+ * Lifecycle state of the role.
+ */
+export type UpdateRoleDtoState =
+  (typeof UpdateRoleDtoState)[keyof typeof UpdateRoleDtoState];
+
+export const UpdateRoleDtoState = {
+  drafted: 'drafted',
+  'under-review': 'under-review',
+  active: 'active',
+  suspended: 'suspended',
+  revoked: 'revoked',
+  expired: 'expired',
+} as const;
+
+export interface UpdateRoleDto {
+  /** Globally unique identifier for this role. */
+  id?: string;
+  /** IFS system identifier for this Role. */
+  ifsId?: string;
+  /** Entity type discriminator. Always "Role" for Role entities. */
+  entityType?: UpdateRoleDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Human-readable name of the role. */
+  name?: string;
+  /** Optional human-readable explanation of what this role is for. */
+  description?: string;
+  /** Identifier of the member acting through this role. */
+  memberId?: string;
+  /** Identifier of the scope where this role has authority. */
+  scopeId?: string;
+  /** Scope entity describing where this role applies. */
+  scope?: ScopeResponseDto;
+  /** Permission entities bundled into this role. */
+  permissions?: PermissionResponseDto[];
+  /** Lifecycle state of the role. */
+  state?: UpdateRoleDtoState;
+  /** Timestamp when this role record was created. */
+  createdAt?: string;
+  /** Timestamp when this role record was last updated. */
+  updatedAt?: string;
+  /** Optional timestamp after which this role no longer applies. */
+  expiresAt?: string;
+}
+
+export interface CreateRuleDto {
+  /** Globally unique identifier for this rule. */
+  id: string;
+  /** IFS system identifier for this Rule. */
+  ifsId: string;
+  /** Entity category for this object, normally Rule. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this rule record was created. */
+  createdAt: string;
+  /** Timestamp when this rule record was last updated. */
+  updatedAt: string;
+}
+
+export interface UpdateRuleDto {
+  /** Globally unique identifier for this rule. */
+  id?: string;
+  /** IFS system identifier for this Rule. */
+  ifsId?: string;
+  /** Entity category for this object, normally Rule. */
+  entityType?: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this rule record was created. */
+  createdAt?: string;
+  /** Timestamp when this rule record was last updated. */
+  updatedAt?: string;
+}
+
+/**
+ * Entity type discriminator. Always "Scope" for Scope entities.
+ */
+export type CreateScopeDtoEntityType =
+  (typeof CreateScopeDtoEntityType)[keyof typeof CreateScopeDtoEntityType];
+
+export const CreateScopeDtoEntityType = {
+  Scope: 'Scope',
+} as const;
+
+/**
+ * Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific.
+ */
+export type CreateScopeDtoBoundaryRules = { [key: string]: unknown };
+
+export interface CreateScopeDto {
+  /** Globally unique identifier for this scope. */
+  id: string;
+  /** IFS system identifier for this Scope. */
+  ifsId: string;
+  /** Entity type discriminator. Always "Scope" for Scope entities. */
+  entityType: CreateScopeDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Human-readable name of the scope. */
+  name: string;
+  /** Optional human-readable explanation of what this scope includes and excludes. */
+  description?: string;
+  /** Location identifiers or names included in this scope. Kept as strings for now. */
+  locations?: string[];
+  /** Group identifiers or names included in this scope. Kept as strings for now. */
+  groups?: string[];
+  /** Object identifiers or names included in this scope. Kept as strings for now. */
+  objects?: string[];
+  /** Entity identifiers or names included in this scope. Kept as strings for now. */
+  entities?: string[];
+  /** Identifier of a broader parent scope, when this scope is nested inside another scope. */
+  parentScopeId?: string;
+  /** Identifiers of narrower child scopes contained by this scope. */
+  childScopeIds?: string[];
+  /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
+  boundaryRules?: CreateScopeDtoBoundaryRules;
+  /** Timestamp when this scope record was created. */
+  createdAt: string;
+  /** Timestamp when this scope record was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Scope" for Scope entities.
+ */
+export type UpdateScopeDtoEntityType =
+  (typeof UpdateScopeDtoEntityType)[keyof typeof UpdateScopeDtoEntityType];
+
+export const UpdateScopeDtoEntityType = {
+  Scope: 'Scope',
+} as const;
+
+/**
+ * Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific.
+ */
+export type UpdateScopeDtoBoundaryRules = { [key: string]: unknown };
+
+export interface UpdateScopeDto {
+  /** Globally unique identifier for this scope. */
+  id?: string;
+  /** IFS system identifier for this Scope. */
+  ifsId?: string;
+  /** Entity type discriminator. Always "Scope" for Scope entities. */
+  entityType?: UpdateScopeDtoEntityType;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Human-readable name of the scope. */
+  name?: string;
+  /** Optional human-readable explanation of what this scope includes and excludes. */
+  description?: string;
+  /** Location identifiers or names included in this scope. Kept as strings for now. */
+  locations?: string[];
+  /** Group identifiers or names included in this scope. Kept as strings for now. */
+  groups?: string[];
+  /** Object identifiers or names included in this scope. Kept as strings for now. */
+  objects?: string[];
+  /** Entity identifiers or names included in this scope. Kept as strings for now. */
+  entities?: string[];
+  /** Identifier of a broader parent scope, when this scope is nested inside another scope. */
+  parentScopeId?: string;
+  /** Identifiers of narrower child scopes contained by this scope. */
+  childScopeIds?: string[];
+  /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
+  boundaryRules?: UpdateScopeDtoBoundaryRules;
+  /** Timestamp when this scope record was created. */
+  createdAt?: string;
+  /** Timestamp when this scope record was last updated. */
+  updatedAt?: string;
+}
+
+export interface CreateVoteDto {
+  /** Globally unique identifier for this vote. */
+  id: string;
+  /** IFS system identifier for this Vote. */
+  ifsId: string;
+  /** Entity category for this object, normally Vote. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this vote record was created. */
+  createdAt: string;
+  /** Timestamp when this vote record was last updated. */
+  updatedAt: string;
+  /** Identifier of the decision this vote participates in. */
+  decisionId: string;
+  /** Identifier of the member who cast or owns this vote. */
+  memberId: string;
+  /** Vote value recorded for the decision, such as an implementation-defined choice or consent signal. */
+  value: string;
+  /** Identifier of the previous revision of this vote, if this vote amends an earlier vote. */
+  previousRevisionId?: string;
+}
+
+export interface UpdateVoteDto {
+  /** Globally unique identifier for this vote. */
+  id?: string;
+  /** IFS system identifier for this Vote. */
+  ifsId?: string;
+  /** Entity category for this object, normally Vote. */
+  entityType?: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this vote record was created. */
+  createdAt?: string;
+  /** Timestamp when this vote record was last updated. */
+  updatedAt?: string;
+  /** Identifier of the decision this vote participates in. */
+  decisionId?: string;
+  /** Identifier of the member who cast or owns this vote. */
+  memberId?: string;
+  /** Vote value recorded for the decision, such as an implementation-defined choice or consent signal. */
+  value?: string;
+  /** Identifier of the previous revision of this vote, if this vote amends an earlier vote. */
+  previousRevisionId?: string;
 }
 
 export type getHelloResponse200 = {
@@ -344,6 +2066,1847 @@ export const getHello = async (
 
   const data: getHelloResponse['data'] = body !== null ? body : '';
   return { data, status: res.status, headers: res.headers } as getHelloResponse;
+};
+
+export type createActionResponse201 = {
+  data: ActionResponseDto;
+  status: 201;
+};
+
+export type createActionResponseSuccess = createActionResponse201 & {
+  headers: Headers;
+};
+export type createActionResponse = createActionResponseSuccess;
+
+export const getCreateActionUrl = () => {
+  return `${getApiBaseUrl()}/actions`;
+};
+
+/**
+ * @summary Create a Action.
+ */
+export const createAction = async (
+  createActionDto: CreateActionDto,
+  options?: RequestInit,
+): Promise<createActionResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateActionUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createActionDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createActionResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createActionResponse;
+};
+
+export type listActionsResponse200 = {
+  data: ActionResponseDto[];
+  status: 200;
+};
+
+export type listActionsResponseSuccess = listActionsResponse200 & {
+  headers: Headers;
+};
+export type listActionsResponse = listActionsResponseSuccess;
+
+export const getListActionsUrl = () => {
+  return `${getApiBaseUrl()}/actions`;
+};
+
+/**
+ * @summary List Action records.
+ */
+export const listActions = async (
+  options?: RequestInit,
+): Promise<listActionsResponse> => {
+  const res = await fetch(getListActionsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listActionsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listActionsResponse;
+};
+
+export type getActionResponse200 = {
+  data: ActionResponseDto;
+  status: 200;
+};
+
+export type getActionResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getActionResponseSuccess = getActionResponse200 & {
+  headers: Headers;
+};
+export type getActionResponseError = getActionResponse404 & {
+  headers: Headers;
+};
+
+export type getActionResponse =
+  getActionResponseSuccess | getActionResponseError;
+
+export const getGetActionUrl = (id: string) => {
+  return `${getApiBaseUrl()}/actions/${id}`;
+};
+
+/**
+ * @summary Get a Action by ID.
+ */
+export const getAction = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getActionResponse> => {
+  const res = await fetch(getGetActionUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getActionResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getActionResponse;
+};
+
+export type updateActionResponse200 = {
+  data: ActionResponseDto;
+  status: 200;
+};
+
+export type updateActionResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateActionResponseSuccess = updateActionResponse200 & {
+  headers: Headers;
+};
+export type updateActionResponseError = updateActionResponse404 & {
+  headers: Headers;
+};
+
+export type updateActionResponse =
+  updateActionResponseSuccess | updateActionResponseError;
+
+export const getUpdateActionUrl = (id: string) => {
+  return `${getApiBaseUrl()}/actions/${id}`;
+};
+
+/**
+ * @summary Update a Action.
+ */
+export const updateAction = async (
+  id: string,
+  updateActionDto: UpdateActionDto,
+  options?: RequestInit,
+): Promise<updateActionResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateActionUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateActionDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateActionResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateActionResponse;
+};
+
+export type deleteActionResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteActionResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteActionResponseSuccess = deleteActionResponse204 & {
+  headers: Headers;
+};
+export type deleteActionResponseError = deleteActionResponse404 & {
+  headers: Headers;
+};
+
+export type deleteActionResponse =
+  deleteActionResponseSuccess | deleteActionResponseError;
+
+export const getDeleteActionUrl = (id: string) => {
+  return `${getApiBaseUrl()}/actions/${id}`;
+};
+
+/**
+ * @summary Delete a Action.
+ */
+export const deleteAction = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteActionResponse> => {
+  const res = await fetch(getDeleteActionUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteActionResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteActionResponse;
+};
+
+export type createChangeResponse201 = {
+  data: ChangeResponseDto;
+  status: 201;
+};
+
+export type createChangeResponseSuccess = createChangeResponse201 & {
+  headers: Headers;
+};
+export type createChangeResponse = createChangeResponseSuccess;
+
+export const getCreateChangeUrl = () => {
+  return `${getApiBaseUrl()}/changes`;
+};
+
+/**
+ * @summary Create a Change.
+ */
+export const createChange = async (
+  createChangeDto: NonReadonly<CreateChangeDto>,
+  options?: RequestInit,
+): Promise<createChangeResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateChangeUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createChangeDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createChangeResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createChangeResponse;
+};
+
+export type listChangesResponse200 = {
+  data: ChangeResponseDto[];
+  status: 200;
+};
+
+export type listChangesResponseSuccess = listChangesResponse200 & {
+  headers: Headers;
+};
+export type listChangesResponse = listChangesResponseSuccess;
+
+export const getListChangesUrl = () => {
+  return `${getApiBaseUrl()}/changes`;
+};
+
+/**
+ * @summary List Change records.
+ */
+export const listChanges = async (
+  options?: RequestInit,
+): Promise<listChangesResponse> => {
+  const res = await fetch(getListChangesUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listChangesResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listChangesResponse;
+};
+
+export type getChangeResponse200 = {
+  data: ChangeResponseDto;
+  status: 200;
+};
+
+export type getChangeResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getChangeResponseSuccess = getChangeResponse200 & {
+  headers: Headers;
+};
+export type getChangeResponseError = getChangeResponse404 & {
+  headers: Headers;
+};
+
+export type getChangeResponse =
+  getChangeResponseSuccess | getChangeResponseError;
+
+export const getGetChangeUrl = (id: string) => {
+  return `${getApiBaseUrl()}/changes/${id}`;
+};
+
+/**
+ * @summary Get a Change by ID.
+ */
+export const getChange = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getChangeResponse> => {
+  const res = await fetch(getGetChangeUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getChangeResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getChangeResponse;
+};
+
+export type updateChangeResponse200 = {
+  data: ChangeResponseDto;
+  status: 200;
+};
+
+export type updateChangeResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateChangeResponseSuccess = updateChangeResponse200 & {
+  headers: Headers;
+};
+export type updateChangeResponseError = updateChangeResponse404 & {
+  headers: Headers;
+};
+
+export type updateChangeResponse =
+  updateChangeResponseSuccess | updateChangeResponseError;
+
+export const getUpdateChangeUrl = (id: string) => {
+  return `${getApiBaseUrl()}/changes/${id}`;
+};
+
+/**
+ * @summary Update a Change.
+ */
+export const updateChange = async (
+  id: string,
+  updateChangeDto: NonReadonly<UpdateChangeDto>,
+  options?: RequestInit,
+): Promise<updateChangeResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateChangeUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateChangeDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateChangeResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateChangeResponse;
+};
+
+export type deleteChangeResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteChangeResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteChangeResponseSuccess = deleteChangeResponse204 & {
+  headers: Headers;
+};
+export type deleteChangeResponseError = deleteChangeResponse404 & {
+  headers: Headers;
+};
+
+export type deleteChangeResponse =
+  deleteChangeResponseSuccess | deleteChangeResponseError;
+
+export const getDeleteChangeUrl = (id: string) => {
+  return `${getApiBaseUrl()}/changes/${id}`;
+};
+
+/**
+ * @summary Delete a Change.
+ */
+export const deleteChange = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteChangeResponse> => {
+  const res = await fetch(getDeleteChangeUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteChangeResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteChangeResponse;
+};
+
+export type createChangeItemResponse201 = {
+  data: ChangeItemResponseDto;
+  status: 201;
+};
+
+export type createChangeItemResponseSuccess = createChangeItemResponse201 & {
+  headers: Headers;
+};
+export type createChangeItemResponse = createChangeItemResponseSuccess;
+
+export const getCreateChangeItemUrl = () => {
+  return `${getApiBaseUrl()}/change-items`;
+};
+
+/**
+ * @summary Create a ChangeItem.
+ */
+export const createChangeItem = async (
+  createChangeItemDto: CreateChangeItemDto,
+  options?: RequestInit,
+): Promise<createChangeItemResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateChangeItemUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createChangeItemDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createChangeItemResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createChangeItemResponse;
+};
+
+export type listChangeItemsResponse200 = {
+  data: ChangeItemResponseDto[];
+  status: 200;
+};
+
+export type listChangeItemsResponseSuccess = listChangeItemsResponse200 & {
+  headers: Headers;
+};
+export type listChangeItemsResponse = listChangeItemsResponseSuccess;
+
+export const getListChangeItemsUrl = () => {
+  return `${getApiBaseUrl()}/change-items`;
+};
+
+/**
+ * @summary List ChangeItem records.
+ */
+export const listChangeItems = async (
+  options?: RequestInit,
+): Promise<listChangeItemsResponse> => {
+  const res = await fetch(getListChangeItemsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listChangeItemsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listChangeItemsResponse;
+};
+
+export type getChangeItemResponse200 = {
+  data: ChangeItemResponseDto;
+  status: 200;
+};
+
+export type getChangeItemResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getChangeItemResponseSuccess = getChangeItemResponse200 & {
+  headers: Headers;
+};
+export type getChangeItemResponseError = getChangeItemResponse404 & {
+  headers: Headers;
+};
+
+export type getChangeItemResponse =
+  getChangeItemResponseSuccess | getChangeItemResponseError;
+
+export const getGetChangeItemUrl = (id: string) => {
+  return `${getApiBaseUrl()}/change-items/${id}`;
+};
+
+/**
+ * @summary Get a ChangeItem by ID.
+ */
+export const getChangeItem = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getChangeItemResponse> => {
+  const res = await fetch(getGetChangeItemUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getChangeItemResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getChangeItemResponse;
+};
+
+export type updateChangeItemResponse200 = {
+  data: ChangeItemResponseDto;
+  status: 200;
+};
+
+export type updateChangeItemResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateChangeItemResponseSuccess = updateChangeItemResponse200 & {
+  headers: Headers;
+};
+export type updateChangeItemResponseError = updateChangeItemResponse404 & {
+  headers: Headers;
+};
+
+export type updateChangeItemResponse =
+  updateChangeItemResponseSuccess | updateChangeItemResponseError;
+
+export const getUpdateChangeItemUrl = (id: string) => {
+  return `${getApiBaseUrl()}/change-items/${id}`;
+};
+
+/**
+ * @summary Update a ChangeItem.
+ */
+export const updateChangeItem = async (
+  id: string,
+  updateChangeItemDto: UpdateChangeItemDto,
+  options?: RequestInit,
+): Promise<updateChangeItemResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateChangeItemUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateChangeItemDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateChangeItemResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateChangeItemResponse;
+};
+
+export type deleteChangeItemResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteChangeItemResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteChangeItemResponseSuccess = deleteChangeItemResponse204 & {
+  headers: Headers;
+};
+export type deleteChangeItemResponseError = deleteChangeItemResponse404 & {
+  headers: Headers;
+};
+
+export type deleteChangeItemResponse =
+  deleteChangeItemResponseSuccess | deleteChangeItemResponseError;
+
+export const getDeleteChangeItemUrl = (id: string) => {
+  return `${getApiBaseUrl()}/change-items/${id}`;
+};
+
+/**
+ * @summary Delete a ChangeItem.
+ */
+export const deleteChangeItem = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteChangeItemResponse> => {
+  const res = await fetch(getDeleteChangeItemUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteChangeItemResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteChangeItemResponse;
+};
+
+export type createCommentResponse201 = {
+  data: CommentResponseDto;
+  status: 201;
+};
+
+export type createCommentResponseSuccess = createCommentResponse201 & {
+  headers: Headers;
+};
+export type createCommentResponse = createCommentResponseSuccess;
+
+export const getCreateCommentUrl = () => {
+  return `${getApiBaseUrl()}/comments`;
+};
+
+/**
+ * @summary Create a Comment.
+ */
+export const createComment = async (
+  createCommentDto: CreateCommentDto,
+  options?: RequestInit,
+): Promise<createCommentResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateCommentUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createCommentDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createCommentResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createCommentResponse;
+};
+
+export type listCommentsResponse200 = {
+  data: CommentResponseDto[];
+  status: 200;
+};
+
+export type listCommentsResponseSuccess = listCommentsResponse200 & {
+  headers: Headers;
+};
+export type listCommentsResponse = listCommentsResponseSuccess;
+
+export const getListCommentsUrl = () => {
+  return `${getApiBaseUrl()}/comments`;
+};
+
+/**
+ * @summary List Comment records.
+ */
+export const listComments = async (
+  options?: RequestInit,
+): Promise<listCommentsResponse> => {
+  const res = await fetch(getListCommentsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listCommentsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listCommentsResponse;
+};
+
+export type getCommentResponse200 = {
+  data: CommentResponseDto;
+  status: 200;
+};
+
+export type getCommentResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getCommentResponseSuccess = getCommentResponse200 & {
+  headers: Headers;
+};
+export type getCommentResponseError = getCommentResponse404 & {
+  headers: Headers;
+};
+
+export type getCommentResponse =
+  getCommentResponseSuccess | getCommentResponseError;
+
+export const getGetCommentUrl = (id: string) => {
+  return `${getApiBaseUrl()}/comments/${id}`;
+};
+
+/**
+ * @summary Get a Comment by ID.
+ */
+export const getComment = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getCommentResponse> => {
+  const res = await fetch(getGetCommentUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getCommentResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getCommentResponse;
+};
+
+export type updateCommentResponse200 = {
+  data: CommentResponseDto;
+  status: 200;
+};
+
+export type updateCommentResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateCommentResponseSuccess = updateCommentResponse200 & {
+  headers: Headers;
+};
+export type updateCommentResponseError = updateCommentResponse404 & {
+  headers: Headers;
+};
+
+export type updateCommentResponse =
+  updateCommentResponseSuccess | updateCommentResponseError;
+
+export const getUpdateCommentUrl = (id: string) => {
+  return `${getApiBaseUrl()}/comments/${id}`;
+};
+
+/**
+ * @summary Update a Comment.
+ */
+export const updateComment = async (
+  id: string,
+  updateCommentDto: UpdateCommentDto,
+  options?: RequestInit,
+): Promise<updateCommentResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateCommentUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateCommentDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateCommentResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateCommentResponse;
+};
+
+export type deleteCommentResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteCommentResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteCommentResponseSuccess = deleteCommentResponse204 & {
+  headers: Headers;
+};
+export type deleteCommentResponseError = deleteCommentResponse404 & {
+  headers: Headers;
+};
+
+export type deleteCommentResponse =
+  deleteCommentResponseSuccess | deleteCommentResponseError;
+
+export const getDeleteCommentUrl = (id: string) => {
+  return `${getApiBaseUrl()}/comments/${id}`;
+};
+
+/**
+ * @summary Delete a Comment.
+ */
+export const deleteComment = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteCommentResponse> => {
+  const res = await fetch(getDeleteCommentUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteCommentResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteCommentResponse;
+};
+
+export type createDecisionResponse201 = {
+  data: DecisionResponseDto;
+  status: 201;
+};
+
+export type createDecisionResponseSuccess = createDecisionResponse201 & {
+  headers: Headers;
+};
+export type createDecisionResponse = createDecisionResponseSuccess;
+
+export const getCreateDecisionUrl = () => {
+  return `${getApiBaseUrl()}/decisions`;
+};
+
+/**
+ * @summary Create a Decision.
+ */
+export const createDecision = async (
+  createDecisionDto: NonReadonly<CreateDecisionDto>,
+  options?: RequestInit,
+): Promise<createDecisionResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateDecisionUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createDecisionDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createDecisionResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createDecisionResponse;
+};
+
+export type listDecisionsResponse200 = {
+  data: DecisionResponseDto[];
+  status: 200;
+};
+
+export type listDecisionsResponseSuccess = listDecisionsResponse200 & {
+  headers: Headers;
+};
+export type listDecisionsResponse = listDecisionsResponseSuccess;
+
+export const getListDecisionsUrl = () => {
+  return `${getApiBaseUrl()}/decisions`;
+};
+
+/**
+ * @summary List Decision records.
+ */
+export const listDecisions = async (
+  options?: RequestInit,
+): Promise<listDecisionsResponse> => {
+  const res = await fetch(getListDecisionsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listDecisionsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listDecisionsResponse;
+};
+
+export type getDecisionResponse200 = {
+  data: DecisionResponseDto;
+  status: 200;
+};
+
+export type getDecisionResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getDecisionResponseSuccess = getDecisionResponse200 & {
+  headers: Headers;
+};
+export type getDecisionResponseError = getDecisionResponse404 & {
+  headers: Headers;
+};
+
+export type getDecisionResponse =
+  getDecisionResponseSuccess | getDecisionResponseError;
+
+export const getGetDecisionUrl = (id: string) => {
+  return `${getApiBaseUrl()}/decisions/${id}`;
+};
+
+/**
+ * @summary Get a Decision by ID.
+ */
+export const getDecision = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getDecisionResponse> => {
+  const res = await fetch(getGetDecisionUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getDecisionResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getDecisionResponse;
+};
+
+export type updateDecisionResponse200 = {
+  data: DecisionResponseDto;
+  status: 200;
+};
+
+export type updateDecisionResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateDecisionResponseSuccess = updateDecisionResponse200 & {
+  headers: Headers;
+};
+export type updateDecisionResponseError = updateDecisionResponse404 & {
+  headers: Headers;
+};
+
+export type updateDecisionResponse =
+  updateDecisionResponseSuccess | updateDecisionResponseError;
+
+export const getUpdateDecisionUrl = (id: string) => {
+  return `${getApiBaseUrl()}/decisions/${id}`;
+};
+
+/**
+ * @summary Update a Decision.
+ */
+export const updateDecision = async (
+  id: string,
+  updateDecisionDto: NonReadonly<UpdateDecisionDto>,
+  options?: RequestInit,
+): Promise<updateDecisionResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateDecisionUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateDecisionDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateDecisionResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateDecisionResponse;
+};
+
+export type deleteDecisionResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteDecisionResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteDecisionResponseSuccess = deleteDecisionResponse204 & {
+  headers: Headers;
+};
+export type deleteDecisionResponseError = deleteDecisionResponse404 & {
+  headers: Headers;
+};
+
+export type deleteDecisionResponse =
+  deleteDecisionResponseSuccess | deleteDecisionResponseError;
+
+export const getDeleteDecisionUrl = (id: string) => {
+  return `${getApiBaseUrl()}/decisions/${id}`;
+};
+
+/**
+ * @summary Delete a Decision.
+ */
+export const deleteDecision = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteDecisionResponse> => {
+  const res = await fetch(getDeleteDecisionUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteDecisionResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteDecisionResponse;
+};
+
+export type createDelegationResponse201 = {
+  data: DelegationResponseDto;
+  status: 201;
+};
+
+export type createDelegationResponseSuccess = createDelegationResponse201 & {
+  headers: Headers;
+};
+export type createDelegationResponse = createDelegationResponseSuccess;
+
+export const getCreateDelegationUrl = () => {
+  return `${getApiBaseUrl()}/delegations`;
+};
+
+/**
+ * @summary Create a Delegation.
+ */
+export const createDelegation = async (
+  createDelegationDto: CreateDelegationDto,
+  options?: RequestInit,
+): Promise<createDelegationResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateDelegationUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createDelegationDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createDelegationResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createDelegationResponse;
+};
+
+export type listDelegationsResponse200 = {
+  data: DelegationResponseDto[];
+  status: 200;
+};
+
+export type listDelegationsResponseSuccess = listDelegationsResponse200 & {
+  headers: Headers;
+};
+export type listDelegationsResponse = listDelegationsResponseSuccess;
+
+export const getListDelegationsUrl = () => {
+  return `${getApiBaseUrl()}/delegations`;
+};
+
+/**
+ * @summary List Delegation records.
+ */
+export const listDelegations = async (
+  options?: RequestInit,
+): Promise<listDelegationsResponse> => {
+  const res = await fetch(getListDelegationsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listDelegationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listDelegationsResponse;
+};
+
+export type getDelegationResponse200 = {
+  data: DelegationResponseDto;
+  status: 200;
+};
+
+export type getDelegationResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getDelegationResponseSuccess = getDelegationResponse200 & {
+  headers: Headers;
+};
+export type getDelegationResponseError = getDelegationResponse404 & {
+  headers: Headers;
+};
+
+export type getDelegationResponse =
+  getDelegationResponseSuccess | getDelegationResponseError;
+
+export const getGetDelegationUrl = (id: string) => {
+  return `${getApiBaseUrl()}/delegations/${id}`;
+};
+
+/**
+ * @summary Get a Delegation by ID.
+ */
+export const getDelegation = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getDelegationResponse> => {
+  const res = await fetch(getGetDelegationUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getDelegationResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getDelegationResponse;
+};
+
+export type updateDelegationResponse200 = {
+  data: DelegationResponseDto;
+  status: 200;
+};
+
+export type updateDelegationResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateDelegationResponseSuccess = updateDelegationResponse200 & {
+  headers: Headers;
+};
+export type updateDelegationResponseError = updateDelegationResponse404 & {
+  headers: Headers;
+};
+
+export type updateDelegationResponse =
+  updateDelegationResponseSuccess | updateDelegationResponseError;
+
+export const getUpdateDelegationUrl = (id: string) => {
+  return `${getApiBaseUrl()}/delegations/${id}`;
+};
+
+/**
+ * @summary Update a Delegation.
+ */
+export const updateDelegation = async (
+  id: string,
+  updateDelegationDto: UpdateDelegationDto,
+  options?: RequestInit,
+): Promise<updateDelegationResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateDelegationUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateDelegationDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateDelegationResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateDelegationResponse;
+};
+
+export type deleteDelegationResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteDelegationResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteDelegationResponseSuccess = deleteDelegationResponse204 & {
+  headers: Headers;
+};
+export type deleteDelegationResponseError = deleteDelegationResponse404 & {
+  headers: Headers;
+};
+
+export type deleteDelegationResponse =
+  deleteDelegationResponseSuccess | deleteDelegationResponseError;
+
+export const getDeleteDelegationUrl = (id: string) => {
+  return `${getApiBaseUrl()}/delegations/${id}`;
+};
+
+/**
+ * @summary Delete a Delegation.
+ */
+export const deleteDelegation = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteDelegationResponse> => {
+  const res = await fetch(getDeleteDelegationUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteDelegationResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteDelegationResponse;
+};
+
+export type createLabelResponse201 = {
+  data: LabelResponseDto;
+  status: 201;
+};
+
+export type createLabelResponseSuccess = createLabelResponse201 & {
+  headers: Headers;
+};
+export type createLabelResponse = createLabelResponseSuccess;
+
+export const getCreateLabelUrl = () => {
+  return `${getApiBaseUrl()}/labels`;
+};
+
+/**
+ * @summary Create a Label.
+ */
+export const createLabel = async (
+  createLabelDto: CreateLabelDto,
+  options?: RequestInit,
+): Promise<createLabelResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateLabelUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createLabelDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createLabelResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createLabelResponse;
+};
+
+export type listLabelsResponse200 = {
+  data: LabelResponseDto[];
+  status: 200;
+};
+
+export type listLabelsResponseSuccess = listLabelsResponse200 & {
+  headers: Headers;
+};
+export type listLabelsResponse = listLabelsResponseSuccess;
+
+export const getListLabelsUrl = () => {
+  return `${getApiBaseUrl()}/labels`;
+};
+
+/**
+ * @summary List Label records.
+ */
+export const listLabels = async (
+  options?: RequestInit,
+): Promise<listLabelsResponse> => {
+  const res = await fetch(getListLabelsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listLabelsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listLabelsResponse;
+};
+
+export type getLabelResponse200 = {
+  data: LabelResponseDto;
+  status: 200;
+};
+
+export type getLabelResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getLabelResponseSuccess = getLabelResponse200 & {
+  headers: Headers;
+};
+export type getLabelResponseError = getLabelResponse404 & {
+  headers: Headers;
+};
+
+export type getLabelResponse = getLabelResponseSuccess | getLabelResponseError;
+
+export const getGetLabelUrl = (id: string) => {
+  return `${getApiBaseUrl()}/labels/${id}`;
+};
+
+/**
+ * @summary Get a Label by ID.
+ */
+export const getLabel = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getLabelResponse> => {
+  const res = await fetch(getGetLabelUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getLabelResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as getLabelResponse;
+};
+
+export type updateLabelResponse200 = {
+  data: LabelResponseDto;
+  status: 200;
+};
+
+export type updateLabelResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateLabelResponseSuccess = updateLabelResponse200 & {
+  headers: Headers;
+};
+export type updateLabelResponseError = updateLabelResponse404 & {
+  headers: Headers;
+};
+
+export type updateLabelResponse =
+  updateLabelResponseSuccess | updateLabelResponseError;
+
+export const getUpdateLabelUrl = (id: string) => {
+  return `${getApiBaseUrl()}/labels/${id}`;
+};
+
+/**
+ * @summary Update a Label.
+ */
+export const updateLabel = async (
+  id: string,
+  updateLabelDto: UpdateLabelDto,
+  options?: RequestInit,
+): Promise<updateLabelResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateLabelUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateLabelDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateLabelResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateLabelResponse;
+};
+
+export type deleteLabelResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteLabelResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteLabelResponseSuccess = deleteLabelResponse204 & {
+  headers: Headers;
+};
+export type deleteLabelResponseError = deleteLabelResponse404 & {
+  headers: Headers;
+};
+
+export type deleteLabelResponse =
+  deleteLabelResponseSuccess | deleteLabelResponseError;
+
+export const getDeleteLabelUrl = (id: string) => {
+  return `${getApiBaseUrl()}/labels/${id}`;
+};
+
+/**
+ * @summary Delete a Label.
+ */
+export const deleteLabel = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteLabelResponse> => {
+  const res = await fetch(getDeleteLabelUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteLabelResponse['data'] = body ? JSON.parse(body) : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteLabelResponse;
 };
 
 export type createMemberResponse201 = {
@@ -608,4 +4171,1834 @@ export const deleteMember = async (
     status: res.status,
     headers: res.headers,
   } as deleteMemberResponse;
+};
+
+export type createPermissionResponse201 = {
+  data: PermissionResponseDto;
+  status: 201;
+};
+
+export type createPermissionResponseSuccess = createPermissionResponse201 & {
+  headers: Headers;
+};
+export type createPermissionResponse = createPermissionResponseSuccess;
+
+export const getCreatePermissionUrl = () => {
+  return `${getApiBaseUrl()}/permissions`;
+};
+
+/**
+ * @summary Create a Permission.
+ */
+export const createPermission = async (
+  createPermissionDto: CreatePermissionDto,
+  options?: RequestInit,
+): Promise<createPermissionResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreatePermissionUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createPermissionDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createPermissionResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createPermissionResponse;
+};
+
+export type listPermissionsResponse200 = {
+  data: PermissionResponseDto[];
+  status: 200;
+};
+
+export type listPermissionsResponseSuccess = listPermissionsResponse200 & {
+  headers: Headers;
+};
+export type listPermissionsResponse = listPermissionsResponseSuccess;
+
+export const getListPermissionsUrl = () => {
+  return `${getApiBaseUrl()}/permissions`;
+};
+
+/**
+ * @summary List Permission records.
+ */
+export const listPermissions = async (
+  options?: RequestInit,
+): Promise<listPermissionsResponse> => {
+  const res = await fetch(getListPermissionsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listPermissionsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listPermissionsResponse;
+};
+
+export type getPermissionResponse200 = {
+  data: PermissionResponseDto;
+  status: 200;
+};
+
+export type getPermissionResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getPermissionResponseSuccess = getPermissionResponse200 & {
+  headers: Headers;
+};
+export type getPermissionResponseError = getPermissionResponse404 & {
+  headers: Headers;
+};
+
+export type getPermissionResponse =
+  getPermissionResponseSuccess | getPermissionResponseError;
+
+export const getGetPermissionUrl = (id: string) => {
+  return `${getApiBaseUrl()}/permissions/${id}`;
+};
+
+/**
+ * @summary Get a Permission by ID.
+ */
+export const getPermission = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getPermissionResponse> => {
+  const res = await fetch(getGetPermissionUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getPermissionResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getPermissionResponse;
+};
+
+export type updatePermissionResponse200 = {
+  data: PermissionResponseDto;
+  status: 200;
+};
+
+export type updatePermissionResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updatePermissionResponseSuccess = updatePermissionResponse200 & {
+  headers: Headers;
+};
+export type updatePermissionResponseError = updatePermissionResponse404 & {
+  headers: Headers;
+};
+
+export type updatePermissionResponse =
+  updatePermissionResponseSuccess | updatePermissionResponseError;
+
+export const getUpdatePermissionUrl = (id: string) => {
+  return `${getApiBaseUrl()}/permissions/${id}`;
+};
+
+/**
+ * @summary Update a Permission.
+ */
+export const updatePermission = async (
+  id: string,
+  updatePermissionDto: UpdatePermissionDto,
+  options?: RequestInit,
+): Promise<updatePermissionResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdatePermissionUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updatePermissionDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updatePermissionResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updatePermissionResponse;
+};
+
+export type deletePermissionResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deletePermissionResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deletePermissionResponseSuccess = deletePermissionResponse204 & {
+  headers: Headers;
+};
+export type deletePermissionResponseError = deletePermissionResponse404 & {
+  headers: Headers;
+};
+
+export type deletePermissionResponse =
+  deletePermissionResponseSuccess | deletePermissionResponseError;
+
+export const getDeletePermissionUrl = (id: string) => {
+  return `${getApiBaseUrl()}/permissions/${id}`;
+};
+
+/**
+ * @summary Delete a Permission.
+ */
+export const deletePermission = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deletePermissionResponse> => {
+  const res = await fetch(getDeletePermissionUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deletePermissionResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deletePermissionResponse;
+};
+
+export type createProtocolResponse201 = {
+  data: ProtocolResponseDto;
+  status: 201;
+};
+
+export type createProtocolResponseSuccess = createProtocolResponse201 & {
+  headers: Headers;
+};
+export type createProtocolResponse = createProtocolResponseSuccess;
+
+export const getCreateProtocolUrl = () => {
+  return `${getApiBaseUrl()}/protocols`;
+};
+
+/**
+ * @summary Create a Protocol.
+ */
+export const createProtocol = async (
+  createProtocolDto: CreateProtocolDto,
+  options?: RequestInit,
+): Promise<createProtocolResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateProtocolUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createProtocolDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createProtocolResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createProtocolResponse;
+};
+
+export type listProtocolsResponse200 = {
+  data: ProtocolResponseDto[];
+  status: 200;
+};
+
+export type listProtocolsResponseSuccess = listProtocolsResponse200 & {
+  headers: Headers;
+};
+export type listProtocolsResponse = listProtocolsResponseSuccess;
+
+export const getListProtocolsUrl = () => {
+  return `${getApiBaseUrl()}/protocols`;
+};
+
+/**
+ * @summary List Protocol records.
+ */
+export const listProtocols = async (
+  options?: RequestInit,
+): Promise<listProtocolsResponse> => {
+  const res = await fetch(getListProtocolsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listProtocolsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listProtocolsResponse;
+};
+
+export type getProtocolResponse200 = {
+  data: ProtocolResponseDto;
+  status: 200;
+};
+
+export type getProtocolResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getProtocolResponseSuccess = getProtocolResponse200 & {
+  headers: Headers;
+};
+export type getProtocolResponseError = getProtocolResponse404 & {
+  headers: Headers;
+};
+
+export type getProtocolResponse =
+  getProtocolResponseSuccess | getProtocolResponseError;
+
+export const getGetProtocolUrl = (id: string) => {
+  return `${getApiBaseUrl()}/protocols/${id}`;
+};
+
+/**
+ * @summary Get a Protocol by ID.
+ */
+export const getProtocol = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getProtocolResponse> => {
+  const res = await fetch(getGetProtocolUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getProtocolResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getProtocolResponse;
+};
+
+export type updateProtocolResponse200 = {
+  data: ProtocolResponseDto;
+  status: 200;
+};
+
+export type updateProtocolResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateProtocolResponseSuccess = updateProtocolResponse200 & {
+  headers: Headers;
+};
+export type updateProtocolResponseError = updateProtocolResponse404 & {
+  headers: Headers;
+};
+
+export type updateProtocolResponse =
+  updateProtocolResponseSuccess | updateProtocolResponseError;
+
+export const getUpdateProtocolUrl = (id: string) => {
+  return `${getApiBaseUrl()}/protocols/${id}`;
+};
+
+/**
+ * @summary Update a Protocol.
+ */
+export const updateProtocol = async (
+  id: string,
+  updateProtocolDto: UpdateProtocolDto,
+  options?: RequestInit,
+): Promise<updateProtocolResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateProtocolUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateProtocolDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateProtocolResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateProtocolResponse;
+};
+
+export type deleteProtocolResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteProtocolResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteProtocolResponseSuccess = deleteProtocolResponse204 & {
+  headers: Headers;
+};
+export type deleteProtocolResponseError = deleteProtocolResponse404 & {
+  headers: Headers;
+};
+
+export type deleteProtocolResponse =
+  deleteProtocolResponseSuccess | deleteProtocolResponseError;
+
+export const getDeleteProtocolUrl = (id: string) => {
+  return `${getApiBaseUrl()}/protocols/${id}`;
+};
+
+/**
+ * @summary Delete a Protocol.
+ */
+export const deleteProtocol = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteProtocolResponse> => {
+  const res = await fetch(getDeleteProtocolUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteProtocolResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteProtocolResponse;
+};
+
+export type createReviewCommentResponse201 = {
+  data: ReviewCommentResponseDto;
+  status: 201;
+};
+
+export type createReviewCommentResponseSuccess =
+  createReviewCommentResponse201 & {
+    headers: Headers;
+  };
+export type createReviewCommentResponse = createReviewCommentResponseSuccess;
+
+export const getCreateReviewCommentUrl = () => {
+  return `${getApiBaseUrl()}/review-comments`;
+};
+
+/**
+ * @summary Create a ReviewComment.
+ */
+export const createReviewComment = async (
+  createReviewCommentDto: CreateReviewCommentDto,
+  options?: RequestInit,
+): Promise<createReviewCommentResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateReviewCommentUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createReviewCommentDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createReviewCommentResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createReviewCommentResponse;
+};
+
+export type listReviewCommentsResponse200 = {
+  data: ReviewCommentResponseDto[];
+  status: 200;
+};
+
+export type listReviewCommentsResponseSuccess =
+  listReviewCommentsResponse200 & {
+    headers: Headers;
+  };
+export type listReviewCommentsResponse = listReviewCommentsResponseSuccess;
+
+export const getListReviewCommentsUrl = () => {
+  return `${getApiBaseUrl()}/review-comments`;
+};
+
+/**
+ * @summary List ReviewComment records.
+ */
+export const listReviewComments = async (
+  options?: RequestInit,
+): Promise<listReviewCommentsResponse> => {
+  const res = await fetch(getListReviewCommentsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listReviewCommentsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listReviewCommentsResponse;
+};
+
+export type getReviewCommentResponse200 = {
+  data: ReviewCommentResponseDto;
+  status: 200;
+};
+
+export type getReviewCommentResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getReviewCommentResponseSuccess = getReviewCommentResponse200 & {
+  headers: Headers;
+};
+export type getReviewCommentResponseError = getReviewCommentResponse404 & {
+  headers: Headers;
+};
+
+export type getReviewCommentResponse =
+  getReviewCommentResponseSuccess | getReviewCommentResponseError;
+
+export const getGetReviewCommentUrl = (id: string) => {
+  return `${getApiBaseUrl()}/review-comments/${id}`;
+};
+
+/**
+ * @summary Get a ReviewComment by ID.
+ */
+export const getReviewComment = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getReviewCommentResponse> => {
+  const res = await fetch(getGetReviewCommentUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getReviewCommentResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getReviewCommentResponse;
+};
+
+export type updateReviewCommentResponse200 = {
+  data: ReviewCommentResponseDto;
+  status: 200;
+};
+
+export type updateReviewCommentResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateReviewCommentResponseSuccess =
+  updateReviewCommentResponse200 & {
+    headers: Headers;
+  };
+export type updateReviewCommentResponseError =
+  updateReviewCommentResponse404 & {
+    headers: Headers;
+  };
+
+export type updateReviewCommentResponse =
+  updateReviewCommentResponseSuccess | updateReviewCommentResponseError;
+
+export const getUpdateReviewCommentUrl = (id: string) => {
+  return `${getApiBaseUrl()}/review-comments/${id}`;
+};
+
+/**
+ * @summary Update a ReviewComment.
+ */
+export const updateReviewComment = async (
+  id: string,
+  updateReviewCommentDto: UpdateReviewCommentDto,
+  options?: RequestInit,
+): Promise<updateReviewCommentResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateReviewCommentUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateReviewCommentDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateReviewCommentResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateReviewCommentResponse;
+};
+
+export type deleteReviewCommentResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteReviewCommentResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteReviewCommentResponseSuccess =
+  deleteReviewCommentResponse204 & {
+    headers: Headers;
+  };
+export type deleteReviewCommentResponseError =
+  deleteReviewCommentResponse404 & {
+    headers: Headers;
+  };
+
+export type deleteReviewCommentResponse =
+  deleteReviewCommentResponseSuccess | deleteReviewCommentResponseError;
+
+export const getDeleteReviewCommentUrl = (id: string) => {
+  return `${getApiBaseUrl()}/review-comments/${id}`;
+};
+
+/**
+ * @summary Delete a ReviewComment.
+ */
+export const deleteReviewComment = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteReviewCommentResponse> => {
+  const res = await fetch(getDeleteReviewCommentUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteReviewCommentResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteReviewCommentResponse;
+};
+
+export type createRoleResponse201 = {
+  data: RoleResponseDto;
+  status: 201;
+};
+
+export type createRoleResponseSuccess = createRoleResponse201 & {
+  headers: Headers;
+};
+export type createRoleResponse = createRoleResponseSuccess;
+
+export const getCreateRoleUrl = () => {
+  return `${getApiBaseUrl()}/roles`;
+};
+
+/**
+ * @summary Create a Role.
+ */
+export const createRole = async (
+  createRoleDto: CreateRoleDto,
+  options?: RequestInit,
+): Promise<createRoleResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateRoleUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createRoleDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createRoleResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createRoleResponse;
+};
+
+export type listRolesResponse200 = {
+  data: RoleResponseDto[];
+  status: 200;
+};
+
+export type listRolesResponseSuccess = listRolesResponse200 & {
+  headers: Headers;
+};
+export type listRolesResponse = listRolesResponseSuccess;
+
+export const getListRolesUrl = () => {
+  return `${getApiBaseUrl()}/roles`;
+};
+
+/**
+ * @summary List Role records.
+ */
+export const listRoles = async (
+  options?: RequestInit,
+): Promise<listRolesResponse> => {
+  const res = await fetch(getListRolesUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listRolesResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listRolesResponse;
+};
+
+export type getRoleResponse200 = {
+  data: RoleResponseDto;
+  status: 200;
+};
+
+export type getRoleResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getRoleResponseSuccess = getRoleResponse200 & {
+  headers: Headers;
+};
+export type getRoleResponseError = getRoleResponse404 & {
+  headers: Headers;
+};
+
+export type getRoleResponse = getRoleResponseSuccess | getRoleResponseError;
+
+export const getGetRoleUrl = (id: string) => {
+  return `${getApiBaseUrl()}/roles/${id}`;
+};
+
+/**
+ * @summary Get a Role by ID.
+ */
+export const getRole = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getRoleResponse> => {
+  const res = await fetch(getGetRoleUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getRoleResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as getRoleResponse;
+};
+
+export type updateRoleResponse200 = {
+  data: RoleResponseDto;
+  status: 200;
+};
+
+export type updateRoleResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateRoleResponseSuccess = updateRoleResponse200 & {
+  headers: Headers;
+};
+export type updateRoleResponseError = updateRoleResponse404 & {
+  headers: Headers;
+};
+
+export type updateRoleResponse =
+  updateRoleResponseSuccess | updateRoleResponseError;
+
+export const getUpdateRoleUrl = (id: string) => {
+  return `${getApiBaseUrl()}/roles/${id}`;
+};
+
+/**
+ * @summary Update a Role.
+ */
+export const updateRole = async (
+  id: string,
+  updateRoleDto: UpdateRoleDto,
+  options?: RequestInit,
+): Promise<updateRoleResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateRoleUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateRoleDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateRoleResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateRoleResponse;
+};
+
+export type deleteRoleResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteRoleResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteRoleResponseSuccess = deleteRoleResponse204 & {
+  headers: Headers;
+};
+export type deleteRoleResponseError = deleteRoleResponse404 & {
+  headers: Headers;
+};
+
+export type deleteRoleResponse =
+  deleteRoleResponseSuccess | deleteRoleResponseError;
+
+export const getDeleteRoleUrl = (id: string) => {
+  return `${getApiBaseUrl()}/roles/${id}`;
+};
+
+/**
+ * @summary Delete a Role.
+ */
+export const deleteRole = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteRoleResponse> => {
+  const res = await fetch(getDeleteRoleUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteRoleResponse['data'] = body ? JSON.parse(body) : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteRoleResponse;
+};
+
+export type createRuleResponse201 = {
+  data: RuleResponseDto;
+  status: 201;
+};
+
+export type createRuleResponseSuccess = createRuleResponse201 & {
+  headers: Headers;
+};
+export type createRuleResponse = createRuleResponseSuccess;
+
+export const getCreateRuleUrl = () => {
+  return `${getApiBaseUrl()}/rules`;
+};
+
+/**
+ * @summary Create a Rule.
+ */
+export const createRule = async (
+  createRuleDto: CreateRuleDto,
+  options?: RequestInit,
+): Promise<createRuleResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateRuleUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createRuleDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createRuleResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createRuleResponse;
+};
+
+export type listRulesResponse200 = {
+  data: RuleResponseDto[];
+  status: 200;
+};
+
+export type listRulesResponseSuccess = listRulesResponse200 & {
+  headers: Headers;
+};
+export type listRulesResponse = listRulesResponseSuccess;
+
+export const getListRulesUrl = () => {
+  return `${getApiBaseUrl()}/rules`;
+};
+
+/**
+ * @summary List Rule records.
+ */
+export const listRules = async (
+  options?: RequestInit,
+): Promise<listRulesResponse> => {
+  const res = await fetch(getListRulesUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listRulesResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listRulesResponse;
+};
+
+export type getRuleResponse200 = {
+  data: RuleResponseDto;
+  status: 200;
+};
+
+export type getRuleResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getRuleResponseSuccess = getRuleResponse200 & {
+  headers: Headers;
+};
+export type getRuleResponseError = getRuleResponse404 & {
+  headers: Headers;
+};
+
+export type getRuleResponse = getRuleResponseSuccess | getRuleResponseError;
+
+export const getGetRuleUrl = (id: string) => {
+  return `${getApiBaseUrl()}/rules/${id}`;
+};
+
+/**
+ * @summary Get a Rule by ID.
+ */
+export const getRule = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getRuleResponse> => {
+  const res = await fetch(getGetRuleUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getRuleResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as getRuleResponse;
+};
+
+export type updateRuleResponse200 = {
+  data: RuleResponseDto;
+  status: 200;
+};
+
+export type updateRuleResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateRuleResponseSuccess = updateRuleResponse200 & {
+  headers: Headers;
+};
+export type updateRuleResponseError = updateRuleResponse404 & {
+  headers: Headers;
+};
+
+export type updateRuleResponse =
+  updateRuleResponseSuccess | updateRuleResponseError;
+
+export const getUpdateRuleUrl = (id: string) => {
+  return `${getApiBaseUrl()}/rules/${id}`;
+};
+
+/**
+ * @summary Update a Rule.
+ */
+export const updateRule = async (
+  id: string,
+  updateRuleDto: UpdateRuleDto,
+  options?: RequestInit,
+): Promise<updateRuleResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateRuleUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateRuleDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateRuleResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateRuleResponse;
+};
+
+export type deleteRuleResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteRuleResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteRuleResponseSuccess = deleteRuleResponse204 & {
+  headers: Headers;
+};
+export type deleteRuleResponseError = deleteRuleResponse404 & {
+  headers: Headers;
+};
+
+export type deleteRuleResponse =
+  deleteRuleResponseSuccess | deleteRuleResponseError;
+
+export const getDeleteRuleUrl = (id: string) => {
+  return `${getApiBaseUrl()}/rules/${id}`;
+};
+
+/**
+ * @summary Delete a Rule.
+ */
+export const deleteRule = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteRuleResponse> => {
+  const res = await fetch(getDeleteRuleUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteRuleResponse['data'] = body ? JSON.parse(body) : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteRuleResponse;
+};
+
+export type createScopeResponse201 = {
+  data: ScopeResponseDto;
+  status: 201;
+};
+
+export type createScopeResponseSuccess = createScopeResponse201 & {
+  headers: Headers;
+};
+export type createScopeResponse = createScopeResponseSuccess;
+
+export const getCreateScopeUrl = () => {
+  return `${getApiBaseUrl()}/scopes`;
+};
+
+/**
+ * @summary Create a Scope.
+ */
+export const createScope = async (
+  createScopeDto: CreateScopeDto,
+  options?: RequestInit,
+): Promise<createScopeResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateScopeUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createScopeDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createScopeResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createScopeResponse;
+};
+
+export type listScopesResponse200 = {
+  data: ScopeResponseDto[];
+  status: 200;
+};
+
+export type listScopesResponseSuccess = listScopesResponse200 & {
+  headers: Headers;
+};
+export type listScopesResponse = listScopesResponseSuccess;
+
+export const getListScopesUrl = () => {
+  return `${getApiBaseUrl()}/scopes`;
+};
+
+/**
+ * @summary List Scope records.
+ */
+export const listScopes = async (
+  options?: RequestInit,
+): Promise<listScopesResponse> => {
+  const res = await fetch(getListScopesUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listScopesResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listScopesResponse;
+};
+
+export type getScopeResponse200 = {
+  data: ScopeResponseDto;
+  status: 200;
+};
+
+export type getScopeResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getScopeResponseSuccess = getScopeResponse200 & {
+  headers: Headers;
+};
+export type getScopeResponseError = getScopeResponse404 & {
+  headers: Headers;
+};
+
+export type getScopeResponse = getScopeResponseSuccess | getScopeResponseError;
+
+export const getGetScopeUrl = (id: string) => {
+  return `${getApiBaseUrl()}/scopes/${id}`;
+};
+
+/**
+ * @summary Get a Scope by ID.
+ */
+export const getScope = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getScopeResponse> => {
+  const res = await fetch(getGetScopeUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getScopeResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as getScopeResponse;
+};
+
+export type updateScopeResponse200 = {
+  data: ScopeResponseDto;
+  status: 200;
+};
+
+export type updateScopeResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateScopeResponseSuccess = updateScopeResponse200 & {
+  headers: Headers;
+};
+export type updateScopeResponseError = updateScopeResponse404 & {
+  headers: Headers;
+};
+
+export type updateScopeResponse =
+  updateScopeResponseSuccess | updateScopeResponseError;
+
+export const getUpdateScopeUrl = (id: string) => {
+  return `${getApiBaseUrl()}/scopes/${id}`;
+};
+
+/**
+ * @summary Update a Scope.
+ */
+export const updateScope = async (
+  id: string,
+  updateScopeDto: UpdateScopeDto,
+  options?: RequestInit,
+): Promise<updateScopeResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateScopeUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateScopeDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateScopeResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateScopeResponse;
+};
+
+export type deleteScopeResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteScopeResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteScopeResponseSuccess = deleteScopeResponse204 & {
+  headers: Headers;
+};
+export type deleteScopeResponseError = deleteScopeResponse404 & {
+  headers: Headers;
+};
+
+export type deleteScopeResponse =
+  deleteScopeResponseSuccess | deleteScopeResponseError;
+
+export const getDeleteScopeUrl = (id: string) => {
+  return `${getApiBaseUrl()}/scopes/${id}`;
+};
+
+/**
+ * @summary Delete a Scope.
+ */
+export const deleteScope = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteScopeResponse> => {
+  const res = await fetch(getDeleteScopeUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteScopeResponse['data'] = body ? JSON.parse(body) : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteScopeResponse;
+};
+
+export type createVoteResponse201 = {
+  data: VoteResponseDto;
+  status: 201;
+};
+
+export type createVoteResponseSuccess = createVoteResponse201 & {
+  headers: Headers;
+};
+export type createVoteResponse = createVoteResponseSuccess;
+
+export const getCreateVoteUrl = () => {
+  return `${getApiBaseUrl()}/votes`;
+};
+
+/**
+ * @summary Create a Vote.
+ */
+export const createVote = async (
+  createVoteDto: CreateVoteDto,
+  options?: RequestInit,
+): Promise<createVoteResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateVoteUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createVoteDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createVoteResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createVoteResponse;
+};
+
+export type listVotesResponse200 = {
+  data: VoteResponseDto[];
+  status: 200;
+};
+
+export type listVotesResponseSuccess = listVotesResponse200 & {
+  headers: Headers;
+};
+export type listVotesResponse = listVotesResponseSuccess;
+
+export const getListVotesUrl = () => {
+  return `${getApiBaseUrl()}/votes`;
+};
+
+/**
+ * @summary List Vote records.
+ */
+export const listVotes = async (
+  options?: RequestInit,
+): Promise<listVotesResponse> => {
+  const res = await fetch(getListVotesUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listVotesResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listVotesResponse;
+};
+
+export type getVoteResponse200 = {
+  data: VoteResponseDto;
+  status: 200;
+};
+
+export type getVoteResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getVoteResponseSuccess = getVoteResponse200 & {
+  headers: Headers;
+};
+export type getVoteResponseError = getVoteResponse404 & {
+  headers: Headers;
+};
+
+export type getVoteResponse = getVoteResponseSuccess | getVoteResponseError;
+
+export const getGetVoteUrl = (id: string) => {
+  return `${getApiBaseUrl()}/votes/${id}`;
+};
+
+/**
+ * @summary Get a Vote by ID.
+ */
+export const getVote = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getVoteResponse> => {
+  const res = await fetch(getGetVoteUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getVoteResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as getVoteResponse;
+};
+
+export type updateVoteResponse200 = {
+  data: VoteResponseDto;
+  status: 200;
+};
+
+export type updateVoteResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateVoteResponseSuccess = updateVoteResponse200 & {
+  headers: Headers;
+};
+export type updateVoteResponseError = updateVoteResponse404 & {
+  headers: Headers;
+};
+
+export type updateVoteResponse =
+  updateVoteResponseSuccess | updateVoteResponseError;
+
+export const getUpdateVoteUrl = (id: string) => {
+  return `${getApiBaseUrl()}/votes/${id}`;
+};
+
+/**
+ * @summary Update a Vote.
+ */
+export const updateVote = async (
+  id: string,
+  updateVoteDto: UpdateVoteDto,
+  options?: RequestInit,
+): Promise<updateVoteResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateVoteUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateVoteDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateVoteResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateVoteResponse;
+};
+
+export type deleteVoteResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteVoteResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteVoteResponseSuccess = deleteVoteResponse204 & {
+  headers: Headers;
+};
+export type deleteVoteResponseError = deleteVoteResponse404 & {
+  headers: Headers;
+};
+
+export type deleteVoteResponse =
+  deleteVoteResponseSuccess | deleteVoteResponseError;
+
+export const getDeleteVoteUrl = (id: string) => {
+  return `${getApiBaseUrl()}/votes/${id}`;
+};
+
+/**
+ * @summary Delete a Vote.
+ */
+export const deleteVote = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteVoteResponse> => {
+  const res = await fetch(getDeleteVoteUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteVoteResponse['data'] = body ? JSON.parse(body) : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteVoteResponse;
 };

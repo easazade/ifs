@@ -3623,7 +3623,7 @@
           },
           "labels": {
             "description": "Label assigned to this change.",
-            "examples": [
+            "example": [
               "main-system:fix",
               "ali:needs-urgent-attention"
             ],
@@ -3817,7 +3817,7 @@
           },
           "labels": {
             "description": "Label assigned to this change.",
-            "examples": [
+            "example": [
               "main-system:fix",
               "ali:needs-urgent-attention"
             ],
@@ -4011,7 +4011,7 @@
           },
           "labels": {
             "description": "Label assigned to this change.",
-            "examples": [
+            "example": [
               "main-system:fix",
               "ali:needs-urgent-attention"
             ],
