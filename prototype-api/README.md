@@ -81,6 +81,19 @@ The CLI and compiled application share the same URL resolver in `src/prisma/data
 
 Inject `PrismaService` into resource services, then use the generated model delegates after adding models. DTOs and runtime JSON Schema validation remain separate from Prisma types. Do not instantiate a client per request or pass unvalidated HTTP bodies straight into Prisma operations.
 
+## Generate DTOs and a Prisma model from an entity schema
+
+Run the generator with an entity name or JSON Schema path:
+
+```bash
+pnpm --filter prototype-api entity:generate member
+pnpm --filter prototype-api entity:generate ../ifs-standards/src/entities/member/member.schema.json
+```
+
+It creates `create`, `update`, and `response` DTOs under `src/<entity>/dto/`, upserts an idempotent generated model block in `prisma/schema.prisma`, formats the Prisma schema, and regenerates Prisma Client. Use `--skip-prisma-generate` when only source generation is wanted.
+
+JSON Schema scalar fields map to Prisma scalars. Arrays, objects, and `$ref` values map to Prisma `Json` because a JSON Schema reference does not define relation ownership, foreign keys, or delete behavior. Replace those fields with reviewed Prisma relations when relation semantics are known. Flexible schemas receive an optional `extensions Json` field for preserving additional properties. The generator intentionally does not create or apply migrations.
+
 ## Schema changes and migrations
 
 After implementing an approved IFS model in `prisma/schema.prisma`, run from the root against your **local development database only**:
