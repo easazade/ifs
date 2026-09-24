@@ -1,0 +1,17 @@
+[
+  "Action",
+  "ChangeItem",
+  "Comment",
+  "Label",
+  "Protocol",
+  "ReviewComment",
+  "Rule",
+  "Scope",
+  "Vote",
+  "Permission",
+  "Delegation",
+  "Role",
+  "Member",
+  "Decision",
+  "Change"
+]
