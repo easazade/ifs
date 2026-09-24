@@ -21,12 +21,12 @@ Build a working, database-backed prototype of the IFS standards, usable by a Rea
 - Backend output: `prototype-api/`, plus regenerated `prototype-api/openapi.json` and `api-client/src/generated/` artifacts. Workspace dependency/lockfile changes and handwritten `api-client/` changes require inclusion in the approved plan.
 - Do not modify `ifs-standards/`, generated standards artifacts, or the frontend (`prototype/`). Regenerating the shared API client is in scope; changing React code is not. Do not run `pnpm --filter ifs-standards entities`.
 - The backend stack is NestJS with Prisma ORM and SQLite. Treat this as decided; do not ask the user to choose an ORM or database, introduce TypeORM, or silently switch providers. If existing configuration conflicts, report it and obtain approval before replacing or migrating it.
-- Prisma schema models define persistence and relations. Request/response DTOs are separate NestJS HTTP contracts, not Prisma models or generated Prisma input/output types. Reuse the project's validation tooling; if absent or insufficient for schema coverage, use JSON Schema draft 2020-12 validation (for example Ajv) and include any dependency changes in the plan. Do not ask the user to choose a validation library.
+- Prisma schema models define persistence and relations. Request/response DTOs are separate NestJS HTTP contracts, not Prisma models or generated Prisma input/output types. Reuse the project's validation tooling or ask which to use if undecided.
 - The API contract pipeline is already decided: the `@nestjs/swagger` compiler plugin adds metadata during Nest compilation, `SwaggerModule.createDocument()` creates OpenAPI, and Orval generates the `@ifs/api-client` workspace package. Preserve this pipeline; do not introduce a second generator or hand-maintained client.
 
 ## 1. Mandatory read-only existence gate
 
-Complete this gate before implementation planning, scaffolding, dependency installation, generation, database access, or any writes.
+Complete this gate before questionnaires about implementation, scaffolding, dependency installation, generation, database access, or any writes.
 
 1. Require a nonempty entity name. If omitted, ask for it and stop.
 2. Normalize ordinary name variants to kebab-case; reject path separators, traversal, or values that are not entity names. Resolve only within `ifs-standards/src/entities/`.
@@ -36,7 +36,7 @@ Complete this gate before implementation planning, scaffolding, dependency insta
 
 All entity definitions come from `*.schema.json`. Do not reverse-engineer fields from `.mdx`, generated TypeScript, examples, existing backend code, or frontend assumptions. Existing backend code determines implementation conventions, not standards semantics. If requirements conflict with the schema, explain the conflict and ask for a separate standards update; do not silently diverge.
 
-## 2. Inspect, resolve real gaps, and obtain approval
+## 2. Inspect, interview, and obtain approval
 
 After the gate passes, inspect read-only:
 
@@ -46,36 +46,19 @@ After the gate passes, inspect read-only:
 - Existing controller routes, DTOs, persistence models, services, and shared utilities. Search registrations too; a partially scaffolded resource is an update, not a reason to generate duplicates.
 - Git status/diff so existing user changes remain intact.
 
-### Use what is already known
+First response: briefly state the resolved schema path, whether this is creation or update, and the proposed field/relation mapping. Ask all needed questions together as a numbered list so `pi-questions-helper` can collect one answer batch. Do not write files; stop and wait. Include any required trace footer after the questions.
 
-Derive entity semantics from the schema, follow compatible backend conventions, and use this prompt's defaults for remaining routine choices. Honor explicit requirements without silently overriding schema constraints. Do not ask the user to reconfirm settled choices or turn the checks below into a questionnaire.
+Tailor questions to actual gaps. Reuse established configuration and requirements instead of asking the user to repeat them:
 
-- Default scope: schema-aligned create/list/get/update/delete. For existing resources, fill gaps and preserve compatible custom logic, routes, operation IDs, and response shapes; do not ask what to change when schema alignment already answers that.
-- Reuse Prisma/SQLite configuration, validation, authentication, pagination, and environment conventions. If database setup is missing, plan minimal local SQLite setup plus a separate disposable test database. Choose routine file locations and safe bounded-list defaults yourself and state them in the plan.
-- Derive writable/server-managed fields and ID/timestamp handling from schema annotations and existing conventions. Never invent a real `ifsId` or other domain value.
-- Choose schema-faithful storage and PATCH behavior using existing conventions. Include new dependencies, related persistence models, and shared infrastructure in the plan, not separate approval questions. Do not add related CRUD endpoints unless requested.
-- Preserve existing CORS/auth settings. Do not ask about frontend needs or introduce configuration changes unless required by the task.
+1. Confirm the intended operation and scope: default is schema-aligned create/list/get/update/delete; for an existing resource, what behavior should change? Preserve compatible custom logic and routes by default.
+2. Reuse existing Prisma/SQLite setup. If absent, propose minimal Prisma setup with a local SQLite database and a separate disposable test database as part of the approval plan. Ask only about unresolved file locations or environment configuration, not the already-decided ORM/database. Request environment variable names, not secrets in chat.
+3. If request validation tooling is undecided, which approach should be used? Recommend JSON Schema draft 2020-12 validation (for example Ajv) when needed for faithful schema coverage; clarify any library the user says they will name later.
+4. Which fields are server-managed versus client-supplied, and how are IDs, timestamps, `ifsId`, and read-only fields populated? Ask only where schema annotations and existing conventions do not settle it.
+5. For entity relations, clarify ownership, cardinality/uniqueness not expressed by the schema, whether writes link existing records or create nested records, and deletion behavior. Show any required related persistence models; request approval before adding or changing them. Do not silently scaffold related CRUD endpoints.
+6. Ask about unresolved frontend/API needs only when relevant: route compatibility, list pagination, allowed development origins, or existing authentication/authorization conventions. Do not invent governance rules from schema descriptions.
+7. Approve the concrete file/change plan, including dependencies, shared infrastructure, related models, migrations, OpenAPI DTOs/decorators, and regenerated client artifacts? Explicitly flag breaking route/field changes, operation-ID/client-export changes, and potentially destructive database changes.
 
-### Ask only about genuine ambiguity or risk
-
-Ask only when the schema, explicit requirements, existing conventions, and defaults cannot safely settle a necessary decision. Examples: unclear relation ownership/linking/deletion, a required server-managed value with no known source, conflicting configuration, a breaking API/client change, or possible data loss. Do not invent domain or governance rules to avoid asking.
-
-If blocked, briefly identify the schema path and whether this is creation or update, then group only the unresolved questions into one short numbered list for `pi-questions-helper`. Use simple everyday language, name the affected fields, explain the practical effect, and offer a recommended option when safe. Avoid jargon and broad design questions. For example: “When a group is deleted, should its members stay? I recommend keeping them.” Ask for environment variable names, never secrets. Stop and wait without writes.
-
-Parse answer batches, including `Here are my answers to your questions:` drafts. Ask follow-ups only for still-blocking missing or conflicting answers. Answers resolve gaps; they are not implementation approval.
-
-### One plan, then approval
-
-Once gaps are resolved—or immediately if none exist—show one concise implementation plan covering:
-
-- Source schema path, creation/update, and key field/relation mapping.
-- Files and behavior to add/change, including DTOs, validation, dependencies, shared setup, related models, and migrations where needed.
-- OpenAPI export, Orval client regeneration, and relevant tests/checks.
-- Any breaking changes, data risks, limitations, and local/test database actions.
-
-State inferred defaults as decisions, not confirmation questions. End with one simple approval question: “Shall I implement this plan?” Stop and wait before writes. If the user requests changes, revise the plan; do not restart the questionnaire.
-
-After approval, complete implementation, generation, verification, and reporting without further routine confirmations. Pause only for a newly discovered blocker, material scope change, breaking change, or data-loss risk outside the approved plan. Plan approval never authorizes dropping data or migrating a shared/production database; those require separate explicit authorization.
+Parse the user's answer batch, including `Here are my answers to your questions:` drafts. If answers are incomplete or conflicting, ask only missing follow-ups and wait. If approval was withheld, present the final plan and obtain approval before writes. Do not treat code-generation approval as permission to drop data or migrate a shared/production database.
 
 ## 3. Schema-to-backend contract
 
