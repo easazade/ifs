@@ -6,6 +6,11 @@ import { CreateMemberDto } from './dto/create-member.dto.js';
 import { MemberResponseDto } from './dto/member-response.dto.js';
 import { UpdateMemberDto } from './dto/update-member.dto.js';
 
+const memberRelations = {
+  permissions: true,
+  roles: true,
+} as const;
+
 @Injectable()
 export class MemberService {
   constructor(private readonly prisma: PrismaService) {}
@@ -13,18 +18,20 @@ export class MemberService {
   create(data: CreateMemberDto): Promise<MemberResponseDto> {
     return this.prisma.member.create({
       data: data as unknown as Prisma.MemberCreateInput,
+      include: memberRelations,
     }) as unknown as Promise<MemberResponseDto>;
   }
 
   findAll(): Promise<MemberResponseDto[]> {
-    return this.prisma.member.findMany() as unknown as Promise<
-      MemberResponseDto[]
-    >;
+    return this.prisma.member.findMany({
+      include: memberRelations,
+    }) as unknown as Promise<MemberResponseDto[]>;
   }
 
   findOne(id: string): Promise<MemberResponseDto | null> {
     return this.prisma.member.findUnique({
       where: { id },
+      include: memberRelations,
     }) as unknown as Promise<MemberResponseDto | null>;
   }
 
@@ -32,12 +39,14 @@ export class MemberService {
     return this.prisma.member.update({
       where: { id },
       data: data as unknown as Prisma.MemberUpdateInput,
+      include: memberRelations,
     }) as unknown as Promise<MemberResponseDto>;
   }
 
   remove(id: string): Promise<MemberResponseDto> {
     return this.prisma.member.delete({
       where: { id },
+      include: memberRelations,
     }) as unknown as Promise<MemberResponseDto>;
   }
 }

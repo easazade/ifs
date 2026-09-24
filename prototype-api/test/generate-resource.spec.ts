@@ -23,21 +23,23 @@ afterEach(() => {
   }
 });
 
-function fixture(withDtos = true) {
+function fixture(
+  withDtos = true,
+  relations = [
+    { property: 'permissions', type: 'Permission' },
+    { property: 'roles', type: 'Role' },
+  ],
+) {
   const root = mkdtempSync(join(tmpdir(), 'ifs-resource-generator-'));
   temporaryDirectories.push(root);
 
   const temporaryApi = join(root, 'prototype-api');
   const scriptsDirectory = join(temporaryApi, 'scripts');
-  const entityDirectory = join(
-    root,
-    'ifs-standards',
-    'src',
-    'entities',
-    'member',
-  );
+  const standardsRoot = join(root, 'ifs-standards');
+  const entityDirectory = join(standardsRoot, 'src', 'entities', 'member');
   mkdirSync(scriptsDirectory, { recursive: true });
   mkdirSync(entityDirectory, { recursive: true });
+  mkdirSync(join(standardsRoot, 'scripts'), { recursive: true });
   mkdirSync(join(temporaryApi, 'prisma'), { recursive: true });
   cpSync(
     join(apiRoot, 'scripts', 'generate-resource.mjs'),
@@ -56,7 +58,11 @@ function fixture(withDtos = true) {
   );
   writeFileSync(
     join(temporaryApi, 'prisma', 'schema.prisma'),
-    'model Member {\n  id String @id\n}\n',
+    'model Member {\n  id String @id\n  permissions Permission[]\n  roles Role[]\n}\n',
+  );
+  writeFileSync(
+    join(standardsRoot, 'scripts', 'entity-relations.json'),
+    JSON.stringify({ Member: relations }),
   );
 
   if (withDtos) writeDtos(temporaryApi);
@@ -112,8 +118,11 @@ describe('resource generator', () => {
     expect(readFileSync(servicePath, 'utf8')).toBe(firstSource);
     expect(firstSource).toContain('@Injectable()');
     expect(firstSource).toContain('private readonly prisma: PrismaService');
-    expect(firstSource).toContain('this.prisma.member.findMany()');
     expect(firstSource).toContain('Prisma.MemberCreateInput');
+    expect(firstSource).toContain('const memberRelations = {');
+    expect(firstSource).toContain('permissions: true');
+    expect(firstSource).toContain('roles: true');
+    expect(firstSource.match(/include: memberRelations/g)).toHaveLength(5);
 
     const controllerSource = readFileSync(
       join(temporaryApi, 'src', 'member', 'member.controller.ts'),
@@ -140,6 +149,19 @@ describe('resource generator', () => {
     );
     expect(resourcesSource).toContain('import { MemberModule }');
     expect(resourcesSource).toContain('imports: [MemberModule]');
+  });
+
+  it('omits Prisma include when the entity has no relations', () => {
+    const temporaryApi = fixture(true, []);
+    const result = run(temporaryApi);
+    const source = readFileSync(
+      join(temporaryApi, 'src', 'member', 'member.service.ts'),
+      'utf8',
+    );
+
+    expect(result.status).toBe(0);
+    expect(source).toContain('this.prisma.member.findMany()');
+    expect(source).not.toContain('include:');
   });
 
   it('runs the all-DTO generator when DTOs are missing', () => {
