@@ -41,22 +41,21 @@ model Scope {
 
 // <generated:model Action source="../ifs-standards/src/entities/action/action.schema.json">
 model Action {
-  id                     String  @id
-  ifsId                  String
-  entityType             String
-  basedOn                String?
-  entityDocumentationUrl String
-  createdAt              String
-  updatedAt              String
-  name                   String
-  uniqueName             String
-  requiresPermission     Boolean
-  description            String
-  instructions           String?
-  notes                  String?
-  warnings               String?
-  state                  String
-
+  id                            String       @id
+  ifsId                         String
+  entityType                    String
+  basedOn                       String?
+  entityDocumentationUrl        String
+  createdAt                     String
+  updatedAt                     String
+  name                          String
+  uniqueName                    String
+  requiresPermission            Boolean
+  description                   String
+  instructions                  String?
+  notes                         String?
+  warnings                      String?
+  state                         String
   // <generated:inverse Permission_actions>
   relationFromPermissionActions Permission[] @relation("Permission_actions")
   // </generated:inverse Permission_actions>
@@ -66,27 +65,31 @@ model Action {
 
 // <generated:model Permission source="../ifs-standards/src/entities/permission/permission.schema.json">
 model Permission {
-  id                            String   @id
-  ifsId                         String
-  entityType                    String
-  basedOn                       String?
-  entityDocumentationUrl        String
-  actionIds                     Json
-  actions                       Action[] @relation("Permission_actions")
-  memberId                      String?
-  roleId                        String?
-  scopeId                       String
-  scope                         Json?
-  state                         String
-  createdAt                     String
-  updatedAt                     String?
-  expiresAt                     String
-  extensions                    Json?
+  id                     String   @id
+  ifsId                  String
+  entityType             String
+  basedOn                String?
+  entityDocumentationUrl String
+  actionIds              Json
+  actions                Action[] @relation("Permission_actions")
+  memberId               String?
+  roleId                 String?
+  scopeId                String
+  scope                  Json?
+  state                  String
+  createdAt              String
+  updatedAt              String?
+  expiresAt              String
+  extensions             Json?
+
+  // <generated:inverse Delegation_permission>
+  relationFromDelegationPermission Delegation[] @relation("Delegation_permission")
+  // </generated:inverse Delegation_permission>
   // <generated:inverse Role_permissions>
-  relationFromRolePermissions   Role[]   @relation("Role_permissions")
+  relationFromRolePermissions      Role[]       @relation("Role_permissions")
   // </generated:inverse Role_permissions>
   // <generated:inverse Member_permissions>
-  relationFromMemberPermissions Member[] @relation("Member_permissions")
+  relationFromMemberPermissions    Member[]     @relation("Member_permissions")
   // </generated:inverse Member_permissions>
 }
 
@@ -119,17 +122,252 @@ model Role {
 
 // <generated:model Member source="../ifs-standards/src/entities/member/member.schema.json">
 model Member {
-  id                     String       @id
+  id                                  String       @id
+  ifsId                               String
+  entityType                          String
+  entityDocumentationUrl              String
+  name                                String
+  roles                               Role[]       @relation("Member_roles")
+  permissions                         Permission[] @relation("Member_permissions")
+  isOwner                             Boolean
+  createdAt                           String
+  updatedAt                           String
+  extensions                          Json?
+  // <generated:inverse Decision_eligibleMembers>
+  relationFromDecisionEligibleMembers Decision[]   @relation("Decision_eligibleMembers")
+  // </generated:inverse Decision_eligibleMembers>
+  // <generated:inverse Decision_affectedMembers>
+  relationFromDecisionAffectedMembers Decision[]   @relation("Decision_affectedMembers")
+  // </generated:inverse Decision_affectedMembers>
+  // <generated:inverse Change_authors>
+  relationFromChangeAuthors           Change[]     @relation("Change_authors")
+  // </generated:inverse Change_authors>
+  // <generated:inverse Change_mainAuthor>
+  relationFromChangeMainAuthor        Change[]     @relation("Change_mainAuthor")
+  // </generated:inverse Change_mainAuthor>
+  // <generated:inverse Change_reviewers>
+  relationFromChangeReviewers         Change[]     @relation("Change_reviewers")
+  // </generated:inverse Change_reviewers>
+}
+
+// </generated:model Member>
+
+// <generated:model ChangeItem source="../ifs-standards/src/entities/change-item/change-item.schema.json">
+model ChangeItem {
+  id                        String   @id
+  ifsId                     String
+  entityType                String
+  basedOn                   String?
+  entityDocumentationUrl    String
+  resourceType              String
+  operation                 String
+  targetRef                 String?
+  baseRef                   String?
+  proposedRef               String?
+  description               String?
+  createdAt                 String
+  updatedAt                 String
+  extensions                Json?
+  // <generated:inverse Change_changes>
+  relationFromChangeChanges Change[] @relation("Change_changes")
+  // </generated:inverse Change_changes>
+}
+
+// </generated:model ChangeItem>
+
+// <generated:model Comment source="../ifs-standards/src/entities/comment/comment.schema.json">
+model Comment {
+  id                         String   @id
+  ifsId                      String
+  entityType                 String
+  basedOn                    String?
+  entityDocumentationUrl     String
+  createdAt                  String
+  updatedAt                  String
+  extensions                 Json?
+  // <generated:inverse Change_comments>
+  relationFromChangeComments Change[] @relation("Change_comments")
+  // </generated:inverse Change_comments>
+}
+
+// </generated:model Comment>
+
+// <generated:model Label source="../ifs-standards/src/entities/label/label.schema.json">
+model Label {
+  id                     String  @id
   ifsId                  String
   entityType             String
+  basedOn                String?
   entityDocumentationUrl String
-  name                   String
-  roles                  Role[]       @relation("Member_roles")
-  permissions            Permission[] @relation("Member_permissions")
-  isOwner                Boolean
   createdAt              String
   updatedAt              String
   extensions             Json?
 }
 
-// </generated:model Member>
+// </generated:model Label>
+
+// <generated:model Protocol source="../ifs-standards/src/entities/protocol/protocol.schema.json">
+model Protocol {
+  id                     String  @id
+  ifsId                  String
+  entityType             String
+  basedOn                String?
+  entityDocumentationUrl String
+  createdAt              String
+  extensions             Json?
+}
+
+// </generated:model Protocol>
+
+// <generated:model ReviewComment source="../ifs-standards/src/entities/review-comment/review-comment.schema.json">
+model ReviewComment {
+  id                               String   @id
+  ifsId                            String
+  entityType                       String
+  basedOn                          String?
+  entityDocumentationUrl           String
+  createdAt                        String
+  updatedAt                        String
+  extensions                       Json?
+  // <generated:inverse Change_reviewComments>
+  relationFromChangeReviewComments Change[] @relation("Change_reviewComments")
+  // </generated:inverse Change_reviewComments>
+}
+
+// </generated:model ReviewComment>
+
+// <generated:model Rule source="../ifs-standards/src/entities/rule/rule.schema.json">
+model Rule {
+  id                        String     @id
+  ifsId                     String
+  entityType                String
+  basedOn                   String?
+  entityDocumentationUrl    String
+  createdAt                 String
+  updatedAt                 String
+  extensions                Json?
+  // <generated:inverse Decision_rules>
+  relationFromDecisionRules Decision[] @relation("Decision_rules")
+  // </generated:inverse Decision_rules>
+}
+
+// </generated:model Rule>
+
+// <generated:model Vote source="../ifs-standards/src/entities/vote/vote.schema.json">
+model Vote {
+  id                        String     @id
+  ifsId                     String
+  entityType                String
+  basedOn                   String?
+  entityDocumentationUrl    String
+  createdAt                 String
+  updatedAt                 String
+  decisionId                String
+  memberId                  String
+  value                     String
+  previousRevisionId        String?
+  extensions                Json?
+  // <generated:inverse Decision_votes>
+  relationFromDecisionVotes Decision[] @relation("Decision_votes")
+  // </generated:inverse Decision_votes>
+}
+
+// </generated:model Vote>
+
+// <generated:model Delegation source="../ifs-standards/src/entities/delegation/delegation.schema.json">
+model Delegation {
+  id                     String      @id
+  ifsId                  String
+  entityType             String
+  basedOn                String?
+  entityDocumentationUrl String
+  createdAt              String
+  updatedAt              String?
+  permissionId           String
+  permissionRelationId   String?
+  permission             Permission? @relation("Delegation_permission", fields: [permissionRelationId], references: [id])
+  delegatorRef           String
+  delegateRef            String
+  state                  String
+  revokedAt              String?
+  expiresAt              String?
+  extensions             Json?
+}
+
+// </generated:model Delegation>
+
+// <generated:model Decision source="../ifs-standards/src/entities/decision/decision.schema.json">
+model Decision {
+  id                                   String     @id
+  ifsId                                String
+  entityType                           String
+  basedOn                              String?
+  entityDocumentationUrl               String
+  subject                              String
+  state                                String
+  previousRevisionId                   String?
+  previousRevision                     Decision?  @relation("Decision_previousRevision", fields: [previousRevisionId], references: [id])
+  eligibleMembers                      Member[]   @relation("Decision_eligibleMembers")
+  affectedMembers                      Member[]   @relation("Decision_affectedMembers")
+  votes                                Vote[]     @relation("Decision_votes")
+  rules                                Rule[]     @relation("Decision_rules")
+  eligibleMemberCount                  Int
+  affectedMemberCount                  Int
+  voteCount                            Int
+  delegateVoteCount                    Int?
+  openedAt                             String
+  closedAt                             String?
+  cancelledAt                          String?
+  verifiedAt                           String?
+  approvedAt                           String?
+  rejectedAt                           String?
+  createdAt                            String
+  updatedAt                            String
+  decidedAt                            String?
+  extensions                           Json?
+  // <generated:inverse Decision_previousRevision>
+  relationFromDecisionPreviousRevision Decision[] @relation("Decision_previousRevision")
+  // </generated:inverse Decision_previousRevision>
+  // <generated:inverse Change_decision>
+  relationFromChangeDecision           Change[]   @relation("Change_decision")
+  // </generated:inverse Change_decision>
+}
+
+// </generated:model Decision>
+
+// <generated:model Change source="../ifs-standards/src/entities/change/change.schema.json">
+model Change {
+  id                     String          @id
+  ifsId                  String
+  entityType             String
+  basedOn                String?
+  entityDocumentationUrl String
+  title                  String
+  description            String
+  summary                String?
+  reason                 String
+  changes                ChangeItem[]    @relation("Change_changes")
+  decisionRelationId     String?
+  decision               Decision?       @relation("Change_decision", fields: [decisionRelationId], references: [id])
+  comments               Comment[]       @relation("Change_comments")
+  commentsUrl            String?
+  reviewComments         ReviewComment[] @relation("Change_reviewComments")
+  authors                Member[]        @relation("Change_authors")
+  mainAuthorId           String
+  mainAuthor             Member          @relation("Change_mainAuthor", fields: [mainAuthorId], references: [id])
+  reviewers              Member[]        @relation("Change_reviewers")
+  status                 String
+  diffUrl                String?
+  number                 Int
+  labels                 Json?
+  merged                 Boolean
+  hasConflict            Boolean
+  links                  Json?
+  createdAt              String
+  updatedAt              String
+  mergedAt               String?
+  closedAt               String?
+  extensions             Json?
+}
+
+// </generated:model Change>
