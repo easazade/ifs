@@ -9,17 +9,17 @@ Currently, two official plugins are available:
 
 ## Backend API client
 
-The generated `@ifs/api-client` workspace package is available to import:
+The generated `@ifs/prototype-client` workspace package is available to import:
 
 ```ts
-import { getHello } from '@ifs/api-client';
+import { getHello } from '@ifs/prototype-client';
 
 const { data, status } = await getHello();
 ```
 
 Run `pnpm client:generate` from the repository root after backend contract changes. This exports OpenAPI, generates the client with Orval, and builds its JavaScript/types. The prototype's `dev` / `build` commands also build the committed client source automatically.
 
-In development, `/api` is proxied to `http://localhost:3000`; run the Nest API separately. Swagger UI is at `http://localhost:3000/docs`. Production needs a reverse proxy or an explicit backend base URL. See [client configuration and usage](../api-client/README.md).
+In development, `/api` is proxied to `http://localhost:3000`; run the Nest API separately. Swagger UI is at `http://localhost:3000/docs`. Production needs a reverse proxy or an explicit backend base URL. See [client configuration and usage](../prototype-client/README.md).
 
 ## Formatting and linting
 

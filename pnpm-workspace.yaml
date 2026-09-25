@@ -2,7 +2,7 @@ packages:
   - "ifs-standards"
   - "prototype"
   - "prototype-api"
-  - "api-client"
+  - "prototype-client"
 
 allowBuilds:
   esbuild: true

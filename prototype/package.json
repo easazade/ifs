@@ -4,15 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @ifs/api-client build && vite",
-    "build": "pnpm --filter @ifs/api-client build && tsc -b && vite build",
+    "dev": "pnpm --filter @ifs/prototype-client build && vite",
+    "build": "pnpm --filter @ifs/prototype-client build && tsc -b && vite build",
     "lint": "eslint .",
     "format": "prettier --write src \"*.{js,ts}\" \"tsconfig*.json\"",
     "format:check": "prettier --check src \"*.{js,ts}\" \"tsconfig*.json\"",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ifs/api-client": "workspace:*",
+    "@ifs/prototype-client": "workspace:*",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

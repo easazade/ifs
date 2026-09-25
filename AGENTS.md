@@ -17,7 +17,7 @@ This repository is a pnpm/Turborepo monorepo. These instructions apply across th
 - `ifs-standards/`: IFS schemas, protocols, documentation, and the standards website. Defines rules for Dynamic Consent, Asset Traceability, and Modular Rule-Setting used to implement IFS software.
 - `prototype/`: prototype frontend.
 - `prototype-api/`: NestJS backend with Prisma and SQLite.
-- `api-client/`: shared OpenAPI-generated client (`@ifs/api-client`).
+- `prototype-client/`: shared OpenAPI-generated client (`@ifs/prototype-client`).
 - `.pi/prompts/`: repository-wide Pi prompt templates.
 
 ## Source of truth

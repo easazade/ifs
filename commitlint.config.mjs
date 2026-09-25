@@ -25,7 +25,7 @@ export default {
     "scope-enum": [
       2,
       "always",
-      ["ifs-standards", "prototype", "prototype-api", "@ifs/api-client"],
+      ["ifs-standards", "prototype", "prototype-api", "@ifs/prototype-client"],
     ],
     "subject-empty": [2, "never"],
   },

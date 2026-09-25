@@ -31,15 +31,15 @@ pnpm openapi:generate
 # Writes prototype-api/openapi.json after a Prisma generation + Nest build.
 
 pnpm client:generate
-# Exports a fresh contract, runs Orval, and builds @ifs/api-client.
+# Exports a fresh contract, runs Orval, and builds @ifs/prototype-client.
 
-pnpm --filter @ifs/api-client generate
+pnpm --filter @ifs/prototype-client generate
 # Client only, using the existing prototype-api/openapi.json.
 ```
 
 Export runs `dist/generate-openapi.js`, not the untransformed TypeScript source. It creates the Nest container but does not call `app.init()` or `app.listen()`, then closes it: no HTTP server, database connection, or migration is required. Constructors still run, so future providers must avoid network/database side effects in constructors. A configured `DATABASE_URL` must still be a syntactically valid SQLite URL.
 
-Commit `openapi.json` and `api-client/src/generated/api.ts` alongside API changes; never edit generated files manually. `api-client/dist/` is ignored build output. The client is a private workspace ESM package with JavaScript and TypeScript declarations, already listed as a dependency of `prototype`. See [client usage and runtime URL configuration](../api-client/README.md).
+Commit `openapi.json` and `prototype-client/src/generated/api.ts` alongside API changes; never edit generated files manually. `prototype-client/dist/` is ignored build output. The client is a private workspace ESM package with JavaScript and TypeScript declarations, already listed as a dependency of `prototype`. See [client usage and runtime URL configuration](../prototype-client/README.md).
 
 Generated resources are wired into OpenAPI automatically. `resource:generate` creates a Swagger-decorated controller, Nest module, Prisma-backed service, and refreshes `src/generated-resources.module.ts`. `AppModule` imports that registry, so generated operations appear in `openapi.json` and Orval without hand-editing module metadata.
 
@@ -152,7 +152,7 @@ pnpm --filter prototype-api build
 pnpm --filter prototype-api test
 pnpm --filter prototype-api test:e2e
 pnpm --filter prototype-api test:openapi
-pnpm --filter @ifs/api-client test
+pnpm --filter @ifs/prototype-client test
 ```
 
 Database tests use unique temporary SQLite files, never the development database. They verify real reads/writes, updates/deletes, persistence across connections, transaction rollback, Nest shutdown cleanup, and URL resolution. E2E tests run `prisma migrate deploy` against a disposable database and verify the application connects to that same file. With no domain models yet, this checks migration-command wiring, not domain migration behavior.

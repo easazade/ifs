@@ -9,7 +9,7 @@
     "format": "turbo run format",
     "test": "turbo run test",
     "openapi:generate": "pnpm --filter prototype-api openapi:generate",
-    "client:generate": "pnpm openapi:generate && pnpm --filter @ifs/api-client generate",
+    "client:generate": "pnpm openapi:generate && pnpm --filter @ifs/prototype-client generate",
     "prepare": "husky"
   },
   "devDependencies": {
