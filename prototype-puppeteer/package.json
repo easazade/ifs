@@ -4,14 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx src/index.ts",
-    "build": "tsc",
+    "dev": "pnpm --filter prototype-client build && tsx src/index.ts",
+    "build": "pnpm --filter prototype-client build && tsc",
     "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@types/node": "^26.6.2",
     "tsx": "^4.23.15",
@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "esbuild": "^0.28.2",
-    "undici-types": "^8.9.0"
+    "undici-types": "^8.9.0",
+    "prototype-client": "workspace:*"
   }
 }

@@ -3,11 +3,12 @@ packages:
   - "prototype"
   - "prototype-api"
   - "prototype-client"
+  - "prototype-puppeteer"
 
 allowBuilds:
   esbuild: true
   better-sqlite3: true
-  '@prisma/engines': true
+  "@prisma/engines": true
   prisma: true
   # Swagger's optional install-time analytics are not needed.
-  '@scarf/scarf': false
+  "@scarf/scarf": false
