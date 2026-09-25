@@ -9,10 +9,10 @@ Currently, two official plugins are available:
 
 ## Backend API client
 
-The generated `@ifs/prototype-client` workspace package is available to import:
+The generated `prototype-client` workspace package is available to import:
 
 ```ts
-import { getHello } from '@ifs/prototype-client';
+import { getHello } from 'prototype-client';
 
 const { data, status } = await getHello();
 ```

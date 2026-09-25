@@ -31,9 +31,9 @@ pnpm openapi:generate
 # Writes prototype-api/openapi.json after a Prisma generation + Nest build.
 
 pnpm client:generate
-# Exports a fresh contract, runs Orval, and builds @ifs/prototype-client.
+# Exports a fresh contract, runs Orval, and builds prototype-client.
 
-pnpm --filter @ifs/prototype-client generate
+pnpm --filter prototype-client generate
 # Client only, using the existing prototype-api/openapi.json.
 ```
 
@@ -152,7 +152,7 @@ pnpm --filter prototype-api build
 pnpm --filter prototype-api test
 pnpm --filter prototype-api test:e2e
 pnpm --filter prototype-api test:openapi
-pnpm --filter @ifs/prototype-client test
+pnpm --filter prototype-client test
 ```
 
 Database tests use unique temporary SQLite files, never the development database. They verify real reads/writes, updates/deletes, persistence across connections, transaction rollback, Nest shutdown cleanup, and URL resolution. E2E tests run `prisma migrate deploy` against a disposable database and verify the application connects to that same file. With no domain models yet, this checks migration-command wiring, not domain migration behavior.

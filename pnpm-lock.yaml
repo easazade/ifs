@@ -224,7 +224,7 @@ importers:
 
   prototype:
     dependencies:
-      '@ifs/prototype-client':
+      prototype-client:
         specifier: workspace:*
         version: link:../prototype-client
       react:
