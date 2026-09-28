@@ -1,24 +1,20 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    // File Layout
-    // "rootDir": "./src",
-    // "outDir": "./dist",
+    // Keep generated JavaScript separate from authored TypeScript.
+    "rootDir": "./src",
+    "outDir": "./dist",
 
-    // Environment Settings
-    // See also https://aka.ms/tsconfig/module
+    // Compile against Node rather than browser or React globals.
     "module": "nodenext",
     "target": "esnext",
-    "types": [],
-    // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
-    // and npm install -D @types/node
+    "lib": ["esnext"],
+    "types": ["node"],
 
-    // Other Outputs
+    // Source maps support debugging; declarations are unnecessary for this app.
     "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
+    "declaration": false,
+    "declarationMap": false,
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
@@ -34,7 +30,7 @@
 
     // Recommended Options
     "strict": true,
-    "jsx": "react-jsx",
+    "noEmitOnError": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,

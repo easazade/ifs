@@ -1,6 +1,9 @@
 # Dependencies
 /node_modules/
 
+# This pnpm workspace uses the repository-level pnpm-lock.yaml.
+/package-lock.json
+
 # TypeScript build output and incremental state
 /dist/
 *.tsbuildinfo

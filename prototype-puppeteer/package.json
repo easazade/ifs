@@ -1,8 +1,9 @@
 {
   "name": "prototype-puppeteer",
   "version": "1.0.0",
+  "private": true,
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "pnpm --filter prototype-client build && tsx src/index.ts",
     "build": "pnpm --filter prototype-client build && tsc",
@@ -18,8 +19,6 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "esbuild": "^0.28.2",
-    "undici-types": "^8.9.0",
     "prototype-client": "workspace:*"
   }
 }
