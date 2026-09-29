@@ -14,9 +14,12 @@ export class Puppeteer {
   async getHello(): Promise<boolean> {
     try {
       const response = await isResponsive();
+      if (response.status === 200) {
+        logger.info("Server is responsive");
+      }
       return response.status === 200;
     } catch (error) {
-      logger.warn("Server is not responsive");
+      logger.warn("Server is NOT responsive");
       logger.error(error);
       return false;
     }
