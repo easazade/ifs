@@ -1,5 +1,5 @@
 import { exit } from "process";
-import { Puppeteer } from "./puppeteer.js";
+import { Puppeteer } from "./game/puppeteer.js";
 
 async function main() {
   console.log("STARTING!!!!!");

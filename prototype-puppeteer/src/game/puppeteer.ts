@@ -5,7 +5,7 @@ import {
 } from "prototype-client";
 
 import { getHello as isResponsive } from "prototype-client";
-import { logger } from "./utils/logger.js";
+import { logger } from "../utils/logger.js";
 export class Puppeteer {
   constructor(private baseUrl: string) {
     setApiBaseUrl(baseUrl);
