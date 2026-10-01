@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import type { PersonalityParameters } from "../src/game/personality.js";
 import { formativeExperiences } from "../src/generation/pools/formative-experiences.js";
 import { traitPool } from "../src/generation/pools/trait-pool.js";
 import { worldviewPool } from "../src/generation/pools/worldview-pool.js";
@@ -29,24 +30,41 @@ function pickRandom<T>(pool: readonly T[], poolName: string): T {
   return pool[Math.floor(Math.random() * pool.length)]!;
 }
 
+// Sampling without replacement prevents duplicate experiences or traits.
+function pickRandomMany<T>(
+  pool: readonly T[],
+  poolName: string,
+  maxCount = 3,
+): T[] {
+  if (pool.length === 0) {
+    throw new Error(`${poolName} cannot be empty.`);
+  }
+
+  const available = [...pool];
+  const count = Math.floor(Math.random() * Math.min(maxCount, pool.length)) + 1;
+
+  return Array.from({ length: count }, () => {
+    const index = Math.floor(Math.random() * available.length);
+    return available.splice(index, 1)[0]!;
+  });
+}
+
 function formatParameters(value: unknown): string {
   return JSON.stringify(value, null, 2).replace(/\n/g, "\n  ");
 }
 
 function createPersonalitySource(count: number): string {
   const personalities = Array.from({ length: count }, () => {
-    const experience = pickRandom(
+    const experiences = pickRandomMany(
       formativeExperiences,
       "formativeExperiences",
     );
-    const trait = pickRandom(traitPool, "traitPool");
+    const traits = pickRandomMany(traitPool, "traitPool");
     const worldview = pickRandom(worldviewPool, "worldviewPool");
-    const parameters = {
-      ...experience,
-      name: trait.name,
-      level: trait.level,
-      effect: trait.effect,
-      ...worldview,
+    const parameters: PersonalityParameters = {
+      formativeExperiences: experiences,
+      traits,
+      worldview,
     };
 
     return `  new Personality(${formatParameters(parameters)})`;

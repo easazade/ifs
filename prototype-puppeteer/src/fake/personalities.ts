@@ -3,448 +3,1065 @@ import { Personality } from "../game/personality.js";
 
 export const personalities: Personality[] = [
   new Personality({
-    "id": "FE_P040",
-    "valence": "positive",
-    "title": "A complaint received a fair hearing",
-    "domain": "institutional_trust",
-    "life_stages": [
-      "adolescence",
-      "adulthood"
+    "formativeExperiences": [
+      {
+        "id": "FE_N049",
+        "valence": "negative",
+        "title": "Public online harassment after speaking up",
+        "domain": "peer_and_school",
+        "life_stages": [
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "repeated",
+        "experience": "After posting an opinion, the person received repeated abusive messages and feared the harassment would spread into offline life.",
+        "possible_meanings": [
+          "Visibility can attract people I cannot control.",
+          "I need boundaries around public expression."
+        ],
+        "reminder_cues": [
+          "A sudden surge of notifications",
+          "Being asked to attach their identity to a contentious statement"
+        ],
+        "possible_initial_responses": [
+          "May stop reading replies or remove personal information.",
+          "May seek moderation and document threatening messages."
+        ],
+        "possible_decision_tendencies": [
+          "May prefer private deliberation on contentious issues.",
+          "May prioritize moderation, privacy, and protection from harassment."
+        ],
+        "moderating_factors": [
+          "Whether threats remain active",
+          "Quality of moderation and support from trusted people"
+        ],
+        "alternative_outcome": "They may return to public participation with deliberate boundaries and suitable safeguards.",
+        "source_ids": [
+          "S02",
+          "S04"
+        ]
+      },
+      {
+        "id": "FE_N011",
+        "valence": "negative",
+        "title": "Caught in caregivers' hostile separation",
+        "domain": "loss_and_separation",
+        "life_stages": [
+          "childhood",
+          "adolescence"
+        ],
+        "exposure_pattern": "extended_period",
+        "experience": "During a separation, caregivers repeatedly asked the child to take sides and carry hostile messages.",
+        "possible_meanings": [
+          "Caring about one person betrays another.",
+          "I am responsible for keeping both sides calm."
+        ],
+        "reminder_cues": [
+          "Friends demand exclusive loyalty",
+          "Two factions ask for private information"
+        ],
+        "possible_initial_responses": [
+          "May conceal preferences or tell each side what it wants to hear.",
+          "May avoid choosing at all."
+        ],
+        "possible_decision_tendencies": [
+          "May abstain when a vote is framed as personal loyalty.",
+          "May advocate procedures that reduce factional pressure."
+        ],
+        "moderating_factors": [
+          "Whether adults later removed the child from the conflict",
+          "Freedom to maintain independent relationships"
+        ],
+        "alternative_outcome": "The person may become comfortable caring about opposing people without serving as their mediator.",
+        "source_ids": [
+          "S01",
+          "S03"
+        ]
+      },
+      {
+        "id": "FE_P004",
+        "valence": "positive",
+        "title": "Family disagreements ended without intimidation",
+        "domain": "family_and_caregiving",
+        "life_stages": [
+          "childhood",
+          "adolescence"
+        ],
+        "exposure_pattern": "repeated",
+        "experience": "The child regularly saw adults disagree, listen, and negotiate without threats or withdrawal of affection.",
+        "possible_meanings": [
+          "Conflict does not have to end a relationship.",
+          "Different preferences can be discussed."
+        ],
+        "reminder_cues": [
+          "A respectful difference of opinion",
+          "Two people propose incompatible plans"
+        ],
+        "possible_initial_responses": [
+          "May ask questions rather than assume hostility.",
+          "May explain their own position calmly."
+        ],
+        "possible_decision_tendencies": [
+          "May vote against a friend's proposal without treating it as betrayal.",
+          "May seek workable compromises while keeping clear boundaries."
+        ],
+        "moderating_factors": [
+          "Actual safety of the current disagreement",
+          "Whether the other side is willing to negotiate"
+        ],
+        "alternative_outcome": "They may still disengage from genuinely coercive conflict rather than expect discussion to solve every situation.",
+        "source_ids": [
+          "S01",
+          "S05"
+        ]
+      }
     ],
-    "exposure_pattern": "single_event",
-    "experience": "An independent reviewer listened to the person's complaint, checked relevant evidence, and explained a fair decision.",
-    "possible_meanings": [
-      "Procedures can protect people with less power.",
-      "Being heard can matter even when the outcome is not exactly what I requested."
+    "traits": [
+      {
+        "name": "dominance-seeking",
+        "level": "medium",
+        "effect": "Prefers to control group decisions and may treat disagreement as a challenge to personal standing.",
+        "valence": "negative"
+      },
+      {
+        "name": "people-pleasing",
+        "level": "high",
+        "effect": "Prioritizes approval and harmony so strongly that they may suppress needs, boundaries, or honest disagreement.",
+        "valence": "negative"
+      },
+      {
+        "name": "fairness",
+        "level": "high",
+        "effect": "Looks for consistent rules and objects when people receive unequal treatment without a good reason.",
+        "valence": "positive"
+      }
     ],
-    "reminder_cues": [
-      "A clear appeal process",
-      "An official gives reasons that can be checked"
-    ],
-    "possible_initial_responses": [
-      "May prepare evidence and use the process.",
-      "May wait for review rather than assume retaliation."
-    ],
-    "possible_decision_tendencies": [
-      "May support independent review and due process.",
-      "May accept an unfavorable outcome more readily when the reasoning is credible."
-    ],
-    "moderating_factors": [
-      "Independence and accessibility of the current process",
-      "Whether earlier findings were actually enforced"
-    ],
-    "alternative_outcome": "They may challenge an unfair procedure despite having had a good experience with another institution.",
-    "source_ids": [
-      "S10",
-      "S11",
-      "S15"
-    ],
-    "name": "emotional-regulation",
-    "level": "high",
-    "effect": "Can pause, name strong feelings, and choose a response instead of immediately acting on anger or fear.",
-    "viewOfPeople": "People are often lonely beneath their social roles and need to feel seen before they can cooperate deeply.",
-    "viewOfSelf": "A sensitive person who needs authenticity and emotional connection more than status.",
-    "viewOfLife": "Life is about honest connection, self-expression, and refusing to live by empty appearances.",
-    "beliefAboutGodAndAfterlife": "Is uncertain about God and afterlife, but experiences awe, love, and conscience as spiritually significant."
+    "worldview": {
+      "viewOfPeople": "People are flawed but educable, especially when they are treated with fairness and given real responsibility.",
+      "viewOfSelf": "A learner who should remain open to correction and keep developing.",
+      "viewOfLife": "Life is an unfinished education in judgment, skill, and ethical maturity.",
+      "beliefAboutGodAndAfterlife": "Believes in a higher power but does not claim to know the details of divine judgment or the afterlife."
+    }
   }),
   new Personality({
-    "id": "FE_N029",
-    "valence": "negative",
-    "title": "Serious road accident",
-    "domain": "health_and_physical_safety",
-    "life_stages": [
-      "childhood",
-      "adolescence",
-      "adulthood"
+    "formativeExperiences": [
+      {
+        "id": "FE_P033",
+        "valence": "positive",
+        "title": "A relationship ended respectfully",
+        "domain": "trust_and_belonging",
+        "life_stages": [
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "single_event",
+        "experience": "A valued relationship ended with honest explanation, maintained boundaries, and no deliberate humiliation or retaliation.",
+        "possible_meanings": [
+          "A relationship can end without proving either person worthless.",
+          "An honest refusal can be kinder than prolonged pretense."
+        ],
+        "reminder_cues": [
+          "A difficult conversation about incompatibility",
+          "Someone wants to leave an arrangement"
+        ],
+        "possible_initial_responses": [
+          "May feel sadness while listening to the explanation.",
+          "May state a boundary without trying to punish the other person."
+        ],
+        "possible_decision_tendencies": [
+          "May support clear and fair exit procedures.",
+          "May end an unsuitable commitment rather than maintain it solely to avoid discomfort."
+        ],
+        "moderating_factors": [
+          "Whether both people honored boundaries afterward",
+          "Attachment, practical dependence, and current safety"
+        ],
+        "alternative_outcome": "They may still grieve deeply; respectful treatment does not make separation painless.",
+        "source_ids": [
+          "S11"
+        ]
+      },
+      {
+        "id": "FE_P045",
+        "valence": "positive",
+        "title": "Volunteering produced visible, respectful benefit",
+        "domain": "caregiving_and_responsibility",
+        "life_stages": [
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "repeated",
+        "experience": "Through a voluntary activity, the person saw that a manageable contribution met a need identified by the people receiving support.",
+        "possible_meanings": [
+          "I can contribute without taking over someone else's life.",
+          "Helpful action starts with understanding what is needed."
+        ],
+        "reminder_cues": [
+          "A specific request from an affected person",
+          "An opportunity to contribute within a clear boundary"
+        ],
+        "possible_initial_responses": [
+          "May ask what would actually help.",
+          "May offer a realistic amount of time or effort."
+        ],
+        "possible_decision_tendencies": [
+          "May favor practical assistance shaped by recipients' input.",
+          "May balance generosity with sustainable commitments."
+        ],
+        "moderating_factors": [
+          "Whether help was wanted and effective",
+          "Current capacity and risk of overcommitment"
+        ],
+        "alternative_outcome": "They may decline ineffective or paternalistic projects while remaining committed to helping.",
+        "source_ids": [
+          "S07",
+          "S11"
+        ]
+      },
+      {
+        "id": "FE_N013",
+        "valence": "negative",
+        "title": "Prolonged uncertainty about a loved one's safety",
+        "domain": "loss_and_separation",
+        "life_stages": [
+          "childhood",
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "extended_period",
+        "experience": "A loved one was missing or unreachable during a crisis, leaving the person without clear information for a long period.",
+        "possible_meanings": [
+          "Uncertainty itself can be unbearable.",
+          "Stopping the search might mean abandoning someone."
+        ],
+        "reminder_cues": [
+          "Conflicting reports during an emergency",
+          "No clear update about an absent person"
+        ],
+        "possible_initial_responses": [
+          "May repeatedly check messages and news.",
+          "May find it difficult to focus on unrelated matters."
+        ],
+        "possible_decision_tendencies": [
+          "May demand frequent status updates.",
+          "May postpone a decision until missing information arrives."
+        ],
+        "moderating_factors": [
+          "Whether uncertainty continues",
+          "Access to dependable information and companionship"
+        ],
+        "alternative_outcome": "They may develop a workable tolerance for uncertainty while retaining strong preferences for communication.",
+        "source_ids": [
+          "S02",
+          "S04"
+        ]
+      }
     ],
-    "exposure_pattern": "single_event",
-    "experience": "The person survived a road accident involving serious injury or a credible threat to life.",
-    "possible_meanings": [
-      "Routine travel can become dangerous.",
-      "I want some control over how I travel."
+    "traits": [
+      {
+        "name": "apathy",
+        "level": "medium",
+        "effect": "Shows limited interest in problems that do not affect them directly and may disengage from shared responsibilities.",
+        "valence": "negative"
+      }
     ],
-    "reminder_cues": [
-      "Sudden braking",
-      "A route or vehicle resembling the accident"
-    ],
-    "possible_initial_responses": [
-      "May tense up, become quiet, or ask to stop.",
-      "May prefer a trusted driver or another route."
-    ],
-    "possible_decision_tendencies": [
-      "May weigh travel safety heavily in accepting an opportunity.",
-      "May support realistic safety procedures even when inconvenient."
-    ],
-    "moderating_factors": [
-      "Recovery from injury",
-      "Current driving conditions and later travel experiences"
-    ],
-    "alternative_outcome": "They may return to ordinary travel while retaining specific preferences about speed and safety.",
-    "source_ids": [
-      "S04"
-    ],
-    "name": "initiative",
-    "level": "medium",
-    "effect": "Will often begin useful work or raise a problem without waiting for someone else to take charge.",
-    "viewOfPeople": "People are often shaped by circumstance more than they admit, so judgment should be tempered by curiosity about context.",
-    "viewOfSelf": "A product of both choice and circumstance who can still take responsibility for the next step.",
-    "viewOfLife": "Life is about widening options for oneself and others rather than pretending everyone begins from the same place.",
-    "beliefAboutGodAndAfterlife": "Leans toward secularism and is unsure whether any conscious existence continues after death."
+    "worldview": {
+      "viewOfPeople": "People are morally responsible but vulnerable to temptation, fear, and self-interest.",
+      "viewOfSelf": "A servant of God who must continually correct personal flaws and intentions.",
+      "viewOfLife": "Life is a test of character, duty, mercy, and trustworthiness.",
+      "beliefAboutGodAndAfterlife": "Believes in one just and merciful God, accountability after death, and an afterlife in which actions matter."
+    }
   }),
   new Personality({
-    "id": "FE_N039",
-    "valence": "negative",
-    "title": "Financial deception by someone trusted",
-    "domain": "trust_and_belonging",
-    "life_stages": [
-      "adolescence",
-      "adulthood"
+    "formativeExperiences": [
+      {
+        "id": "FE_P020",
+        "valence": "positive",
+        "title": "Creative expression was taken seriously",
+        "domain": "agency_and_mastery",
+        "life_stages": [
+          "childhood",
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "repeated",
+        "experience": "Other people listened to the person's stories, art, music, or ideas with interest and offered room to experiment.",
+        "possible_meanings": [
+          "My perspective can contribute something worthwhile.",
+          "Exploration does not require immediate perfection."
+        ],
+        "reminder_cues": [
+          "An open-ended problem",
+          "An invitation to suggest an unconventional idea"
+        ],
+        "possible_initial_responses": [
+          "May generate several possibilities.",
+          "May share unfinished work for constructive discussion."
+        ],
+        "possible_decision_tendencies": [
+          "May support limited experiments and creative participation.",
+          "May value expressive activities alongside practical needs."
+        ],
+        "moderating_factors": [
+          "Whether feedback respected ownership",
+          "Resources and tolerance for uncertainty in the present setting"
+        ],
+        "alternative_outcome": "They may enjoy creative freedom while accepting constraints needed for a particular task.",
+        "source_ids": [
+          "S07",
+          "S09"
+        ]
+      },
+      {
+        "id": "FE_N017",
+        "valence": "negative",
+        "title": "Public humiliation by a teacher",
+        "domain": "peer_and_school",
+        "life_stages": [
+          "childhood",
+          "adolescence"
+        ],
+        "exposure_pattern": "single_event",
+        "experience": "A teacher ridiculed an incorrect answer in front of classmates, turning a learning attempt into public embarrassment.",
+        "possible_meanings": [
+          "Asking or answering questions can expose me.",
+          "Authority may use my mistakes against me."
+        ],
+        "reminder_cues": [
+          "Being called on without preparation",
+          "A knowledgeable person laughs at an error"
+        ],
+        "possible_initial_responses": [
+          "May go blank or avoid eye contact.",
+          "May prepare excessively before contributing."
+        ],
+        "possible_decision_tendencies": [
+          "May withhold useful questions in meetings.",
+          "May prefer written input where there is time to compose a response."
+        ],
+        "moderating_factors": [
+          "Whether the teacher repaired the harm",
+          "Later experiences with patient instruction"
+        ],
+        "alternative_outcome": "The person may regain confidence in learning environments that welcome uncertainty.",
+        "source_ids": [
+          "S03",
+          "S09"
+        ]
+      }
     ],
-    "exposure_pattern": "single_event",
-    "experience": "A trusted person misrepresented a financial arrangement and caused a meaningful loss.",
-    "possible_meanings": [
-      "Personal warmth does not guarantee honesty.",
-      "I should verify terms independently."
+    "traits": [
+      {
+        "name": "defensiveness",
+        "level": "medium",
+        "effect": "Interprets criticism as a personal attack and may explain, deny, or counterattack before reflecting.",
+        "valence": "negative"
+      },
+      {
+        "name": "assertiveness",
+        "level": "medium",
+        "effect": "States needs and disagreements clearly without usually becoming aggressive or withdrawing.",
+        "valence": "positive"
+      },
+      {
+        "name": "insecurity",
+        "level": "high",
+        "effect": "Doubts their own worth and may react strongly to comparison, criticism, or possible rejection.",
+        "valence": "negative"
+      }
     ],
-    "reminder_cues": [
-      "Pressure to invest quickly",
-      "A request to rely on friendship instead of written terms"
-    ],
-    "possible_initial_responses": [
-      "May become suspicious of urgency.",
-      "May seek records and outside advice."
-    ],
-    "possible_decision_tendencies": [
-      "May favor transparent accounts and independent checks.",
-      "May decline informal pooling of money."
-    ],
-    "moderating_factors": [
-      "Size and recoverability of the loss",
-      "Whether later transactions have been trustworthy"
-    ],
-    "alternative_outcome": "Careful verification may replace generalized suspicion as the person's main response.",
-    "source_ids": [
-      "S11",
-      "S12"
-    ],
-    "name": "jealousy",
-    "level": "medium",
-    "effect": "Feels threatened by a close person's attention, affection, or loyalty toward someone else.",
-    "viewOfPeople": "People deserve compassion because anyone can be harmed by bad luck, illness, loss, or social neglect.",
-    "viewOfSelf": "A temporary beneficiary of conditions that could easily have been otherwise.",
-    "viewOfLife": "Life is fragile, so a decent society protects dignity and reduces avoidable hardship.",
-    "beliefAboutGodAndAfterlife": "Does not know whether God or an afterlife exists; moral concern comes from the reality of shared vulnerability."
+    "worldview": {
+      "viewOfPeople": "People are often lonely beneath their social roles and need to feel seen before they can cooperate deeply.",
+      "viewOfSelf": "A sensitive person who needs authenticity and emotional connection more than status.",
+      "viewOfLife": "Life is about honest connection, self-expression, and refusing to live by empty appearances.",
+      "beliefAboutGodAndAfterlife": "Is uncertain about God and afterlife, but experiences awe, love, and conscience as spiritually significant."
+    }
   }),
   new Personality({
-    "id": "FE_P016",
-    "valence": "positive",
-    "title": "Belonged to a cooperative team",
-    "domain": "peer_and_school",
-    "life_stages": [
-      "childhood",
-      "adolescence",
-      "adulthood"
+    "formativeExperiences": [
+      {
+        "id": "FE_N023",
+        "valence": "negative",
+        "title": "Disclosure of harm was dismissed",
+        "domain": "institutional_trust",
+        "life_stages": [
+          "childhood",
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "single_event",
+        "experience": "After reporting serious mistreatment, the person was dismissed or blamed by someone responsible for helping.",
+        "possible_meanings": [
+          "Asking for protection may make things worse.",
+          "I need evidence before anyone will listen."
+        ],
+        "reminder_cues": [
+          "An official minimizes a complaint",
+          "Being asked why they did not act sooner"
+        ],
+        "possible_initial_responses": [
+          "May stop explaining and disengage.",
+          "May document details carefully before speaking again."
+        ],
+        "possible_decision_tendencies": [
+          "May prefer independent complaint channels.",
+          "May hesitate to report a problem through the same hierarchy."
+        ],
+        "moderating_factors": [
+          "Whether a later responder took the report seriously",
+          "Independence and conduct of the current institution"
+        ],
+        "alternative_outcome": "A credible response may rebuild trust in specific people or procedures without requiring blanket trust.",
+        "source_ids": [
+          "S03",
+          "S10",
+          "S15"
+        ]
+      }
     ],
-    "exposure_pattern": "extended_period",
-    "experience": "In a team activity, roles were complementary and members practiced, contributed, and celebrated shared results.",
-    "possible_meanings": [
-      "Different strengths can produce a better result together.",
-      "My contribution matters even when it is not the most visible."
+    "traits": [
+      {
+        "name": "callousness",
+        "level": "low",
+        "effect": "Can discount another person's emotional pain when it conflicts with a desired outcome.",
+        "valence": "negative"
+      }
     ],
-    "reminder_cues": [
-      "A problem requires several kinds of skill",
-      "A teammate offers to share responsibility"
-    ],
-    "possible_initial_responses": [
-      "May ask who is best placed to do each task.",
-      "May coordinate rather than compete for every role."
-    ],
-    "possible_decision_tendencies": [
-      "May favor balanced teams over a single dominant performer.",
-      "May accept a supporting role when it serves the shared goal."
-    ],
-    "moderating_factors": [
-      "Fairness of credit and workload",
-      "Whether current team members are dependable"
-    ],
-    "alternative_outcome": "They may still prefer independent work for tasks where coordination offers little benefit.",
-    "source_ids": [
-      "S05",
-      "S07"
-    ],
-    "name": "loyalty",
-    "level": "high",
-    "effect": "Stays committed to trusted people and groups, especially when they are facing difficulty.",
-    "viewOfPeople": "People are bound to one another by responsibility, memory, and a shared moral law.",
-    "viewOfSelf": "A link in a long chain of family and community, entrusted with preserving what is good.",
-    "viewOfLife": "Life is a covenantal task: build a just community, remember history, and pass wisdom forward.",
-    "beliefAboutGodAndAfterlife": "Believes in one God who calls people to ethical responsibility; holds a reverent but non-detailed view of what comes after death."
+    "worldview": {
+      "viewOfPeople": "Most people can care for one another, but social conditions often distort their choices.",
+      "viewOfSelf": "One person among many, with a responsibility to reduce suffering where possible.",
+      "viewOfLife": "Life has no guaranteed cosmic purpose; meaning is made through relationships, knowledge, and humane action.",
+      "beliefAboutGodAndAfterlife": "Does not believe in God or an afterlife, but sees human wellbeing as morally important in itself."
+    }
   }),
   new Personality({
-    "id": "FE_P040",
-    "valence": "positive",
-    "title": "A complaint received a fair hearing",
-    "domain": "institutional_trust",
-    "life_stages": [
-      "adolescence",
-      "adulthood"
+    "formativeExperiences": [
+      {
+        "id": "FE_N030",
+        "valence": "negative",
+        "title": "Frightening medical treatment with little explanation",
+        "domain": "health_and_physical_safety",
+        "life_stages": [
+          "childhood",
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "single_event",
+        "experience": "During urgent medical care, the person felt frightened and powerless because procedures were painful or poorly explained.",
+        "possible_meanings": [
+          "Medical settings may take away my control.",
+          "I need to understand before I can cooperate."
+        ],
+        "reminder_cues": [
+          "An unexplained procedure",
+          "Being rushed to consent"
+        ],
+        "possible_initial_responses": [
+          "May become tense or unable to ask questions.",
+          "May demand more information or delay agreement."
+        ],
+        "possible_decision_tendencies": [
+          "May prioritize informed consent and communication in service choices.",
+          "May avoid a useful service if it recreates helplessness."
+        ],
+        "moderating_factors": [
+          "Medical urgency and actual options",
+          "Whether later clinicians provide respectful explanations"
+        ],
+        "alternative_outcome": "A clinician who explains choices may help the person use care confidently while acknowledging the earlier experience.",
+        "source_ids": [
+          "S02",
+          "S04"
+        ]
+      },
+      {
+        "id": "FE_N011",
+        "valence": "negative",
+        "title": "Caught in caregivers' hostile separation",
+        "domain": "loss_and_separation",
+        "life_stages": [
+          "childhood",
+          "adolescence"
+        ],
+        "exposure_pattern": "extended_period",
+        "experience": "During a separation, caregivers repeatedly asked the child to take sides and carry hostile messages.",
+        "possible_meanings": [
+          "Caring about one person betrays another.",
+          "I am responsible for keeping both sides calm."
+        ],
+        "reminder_cues": [
+          "Friends demand exclusive loyalty",
+          "Two factions ask for private information"
+        ],
+        "possible_initial_responses": [
+          "May conceal preferences or tell each side what it wants to hear.",
+          "May avoid choosing at all."
+        ],
+        "possible_decision_tendencies": [
+          "May abstain when a vote is framed as personal loyalty.",
+          "May advocate procedures that reduce factional pressure."
+        ],
+        "moderating_factors": [
+          "Whether adults later removed the child from the conflict",
+          "Freedom to maintain independent relationships"
+        ],
+        "alternative_outcome": "The person may become comfortable caring about opposing people without serving as their mediator.",
+        "source_ids": [
+          "S01",
+          "S03"
+        ]
+      },
+      {
+        "id": "FE_P042",
+        "valence": "positive",
+        "title": "A team handled failure without scapegoating",
+        "domain": "work_and_achievement",
+        "life_stages": [
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "single_event",
+        "experience": "After a project failed, the team examined shared decisions and system problems while holding each person responsible for their actual part.",
+        "possible_meanings": [
+          "Failure can be examined accurately without sacrificing one person.",
+          "Clear responsibility makes learning easier."
+        ],
+        "reminder_cues": [
+          "A project review after an unexpected outcome",
+          "A request to describe a mistake or constraint"
+        ],
+        "possible_initial_responses": [
+          "May contribute candid details.",
+          "May focus on what can change rather than who can be blamed."
+        ],
+        "possible_decision_tendencies": [
+          "May support documented roles and learning reviews.",
+          "May accept leadership when responsibility and authority are aligned."
+        ],
+        "moderating_factors": [
+          "Whether openness is protected in the current team",
+          "Consequences and seriousness of the error"
+        ],
+        "alternative_outcome": "They may still insist on consequences for deliberate wrongdoing rather than treating every failure as an innocent mistake.",
+        "source_ids": [
+          "S09",
+          "S11",
+          "S16"
+        ]
+      }
     ],
-    "exposure_pattern": "single_event",
-    "experience": "An independent reviewer listened to the person's complaint, checked relevant evidence, and explained a fair decision.",
-    "possible_meanings": [
-      "Procedures can protect people with less power.",
-      "Being heard can matter even when the outcome is not exactly what I requested."
+    "traits": [
+      {
+        "name": "future-orientation",
+        "level": "high",
+        "effect": "Gives strong weight to long-term consequences instead of focusing only on immediate rewards.",
+        "valence": "positive"
+      },
+      {
+        "name": "diligence",
+        "level": "high",
+        "effect": "Follows through on responsibilities and examines important details before committing.",
+        "valence": "positive"
+      },
+      {
+        "name": "learning-agility",
+        "level": "high",
+        "effect": "Learns quickly from feedback and can apply a lesson from one situation to another.",
+        "valence": "positive"
+      }
     ],
-    "reminder_cues": [
-      "A clear appeal process",
-      "An official gives reasons that can be checked"
-    ],
-    "possible_initial_responses": [
-      "May prepare evidence and use the process.",
-      "May wait for review rather than assume retaliation."
-    ],
-    "possible_decision_tendencies": [
-      "May support independent review and due process.",
-      "May accept an unfavorable outcome more readily when the reasoning is credible."
-    ],
-    "moderating_factors": [
-      "Independence and accessibility of the current process",
-      "Whether earlier findings were actually enforced"
-    ],
-    "alternative_outcome": "They may challenge an unfair procedure despite having had a good experience with another institution.",
-    "source_ids": [
-      "S10",
-      "S11",
-      "S15"
-    ],
-    "name": "civic-mindedness",
-    "level": "high",
-    "effect": "Considers the health of the wider group and supports duties that benefit people beyond close friends.",
-    "viewOfPeople": "People are drawn toward good but can confuse certainty with righteousness and power with virtue.",
-    "viewOfSelf": "A morally accountable soul who should pair conviction with humility.",
-    "viewOfLife": "Life is a struggle to purify motives, seek justice, and avoid becoming cruel in the name of a good cause.",
-    "beliefAboutGodAndAfterlife": "Believes in God, divine justice, forgiveness, and an afterlife in which intentions as well as actions matter."
+    "worldview": {
+      "viewOfPeople": "People need both freedom and structure; too much of either can weaken character.",
+      "viewOfSelf": "A steward of personal talents, family obligations, and limited resources.",
+      "viewOfLife": "Life is about building competence, stability, and a legacy through sustained work.",
+      "beliefAboutGodAndAfterlife": "Believes in God and an afterlife, but treats everyday responsibility as the clearest form of faith."
+    }
   }),
   new Personality({
-    "id": "FE_N009",
-    "valence": "negative",
-    "title": "Repeated unfavorable comparison with a sibling",
-    "domain": "family_and_caregiving",
-    "life_stages": [
-      "childhood",
-      "adolescence"
+    "formativeExperiences": [
+      {
+        "id": "FE_N050",
+        "valence": "negative",
+        "title": "A project failed and blame fell on one person",
+        "domain": "work_and_achievement",
+        "life_stages": [
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "single_event",
+        "experience": "A collective project failed, but the group publicly blamed the person while ignoring shared decisions and constraints.",
+        "possible_meanings": [
+          "Responsibility may be assigned unfairly after a setback.",
+          "I need agreement about who owns each decision."
+        ],
+        "reminder_cues": [
+          "A vague leadership role",
+          "A group starts searching for one person to blame"
+        ],
+        "possible_initial_responses": [
+          "May defend their record or produce documentation.",
+          "May avoid becoming the visible representative."
+        ],
+        "possible_decision_tendencies": [
+          "May require clear roles and shared review of failures.",
+          "May decline responsibility without matching authority."
+        ],
+        "moderating_factors": [
+          "Accuracy of the original blame",
+          "Whether current colleagues acknowledge shared responsibility"
+        ],
+        "alternative_outcome": "A fair team may restore willingness to lead and learn openly from failure.",
+        "source_ids": [
+          "S09",
+          "S11",
+          "S16"
+        ]
+      },
+      {
+        "id": "FE_P020",
+        "valence": "positive",
+        "title": "Creative expression was taken seriously",
+        "domain": "agency_and_mastery",
+        "life_stages": [
+          "childhood",
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "repeated",
+        "experience": "Other people listened to the person's stories, art, music, or ideas with interest and offered room to experiment.",
+        "possible_meanings": [
+          "My perspective can contribute something worthwhile.",
+          "Exploration does not require immediate perfection."
+        ],
+        "reminder_cues": [
+          "An open-ended problem",
+          "An invitation to suggest an unconventional idea"
+        ],
+        "possible_initial_responses": [
+          "May generate several possibilities.",
+          "May share unfinished work for constructive discussion."
+        ],
+        "possible_decision_tendencies": [
+          "May support limited experiments and creative participation.",
+          "May value expressive activities alongside practical needs."
+        ],
+        "moderating_factors": [
+          "Whether feedback respected ownership",
+          "Resources and tolerance for uncertainty in the present setting"
+        ],
+        "alternative_outcome": "They may enjoy creative freedom while accepting constraints needed for a particular task.",
+        "source_ids": [
+          "S07",
+          "S09"
+        ]
+      }
     ],
-    "exposure_pattern": "repeated",
-    "experience": "Family members repeatedly praised a sibling while describing the child's contributions as inferior.",
-    "possible_meanings": [
-      "Recognition is scarce and someone else gets it.",
-      "I have to distinguish myself to be noticed."
+    "traits": [
+      {
+        "name": "cruelty",
+        "level": "low",
+        "effect": "Can take satisfaction in another person's humiliation or pain, particularly when angry or seeking power.",
+        "valence": "negative"
+      }
     ],
-    "reminder_cues": [
-      "Unequal public praise",
-      "Two people are compared for one position"
-    ],
-    "possible_initial_responses": [
-      "May feel overlooked even before the criteria are explained.",
-      "May compete intensely or stop participating."
-    ],
-    "possible_decision_tendencies": [
-      "May scrutinize how credit and opportunities are allocated.",
-      "May reject a collaborative role if it seems invisible."
-    ],
-    "moderating_factors": [
-      "Fairness of the current comparison",
-      "Recognition received in other relationships"
-    ],
-    "alternative_outcome": "They may value fair recognition without viewing colleagues as rivals.",
-    "source_ids": [
-      "S03",
-      "S13"
-    ],
-    "name": "laziness",
-    "level": "medium",
-    "effect": "Avoids effort when there is no immediate pressure and may leave necessary work for others.",
-    "viewOfPeople": "People are animals with powerful instincts, but culture and reflection can help them channel those instincts wisely.",
-    "viewOfSelf": "A biological being with the capacity to choose habits that improve life.",
-    "viewOfLife": "Life is brief and embodied; health, friendship, curiosity, and reducing suffering make it worthwhile.",
-    "beliefAboutGodAndAfterlife": "Does not believe in a supernatural afterlife and sees death as the end of individual experience."
+    "worldview": {
+      "viewOfPeople": "People deserve compassion because anyone can be harmed by bad luck, illness, loss, or social neglect.",
+      "viewOfSelf": "A temporary beneficiary of conditions that could easily have been otherwise.",
+      "viewOfLife": "Life is fragile, so a decent society protects dignity and reduces avoidable hardship.",
+      "beliefAboutGodAndAfterlife": "Does not know whether God or an afterlife exists; moral concern comes from the reality of shared vulnerability."
+    }
   }),
   new Personality({
-    "id": "FE_P047",
-    "valence": "positive",
-    "title": "A previously feared conversation went safely",
-    "domain": "emotion_and_coping",
-    "life_stages": [
-      "adolescence",
-      "adulthood"
+    "formativeExperiences": [
+      {
+        "id": "FE_N028",
+        "valence": "negative",
+        "title": "Survived a disaster that destroyed home",
+        "domain": "community_and_displacement",
+        "life_stages": [
+          "childhood",
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "single_event",
+        "experience": "A flood, earthquake, or fire destroyed the person's home and disrupted ordinary life.",
+        "possible_meanings": [
+          "Material security can disappear suddenly.",
+          "Preparation may matter more than I previously thought."
+        ],
+        "reminder_cues": [
+          "Weather or emergency warnings",
+          "Being asked to store all resources in one place"
+        ],
+        "possible_initial_responses": [
+          "May check supplies and contingency plans.",
+          "May become distressed by sensory reminders of the disaster."
+        ],
+        "possible_decision_tendencies": [
+          "May prioritize emergency reserves over short-term improvements.",
+          "May support rebuilding with stronger safety standards."
+        ],
+        "moderating_factors": [
+          "Losses and danger actually experienced",
+          "Quality of recovery support and current housing"
+        ],
+        "alternative_outcome": "Preparedness may become a bounded habit without persistent fear in unrelated settings.",
+        "source_ids": [
+          "S02",
+          "S04"
+        ]
+      },
+      {
+        "id": "FE_N035",
+        "valence": "negative",
+        "title": "Abrupt involuntary job loss",
+        "domain": "work_and_achievement",
+        "life_stages": [
+          "adulthood"
+        ],
+        "exposure_pattern": "single_event",
+        "experience": "The person lost a job unexpectedly and had to reorganize finances and daily identity with little preparation.",
+        "possible_meanings": [
+          "Loyalty does not guarantee security.",
+          "My future needs more than one source of support."
+        ],
+        "reminder_cues": [
+          "Rumors of restructuring",
+          "An unexplained meeting with management"
+        ],
+        "possible_initial_responses": [
+          "May worry and review finances immediately.",
+          "May emotionally distance themselves from the employer."
+        ],
+        "possible_decision_tendencies": [
+          "May prefer a safer contract over higher uncertain pay.",
+          "May support emergency funds and transparent termination procedures."
+        ],
+        "moderating_factors": [
+          "Financial reserves and dependents",
+          "Access to alternative work and supportive relationships"
+        ],
+        "alternative_outcome": "A later secure role or chosen career change may restore confidence and make the loss a bounded chapter.",
+        "source_ids": [
+          "S12"
+        ]
+      },
+      {
+        "id": "FE_P038",
+        "valence": "positive",
+        "title": "Gradual recovery showed measurable progress",
+        "domain": "health_and_physical_safety",
+        "life_stages": [
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "extended_period",
+        "experience": "During recovery from an injury or illness, the person observed small improvements with appropriate care and a realistic plan.",
+        "possible_meanings": [
+          "Progress may be gradual and uneven.",
+          "Support and adjustment can make difficult goals possible."
+        ],
+        "reminder_cues": [
+          "A long task with small milestones",
+          "A temporary setback within a larger improvement"
+        ],
+        "possible_initial_responses": [
+          "May look for meaningful signs of progress.",
+          "May adjust pace instead of treating a setback as total failure."
+        ],
+        "possible_decision_tendencies": [
+          "May support realistic milestones and flexible participation.",
+          "May value maintenance and recovery time alongside output."
+        ],
+        "moderating_factors": [
+          "Medical realities and access to care",
+          "Whether the current challenge is comparable"
+        ],
+        "alternative_outcome": "They may acknowledge lasting limitations without interpreting them as a failure of effort or character.",
+        "source_ids": [
+          "S09",
+          "S11"
+        ]
+      }
     ],
-    "exposure_pattern": "single_event",
-    "experience": "The person prepared for a difficult conversation, expressed a reasonable need, and received a respectful response.",
-    "possible_meanings": [
-      "The outcome I fear is not inevitable.",
-      "Preparation and respectful partners can make speaking up possible."
+    "traits": [
+      {
+        "name": "disloyalty",
+        "level": "low",
+        "effect": "May abandon commitments or reveal confidences when loyalty becomes costly or inconvenient.",
+        "valence": "negative"
+      },
+      {
+        "name": "resentment",
+        "level": "low",
+        "effect": "Holds onto perceived unfairness and may let old injuries shape later judgments of the people involved.",
+        "valence": "negative"
+      },
+      {
+        "name": "empathy",
+        "level": "high",
+        "effect": "Can imagine how a decision may feel from another person's position and incorporates that perspective.",
+        "valence": "positive"
+      }
     ],
-    "reminder_cues": [
-      "A similar conversation with a safe person",
-      "An opportunity to rehearse a request"
-    ],
-    "possible_initial_responses": [
-      "May feel nervous but try a clear opening statement.",
-      "May recall the earlier successful conversation."
-    ],
-    "possible_decision_tendencies": [
-      "May voice a preference instead of automatically conceding.",
-      "May choose a private discussion before a public confrontation."
-    ],
-    "moderating_factors": [
-      "Similarity and safety of the new situation",
-      "Whether the earlier success has been repeated"
-    ],
-    "alternative_outcome": "Confidence may grow gradually and remain specific to certain people or circumstances.",
-    "source_ids": [
-      "S09"
-    ],
-    "name": "irritability",
-    "level": "medium",
-    "effect": "Becomes annoyed quickly under inconvenience, fatigue, or criticism and may respond more sharply than intended.",
-    "viewOfPeople": "People want recognition and will often compete for it, but they can mature beyond that competition.",
-    "viewOfSelf": "A person trying to become capable, respected, and internally coherent.",
-    "viewOfLife": "Life is self-creation through challenge, achievement, and responsibility for one's own standards.",
-    "beliefAboutGodAndAfterlife": "Does not believe in a personal God or a guaranteed afterlife; sees this life as the arena for self-development."
+    "worldview": {
+      "viewOfPeople": "People deserve second chances, but repair must include truth, accountability, and changed behavior.",
+      "viewOfSelf": "A person capable of causing harm and of becoming better through honest repair.",
+      "viewOfLife": "Life is a series of moral relationships where justice and mercy must be held together.",
+      "beliefAboutGodAndAfterlife": "Believes in a forgiving God, moral accountability, and an afterlife where sincere repentance matters."
+    }
   }),
   new Personality({
-    "id": "FE_P020",
-    "valence": "positive",
-    "title": "Creative expression was taken seriously",
-    "domain": "agency_and_mastery",
-    "life_stages": [
-      "childhood",
-      "adolescence",
-      "adulthood"
+    "formativeExperiences": [
+      {
+        "id": "FE_P040",
+        "valence": "positive",
+        "title": "A complaint received a fair hearing",
+        "domain": "institutional_trust",
+        "life_stages": [
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "single_event",
+        "experience": "An independent reviewer listened to the person's complaint, checked relevant evidence, and explained a fair decision.",
+        "possible_meanings": [
+          "Procedures can protect people with less power.",
+          "Being heard can matter even when the outcome is not exactly what I requested."
+        ],
+        "reminder_cues": [
+          "A clear appeal process",
+          "An official gives reasons that can be checked"
+        ],
+        "possible_initial_responses": [
+          "May prepare evidence and use the process.",
+          "May wait for review rather than assume retaliation."
+        ],
+        "possible_decision_tendencies": [
+          "May support independent review and due process.",
+          "May accept an unfavorable outcome more readily when the reasoning is credible."
+        ],
+        "moderating_factors": [
+          "Independence and accessibility of the current process",
+          "Whether earlier findings were actually enforced"
+        ],
+        "alternative_outcome": "They may challenge an unfair procedure despite having had a good experience with another institution.",
+        "source_ids": [
+          "S10",
+          "S11",
+          "S15"
+        ]
+      }
     ],
-    "exposure_pattern": "repeated",
-    "experience": "Other people listened to the person's stories, art, music, or ideas with interest and offered room to experiment.",
-    "possible_meanings": [
-      "My perspective can contribute something worthwhile.",
-      "Exploration does not require immediate perfection."
+    "traits": [
+      {
+        "name": "insecurity",
+        "level": "high",
+        "effect": "Doubts their own worth and may react strongly to comparison, criticism, or possible rejection.",
+        "valence": "negative"
+      }
     ],
-    "reminder_cues": [
-      "An open-ended problem",
-      "An invitation to suggest an unconventional idea"
-    ],
-    "possible_initial_responses": [
-      "May generate several possibilities.",
-      "May share unfinished work for constructive discussion."
-    ],
-    "possible_decision_tendencies": [
-      "May support limited experiments and creative participation.",
-      "May value expressive activities alongside practical needs."
-    ],
-    "moderating_factors": [
-      "Whether feedback respected ownership",
-      "Resources and tolerance for uncertainty in the present setting"
-    ],
-    "alternative_outcome": "They may enjoy creative freedom while accepting constraints needed for a particular task.",
-    "source_ids": [
-      "S07",
-      "S09"
-    ],
-    "name": "carefulness",
-    "level": "high",
-    "effect": "Checks important facts and avoids acting carelessly when a mistake could affect other people.",
-    "viewOfPeople": "People cannot control everything, but they can control their judgment, conduct, and response.",
-    "viewOfSelf": "A rational agent responsible for inner discipline rather than external outcomes.",
-    "viewOfLife": "Life is practice in accepting what cannot be changed while acting virtuously where action is possible.",
-    "beliefAboutGodAndAfterlife": "Is open to a providential order but treats virtue in this life as the central concern."
+    "worldview": {
+      "viewOfPeople": "People want recognition and will often compete for it, but they can mature beyond that competition.",
+      "viewOfSelf": "A person trying to become capable, respected, and internally coherent.",
+      "viewOfLife": "Life is self-creation through challenge, achievement, and responsibility for one's own standards.",
+      "beliefAboutGodAndAfterlife": "Does not believe in a personal God or a guaranteed afterlife; sees this life as the arena for self-development."
+    }
   }),
   new Personality({
-    "id": "FE_P031",
-    "valence": "positive",
-    "title": "Shared finances were handled transparently",
-    "domain": "trust_and_belonging",
-    "life_stages": [
-      "adolescence",
-      "adulthood"
+    "formativeExperiences": [
+      {
+        "id": "FE_N038",
+        "valence": "negative",
+        "title": "Retaliation after reporting wrongdoing",
+        "domain": "institutional_trust",
+        "life_stages": [
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "single_event",
+        "experience": "After raising a legitimate concern, the person lost opportunities or experienced intimidation from those implicated.",
+        "possible_meanings": [
+          "Reporting a problem can carry personal costs.",
+          "Rules may protect the powerful unless independently enforced."
+        ],
+        "reminder_cues": [
+          "A request to report directly to the accused leader",
+          "Warnings about damaging the group's reputation"
+        ],
+        "possible_initial_responses": [
+          "May document concerns quietly.",
+          "May become angry or reluctant to speak through official channels."
+        ],
+        "possible_decision_tendencies": [
+          "May insist on protection for complainants.",
+          "May seek an independent route before challenging leadership."
+        ],
+        "moderating_factors": [
+          "Credibility of current protections",
+          "Personal exposure to retaliation and available allies"
+        ],
+        "alternative_outcome": "Successful accountability may rebuild confidence in specific procedures and collective action.",
+        "source_ids": [
+          "S10",
+          "S15",
+          "S16"
+        ]
+      },
+      {
+        "id": "FE_N033",
+        "valence": "negative",
+        "title": "Eviction and repeated temporary housing",
+        "domain": "material_security",
+        "life_stages": [
+          "childhood",
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "extended_period",
+        "experience": "After losing housing, the person moved between temporary places with little control over how long they could stay.",
+        "possible_meanings": [
+          "A place to live can depend on someone else's decision.",
+          "Long-term plans need a secure base."
+        ],
+        "reminder_cues": [
+          "A rent increase or uncertain renewal",
+          "Being told an arrangement is only temporary"
+        ],
+        "possible_initial_responses": [
+          "May urgently seek written assurances.",
+          "May keep belongings packed or avoid becoming attached to a place."
+        ],
+        "possible_decision_tendencies": [
+          "May choose stability over a more rewarding but precarious opportunity.",
+          "May favor reliable housing support in a shared budget."
+        ],
+        "moderating_factors": [
+          "Current legal and financial housing security",
+          "Availability of people who can help without imposing control"
+        ],
+        "alternative_outcome": "Once securely housed, the person may regain comfort with long-term commitments.",
+        "source_ids": [
+          "S01",
+          "S12"
+        ]
+      },
+      {
+        "id": "FE_N035",
+        "valence": "negative",
+        "title": "Abrupt involuntary job loss",
+        "domain": "work_and_achievement",
+        "life_stages": [
+          "adulthood"
+        ],
+        "exposure_pattern": "single_event",
+        "experience": "The person lost a job unexpectedly and had to reorganize finances and daily identity with little preparation.",
+        "possible_meanings": [
+          "Loyalty does not guarantee security.",
+          "My future needs more than one source of support."
+        ],
+        "reminder_cues": [
+          "Rumors of restructuring",
+          "An unexplained meeting with management"
+        ],
+        "possible_initial_responses": [
+          "May worry and review finances immediately.",
+          "May emotionally distance themselves from the employer."
+        ],
+        "possible_decision_tendencies": [
+          "May prefer a safer contract over higher uncertain pay.",
+          "May support emergency funds and transparent termination procedures."
+        ],
+        "moderating_factors": [
+          "Financial reserves and dependents",
+          "Access to alternative work and supportive relationships"
+        ],
+        "alternative_outcome": "A later secure role or chosen career change may restore confidence and make the loss a bounded chapter.",
+        "source_ids": [
+          "S12"
+        ]
+      }
     ],
-    "exposure_pattern": "extended_period",
-    "experience": "In a household or group, contributions and expenses were explained openly and questions about money were welcomed.",
-    "possible_meanings": [
-      "Pooling resources can work when records are clear.",
-      "Questions about money need not imply disloyalty."
+    "traits": [
+      {
+        "name": "cynicism",
+        "level": "medium",
+        "effect": "Assumes people and institutions are mainly self-serving, which can block trust and cooperation.",
+        "valence": "negative"
+      },
+      {
+        "name": "curiosity",
+        "level": "high",
+        "effect": "Actively seeks new information, asks questions, and is drawn to unfamiliar ideas.",
+        "valence": "positive"
+      }
     ],
-    "reminder_cues": [
-      "A shared budget with accessible records",
-      "Someone requests clarification of an expense"
-    ],
-    "possible_initial_responses": [
-      "May ask factual questions without assuming fraud.",
-      "May share relevant information promptly."
-    ],
-    "possible_decision_tendencies": [
-      "May support collective spending with transparent accounts.",
-      "May prefer agreed rules to informal assurances."
-    ],
-    "moderating_factors": [
-      "Quality of records and actual conduct",
-      "Whether questioning remains free from retaliation"
-    ],
-    "alternative_outcome": "They may become cautious when transparency disappears rather than extending trust unconditionally.",
-    "source_ids": [
-      "S11"
-    ],
-    "name": "gullibility",
-    "level": "low",
-    "effect": "May accept confident claims or emotionally persuasive stories without enough verification.",
-    "viewOfPeople": "People are bound to one another by responsibility, memory, and a shared moral law.",
-    "viewOfSelf": "A link in a long chain of family and community, entrusted with preserving what is good.",
-    "viewOfLife": "Life is a covenantal task: build a just community, remember history, and pass wisdom forward.",
-    "beliefAboutGodAndAfterlife": "Believes in one God who calls people to ethical responsibility; holds a reverent but non-detailed view of what comes after death."
+    "worldview": {
+      "viewOfPeople": "People are shaped by unconscious fears, desires, and old wounds as much as by deliberate reasoning.",
+      "viewOfSelf": "A person with hidden patterns who can gain freedom through honest self-examination.",
+      "viewOfLife": "Life is a process of becoming more conscious and less ruled by unexamined pain.",
+      "beliefAboutGodAndAfterlife": "Is spiritually open but uncertain; sees religious language as potentially meaningful without claiming certainty."
+    }
   }),
   new Personality({
-    "id": "FE_P036",
-    "valence": "positive",
-    "title": "Care was explained and consent was respected",
-    "domain": "health_and_physical_safety",
-    "life_stages": [
-      "childhood",
-      "adolescence",
-      "adulthood"
+    "formativeExperiences": [
+      {
+        "id": "FE_P020",
+        "valence": "positive",
+        "title": "Creative expression was taken seriously",
+        "domain": "agency_and_mastery",
+        "life_stages": [
+          "childhood",
+          "adolescence",
+          "adulthood"
+        ],
+        "exposure_pattern": "repeated",
+        "experience": "Other people listened to the person's stories, art, music, or ideas with interest and offered room to experiment.",
+        "possible_meanings": [
+          "My perspective can contribute something worthwhile.",
+          "Exploration does not require immediate perfection."
+        ],
+        "reminder_cues": [
+          "An open-ended problem",
+          "An invitation to suggest an unconventional idea"
+        ],
+        "possible_initial_responses": [
+          "May generate several possibilities.",
+          "May share unfinished work for constructive discussion."
+        ],
+        "possible_decision_tendencies": [
+          "May support limited experiments and creative participation.",
+          "May value expressive activities alongside practical needs."
+        ],
+        "moderating_factors": [
+          "Whether feedback respected ownership",
+          "Resources and tolerance for uncertainty in the present setting"
+        ],
+        "alternative_outcome": "They may enjoy creative freedom while accepting constraints needed for a particular task.",
+        "source_ids": [
+          "S07",
+          "S09"
+        ]
+      }
     ],
-    "exposure_pattern": "repeated",
-    "experience": "A clinician explained procedures, checked understanding, and offered meaningful choices whenever medically possible.",
-    "possible_meanings": [
-      "Expertise can work with my agency.",
-      "Asking questions can improve care."
+    "traits": [
+      {
+        "name": "conflict-avoidance",
+        "level": "high",
+        "effect": "Avoids confrontation and may stay silent or agree outwardly to escape interpersonal tension.",
+        "valence": "negative"
+      },
+      {
+        "name": "resilience",
+        "level": "high",
+        "effect": "Recovers from setbacks and continues trying after disappointment, criticism, or failure.",
+        "valence": "positive"
+      }
     ],
-    "reminder_cues": [
-      "A professional explains options clearly",
-      "A decision requires understanding risks and benefits"
-    ],
-    "possible_initial_responses": [
-      "May ask questions rather than silently endure uncertainty.",
-      "May cooperate once they understand the plan."
-    ],
-    "possible_decision_tendencies": [
-      "May seek expertise with transparent reasoning.",
-      "May support informed consent in group services."
-    ],
-    "moderating_factors": [
-      "Quality and honesty of the explanation",
-      "Urgency and available alternatives"
-    ],
-    "alternative_outcome": "They may retain specific medical fears while being able to use trusted care effectively.",
-    "source_ids": [
-      "S02",
-      "S09"
-    ],
-    "name": "gratitude",
-    "level": "medium",
-    "effect": "Notices help and good fortune, and tends to respond with appreciation rather than entitlement.",
-    "viewOfPeople": "People are connected through duties, consequences, and the moral weight of their actions.",
-    "viewOfSelf": "A soul with obligations shaped by family, role, and the consequences of prior choices.",
-    "viewOfLife": "Life is a path of learning to act rightly, fulfill duty, and grow beyond selfish desire.",
-    "beliefAboutGodAndAfterlife": "Believes in a divine order, karma, and continuing existence or rebirth after death."
+    "worldview": {
+      "viewOfPeople": "People are drawn toward good but can confuse certainty with righteousness and power with virtue.",
+      "viewOfSelf": "A morally accountable soul who should pair conviction with humility.",
+      "viewOfLife": "Life is a struggle to purify motives, seek justice, and avoid becoming cruel in the name of a good cause.",
+      "beliefAboutGodAndAfterlife": "Believes in God, divine justice, forgiveness, and an afterlife in which intentions as well as actions matter."
+    }
   })
 ];
-// 32124318
-// 32121451
