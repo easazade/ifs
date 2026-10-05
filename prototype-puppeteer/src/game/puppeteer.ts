@@ -15,7 +15,7 @@ export class Puppeteer {
 
   async bootstrap(): Promise<boolean> {
     try {
-      logger.info("Puppeteer is trying to bootstrap the server");
+      logger.info("Puppeteer is trying to bootstrap the server...");
       if (!(await isResponsive())) {
         return false;
       }
@@ -27,6 +27,7 @@ export class Puppeteer {
         await this.registerAllMembers();
       }
 
+      logger.info("Puppeteer successfully bootstrapped");
       return true;
     } catch (error) {
       logger.error("Puppeteer Could not bootstrap server");
@@ -52,9 +53,6 @@ export class Puppeteer {
   async getAllMembers(): Promise<MemberResponseDto[]> {
     const response = await listMembers();
     if (response.status >= 200 && response.status < 300) {
-      response.data.map((item) => {
-        console.log(item.ifsId);
-      });
       return response.data;
     } else {
       return [];
