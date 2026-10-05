@@ -1,14 +1,38 @@
 import {
+  createMember,
   listMembers,
   setApiBaseUrl,
   type MemberResponseDto,
 } from "prototype-client";
 
 import { getHello as isResponsive } from "prototype-client";
+import { fakeMembers } from "../fake/members.js";
 import { logger } from "../utils/logger.js";
 export class Puppeteer {
   constructor(private baseUrl: string) {
     setApiBaseUrl(baseUrl);
+  }
+
+  async bootstrap(): Promise<boolean> {
+    try {
+      logger.info("Puppeteer is trying to bootstrap the server");
+      if (!(await isResponsive())) {
+        return false;
+      }
+      const members = await this.getAllMembers();
+      if (!members.length) {
+        logger.info(
+          "No members found. Trying to register All fake members into the server",
+        );
+        await this.registerAllMembers();
+      }
+
+      return true;
+    } catch (error) {
+      logger.error("Puppeteer Could not bootstrap server");
+      logger.error(error);
+      return false;
+    }
   }
 
   async getHello(): Promise<boolean> {
@@ -35,5 +59,9 @@ export class Puppeteer {
     } else {
       return [];
     }
+  }
+
+  private async registerAllMembers(): Promise<void> {
+    await Promise.all(fakeMembers.map((member) => createMember(member)));
   }
 }

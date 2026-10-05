@@ -1,6 +1,6 @@
 import type { CreateMemberDto } from "prototype-client";
 
-const memberNames = [
+const fakeMemberNames = [
   "Ali Rezaei",
   "Sara Ahmadi",
   "Mohammad Mohammadi",
@@ -103,19 +103,22 @@ const memberNames = [
   "Pantea Shams",
 ];
 
-const fakeMembers: CreateMemberDto[] = memberNames.map((name, index) => {
-  const sequence = String(index + 1).padStart(12, "0");
-  const timestamp = new Date(Date.UTC(2025, 0, index + 1, 9)).toISOString();
+export const fakeMembers: CreateMemberDto[] = fakeMemberNames.map(
+  (name, index) => {
+    const sequence = String(index + 1).padStart(12, "0");
+    const timestamp = new Date(Date.UTC(2025, 0, index + 1, 9)).toISOString();
 
-  return {
-    id: (index + 1).toString(),
-    ifsId: `Member/${index + 1}`,
-    entityType: "Member",
-    entityDocumentationUrl: "https://individualfreedom.systems/entities/member",
-    name,
-    permissions: [],
-    isOwner: index === 0,
-    createdAt: timestamp,
-    updatedAt: timestamp,
-  };
-});
+    return {
+      id: (index + 1).toString(),
+      ifsId: `Member/${index + 1}`,
+      entityType: "Member",
+      entityDocumentationUrl:
+        "https://individualfreedom.systems/entities/member",
+      name,
+      permissions: [],
+      isOwner: index === 0,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    };
+  },
+);
