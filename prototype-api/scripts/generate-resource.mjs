@@ -122,27 +122,24 @@ function missingDtos(entityName, modelName) {
   });
 }
 
-function ensureDtos(entityName, modelName) {
-  let missing = missingDtos(entityName, modelName);
-  if (!missing.length) return false;
+function ensureDtos(entityName, modelName, skipGeneration) {
+  if (!skipGeneration) {
+    console.log('Generating DTO artifacts for all IFS entities...');
+    execFileSync(process.execPath, [generateDtosPath], {
+      cwd: apiRoot,
+      stdio: 'inherit',
+    });
+  }
 
-  console.log(
-    `Missing DTOs for ${modelName}; generating DTO artifacts for all IFS entities...`,
-  );
-  execFileSync(process.execPath, [generateDtosPath], {
-    cwd: apiRoot,
-    stdio: 'inherit',
-  });
-
-  missing = missingDtos(entityName, modelName);
+  const missing = missingDtos(entityName, modelName);
   if (missing.length) {
     throw new Error(
-      `DTO generation completed but these DTOs are still missing or invalid: ${missing
+      `${skipGeneration ? 'DTO generation was skipped, but these DTOs are' : 'DTO generation completed but these DTOs are still'} missing or invalid: ${missing
         .map(({ path }) => relative(workspaceRoot, path))
         .join(', ')}`,
     );
   }
-  return true;
+  return !skipGeneration;
 }
 
 function assertPrismaModel(modelName) {
@@ -475,7 +472,11 @@ export class GeneratedResourcesModule {}
 
 export function generateService(entityInput, options = {}) {
   const { entityName, modelName, schemaPath, schema } = readEntity(entityInput);
-  const generatedDtos = ensureDtos(entityName, modelName);
+  const generatedDtos = ensureDtos(
+    entityName,
+    modelName,
+    options.skipDtoGeneration === true,
+  );
   assertPrismaModel(modelName);
   const relations = readEntityRelations(modelName, schema);
 
@@ -555,7 +556,7 @@ function main() {
   const args = process.argv.slice(2);
   if (args.includes('--help') || args.includes('-h')) return usage();
 
-  const allowedFlags = new Set(['--skip-format']);
+  const allowedFlags = new Set(['--skip-dtos', '--skip-format']);
   const unknownFlag = args.find(
     (arg) => arg.startsWith('-') && !allowedFlags.has(arg),
   );
@@ -567,9 +568,10 @@ function main() {
 
   try {
     const result = generateService(positional[0], {
+      skipDtoGeneration: args.includes('--skip-dtos'),
       skipFormat: args.includes('--skip-format'),
     });
-    if (result.generatedDtos) console.log('Generated missing DTOs.');
+    if (result.generatedDtos) console.log('Generated DTOs.');
     console.log(
       `Generated ${result.modelName} resource in ${relative(workspaceRoot, dirname(result.servicePath))}`,
     );

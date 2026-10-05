@@ -13,7 +13,8 @@ const generationOrderPath = join(
   'scripts',
   'generate-order.json',
 );
-const generatorPath = join(apiRoot, 'scripts', 'generate-resource.mjs');
+const dtoGeneratorPath = join(apiRoot, 'scripts', 'generate-dtos.mjs');
+const resourceGeneratorPath = join(apiRoot, 'scripts', 'generate-resource.mjs');
 
 function readGenerationOrder() {
   let generationOrder;
@@ -51,14 +52,24 @@ function readGenerationOrder() {
 try {
   const generationOrder = readGenerationOrder();
 
+  console.log('Generating DTO artifacts for all IFS entities...');
+  execFileSync(process.execPath, [dtoGeneratorPath], {
+    cwd: apiRoot,
+    stdio: 'inherit',
+  });
+
   for (const [index, entity] of generationOrder.entries()) {
     console.log(
       `\n[${index + 1}/${generationOrder.length}] Generating ${entity} resource...`,
     );
-    execFileSync(process.execPath, [generatorPath, entity], {
-      cwd: apiRoot,
-      stdio: 'inherit',
-    });
+    execFileSync(
+      process.execPath,
+      [resourceGeneratorPath, entity, '--skip-dtos'],
+      {
+        cwd: apiRoot,
+        stdio: 'inherit',
+      },
+    );
   }
 
   console.log(`\nGenerated ${generationOrder.length} resources in order.`);

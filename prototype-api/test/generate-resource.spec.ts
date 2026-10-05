@@ -66,6 +66,10 @@ function fixture(
   );
 
   if (withDtos) writeDtos(temporaryApi);
+  writeFileSync(
+    join(scriptsDirectory, 'generate-dtos.mjs'),
+    `import { appendFileSync } from 'node:fs';\nappendFileSync(new URL('../generator-ran', import.meta.url), 'x');\n`,
+  );
   return temporaryApi;
 }
 
@@ -207,6 +211,15 @@ describe('resource generator', () => {
     expect(result.status).toBe(0);
     expect(source).toContain('this.prisma.member.findMany()');
     expect(source).not.toContain('include:');
+  });
+
+  it('runs the all-DTO generator once before generating a resource', () => {
+    const temporaryApi = fixture();
+
+    const result = run(temporaryApi);
+
+    expect(result.status).toBe(0);
+    expect(readFileSync(join(temporaryApi, 'generator-ran'), 'utf8')).toBe('x');
   });
 
   it('runs the all-DTO generator when DTOs are missing', () => {
