@@ -1,15 +1,16 @@
-import { exit } from "process";
 import { Puppeteer } from "./game/puppeteer.js";
 
 async function main() {
-  console.log("STARTING!!!!!");
+  console.log("STARTING PUPPETEER!");
 
-  const puppetter = new Puppeteer("http://localhost:3000");
-  if (!(await puppetter.getHello())) {
-    exit(-1);
+  const puppeteer = new Puppeteer("http://localhost:3000");
+  await puppeteer.bootstrap();
+
+  const allMembers = await puppeteer.getAllMembers();
+  if (!allMembers.length) {
+    console.log(allMembers.length);
+    console.log(allMembers[0]);
   }
-  const allMembers = await puppetter.getAllMembers();
-  console.log(allMembers);
 }
 
 main();
