@@ -108,8 +108,8 @@ const fakeMembers: CreateMemberDto[] = memberNames.map((name, index) => {
   const timestamp = new Date(Date.UTC(2025, 0, index + 1, 9)).toISOString();
 
   return {
-    id: `00000000-0000-4000-8000-${sequence}`,
-    ifsId: `ifs:member:${String(index + 1).padStart(3, "0")}`,
+    id: (index + 1).toString(),
+    ifsId: `Member/${index + 1}`,
     entityType: "Member",
     entityDocumentationUrl: "https://individualfreedom.systems/entities/member",
     name,
