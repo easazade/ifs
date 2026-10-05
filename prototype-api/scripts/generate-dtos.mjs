@@ -61,7 +61,9 @@ try {
     });
   }
 
-  console.log(`\nGenerated DTOs for ${generationOrder.length} entities in order.`);
+  console.log(
+    `\nGenerated DTOs for ${generationOrder.length} entities in order.`,
+  );
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error));
   process.exitCode = 1;

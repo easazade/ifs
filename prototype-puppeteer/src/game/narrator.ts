@@ -1,3 +1,1 @@
-export class Narrator {
-    
-}
+export class Narrator {}
