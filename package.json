@@ -8,6 +8,7 @@
     "lint": "turbo run lint",
     "format": "turbo run format",
     "test": "turbo run test",
+    "generate:all": "pnpm --filter prototype-api generate:all && pnpm openapi:generate && pnpm --filter prototype-client generate",
     "openapi:generate": "pnpm --filter prototype-api openapi:generate",
     "client:generate": "pnpm openapi:generate && pnpm --filter prototype-client generate",
     "prepare": "husky"
