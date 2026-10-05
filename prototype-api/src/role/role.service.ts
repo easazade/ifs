@@ -11,13 +11,42 @@ const roleRelations = {
   scope: true,
 } as const;
 
+// API relations are expanded entities; Prisma requires nested relation operations.
+function toRoleCreateInput(data: CreateRoleDto): Prisma.RoleCreateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.permissions !== undefined) {
+    prismaData.permissions = {
+      connect: data.permissions.map(({ id }) => ({ id })),
+    };
+  }
+  if (data.scope !== undefined) {
+    delete prismaData.scopeId;
+    prismaData.scope = { connect: { id: data.scope.id } };
+  }
+  return prismaData as unknown as Prisma.RoleCreateInput;
+}
+
+function toRoleUpdateInput(data: UpdateRoleDto): Prisma.RoleUpdateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.permissions !== undefined) {
+    prismaData.permissions = {
+      set: data.permissions.map(({ id }) => ({ id })),
+    };
+  }
+  if (data.scope !== undefined) {
+    delete prismaData.scopeId;
+    prismaData.scope = { connect: { id: data.scope.id } };
+  }
+  return prismaData as unknown as Prisma.RoleUpdateInput;
+}
+
 @Injectable()
 export class RoleService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreateRoleDto): Promise<RoleResponseDto> {
     return this.prisma.role.create({
-      data: data as unknown as Prisma.RoleCreateInput,
+      data: toRoleCreateInput(data),
       include: roleRelations,
     }) as unknown as Promise<RoleResponseDto>;
   }
@@ -38,7 +67,7 @@ export class RoleService {
   update(id: string, data: UpdateRoleDto): Promise<RoleResponseDto> {
     return this.prisma.role.update({
       where: { id },
-      data: data as unknown as Prisma.RoleUpdateInput,
+      data: toRoleUpdateInput(data),
       include: roleRelations,
     }) as unknown as Promise<RoleResponseDto>;
   }

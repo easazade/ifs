@@ -16,13 +16,76 @@ const changeRelations = {
   reviewers: true,
 } as const;
 
+// API relations are expanded entities; Prisma requires nested relation operations.
+function toChangeCreateInput(data: CreateChangeDto): Prisma.ChangeCreateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.authors !== undefined) {
+    prismaData.authors = { connect: data.authors.map(({ id }) => ({ id })) };
+  }
+  if (data.changes !== undefined) {
+    prismaData.changes = { connect: data.changes.map(({ id }) => ({ id })) };
+  }
+  if (data.comments !== undefined) {
+    prismaData.comments = { connect: data.comments.map(({ id }) => ({ id })) };
+  }
+  if (data.decision !== undefined) {
+    delete prismaData.decisionRelationId;
+    prismaData.decision = { connect: { id: data.decision.id } };
+  }
+  if (data.mainAuthor !== undefined) {
+    delete prismaData.mainAuthorId;
+    prismaData.mainAuthor = { connect: { id: data.mainAuthor.id } };
+  }
+  if (data.reviewComments !== undefined) {
+    prismaData.reviewComments = {
+      connect: data.reviewComments.map(({ id }) => ({ id })),
+    };
+  }
+  if (data.reviewers !== undefined) {
+    prismaData.reviewers = {
+      connect: data.reviewers.map(({ id }) => ({ id })),
+    };
+  }
+  return prismaData as unknown as Prisma.ChangeCreateInput;
+}
+
+function toChangeUpdateInput(data: UpdateChangeDto): Prisma.ChangeUpdateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.authors !== undefined) {
+    prismaData.authors = { set: data.authors.map(({ id }) => ({ id })) };
+  }
+  if (data.changes !== undefined) {
+    prismaData.changes = { set: data.changes.map(({ id }) => ({ id })) };
+  }
+  if (data.comments !== undefined) {
+    prismaData.comments = { set: data.comments.map(({ id }) => ({ id })) };
+  }
+  if (data.decision !== undefined) {
+    delete prismaData.decisionRelationId;
+    prismaData.decision = { connect: { id: data.decision.id } };
+  }
+  if (data.mainAuthor !== undefined) {
+    delete prismaData.mainAuthorId;
+    prismaData.mainAuthor = { connect: { id: data.mainAuthor.id } };
+  }
+  if (data.reviewComments !== undefined) {
+    prismaData.reviewComments = {
+      set: data.reviewComments.map(({ id }) => ({ id })),
+    };
+  }
+  if (data.reviewers !== undefined) {
+    prismaData.reviewers = { set: data.reviewers.map(({ id }) => ({ id })) };
+  }
+  return prismaData as unknown as Prisma.ChangeUpdateInput;
+}
+
 @Injectable()
 export class ChangeService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreateChangeDto): Promise<ChangeResponseDto> {
     return this.prisma.change.create({
-      data: data as unknown as Prisma.ChangeCreateInput,
+      data: toChangeCreateInput(data),
       include: changeRelations,
     }) as unknown as Promise<ChangeResponseDto>;
   }
@@ -43,7 +106,7 @@ export class ChangeService {
   update(id: string, data: UpdateChangeDto): Promise<ChangeResponseDto> {
     return this.prisma.change.update({
       where: { id },
-      data: data as unknown as Prisma.ChangeUpdateInput,
+      data: toChangeUpdateInput(data),
       include: changeRelations,
     }) as unknown as Promise<ChangeResponseDto>;
   }

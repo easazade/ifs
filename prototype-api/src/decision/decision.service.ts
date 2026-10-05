@@ -14,13 +14,68 @@ const decisionRelations = {
   votes: true,
 } as const;
 
+// API relations are expanded entities; Prisma requires nested relation operations.
+function toDecisionCreateInput(
+  data: CreateDecisionDto,
+): Prisma.DecisionCreateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.affectedMembers !== undefined) {
+    prismaData.affectedMembers = {
+      connect: data.affectedMembers.map(({ id }) => ({ id })),
+    };
+  }
+  if (data.eligibleMembers !== undefined) {
+    prismaData.eligibleMembers = {
+      connect: data.eligibleMembers.map(({ id }) => ({ id })),
+    };
+  }
+  if (data.previousRevision !== undefined) {
+    delete prismaData.previousRevisionId;
+    prismaData.previousRevision = { connect: { id: data.previousRevision.id } };
+  }
+  if (data.rules !== undefined) {
+    prismaData.rules = { connect: data.rules.map(({ id }) => ({ id })) };
+  }
+  if (data.votes !== undefined) {
+    prismaData.votes = { connect: data.votes.map(({ id }) => ({ id })) };
+  }
+  return prismaData as unknown as Prisma.DecisionCreateInput;
+}
+
+function toDecisionUpdateInput(
+  data: UpdateDecisionDto,
+): Prisma.DecisionUpdateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.affectedMembers !== undefined) {
+    prismaData.affectedMembers = {
+      set: data.affectedMembers.map(({ id }) => ({ id })),
+    };
+  }
+  if (data.eligibleMembers !== undefined) {
+    prismaData.eligibleMembers = {
+      set: data.eligibleMembers.map(({ id }) => ({ id })),
+    };
+  }
+  if (data.previousRevision !== undefined) {
+    delete prismaData.previousRevisionId;
+    prismaData.previousRevision = { connect: { id: data.previousRevision.id } };
+  }
+  if (data.rules !== undefined) {
+    prismaData.rules = { set: data.rules.map(({ id }) => ({ id })) };
+  }
+  if (data.votes !== undefined) {
+    prismaData.votes = { set: data.votes.map(({ id }) => ({ id })) };
+  }
+  return prismaData as unknown as Prisma.DecisionUpdateInput;
+}
+
 @Injectable()
 export class DecisionService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreateDecisionDto): Promise<DecisionResponseDto> {
     return this.prisma.decision.create({
-      data: data as unknown as Prisma.DecisionCreateInput,
+      data: toDecisionCreateInput(data),
       include: decisionRelations,
     }) as unknown as Promise<DecisionResponseDto>;
   }
@@ -41,7 +96,7 @@ export class DecisionService {
   update(id: string, data: UpdateDecisionDto): Promise<DecisionResponseDto> {
     return this.prisma.decision.update({
       where: { id },
-      data: data as unknown as Prisma.DecisionUpdateInput,
+      data: toDecisionUpdateInput(data),
       include: decisionRelations,
     }) as unknown as Promise<DecisionResponseDto>;
   }

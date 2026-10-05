@@ -122,6 +122,15 @@ describe('resource generator', () => {
     expect(firstSource).toContain('const memberRelations = {');
     expect(firstSource).toContain('permissions: true');
     expect(firstSource).toContain('roles: true');
+    expect(firstSource).toContain(
+      'permissions = { connect: data.permissions.map(({ id }) => ({ id })) }',
+    );
+    expect(firstSource).toContain(
+      'permissions = { set: data.permissions.map(({ id }) => ({ id })) }',
+    );
+    expect(firstSource).toContain('delete prismaData.roles');
+    expect(firstSource).toContain('data: toMemberCreateInput(data)');
+    expect(firstSource).toContain('data: toMemberUpdateInput(data)');
     expect(firstSource.match(/include: memberRelations/g)).toHaveLength(5);
 
     const controllerSource = readFileSync(
@@ -149,6 +158,42 @@ describe('resource generator', () => {
     );
     expect(resourcesSource).toContain('import { MemberModule }');
     expect(resourcesSource).toContain('imports: [MemberModule]');
+  });
+
+  it('maps singular DTO relations and removes their scalar foreign keys', () => {
+    const temporaryApi = fixture(true, [
+      { property: 'primaryPermission', type: 'Permission' },
+    ]);
+    const schemaPath = join(
+      temporaryApi,
+      '..',
+      'ifs-standards',
+      'src',
+      'entities',
+      'member',
+      'member.schema.json',
+    );
+    const schema = JSON.parse(readFileSync(schemaPath, 'utf8'));
+    schema.properties.primaryPermission = {
+      $ref: 'https://ifs-standards.org/schemas/v1/entities/permission.schema.json',
+    };
+    writeFileSync(schemaPath, JSON.stringify(schema));
+    writeFileSync(
+      join(temporaryApi, 'prisma', 'schema.prisma'),
+      'model Member {\n  id String @id\n  primaryPermissionId String?\n  primaryPermission Permission? @relation("Member_primaryPermission", fields: [primaryPermissionId], references: [id])\n}\n',
+    );
+
+    const result = run(temporaryApi);
+    const source = readFileSync(
+      join(temporaryApi, 'src', 'member', 'member.service.ts'),
+      'utf8',
+    );
+
+    expect(result.status).toBe(0);
+    expect(source).toContain('delete prismaData.primaryPermissionId');
+    expect(source).toContain(
+      'primaryPermission = { connect: { id: data.primaryPermission.id } }',
+    );
   });
 
   it('omits Prisma include when the entity has no relations', () => {

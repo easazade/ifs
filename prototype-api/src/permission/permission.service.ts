@@ -10,13 +10,34 @@ const permissionRelations = {
   actions: true,
 } as const;
 
+// API relations are expanded entities; Prisma requires nested relation operations.
+function toPermissionCreateInput(
+  data: CreatePermissionDto,
+): Prisma.PermissionCreateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.actions !== undefined) {
+    prismaData.actions = { connect: data.actions.map(({ id }) => ({ id })) };
+  }
+  return prismaData as unknown as Prisma.PermissionCreateInput;
+}
+
+function toPermissionUpdateInput(
+  data: UpdatePermissionDto,
+): Prisma.PermissionUpdateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.actions !== undefined) {
+    prismaData.actions = { set: data.actions.map(({ id }) => ({ id })) };
+  }
+  return prismaData as unknown as Prisma.PermissionUpdateInput;
+}
+
 @Injectable()
 export class PermissionService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreatePermissionDto): Promise<PermissionResponseDto> {
     return this.prisma.permission.create({
-      data: data as unknown as Prisma.PermissionCreateInput,
+      data: toPermissionCreateInput(data),
       include: permissionRelations,
     }) as unknown as Promise<PermissionResponseDto>;
   }
@@ -40,7 +61,7 @@ export class PermissionService {
   ): Promise<PermissionResponseDto> {
     return this.prisma.permission.update({
       where: { id },
-      data: data as unknown as Prisma.PermissionUpdateInput,
+      data: toPermissionUpdateInput(data),
       include: permissionRelations,
     }) as unknown as Promise<PermissionResponseDto>;
   }

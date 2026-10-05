@@ -10,13 +10,36 @@ const delegationRelations = {
   permission: true,
 } as const;
 
+// API relations are expanded entities; Prisma requires nested relation operations.
+function toDelegationCreateInput(
+  data: CreateDelegationDto,
+): Prisma.DelegationCreateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.permission !== undefined) {
+    delete prismaData.permissionRelationId;
+    prismaData.permission = { connect: { id: data.permission.id } };
+  }
+  return prismaData as unknown as Prisma.DelegationCreateInput;
+}
+
+function toDelegationUpdateInput(
+  data: UpdateDelegationDto,
+): Prisma.DelegationUpdateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.permission !== undefined) {
+    delete prismaData.permissionRelationId;
+    prismaData.permission = { connect: { id: data.permission.id } };
+  }
+  return prismaData as unknown as Prisma.DelegationUpdateInput;
+}
+
 @Injectable()
 export class DelegationService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreateDelegationDto): Promise<DelegationResponseDto> {
     return this.prisma.delegation.create({
-      data: data as unknown as Prisma.DelegationCreateInput,
+      data: toDelegationCreateInput(data),
       include: delegationRelations,
     }) as unknown as Promise<DelegationResponseDto>;
   }
@@ -40,7 +63,7 @@ export class DelegationService {
   ): Promise<DelegationResponseDto> {
     return this.prisma.delegation.update({
       where: { id },
-      data: data as unknown as Prisma.DelegationUpdateInput,
+      data: toDelegationUpdateInput(data),
       include: delegationRelations,
     }) as unknown as Promise<DelegationResponseDto>;
   }

@@ -11,13 +11,36 @@ const memberRelations = {
   roles: true,
 } as const;
 
+// API relations are expanded entities; Prisma requires nested relation operations.
+function toMemberCreateInput(data: CreateMemberDto): Prisma.MemberCreateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.permissions !== undefined) {
+    prismaData.permissions = {
+      connect: data.permissions.map(({ id }) => ({ id })),
+    };
+  }
+  delete prismaData.roles;
+  return prismaData as unknown as Prisma.MemberCreateInput;
+}
+
+function toMemberUpdateInput(data: UpdateMemberDto): Prisma.MemberUpdateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.permissions !== undefined) {
+    prismaData.permissions = {
+      set: data.permissions.map(({ id }) => ({ id })),
+    };
+  }
+  delete prismaData.roles;
+  return prismaData as unknown as Prisma.MemberUpdateInput;
+}
+
 @Injectable()
 export class MemberService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreateMemberDto): Promise<MemberResponseDto> {
     return this.prisma.member.create({
-      data: data as unknown as Prisma.MemberCreateInput,
+      data: toMemberCreateInput(data),
       include: memberRelations,
     }) as unknown as Promise<MemberResponseDto>;
   }
@@ -38,7 +61,7 @@ export class MemberService {
   update(id: string, data: UpdateMemberDto): Promise<MemberResponseDto> {
     return this.prisma.member.update({
       where: { id },
-      data: data as unknown as Prisma.MemberUpdateInput,
+      data: toMemberUpdateInput(data),
       include: memberRelations,
     }) as unknown as Promise<MemberResponseDto>;
   }

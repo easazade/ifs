@@ -93,7 +93,7 @@ function readEntity(entityInput) {
     );
   }
 
-  return { entityName, modelName: schema.title, schemaPath };
+  return { entityName, modelName: schema.title, schemaPath, schema };
 }
 
 function expectedDtos(entityName, modelName) {
@@ -157,7 +157,7 @@ function assertPrismaModel(modelName) {
   }
 }
 
-function readEntityRelations(modelName) {
+function readEntityRelations(modelName, schema) {
   let metadata;
   try {
     metadata = JSON.parse(readFileSync(entityRelationsPath, 'utf8'));
@@ -184,15 +184,99 @@ function readEntityRelations(modelName) {
     throw new Error(`Entity relations metadata for ${modelName} is invalid.`);
   }
 
-  return [...new Set(relations.map(({ property }) => property))];
+  const prismaSource = readFileSync(prismaSchemaPath, 'utf8');
+  const modelMatch = prismaSource.match(
+    new RegExp(`(?:^|\\n)model\\s+${modelName}\\s*\\{([\\s\\S]*?)\\n\\}`),
+  );
+  if (!modelMatch) throw new Error(`Prisma model ${modelName} is missing.`);
+
+  const seen = new Set();
+  return relations.map(({ property, type }) => {
+    if (seen.has(property)) {
+      throw new Error(
+        `Entity relations metadata for ${modelName} contains duplicate property ${property}.`,
+      );
+    }
+    seen.add(property);
+
+    const propertySchema = schema.properties?.[property];
+    if (!propertySchema) {
+      throw new Error(
+        `Entity relations metadata for ${modelName} references missing property ${property}.`,
+      );
+    }
+
+    const relationLine = modelMatch[1]
+      .split('\n')
+      .find((line) => new RegExp(`^\\s*${property}\\s`).test(line));
+    const foreignKey = relationLine?.match(
+      /@relation\([^\n]*fields:\s*\[\s*([A-Za-z_][A-Za-z0-9_]*)\s*\]/,
+    )?.[1];
+
+    return {
+      property,
+      type,
+      isArray: propertySchema.type === 'array',
+      readOnly: propertySchema.readOnly === true,
+      foreignKey,
+    };
+  });
+}
+
+function renderRelationInputMapper(modelName, relations) {
+  if (!relations.length) return '';
+
+  const renderOperations = (operation) =>
+    relations
+      .map(({ property, isArray, readOnly, foreignKey }) => {
+        if (readOnly) return `  delete prismaData.${property};`;
+
+        const nestedOperation = operation === 'create' ? 'connect' : 'set';
+        const foreignKeyDelete = foreignKey
+          ? `\n    delete prismaData.${foreignKey};`
+          : '';
+        const nestedValue = isArray
+          ? `{ ${nestedOperation}: data.${property}.map(({ id }) => ({ id })) }`
+          : `{ connect: { id: data.${property}.id } }`;
+
+        return `  if (data.${property} !== undefined) {${foreignKeyDelete}\n    prismaData.${property} = ${nestedValue};\n  }`;
+      })
+      .join('\n');
+
+  return `
+// API relations are expanded entities; Prisma requires nested relation operations.
+function to${modelName}CreateInput(
+  data: Create${modelName}Dto,
+): Prisma.${modelName}CreateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+${renderOperations('create')}
+  return prismaData as unknown as Prisma.${modelName}CreateInput;
+}
+
+function to${modelName}UpdateInput(
+  data: Update${modelName}Dto,
+): Prisma.${modelName}UpdateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+${renderOperations('update')}
+  return prismaData as unknown as Prisma.${modelName}UpdateInput;
+}
+`;
 }
 
 function renderService(entityName, modelName, relations) {
   const delegateName = lowerCamelCase(modelName);
+  const relationProperties = relations.map(({ property }) => property);
   const relationsName = `${delegateName}Relations`;
   const relationsDeclaration = relations.length
-    ? `\nconst ${relationsName} = {\n${relations.map((relation) => `  ${relation}: true,`).join('\n')}\n} as const;\n`
+    ? `\nconst ${relationsName} = {\n${relationProperties.map((relation) => `  ${relation}: true,`).join('\n')}\n} as const;\n`
     : '';
+  const relationInputMapper = renderRelationInputMapper(modelName, relations);
+  const createInput = relations.length
+    ? `to${modelName}CreateInput(data)`
+    : `data as unknown as Prisma.${modelName}CreateInput`;
+  const updateInput = relations.length
+    ? `to${modelName}UpdateInput(data)`
+    : `data as unknown as Prisma.${modelName}UpdateInput`;
   const includeRelations = relations.length
     ? `\n      include: ${relationsName},`
     : '';
@@ -206,14 +290,14 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { Create${modelName}Dto } from './dto/create-${entityName}.dto.js';
 import { ${modelName}ResponseDto } from './dto/${entityName}-response.dto.js';
 import { Update${modelName}Dto } from './dto/update-${entityName}.dto.js';
-${relationsDeclaration}
+${relationsDeclaration}${relationInputMapper}
 @Injectable()
 export class ${modelName}Service {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: Create${modelName}Dto): Promise<${modelName}ResponseDto> {
     return this.prisma.${delegateName}.create({
-      data: data as unknown as Prisma.${modelName}CreateInput,${includeRelations}
+      data: ${createInput},${includeRelations}
     }) as unknown as Promise<${modelName}ResponseDto>;
   }
 
@@ -232,7 +316,7 @@ export class ${modelName}Service {
   update(id: string, data: Update${modelName}Dto): Promise<${modelName}ResponseDto> {
     return this.prisma.${delegateName}.update({
       where: { id },
-      data: data as unknown as Prisma.${modelName}UpdateInput,${includeRelations}
+      data: ${updateInput},${includeRelations}
     }) as unknown as Promise<${modelName}ResponseDto>;
   }
 
@@ -390,10 +474,10 @@ export class GeneratedResourcesModule {}
 }
 
 export function generateService(entityInput, options = {}) {
-  const { entityName, modelName, schemaPath } = readEntity(entityInput);
+  const { entityName, modelName, schemaPath, schema } = readEntity(entityInput);
   const generatedDtos = ensureDtos(entityName, modelName);
   assertPrismaModel(modelName);
-  const relations = readEntityRelations(modelName);
+  const relations = readEntityRelations(modelName, schema);
 
   const serviceDirectory = join(apiRoot, 'src', entityName);
   const generatedFiles = [
