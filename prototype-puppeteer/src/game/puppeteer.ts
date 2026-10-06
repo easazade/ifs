@@ -20,7 +20,7 @@ export class Puppeteer {
         return false;
       }
       const members = await this.getAllMembers();
-      if (!members.length) {
+      if (members.length !== 0) {
         logger.info(
           "No members found. Trying to register All fake members into the server",
         );
