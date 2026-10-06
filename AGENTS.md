@@ -1,117 +1,105 @@
 # AGENTS.md
 
-## About IFS (Individual Freedom System)
+Repository-wide guidance for coding agents. Paths and commands are relative to the repository root. Check for a nearer `AGENTS.md` before changing a package.
 
-**System Philosophy:** The IFS is a "Servant-Architecture" for governance. It operates on the principle that sovereignty is non-transferable. Power resides permanently with the individual and is only temporarily delegated to roles or entities.
+## Project
 
-**Dynamic Role Delegation:** Unlike static elected terms, IFS enables Real-time Authority Revocation. Users do not "elect" leaders; they assign specific responsibilities to "Stewards" whose permissions can be modified or terminated instantly by the affected collective.
+IFS (Individual Freedom System) explores governance built around revocable delegation, proportional authority, and traceable decisions/resources. Keep these domain principles intact when changing schemas, APIs, or user-facing language.
 
-**Proportional Governance (The Scope Rule):** Decision-making power is strictly limited to the affected radius. If a decision impacts a town, only that town's participants possess the voting keys. If it impacts a nation, the keys scale accordingly.
+This is a pnpm/Turborepo monorepo:
 
-**Radical Transparency & Fiscal Agency:** Every resource flow is indexed and public. "Taxation" is replaced by Direct Resource Allocation—users do not pay into a black box; they programmatically direct their contributions to specific services and can audit every transaction in real-time.
+| Workspace | Purpose | Main stack |
+| --- | --- | --- |
+| `ifs-standards` | Standards site and canonical IFS entity schemas | React, Vite, Tailwind CSS v4, MDX, Vitest |
+| `prototype` | Browser prototype | React, Vite |
+| `prototype-api` | HTTP API and persistence | NestJS, Prisma, SQLite, Vitest |
+| `prototype-client` | Generated API client | Orval, TypeScript, native Fetch |
+| `prototype-puppeteer` | Simulation runner using the generated client | TypeScript, Node.js |
 
-## About This Project:
+Use Node.js 24 and the `pnpm` version pinned in root `package.json`. Do not use workspace-local npm lockfiles as the monorepo package-manager source of truth.
 
-This repository is a pnpm/Turborepo monorepo. These instructions apply across the repository; follow any additional package-local instructions when present. All paths below are relative to the monorepo root, unless explicitly stated otherwise.
+## Sources of truth and generated files
 
-- `ifs-standards/`: IFS schemas, protocols, documentation, and the standards website. Defines rules for Dynamic Consent, Asset Traceability, and Modular Rule-Setting used to implement IFS software.
-- `prototype/`: prototype frontend.
-- `prototype-api/`: NestJS backend with Prisma and SQLite.
-- `prototype-client/`: shared OpenAPI-generated client (`prototype-client`).
-- `.pi/prompts/`: repository-wide Pi prompt templates.
+- Entity definitions: `ifs-standards/src/entities/**/*.schema.json`.
+- UI guidance: `DESIGN.md`.
+- Database schema: `prototype-api/prisma/schema.prisma`; generated model blocks originate from entity schemas.
+- API contract: backend DTOs/controllers plus `prototype-api/src/openapi.ts`.
+- Committed OpenAPI output: `prototype-api/openapi.json`.
+- Generated client: `prototype-client/src/generated/api.ts`.
 
-## Source of truth
+Do not hand-edit generated entity interfaces, entity overview/example output, Prisma client files in `prototype-api/src/generated/prisma/`, `prototype-api/openapi.json`, or `prototype-client/src/generated/api.ts`. Change their source and run the matching generator. Commit generated OpenAPI/client source with contract changes; do not commit `dist/`, databases, secrets, or local caches.
 
-- UI rules live in `DESIGN.md`
-- Standards design files remain in `ifs-standards/design/` as .pen files created by pencil.dev. Modify them through Pencil MCP following root `DESIGN.md` guidelines.
-- Entity definitions live in `ifs-standards/src/entities/**/*.schema.json`; generate derived artifacts from schemas, not the reverse.
+## Common commands
 
-## Commands
+Run commands from the repository root:
 
-Run commands from the monorepo root using the pinned pnpm version.
-
-- `pnpm dev`, `pnpm build`, `pnpm lint`, `pnpm test`, `pnpm format` - Run workspace tasks through Turbo.
-- `pnpm --filter <package-name> <script>` - Run a package-specific script; check its `package.json` first.
-- `pnpm --filter ifs-standards dev` - Start the standards Vite dev server.
-- `pnpm --filter ifs-standards build` - Type-check and build to `ifs-standards/dist/`.
-- `pnpm --filter ifs-standards typecheck` - Check standards app, scripts, configs, and tests.
-- `pnpm --filter ifs-standards test` - Run standards Vitest tests.
-- `pnpm --filter ifs-standards preview` - Serve the standards production build.
-- `pnpm --filter ifs-standards tokens:code` - Generate `ifs-standards/src/index.css` from `ifs-standards/design/design-system.lib.pen`.
-- `pnpm --filter ifs-standards entities` - Regenerate derived standards entity artifacts.
-- `pnpm openapi:generate` - Generate the backend OpenAPI document.
-- `pnpm client:generate` - Regenerate OpenAPI and the shared API client.
-
-## IFS Standards Key Files
-
-- **Entry**: `ifs-standards/src/main.tsx` - React app with BrowserRouter
-- **Routes**: `ifs-standards/src/routes.ts` - Route definitions
-- **Data**: `ifs-standards/src/data/protocols.ts` - Protocol data source
-- **Layout**: `ifs-standards/src/layouts/MainLayout.tsx` - Navbar + Sidebar wrapper
-- **TypeScript**: `ifs-standards/tsconfig.app.json` and `ifs-standards/tsconfig.node.json` share `ifs-standards/tsconfig.base.json`
-
-## IFS Standards Notes
-
-- Tailwind v4 uses `@tailwindcss/vite` plugin (not the old postcss approach)
-- GSAP animations via `@gsap/react` hook
-- Standards Vitest tests live in `ifs-standards/tests/`; consult `ifs-standards/README.md` and current test results for known failures.
-- Use `.tsx` for JSX components and `.ts` for other code; run generators through `tsx`
-
-## Rules (IMPORTANT)
-
-### Read Rules First
-
-- At start of each conversation, read AGENTS.md.
-- Identify rules with `alwaysApply: true` — these MUST be followed.
-- Identify rules with `alwaysApply: false` — follow intelligently if rule applies to task.
-- alwaysApply: true
-
-### React/JS Learning (Intelligent)
-
-- Teach React & Advanced JS.
-- For standards learning notes, update `ifs-standards/NOTES.md`: Include TOC with links, sections for new concepts.
-- Coding: Add short comments above new concepts/types.
-- Reference: Use Flutter/Dart analogies.
-- Discretion: Decide if `NOTES.md` entry, code comment, or both is required.
-- alwaysApply: false
-
-### Trace & Report
-
-- End every response with:
-
-```
-## Trace
-- Rules used:
-- Skills/Tools:
-- Assumptions:
-- (Use "unknown" if unsure; keep concise)
-- alwaysApply: true
+```bash
+pnpm install
+pnpm dev
+pnpm build
+pnpm lint
+pnpm test
+pnpm format
+pnpm --filter <workspace> <script>
 ```
 
-### Optimization
+Important generation/setup commands:
 
-- Use caveman skill: Shorten prompts, minimize context/cost unless forbidden.
-- alwaysApply: true
+```bash
+pnpm --filter ifs-standards entities       # schema-derived standards artifacts
+pnpm --filter prototype-api db:setup       # generate Prisma client + apply migrations
+pnpm openapi:generate                       # backend -> prototype-api/openapi.json
+pnpm client:generate                        # OpenAPI export -> Orval client + build
+pnpm generate:all                           # API resources, OpenAPI, and client
+```
 
-### AI Agent Memory
+Check each workspace's `package.json` before assuming a script exists. Prefer the smallest relevant check while iterating, then run affected build/lint/tests before finishing.
 
-- Agents may use root `ai-agent-memory/` for context between runs and sessions; create it when needed.
-- AI agents have complete autonomy to read/write/edit/delete the files in that directory.
-- The purpose of these files is to improve agent efficiency.
-- Code remains the source of truth; memory files may be outdated.
-- alwaysApply: true
+## Development rules
 
+- Preserve existing ESM conventions and explicit `.js` suffixes where Node-targeted TypeScript already uses them.
+- Use `.tsx` for JSX and `.ts` otherwise.
+- Keep changes scoped; do not refactor unrelated code or overwrite user changes.
+- Never edit build output under `dist/`.
+- Treat entity schemas as contracts. Regenerate downstream artifacts after schema or API changes.
+- Use concrete DTO classes and stable, unique Swagger `operationId` values for API endpoints.
+- OpenAPI generation must remain offline: no listening server or required database connection.
+- Native Fetch does not reject non-2xx responses; client consumers must inspect `status`.
+- Review generated relation writes and Prisma migrations before applying them.
+- Never reset or destructively migrate a database without explicit approval. Verify `DATABASE_URL` first.
+- Keep secrets out of source; use `.env.example` for documented configuration.
 
-### Design & Pencil MCP
+## UI and design work
 
-- Use root `DESIGN.md` for design tasks, including `.pen` files in `ifs-standards/design/`.
-- pencil mcp: main design tool to read/write/change .pen design files.
-- For all .pen related tasks first check if pencil mcp is responsive. if pencil mcp cannot be reached MUST cancel agent run and tell user.
-- .pen rules: No helper files/scripts/temp artifacts. No retries via scripts.
-- .lib.pen files are shared Pencil libraries that must be imported into all .pen files in `ifs-standards/design/`.
-- Colors: Use HEX only. No RGBA.
-- Standards Design Tokens & Components: Source of truth is `ifs-standards/design/design-system.lib.pen`.
-- Run `pnpm --filter ifs-standards tokens:code` from root to regenerate `ifs-standards/src/index.css` from design tokens.
-- If content's height requires increasing the height of parent item or frame, do it.
-- Design to Code: only tailwind inline css classes (existing classes), Use defined variables, no hardcoding
-- alwaysApply: false
+Follow `DESIGN.md`; reuse existing components and tokens instead of inventing styles.
+
+## Verification by area
+
+```bash
+# Standards
+pnpm --filter ifs-standards typecheck
+pnpm --filter ifs-standards lint
+pnpm --filter ifs-standards test
+pnpm --filter ifs-standards build
+
+# Prototype
+pnpm --filter prototype lint
+pnpm --filter prototype build
+
+# API and generated client
+pnpm --filter prototype-api db:validate
+pnpm --filter prototype-api lint
+pnpm --filter prototype-api test
+pnpm --filter prototype-api test:e2e
+pnpm --filter prototype-api test:openapi
+pnpm --filter prototype-client test
+
+# Simulation runner
+pnpm --filter prototype-puppeteer build
+```
+
+Some checks need generated dependencies or local setup; report anything not run and why.
+
+## Git
+
+Use Conventional Commits. Allowed scopes are workspace names from `commitlint.config.mjs`; omit scope for repository-wide changes. Do not commit unless asked.

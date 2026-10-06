@@ -1,8 +1,6 @@
 # DESIGN.md
 
-Shared UI and design guidance for the IFS monorepo. Paths are relative to the monorepo root.
-
-Standards Pencil files remain in `ifs-standards/design/`; their token/component library is `ifs-standards/design/design-system.lib.pen`. Moving this document does not move design assets. Run `pnpm --filter ifs-standards tokens:code` from root to regenerate `ifs-standards/src/index.css` after standards token changes. Other packages retain their own build and styling pipelines.
+Shared UI and design guidance for the IFS monorepo. Paths are relative to the monorepo root. Each package retains its own build and styling pipeline.
 
 ## 1. Style & Tone
 
@@ -58,4 +56,3 @@ Standards Pencil files remain in `ifs-standards/design/`; their token/component 
 - Do not invent new styles; prefer consistency over creativity.
 - Keep UI simple, readable, and snapped to the 8px grid.
 - Strict adherence to tokens; no new styles.
-- Snap all `.pen` coordinates/sizes to 4px/8px increments.
