@@ -8,6 +8,7 @@ import {
 import { getHello as isResponsive } from "prototype-client";
 import { fakeMembers } from "../fake/members.js";
 import { logger } from "../utils/logger.js";
+import { Puppet } from "./puppet.js";
 export class Puppeteer {
   constructor(private baseUrl: string) {
     setApiBaseUrl(baseUrl);
@@ -57,6 +58,12 @@ export class Puppeteer {
     } else {
       return [];
     }
+  }
+
+  async getAllPuppets(): Promise<Puppet[]> {
+    return await this.getAllMembers().then((members) =>
+      members.map((member) => new Puppet(member)),
+    );
   }
 
   private async registerAllMembers(): Promise<void> {
