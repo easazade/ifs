@@ -9,6 +9,8 @@
     "build": "pnpm --filter prototype-client build && tsc",
     "format": "prettier --write src scripts *.ts tsconfig*.json",
     "personalities:generate": "tsx scripts/generate-personalities.ts",
+    "fake:check": "tsx scripts/check-fake-references.ts",
+    "fake:check:test": "tsx --test scripts/check-fake-references.test.ts",
     "generate-api": "tsx scripts/generate-api.ts",
     "start": "node dist/index.js"
   },
