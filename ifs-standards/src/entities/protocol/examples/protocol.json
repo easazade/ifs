@@ -1,8 +1,7 @@
 {
-  "id": "1001",
-  "ifsId": "1001",
+  "id": "Protocol/1001",
   "entityType": "Protocol",
-  "basedOn": "1000",
+  "basedOn": "Protocol/1000",
   "entityDocumentationUrl": "https://ifs-standards.org/entities/Protocol",
-  "createdAt": "2006-08-17T18:11:43Z"
+  "createdAt": "2023-04-06T01:25:35Z"
 }

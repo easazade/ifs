@@ -1,61 +1,56 @@
 {
-  "id": "1001",
-  "ifsId": "1001",
+  "id": "Observation/1001",
   "entityType": "Observation",
-  "basedOn": "1000",
   "entityDocumentationUrl": "https://ifs-standards.org/entities/Observation",
-  "createdAt": "2016-10-06T17:27:46Z",
-  "updatedAt": "2030-03-24T03:19:24Z",
-  "description": "jT",
+  "createdAt": "2007-02-14T01:23:46Z",
+  "updatedAt": "2008-03-02T10:35:47Z",
+  "description": "mOH",
   "locations": [
-    "q",
-    ""
+    "SC",
+    "9oUjuzpj",
+    "JhqdM1o"
   ],
-  "timeOfObservation": "2019-11-08T23:43:24Z",
+  "timeOfObservation": "2030-09-13T07:40:57Z",
   "observer": {
-    "id": "P75",
-    "ifsId": "4Z5hc1s",
+    "id": "Member/8;='j",
     "entityType": "Member",
-    "entityDocumentationUrl": "https://test.org/data/api/data",
-    "name": "i8kyhyuOFG",
+    "entityDocumentationUrl": "https://demo.net/resource",
+    "name": "6RkP6",
     "roles": [],
     "permissions": [
       {
-        "id": "",
-        "ifsId": "",
+        "id": "Permission/1001",
         "entityType": "Permission",
         "entityDocumentationUrl": "",
         "actionIds": [],
-        "scopeId": "",
+        "scopeId": "Scope/1001",
         "state": "granted",
         "createdAt": "",
         "expiresAt": ""
       },
       {
-        "id": "",
-        "ifsId": "",
+        "id": "Permission/1001",
         "entityType": "Permission",
         "entityDocumentationUrl": "",
         "actionIds": [],
-        "scopeId": "",
+        "scopeId": "Scope/1001",
         "state": "granted",
         "createdAt": "",
         "expiresAt": ""
       },
       {
-        "id": "",
-        "ifsId": "",
+        "id": "Permission/1001",
         "entityType": "Permission",
         "entityDocumentationUrl": "",
         "actionIds": [],
-        "scopeId": "",
+        "scopeId": "Scope/1001",
         "state": "granted",
         "createdAt": "",
         "expiresAt": ""
       }
     ],
-    "isOwner": false,
-    "createdAt": "2008-02-09T21:17:08Z",
-    "updatedAt": "2020-07-11T02:08:04Z"
+    "isOwner": true,
+    "createdAt": "2012-02-12T07:39:30Z",
+    "updatedAt": "2016-01-26T20:16:09Z"
   }
 }

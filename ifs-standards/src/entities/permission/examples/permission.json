@@ -1,15 +1,17 @@
 {
-  "id": "1001",
-  "ifsId": "1001",
+  "id": "Permission/1001",
   "entityType": "Permission",
-  "basedOn": "1000",
+  "basedOn": "Permission/1000",
   "entityDocumentationUrl": "https://ifs-standards.org/entities/Permission",
   "actionIds": [
-    "Example"
+    "Action/qd",
+    "Action/Z)z",
+    "Action/5V"
   ],
-  "scopeId": "SC",
-  "state": "drafted",
-  "createdAt": "2007-10-05T07:24:14Z",
-  "updatedAt": "2022-07-04T06:02:37Z",
+  "memberId": "Member/N*?u",
+  "scopeId": "Scope/C",
+  "scope": {},
+  "state": "granted",
+  "createdAt": "2004-09-18T03:15:02Z",
   "expiresAt": "2026-03-31T17:24:18Z"
 }

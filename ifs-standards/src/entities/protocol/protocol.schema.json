@@ -7,11 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Protocol/[^/\\s]+$",
       "description": "identifier protocol."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this Protocol."
     },
     "entityType": {
       "type": "string",
@@ -20,6 +18,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -32,5 +32,5 @@
       "format": "date-time"
     }
   },
-  "required": ["id", "createdAt", "ifsId", "entityType", "entityDocumentationUrl"]
+  "required": ["id", "createdAt", "entityType", "entityDocumentationUrl"]
 }

@@ -1,186 +1,46 @@
 {
-  "id": "1001",
-  "ifsId": "1001",
+  "id": "Decision/1001",
   "entityType": "Decision",
-  "basedOn": "1000",
   "entityDocumentationUrl": "https://ifs-standards.org/entities/Decision",
-  "subject": "VlSCV9",
-  "state": "open",
-  "previousRevision": {
-    "id": "zpj",
-    "ifsId": "JhqdM1o",
-    "entityType": "SysP75Q4Z5",
-    "basedOn": "",
-    "entityDocumentationUrl": "https://example.com/items/resource/data",
-    "subject": "P",
-    "state": "cancelled",
-    "previousRevisionId": "kyhyuOFGeY",
-    "eligibleMembers": [
-      {
-        "id": "",
-        "ifsId": "",
-        "entityType": "Member",
-        "entityDocumentationUrl": "",
-        "name": "",
-        "roles": [],
-        "permissions": [],
-        "isOwner": false,
-        "createdAt": "",
-        "updatedAt": ""
-      }
-    ],
-    "affectedMembers": [],
-    "votes": [
-      {
-        "id": "",
-        "ifsId": "",
-        "entityType": "",
-        "entityDocumentationUrl": "",
-        "createdAt": "",
-        "updatedAt": "",
-        "decisionId": "",
-        "memberId": "",
-        "value": ""
-      }
-    ],
-    "eligibleMemberCount": 290,
-    "affectedMemberCount": 143,
-    "voteCount": 655,
-    "openedAt": "2010-02-04T01:18:40Z",
-    "cancelledAt": "2015-07-07T19:15:59Z",
-    "rejectedAt": "2005-01-31T07:43:51Z",
-    "createdAt": "2002-04-27T19:47:13Z",
-    "updatedAt": "2002-02-12T13:17:53Z",
-    "decidedAt": "2028-11-19T16:14:23Z"
-  },
+  "subject": "G/fI&",
+  "state": "closed",
+  "previousRevisionId": "Decision/L",
   "eligibleMembers": [
     {
-      "id": "q5",
-      "ifsId": "juecWypjYt",
+      "id": "Member/r5",
       "entityType": "Member",
-      "entityDocumentationUrl": "https://test.org/data/users",
-      "name": "HV",
-      "roles": [
+      "entityDocumentationUrl": "https://demo.net/data",
+      "name": "V9oU",
+      "roles": [],
+      "permissions": [
         {
-          "id": "",
-          "ifsId": "",
-          "entityType": "Role",
+          "id": "Permission/1001",
+          "entityType": "Permission",
           "entityDocumentationUrl": "",
-          "name": "",
-          "memberId": "",
-          "scopeId": "",
-          "scope": null,
-          "permissions": [],
-          "state": "drafted",
+          "actionIds": [],
+          "scopeId": "Scope/1001",
+          "state": "granted",
           "createdAt": "",
-          "updatedAt": ""
-        },
-        {
-          "id": "",
-          "ifsId": "",
-          "entityType": "Role",
-          "entityDocumentationUrl": "",
-          "name": "",
-          "memberId": "",
-          "scopeId": "",
-          "scope": null,
-          "permissions": [],
-          "state": "drafted",
-          "createdAt": "",
-          "updatedAt": ""
-        },
-        {
-          "id": "",
-          "ifsId": "",
-          "entityType": "Role",
-          "entityDocumentationUrl": "",
-          "name": "",
-          "memberId": "",
-          "scopeId": "",
-          "scope": null,
-          "permissions": [],
-          "state": "drafted",
-          "createdAt": "",
-          "updatedAt": ""
+          "expiresAt": ""
         }
       ],
-      "permissions": [],
       "isOwner": true,
-      "createdAt": "2019-08-01T07:25:52Z",
-      "updatedAt": "2020-05-11T14:00:55Z"
-    }
-  ],
-  "affectedMembers": [
-    {
-      "id": "NheYiS",
-      "ifsId": "NsH",
-      "entityType": "Member",
-      "entityDocumentationUrl": "https://example.com/v1",
-      "name": "cGxWqf9",
-      "roles": [
-        {
-          "id": "",
-          "ifsId": "",
-          "entityType": "Role",
-          "entityDocumentationUrl": "",
-          "name": "",
-          "memberId": "",
-          "scopeId": "",
-          "scope": null,
-          "permissions": [],
-          "state": "drafted",
-          "createdAt": "",
-          "updatedAt": ""
-        },
-        {
-          "id": "",
-          "ifsId": "",
-          "entityType": "Role",
-          "entityDocumentationUrl": "",
-          "name": "",
-          "memberId": "",
-          "scopeId": "",
-          "scope": null,
-          "permissions": [],
-          "state": "drafted",
-          "createdAt": "",
-          "updatedAt": ""
-        },
-        {
-          "id": "",
-          "ifsId": "",
-          "entityType": "Role",
-          "entityDocumentationUrl": "",
-          "name": "",
-          "memberId": "",
-          "scopeId": "",
-          "scope": null,
-          "permissions": [],
-          "state": "drafted",
-          "createdAt": "",
-          "updatedAt": ""
-        }
-      ],
-      "permissions": [],
-      "isOwner": false,
-      "createdAt": "2003-05-19T12:23:42Z",
-      "updatedAt": "2004-04-29T14:32:02Z"
+      "createdAt": "2007-02-21T13:07:15Z",
+      "updatedAt": "2001-08-27T05:59:43Z"
     },
     {
-      "id": "M",
-      "ifsId": "jN",
+      "id": "Member/A6,",
       "entityType": "Member",
-      "entityDocumentationUrl": "https://example.com/api",
-      "name": "POXN",
+      "entityDocumentationUrl": "https://demo.net/resource/resource/api",
+      "name": "",
       "roles": [
         {
-          "id": "",
-          "ifsId": "",
+          "id": "Role/1001",
           "entityType": "Role",
           "entityDocumentationUrl": "",
           "name": "",
-          "memberId": "",
-          "scopeId": "",
+          "memberId": "Member/1001",
+          "scopeId": "Scope/1001",
           "scope": null,
           "permissions": [],
           "state": "drafted",
@@ -188,13 +48,25 @@
           "updatedAt": ""
         },
         {
-          "id": "",
-          "ifsId": "",
+          "id": "Role/1001",
           "entityType": "Role",
           "entityDocumentationUrl": "",
           "name": "",
-          "memberId": "",
-          "scopeId": "",
+          "memberId": "Member/1001",
+          "scopeId": "Scope/1001",
+          "scope": null,
+          "permissions": [],
+          "state": "drafted",
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        {
+          "id": "Role/1001",
+          "entityType": "Role",
+          "entityDocumentationUrl": "",
+          "name": "",
+          "memberId": "Member/1001",
+          "scopeId": "Scope/1001",
           "scope": null,
           "permissions": [],
           "state": "drafted",
@@ -204,79 +76,279 @@
       ],
       "permissions": [
         {
-          "id": "",
-          "ifsId": "",
+          "id": "Permission/1001",
           "entityType": "Permission",
           "entityDocumentationUrl": "",
           "actionIds": [],
-          "scopeId": "",
+          "scopeId": "Scope/1001",
+          "state": "granted",
+          "createdAt": "",
+          "expiresAt": ""
+        }
+      ],
+      "isOwner": false,
+      "createdAt": "2015-12-22T03:40:56Z",
+      "updatedAt": "2004-12-06T09:07:24Z"
+    },
+    {
+      "id": "Member/5S",
+      "entityType": "Member",
+      "entityDocumentationUrl": "https://example.com/resource/v1/api",
+      "name": "3ri",
+      "roles": [
+        {
+          "id": "Role/1001",
+          "entityType": "Role",
+          "entityDocumentationUrl": "",
+          "name": "",
+          "memberId": "Member/1001",
+          "scopeId": "Scope/1001",
+          "scope": null,
+          "permissions": [],
+          "state": "drafted",
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        {
+          "id": "Role/1001",
+          "entityType": "Role",
+          "entityDocumentationUrl": "",
+          "name": "",
+          "memberId": "Member/1001",
+          "scopeId": "Scope/1001",
+          "scope": null,
+          "permissions": [],
+          "state": "drafted",
+          "createdAt": "",
+          "updatedAt": ""
+        }
+      ],
+      "permissions": [
+        {
+          "id": "Permission/1001",
+          "entityType": "Permission",
+          "entityDocumentationUrl": "",
+          "actionIds": [],
+          "scopeId": "Scope/1001",
           "state": "granted",
           "createdAt": "",
           "expiresAt": ""
         },
         {
-          "id": "",
-          "ifsId": "",
+          "id": "Permission/1001",
           "entityType": "Permission",
           "entityDocumentationUrl": "",
           "actionIds": [],
-          "scopeId": "",
-          "state": "granted",
-          "createdAt": "",
-          "expiresAt": ""
-        },
-        {
-          "id": "",
-          "ifsId": "",
-          "entityType": "Permission",
-          "entityDocumentationUrl": "",
-          "actionIds": [],
-          "scopeId": "",
+          "scopeId": "Scope/1001",
           "state": "granted",
           "createdAt": "",
           "expiresAt": ""
         }
       ],
       "isOwner": true,
-      "createdAt": "2026-12-01T19:32:33Z",
-      "updatedAt": "2011-02-03T16:22:00Z"
+      "createdAt": "2003-02-02T07:40:39Z",
+      "updatedAt": "2003-07-17T05:47:15Z"
+    }
+  ],
+  "affectedMembers": [
+    {
+      "id": "Member/]apc>",
+      "entityType": "Member",
+      "entityDocumentationUrl": "https://demo.net/api/v1/resource",
+      "name": "XnfjzHr2",
+      "roles": [
+        {
+          "id": "Role/1001",
+          "entityType": "Role",
+          "entityDocumentationUrl": "",
+          "name": "",
+          "memberId": "Member/1001",
+          "scopeId": "Scope/1001",
+          "scope": null,
+          "permissions": [],
+          "state": "drafted",
+          "createdAt": "",
+          "updatedAt": ""
+        }
+      ],
+      "permissions": [
+        {
+          "id": "Permission/1001",
+          "entityType": "Permission",
+          "entityDocumentationUrl": "",
+          "actionIds": [],
+          "scopeId": "Scope/1001",
+          "state": "granted",
+          "createdAt": "",
+          "expiresAt": ""
+        },
+        {
+          "id": "Permission/1001",
+          "entityType": "Permission",
+          "entityDocumentationUrl": "",
+          "actionIds": [],
+          "scopeId": "Scope/1001",
+          "state": "granted",
+          "createdAt": "",
+          "expiresAt": ""
+        },
+        {
+          "id": "Permission/1001",
+          "entityType": "Permission",
+          "entityDocumentationUrl": "",
+          "actionIds": [],
+          "scopeId": "Scope/1001",
+          "state": "granted",
+          "createdAt": "",
+          "expiresAt": ""
+        }
+      ],
+      "isOwner": false,
+      "createdAt": "2019-09-08T09:18:12Z",
+      "updatedAt": "2008-12-30T03:19:04Z"
+    },
+    {
+      "id": "Member/(",
+      "entityType": "Member",
+      "entityDocumentationUrl": "https://example.com/data",
+      "name": "3GA",
+      "roles": [
+        {
+          "id": "Role/1001",
+          "entityType": "Role",
+          "entityDocumentationUrl": "",
+          "name": "",
+          "memberId": "Member/1001",
+          "scopeId": "Scope/1001",
+          "scope": null,
+          "permissions": [],
+          "state": "drafted",
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        {
+          "id": "Role/1001",
+          "entityType": "Role",
+          "entityDocumentationUrl": "",
+          "name": "",
+          "memberId": "Member/1001",
+          "scopeId": "Scope/1001",
+          "scope": null,
+          "permissions": [],
+          "state": "drafted",
+          "createdAt": "",
+          "updatedAt": ""
+        }
+      ],
+      "permissions": [
+        {
+          "id": "Permission/1001",
+          "entityType": "Permission",
+          "entityDocumentationUrl": "",
+          "actionIds": [],
+          "scopeId": "Scope/1001",
+          "state": "granted",
+          "createdAt": "",
+          "expiresAt": ""
+        }
+      ],
+      "isOwner": true,
+      "createdAt": "2016-10-25T01:12:37Z",
+      "updatedAt": "2020-01-11T10:52:38Z"
+    },
+    {
+      "id": "Member/E0",
+      "entityType": "Member",
+      "entityDocumentationUrl": "https://demo.net/items/items",
+      "name": "e",
+      "roles": [
+        {
+          "id": "Role/1001",
+          "entityType": "Role",
+          "entityDocumentationUrl": "",
+          "name": "",
+          "memberId": "Member/1001",
+          "scopeId": "Scope/1001",
+          "scope": null,
+          "permissions": [],
+          "state": "drafted",
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        {
+          "id": "Role/1001",
+          "entityType": "Role",
+          "entityDocumentationUrl": "",
+          "name": "",
+          "memberId": "Member/1001",
+          "scopeId": "Scope/1001",
+          "scope": null,
+          "permissions": [],
+          "state": "drafted",
+          "createdAt": "",
+          "updatedAt": ""
+        },
+        {
+          "id": "Role/1001",
+          "entityType": "Role",
+          "entityDocumentationUrl": "",
+          "name": "",
+          "memberId": "Member/1001",
+          "scopeId": "Scope/1001",
+          "scope": null,
+          "permissions": [],
+          "state": "drafted",
+          "createdAt": "",
+          "updatedAt": ""
+        }
+      ],
+      "permissions": [],
+      "isOwner": false,
+      "createdAt": "2008-08-10T13:55:04Z",
+      "updatedAt": "2003-03-22T01:31:22Z"
     }
   ],
   "votes": [
     {
-      "id": "Q1EVey",
-      "ifsId": "m2WflRcX",
-      "entityType": "u40MDLBmi6",
-      "entityDocumentationUrl": "https://test.org/api/api",
-      "createdAt": "2029-04-01T11:19:58Z",
-      "updatedAt": "2019-06-01T15:01:47Z",
-      "decisionId": "lO2KKzMJW2",
-      "memberId": "VSpj",
-      "value": "x7FNAgVMV",
-      "previousRevisionId": ""
+      "id": "Vote/h?",
+      "entityType": "a1gyLGxSir",
+      "entityDocumentationUrl": "https://test.org/api",
+      "createdAt": "2019-03-05T15:36:01Z",
+      "updatedAt": "2002-01-13T16:39:47Z",
+      "decisionId": "Decision/6.b]",
+      "memberId": "Member/c_VXG",
+      "value": "f"
     },
     {
-      "id": "WntUcods",
-      "ifsId": "tzPiNXPDgz",
-      "entityType": "C49LmNMK4w",
-      "entityDocumentationUrl": "https://test.org/api",
-      "createdAt": "2015-06-24T07:48:54Z",
-      "updatedAt": "2013-03-18T12:22:57Z",
-      "decisionId": "FEcymIc",
-      "memberId": "vIoirs",
-      "value": "NKe",
-      "previousRevisionId": "W"
+      "id": "Vote/bS",
+      "entityType": "Q1EVey",
+      "entityDocumentationUrl": "https://demo.net/api/v1/data",
+      "createdAt": "2001-10-30T08:54:51Z",
+      "updatedAt": "2019-06-18T10:12:08Z",
+      "decisionId": "Decision/4e0Zn",
+      "memberId": "Member/.",
+      "value": "aEu"
+    },
+    {
+      "id": "Vote/Pa3c",
+      "entityType": "8lO2KKzM",
+      "entityDocumentationUrl": "https://demo.net/data/data",
+      "createdAt": "2007-02-25T09:57:30Z",
+      "updatedAt": "2019-06-04T18:37:46Z",
+      "decisionId": "Decision/a",
+      "memberId": "Member/*tB#",
+      "value": "",
+      "previousRevisionId": "Vote/A"
     }
   ],
-  "eligibleMemberCount": 205,
-  "affectedMemberCount": 485,
-  "voteCount": 4,
-  "delegateVoteCount": 354,
-  "openedAt": "2018-12-12T14:31:24Z",
-  "closedAt": "2002-08-21T12:01:18Z",
-  "cancelledAt": "2019-12-29T11:47:29Z",
-  "verifiedAt": "2008-12-02T08:50:51Z",
-  "approvedAt": "2023-10-20T04:03:10Z",
-  "createdAt": "2015-07-15T07:37:46Z",
-  "updatedAt": "2025-02-25T13:21:52Z"
+  "eligibleMemberCount": 316,
+  "affectedMemberCount": 408,
+  "voteCount": 671,
+  "delegateVoteCount": 644,
+  "openedAt": "2024-08-15T02:24:54Z",
+  "closedAt": "2028-12-19T04:38:37Z",
+  "approvedAt": "2028-01-14T05:00:30Z",
+  "rejectedAt": "2024-04-25T21:25:11Z",
+  "createdAt": "2017-07-12T23:39:30Z",
+  "updatedAt": "2015-01-13T04:33:02Z"
 }

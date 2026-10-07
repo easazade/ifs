@@ -7,11 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Delegation/[^/\\s]+$",
       "description": "Globally unique identifier for this delegation."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this Delegation."
     },
     "entityType": {
       "type": "string",
@@ -19,6 +17,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -38,21 +38,25 @@
     },
     "permissionId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Permission/[^/\\s]+$",
       "description": "Identifier of the permission delegated from the delegator to the delegate."
     },
     "permission": {
       "$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json",
       "description": "Permission entity represented by permissionId when expanded by an implementation."
     },
-    "delegatorRef": {
+    "delegatorId": {
       "type": "string",
-      "format": "ifs-ref",
-      "description": "Reference to the role or member delegating the permission."
+      "x-ifs-id": true,
+      "pattern": "^(Role|Member)/[^/\\s]+$",
+      "description": "ID of the role or member delegating the permission."
     },
-    "delegateRef": {
+    "delegateId": {
       "type": "string",
-      "format": "ifs-ref",
-      "description": "Reference to the role or member receiving the delegated permission."
+      "x-ifs-id": true,
+      "pattern": "^(Role|Member)/[^/\\s]+$",
+      "description": "ID of the role or member receiving the delegated permission."
     },
     "state": {
       "type": "string",
@@ -72,13 +76,12 @@
   },
   "required": [
     "id",
-    "ifsId",
     "entityType",
     "entityDocumentationUrl",
     "createdAt",
     "permissionId",
-    "delegatorRef",
-    "delegateRef",
+    "delegatorId",
+    "delegateId",
     "state"
   ]
 }

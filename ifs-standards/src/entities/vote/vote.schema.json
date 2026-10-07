@@ -7,11 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Vote/[^/\\s]+$",
       "description": "Globally unique identifier for this vote."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this Vote."
     },
     "entityType": {
       "type": "string",
@@ -19,6 +17,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -38,10 +38,14 @@
     },
     "decisionId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Decision/[^/\\s]+$",
       "description": "Identifier of the decision this vote participates in."
     },
     "memberId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Member/[^/\\s]+$",
       "description": "Identifier of the member who cast or owns this vote."
     },
     "value": {
@@ -50,12 +54,13 @@
     },
     "previousRevisionId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Vote/[^/\\s]+$",
       "description": "Identifier of the previous revision of this vote, if this vote amends an earlier vote."
     }
   },
   "required": [
     "id",
-    "ifsId",
     "entityType",
     "entityDocumentationUrl",
     "createdAt",

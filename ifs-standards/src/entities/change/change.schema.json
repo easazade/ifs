@@ -7,11 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Change/[^/\\s]+$",
       "description": "Globally unique identifier for this change."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this Change."
     },
     "entityType": {
       "type": "string",
@@ -20,6 +18,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -82,6 +82,8 @@
     },
     "mainAuthorId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Member/[^/\\s]+$",
       "description": "Identifier of the primary member responsible for this change."
     },
     "mainAuthor": {
@@ -159,7 +161,6 @@
   },
   "required": [
     "id",
-    "ifsId",
     "entityType",
     "entityDocumentationUrl",
     "title",

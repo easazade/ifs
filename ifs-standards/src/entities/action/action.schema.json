@@ -7,11 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Action/[^/\\s]+$",
       "description": "Globally unique identifier for this action."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this Action."
     },
     "entityType": {
       "type": "string",
@@ -19,6 +17,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -72,7 +72,6 @@
   },
   "required": [
     "id",
-    "ifsId",
     "entityType",
     "entityDocumentationUrl",
     "createdAt",

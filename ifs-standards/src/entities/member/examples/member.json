@@ -1,144 +1,29 @@
 {
-  "id": "1001",
-  "ifsId": "1001",
+  "id": "Member/1001",
   "entityType": "Member",
   "entityDocumentationUrl": "https://ifs-standards.org/entities/Member",
-  "name": "rlcAKXsm",
+  "name": "izpjE",
   "roles": [
-    {
-      "id": "8c3b7cf3-c256-432b-a240-9d3fb64afebe",
-      "ifsId": "5hc1s2F6R",
-      "entityType": "Role",
-      "basedOn": "6i8kyhy",
-      "entityDocumentationUrl": "https://test.org/items/api",
-      "name": "0qks3riO",
-      "memberId": "hie",
-      "scopeId": "POh",
-      "scope": {
-        "id": "",
-        "ifsId": "",
-        "entityType": "Scope",
-        "entityDocumentationUrl": "",
-        "name": "",
-        "type": null,
-        "state": null,
-        "createdAt": "",
-        "updatedAt": "",
-        "entities": []
-      },
-      "permissions": [
-        {
-          "id": "",
-          "ifsId": "",
-          "entityType": "Permission",
-          "entityDocumentationUrl": "",
-          "actionIds": [],
-          "scopeId": "",
-          "state": "granted",
-          "createdAt": "",
-          "expiresAt": ""
-        },
-        {
-          "id": "",
-          "ifsId": "",
-          "entityType": "Permission",
-          "entityDocumentationUrl": "",
-          "actionIds": [],
-          "scopeId": "",
-          "state": "granted",
-          "createdAt": "",
-          "expiresAt": ""
-        },
-        {
-          "id": "",
-          "ifsId": "",
-          "entityType": "Permission",
-          "entityDocumentationUrl": "",
-          "actionIds": [],
-          "scopeId": "",
-          "state": "granted",
-          "createdAt": "",
-          "expiresAt": ""
-        }
-      ],
-      "state": "under-review",
-      "createdAt": "2030-12-27T00:10:01Z",
-      "updatedAt": "2030-04-22T20:05:15Z"
-    },
-    {
-      "id": "cc312684-e4ed-4aa3-9434-ef2510c632d4",
-      "ifsId": "GAQvpHVXd",
-      "entityType": "Role",
-      "basedOn": "ObuA2O",
-      "entityDocumentationUrl": "https://test.org/api/resource",
-      "name": "JNheY",
-      "description": "rNsH5eg",
-      "memberId": "Q",
-      "scopeId": "",
-      "scope": {
-        "id": "",
-        "ifsId": "",
-        "entityType": "Scope",
-        "entityDocumentationUrl": "",
-        "name": "",
-        "type": null,
-        "state": null,
-        "createdAt": "",
-        "updatedAt": "",
-        "locations": []
-      },
-      "permissions": [
-        {
-          "id": "",
-          "ifsId": "",
-          "entityType": "Permission",
-          "entityDocumentationUrl": "",
-          "actionIds": [],
-          "scopeId": "",
-          "state": "granted",
-          "createdAt": "",
-          "expiresAt": ""
-        }
-      ],
-      "state": "drafted",
-      "createdAt": "2030-12-01T20:06:23Z",
-      "updatedAt": "2018-07-12T17:08:17Z"
-    }
+    "Example"
   ],
   "permissions": [
     {
-      "id": "ckMoj",
-      "ifsId": "LbebyPO",
+      "id": "Permission/yqdL",
       "entityType": "Permission",
-      "entityDocumentationUrl": "https://demo.net/api/resource/resource",
-      "actionIds": [],
-      "scopeId": "gfQx",
-      "scope": {},
-      "state": "revoked",
-      "createdAt": "2017-09-26T11:46:03Z",
-      "updatedAt": "2022-03-28T18:05:11Z",
-      "expiresAt": "2021-01-25T22:20:54Z"
-    },
-    {
-      "id": "MDLBmi6Oc",
-      "ifsId": "Kjj7qa",
-      "entityType": "Permission",
-      "basedOn": "8ND",
-      "entityDocumentationUrl": "https://test.org/data",
+      "entityDocumentationUrl": "https://example.com/items",
       "actionIds": [
-        "O",
-        "KKzMJW2yV",
-        "pj3x7FN"
+        "Action/q!N*",
+        "Action/u%nCJ"
       ],
       "actions": [],
-      "scopeId": "haWWntUc",
+      "scopeId": "Scope/x",
       "scope": {},
-      "state": "granted",
-      "createdAt": "2009-12-10T09:40:08Z",
-      "expiresAt": "2024-08-15T02:24:54Z"
+      "state": "revoked",
+      "createdAt": "2026-03-31T17:24:18Z",
+      "expiresAt": "2029-12-22T22:50:56Z"
     }
   ],
   "isOwner": true,
-  "createdAt": "2028-12-19T04:38:37Z",
-  "updatedAt": "2018-11-12T21:02:26Z"
+  "createdAt": "2001-11-09T21:30:56Z",
+  "updatedAt": "2021-02-19T22:07:58Z"
 }

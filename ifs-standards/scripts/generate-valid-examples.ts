@@ -38,11 +38,10 @@ for (const schemaDir of schemaDirs) {
 
     if (typeof fakeObject === 'object' && fakeObject !== null && !Array.isArray(fakeObject)) {
       const example = fakeObject as Record<string, unknown>;
-      example.id = '1001';
-      example.ifsId = '1001';
+      example.id = `${entityType}/1001`;
       example.entityType = entityType;
       example.entityDocumentationUrl = documentationUrl;
-      if ('basedOn' in example) example.basedOn = '1000';
+      if ('basedOn' in example) example.basedOn = `${entityType}/1000`;
 
       // Faker may choose empty arrays even when they represent the entity's key data.
       for (const [property, value] of Object.entries(example)) {
@@ -62,9 +61,9 @@ for (const schemaDir of schemaDirs) {
           }
 
           const propertySchema = (schema as Exclude<JsonSchema, boolean>).properties?.[property] as
-            | JsonSchema
-            | undefined;
-          const objectPropertySchema = propertySchema && typeof propertySchema === 'object' ? propertySchema : undefined;
+            JsonSchema | undefined;
+          const objectPropertySchema =
+            propertySchema && typeof propertySchema === 'object' ? propertySchema : undefined;
           example[property] = [
             objectPropertySchema?.items
               ? exampleValue(objectPropertySchema.items as Exclude<JsonSchema, boolean>)
@@ -73,6 +72,8 @@ for (const schemaDir of schemaDirs) {
         }
       }
     }
+
+    await normalizeExampleIds(fakeObject, schema);
 
     // Node's writeFile creates the file, but not missing parent folders.
     await mkdir(dirname(exampleObjectPath), { recursive: true });
@@ -228,14 +229,57 @@ function exampleValue(schema: Exclude<JsonSchema, boolean>): unknown {
   }
   if (schema.type === 'object') {
     return Object.fromEntries(
-      Object.entries(schema.properties ?? {}).map(([key, value]) => [key, exampleValue(value as Exclude<JsonSchema, boolean>)])
+      Object.entries(schema.properties ?? {}).map(([key, value]) => [
+        key,
+        exampleValue(value as Exclude<JsonSchema, boolean>),
+      ])
     );
   }
   if (schema.type === 'number' || schema.type === 'integer') return 1;
   if (schema.type === 'boolean') return true;
   if (schema.enum?.length) return schema.enum[0];
   if (schema.format === 'date-time') return '2025-01-01T00:00:00Z';
+  if (schema.pattern) {
+    // ID patterns use a fixed type, a type union, or a heterogeneous PascalCase prefix.
+    const entityType = schema.pattern.match(/^\^\(?([A-Z][A-Za-z0-9]*)(?:\/|\|)/)?.[1] ?? 'Member';
+    return `${entityType}/1001`;
+  }
   return 'Example';
+}
+
+// Faker truncates recursive relations with empty strings and may ignore conditional nullability.
+async function normalizeExampleIds(value: unknown, schema: JsonSchema): Promise<unknown> {
+  if (!schema || typeof schema !== 'object') return value;
+  if (schema.$ref) {
+    return normalizeExampleIds(value, await resolveLocalSchemaReferenceFirst(schema.$ref));
+  }
+  if (typeof value === 'string' && schema.pattern && !new RegExp(schema.pattern).test(value)) {
+    return exampleValue(schema);
+  }
+  if (Array.isArray(value) && schema.items && !Array.isArray(schema.items)) {
+    for (let index = 0; index < value.length; index++) {
+      value[index] = await normalizeExampleIds(value[index], schema.items);
+    }
+  } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+    const object = value as Record<string, unknown>;
+    for (const [property, propertySchema] of Object.entries(schema.properties ?? {})) {
+      if (property in object) {
+        object[property] = await normalizeExampleIds(object[property], propertySchema);
+      }
+    }
+    if (schema.title === 'ChangeItem') {
+      for (const property of ['targetId', 'baseId', 'proposedId']) {
+        const mustBeNull =
+          object.operation === 'create'
+            ? property !== 'proposedId'
+            : object.operation === 'delete' && property === 'proposedId';
+        object[property] = mustBeNull
+          ? null
+          : (object[property] ?? exampleValue(schema.properties![property] as Exclude<JsonSchema, boolean>));
+      }
+    }
+  }
+  return value;
 }
 
 async function fileExists(path: string) {

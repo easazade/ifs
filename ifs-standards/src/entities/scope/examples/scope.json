@@ -1,21 +1,21 @@
 {
-  "id": "1001",
-  "ifsId": "1001",
+  "id": "Scope/1001",
   "entityType": "Scope",
   "entityDocumentationUrl": "https://ifs-standards.org/entities/Scope",
-  "name": "1o9Sys",
-  "entities": [
-    "5hc1s2F6R",
-    "P",
-    "i8kyhyuOFG"
+  "name": "jE",
+  "description": "Vrlc",
+  "locations": [
+    "smOHVlSC",
+    "9oUjuzpj"
   ],
-  "parentScopeId": "0qks3riO",
-  "boundaryRules": {},
-  "createdAt": "2003-02-02T07:40:39Z",
-  "updatedAt": "2003-07-17T05:47:15Z",
-  "type": [
+  "entities": [
     "Example"
   ],
+  "parentScopeId": "Scope/2",
+  "boundaryRules": {},
+  "createdAt": "2030-09-13T07:40:57Z",
+  "updatedAt": "2028-09-28T20:56:06Z",
+  "type": "s2F6RkP6i",
   "state": [
     "Example"
   ]

@@ -7,11 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Group/[^/\\s]+$",
       "description": "Globally unique identifier for this group."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this Group."
     },
     "entityType": {
       "type": "string",
@@ -19,6 +17,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -67,13 +67,5 @@
       "description": "Timestamp when this group record was last updated."
     }
   },
-  "required": [
-    "id",
-    "ifsId",
-    "entityType",
-    "entityDocumentationUrl",
-    "name",
-    "createdAt",
-    "updatedAt"
-  ]
+  "required": ["id", "entityType", "entityDocumentationUrl", "name", "createdAt", "updatedAt"]
 }

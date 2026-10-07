@@ -7,11 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Decision/[^/\\s]+$",
       "description": "Globally unique identifier for this decision."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this Decision."
     },
     "entityType": {
       "type": "string",
@@ -19,6 +17,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -28,8 +28,9 @@
     },
     "subject": {
       "type": "string",
-      "format": "ifs-ref",
-      "description": "Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources."
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+      "description": "ID of the object, proposal, rule, resource, or question being decided."
     },
     "state": {
       "type": "string",
@@ -38,6 +39,8 @@
     },
     "previousRevisionId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Decision/[^/\\s]+$",
       "description": "Id of previous revision of this decision, If this decision is a modified version of another decision."
     },
     "previousRevision": {
@@ -140,7 +143,6 @@
   },
   "required": [
     "id",
-    "ifsId",
     "entityType",
     "entityDocumentationUrl",
     "subject",

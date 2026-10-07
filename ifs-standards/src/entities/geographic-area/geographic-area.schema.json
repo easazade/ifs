@@ -7,11 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^GeographicArea/[^/\\s]+$",
       "description": "Globally unique identifier for this geographic area."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this GeographicArea."
     },
     "entityType": {
       "type": "string",
@@ -19,6 +17,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -55,13 +55,5 @@
       "description": "Polygon geometries making up this area. Separate polygons can represent disconnected regions. Coordinates use [longitude, latitude, optional altitude] positions."
     }
   },
-  "required": [
-    "id",
-    "ifsId",
-    "entityType",
-    "entityDocumentationUrl",
-    "createdAt",
-    "updatedAt",
-    "polygons"
-  ]
+  "required": ["id", "entityType", "entityDocumentationUrl", "createdAt", "updatedAt", "polygons"]
 }

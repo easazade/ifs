@@ -7,12 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
-      "format": "uuid",
+      "x-ifs-id": true,
+      "pattern": "^Role/[^/\\s]+$",
       "description": "Globally unique identifier for this role."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this Role."
     },
     "entityType": {
       "type": "string",
@@ -21,6 +18,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -38,10 +37,14 @@
     },
     "memberId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Member/[^/\\s]+$",
       "description": "Identifier of the member acting through this role."
     },
     "scopeId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Scope/[^/\\s]+$",
       "description": "Identifier of the scope where this role has authority."
     },
     "scope": {
@@ -78,7 +81,6 @@
   },
   "required": [
     "id",
-    "ifsId",
     "entityType",
     "entityDocumentationUrl",
     "name",

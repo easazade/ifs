@@ -7,11 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^ChangeItem/[^/\\s]+$",
       "description": "Globally unique identifier for this change item."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this ChangeItem."
     },
     "entityType": {
       "type": "string",
@@ -20,6 +18,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -36,23 +36,23 @@
       "enum": ["update", "create", "delete", "replace"],
       "description": "Type of operation this item proposes for the target object."
     },
-    "targetRef": {
+    "targetId": {
       "type": ["string", "null"],
-      "format": "ifs-ref",
-      "default": "ifs://object/current-target",
-      "description": "Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet."
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+      "description": "ID of the logical object being changed. Null for create operations."
     },
-    "baseRef": {
+    "baseId": {
       "type": ["string", "null"],
-      "format": "ifs-ref",
-      "default": "ifs://object/current-target@v1",
-      "description": "IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations."
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+      "description": "ID of the active version observed when authored, for conflict detection. Null for create operations."
     },
-    "proposedRef": {
+    "proposedId": {
       "type": ["string", "null"],
-      "format": "ifs-ref",
-      "default": "ifs://change/change_1/proposed/current-target",
-      "description": "IFS reference to the proposed object or version produced by this change item. Null for delete operations."
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+      "description": "ID of the proposed object or version. Null for delete operations."
     },
     "description": {
       "type": "string",
@@ -71,14 +71,13 @@
   },
   "required": [
     "id",
-    "ifsId",
     "entityType",
     "entityDocumentationUrl",
     "resourceType",
     "operation",
-    "targetRef",
-    "baseRef",
-    "proposedRef",
+    "targetId",
+    "baseId",
+    "proposedId",
     "createdAt",
     "updatedAt"
   ],
@@ -94,15 +93,14 @@
       },
       "then": {
         "properties": {
-          "targetRef": {
+          "targetId": {
             "type": "null"
           },
-          "baseRef": {
+          "baseId": {
             "type": "null"
           },
-          "proposedRef": {
-            "type": "string",
-            "format": "ifs-ref"
+          "proposedId": {
+            "type": "string"
           }
         }
       }
@@ -118,15 +116,13 @@
       },
       "then": {
         "properties": {
-          "targetRef": {
-            "type": "string",
-            "format": "ifs-ref"
+          "targetId": {
+            "type": "string"
           },
-          "baseRef": {
-            "type": "string",
-            "format": "ifs-ref"
+          "baseId": {
+            "type": "string"
           },
-          "proposedRef": {
+          "proposedId": {
             "type": "null"
           }
         }
@@ -143,17 +139,14 @@
       },
       "then": {
         "properties": {
-          "targetRef": {
-            "type": "string",
-            "format": "ifs-ref"
+          "targetId": {
+            "type": "string"
           },
-          "baseRef": {
-            "type": "string",
-            "format": "ifs-ref"
+          "baseId": {
+            "type": "string"
           },
-          "proposedRef": {
-            "type": "string",
-            "format": "ifs-ref"
+          "proposedId": {
+            "type": "string"
           }
         }
       }

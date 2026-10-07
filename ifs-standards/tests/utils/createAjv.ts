@@ -8,7 +8,6 @@ export function createAjv() {
   });
 
   addFormats(ajv);
-  ajv.addFormat('ifs-ref', true);
 
   return ajv;
 }

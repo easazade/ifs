@@ -7,12 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
-      "format": "uuid",
+      "x-ifs-id": true,
+      "pattern": "^Scope/[^/\\s]+$",
       "description": "Globally unique identifier for this scope."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this Scope."
     },
     "entityType": {
       "type": "string",
@@ -21,6 +18,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -66,12 +65,16 @@
     },
     "parentScopeId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Scope/[^/\\s]+$",
       "description": "Identifier of a broader parent scope, when this scope is nested inside another scope."
     },
     "childScopeIds": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "x-ifs-id": true,
+        "pattern": "^Scope/[^/\\s]+$"
       },
       "description": "Identifiers of narrower child scopes contained by this scope."
     },
@@ -91,17 +94,7 @@
       "description": "Timestamp when this scope record was last updated."
     }
   },
-  "required": [
-    "id",
-    "ifsId",
-    "entityType",
-    "entityDocumentationUrl",
-    "name",
-    "type",
-    "state",
-    "createdAt",
-    "updatedAt"
-  ],
+  "required": ["id", "entityType", "entityDocumentationUrl", "name", "type", "state", "createdAt", "updatedAt"],
   "anyOf": [
     {
       "required": ["locations"]

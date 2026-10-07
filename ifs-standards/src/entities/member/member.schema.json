@@ -7,11 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Member/[^/\\s]+$",
       "description": "Globally unique identifier for this member."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this Member."
     },
     "entityType": {
       "type": "string",
@@ -57,7 +55,6 @@
   },
   "required": [
     "id",
-    "ifsId",
     "entityType",
     "entityDocumentationUrl",
     "name",

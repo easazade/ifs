@@ -7,11 +7,9 @@
   "properties": {
     "id": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Permission/[^/\\s]+$",
       "description": "Globally unique identifier for this permission."
-    },
-    "ifsId": {
-      "type": "string",
-      "description": "IFS system identifier for this Permission."
     },
     "entityType": {
       "type": "string",
@@ -20,6 +18,8 @@
     },
     "basedOn": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "Id of the object this object is derived from."
     },
     "entityDocumentationUrl": {
@@ -30,7 +30,9 @@
     "actionIds": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "x-ifs-id": true,
+        "pattern": "^Action/[^/\\s]+$"
       },
       "description": "ID list of actions that this permission allows"
     },
@@ -43,14 +45,20 @@
     },
     "memberId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Member/[^/\\s]+$",
       "description": "Identifier of the member receiving this permission."
     },
     "roleId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Role/[^/\\s]+$",
       "description": "Identifier of the role receiving this permission."
     },
     "scopeId": {
       "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Scope/[^/\\s]+$",
       "description": "Identifier of the scope object where this permission applies."
     },
     "scope": {
@@ -79,15 +87,5 @@
       "description": "Optional timestamp after which this permission no longer applies."
     }
   },
-  "required": [
-    "id",
-    "ifsId",
-    "entityType",
-    "entityDocumentationUrl",
-    "actionIds",
-    "scopeId",
-    "state",
-    "createdAt",
-    "expiresAt"
-  ]
+  "required": ["id", "entityType", "entityDocumentationUrl", "actionIds", "scopeId", "state", "createdAt", "expiresAt"]
 }

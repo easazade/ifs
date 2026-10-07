@@ -8,7 +8,6 @@ Generated from `src/entities/**/*.schema.json`.
 erDiagram
   ACTION {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -25,7 +24,6 @@ erDiagram
   }
   CHANGE {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -56,22 +54,20 @@ erDiagram
   }
   CHANGEITEM {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
     resourceType string "required"
     operation string "required"
-    targetRef string_or_null "required, ifs-ref"
-    baseRef string_or_null "required, ifs-ref"
-    proposedRef string_or_null "required, ifs-ref"
+    targetId string_or_null "required"
+    baseId string_or_null "required"
+    proposedId string_or_null "required"
     description string "optional"
     createdAt string "required, date-time"
     updatedAt string "required, date-time"
   }
   COMMENT {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -80,11 +76,10 @@ erDiagram
   }
   DECISION {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
-    subject string "required, ifs-ref"
+    subject string "required"
     state string "required"
     previousRevisionId string FK "optional"
     previousRevision object FK "Decision"
@@ -108,7 +103,6 @@ erDiagram
   }
   DELEGATION {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -116,15 +110,14 @@ erDiagram
     updatedAt string "date-time"
     permissionId string FK "required"
     permission object FK "Permission"
-    delegatorRef string "required, ifs-ref"
-    delegateRef string "required, ifs-ref"
+    delegatorId string "required"
+    delegateId string "required"
     state string "required"
     revokedAt string "date-time"
     expiresAt string "date-time"
   }
   GEOGRAPHICAREA {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -134,7 +127,6 @@ erDiagram
   }
   GROUP {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -148,7 +140,6 @@ erDiagram
   }
   LABEL {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -157,7 +148,6 @@ erDiagram
   }
   MEMBER {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     entityDocumentationUrl string "required, uri"
     name string "required"
@@ -169,7 +159,6 @@ erDiagram
   }
   OBSERVATION {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -182,7 +171,6 @@ erDiagram
   }
   ORGANIZATION {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -191,7 +179,6 @@ erDiagram
   }
   PERMISSION {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -208,7 +195,6 @@ erDiagram
   }
   PLACE {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -222,7 +208,6 @@ erDiagram
   }
   PROTOCOL {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -230,7 +215,6 @@ erDiagram
   }
   REVIEWCOMMENT {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -238,8 +222,7 @@ erDiagram
     updatedAt string "required, date-time"
   }
   ROLE {
-    id string PK "required, uuid"
-    ifsId string "required"
+    id string PK "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -256,7 +239,6 @@ erDiagram
   }
   RULE {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -264,8 +246,7 @@ erDiagram
     updatedAt string "required, date-time"
   }
   SCOPE {
-    id string PK "required, uuid"
-    ifsId string "required"
+    id string PK "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
@@ -283,7 +264,6 @@ erDiagram
   }
   VOTE {
     id string PK "required"
-    ifsId string "required"
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"

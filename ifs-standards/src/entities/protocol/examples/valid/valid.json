@@ -1,5 +1,6 @@
 {
-  "id": "wd9jajd",
-  "ifsId": "ifs.entity.user",
+  "id": "Protocol/wd9jajd",
+  "entityType": "Protocol",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/Protocol",
   "createdAt": "2026-05-10T13:28:00Z"
 }

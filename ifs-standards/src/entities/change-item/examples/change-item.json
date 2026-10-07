@@ -1,15 +1,13 @@
 {
-  "id": "1001",
-  "ifsId": "1001",
+  "id": "ChangeItem/1001",
   "entityType": "ChangeItem",
-  "basedOn": "1000",
+  "basedOn": "ChangeItem/1000",
   "entityDocumentationUrl": "https://ifs-standards.org/entities/ChangeItem",
-  "resourceType": "OH",
-  "operation": "replace",
-  "targetRef": null,
-  "baseRef": null,
-  "proposedRef": "juzpjTJh",
-  "description": "",
-  "createdAt": "2019-11-08T23:43:24Z",
-  "updatedAt": "2009-09-29T22:41:55Z"
+  "resourceType": "rlcAKXsm",
+  "operation": "delete",
+  "targetId": "Member/1001",
+  "baseId": "Member/1001",
+  "proposedId": null,
+  "createdAt": "2007-10-05T07:24:14Z",
+  "updatedAt": "2004-09-18T03:15:02Z"
 }
