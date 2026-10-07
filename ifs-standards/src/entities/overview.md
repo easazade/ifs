@@ -122,6 +122,25 @@ erDiagram
     revokedAt string "date-time"
     expiresAt string "date-time"
   }
+  GEOGRAPHICAREA {
+    id string PK "required"
+    ifsId string "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
+    updatedAt string "required, date-time"
+    polygons array "required"
+  }
+  GROUP {
+    id string PK "required"
+    ifsId string "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
+    updatedAt string "required, date-time"
+  }
   LABEL {
     id string PK "required"
     ifsId string "required"
@@ -172,6 +191,20 @@ erDiagram
     createdAt string "required, date-time"
     updatedAt string "date-time"
     expiresAt string "required, date-time"
+  }
+  PLACE {
+    id string PK "required"
+    ifsId string "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
+    updatedAt string "required, date-time"
+    name string "required"
+    coordinate string "optional"
+    geographicArea object FK "GeographicArea"
+    owners array "optional"
+    roles array FK "Role[]"
   }
   PROTOCOL {
     id string PK "required"
@@ -262,6 +295,8 @@ erDiagram
   OBSERVATION ||--|| MEMBER : observer
   PERMISSION ||--o{ ACTION : actions_fk_actionIds
   PERMISSION ||--|| SCOPE : scopeId
+  PLACE ||--|| GEOGRAPHICAREA : geographicArea
+  PLACE ||--o{ ROLE : roles
   ROLE ||--o{ PERMISSION : permissions_fk_roleId
   ROLE ||--|| SCOPE : scope_fk_scopeId
   SCOPE ||--o{ SCOPE : childScopeIds_fk_parentScopeId
@@ -295,6 +330,8 @@ erDiagram
 - `Permission.actions` → `Action` ($ref, many)
 - `Permission.actionIds` → `Action` (id, many)
 - `Permission.scopeId` → `Scope` (id, one)
+- `Place.geographicArea` → `Geographic Area` ($ref, one)
+- `Place.roles` → `Role` ($ref, many)
 - `Permission.roleId` → `Role` (id, one)
 - `Role.permissions` → `Permission` ($ref, many)
 - `Role.scope` → `Scope` ($ref, one)

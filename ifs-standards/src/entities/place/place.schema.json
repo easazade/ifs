@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ifs-standards.org/schemas/v1/entities/place.schema.json",
+  "title": "Place",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Globally unique identifier for this place."
+    },
+    "ifsId": {
+      "type": "string",
+      "description": "IFS system identifier for this Place."
+    },
+    "entityType": {
+      "type": "string",
+      "description": "IFS entity category/type for this place."
+    },
+    "basedOn": {
+      "type": "string",
+      "description": "Id of the object this object is derived from."
+    },
+    "entityDocumentationUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL for documentation about this entity."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when this place record was created."
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when this place record was last updated."
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name of the real-world place."
+    },
+    "coordinate": {
+      "type": "string",
+      "description": "Optional latitude, longitude, and altitude location, represented as a comma-separated string."
+    },
+    "geographicArea": {
+      "$ref": "https://ifs-standards.org/schemas/v1/entities/geographic-area.schema.json",
+      "description": "Geographic area occupied by this place, including disconnected areas when applicable."
+    },
+    "owners": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "ifs-ref"
+      },
+      "description": "References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001)."
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "$ref": "https://ifs-standards.org/schemas/v1/entities/role.schema.json"
+      },
+      "description": "Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc."
+    }
+  },
+  "required": ["id", "ifsId", "entityType", "entityDocumentationUrl", "createdAt", "updatedAt", "name", "coordinate"]
+}

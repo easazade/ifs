@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ifs-standards.org/schemas/v1/entities/geographic-area.schema.json",
+  "title": "Geographic Area",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Globally unique identifier for this geographic area."
+    },
+    "ifsId": {
+      "type": "string",
+      "description": "IFS system identifier for this GeographicArea."
+    },
+    "entityType": {
+      "type": "string",
+      "description": "IFS entity category/type for this geographic area."
+    },
+    "basedOn": {
+      "type": "string",
+      "description": "Id of the object this object is derived from."
+    },
+    "entityDocumentationUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL for documentation about this entity."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when this geographic area record was created."
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when this geographic area record was last updated."
+    },
+    "polygons": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 2,
+            "maxItems": 3
+          },
+          "minItems": 4
+        },
+        "description": "A polygon ring represented by coordinate positions; the first ring is the exterior boundary and subsequent rings, if any, are holes."
+      },
+      "description": "Polygon geometries making up this area. Separate polygons can represent disconnected regions. Coordinates use [longitude, latitude, optional altitude] positions."
+    }
+  },
+  "required": [
+    "id",
+    "ifsId",
+    "entityType",
+    "entityDocumentationUrl",
+    "createdAt",
+    "updatedAt",
+    "polygons"
+  ]
+}

@@ -9,6 +9,7 @@ export type PuppeteerParams = {
 };
 export class Puppeteer {
   private api: Api;
+
   constructor({ api, baseUrl }: PuppeteerParams) {
     this.api = api;
     this.api.setApiBaseUrl(baseUrl);

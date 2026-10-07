@@ -19,6 +19,8 @@
     { "property": "votes", "type": "Vote" }
   ],
   "Delegation": [{ "property": "permission", "type": "Permission" }],
+  "Geographic Area": [],
+  "Group": [],
   "Label": [],
   "Member": [
     { "property": "permissions", "type": "Permission" },
@@ -26,6 +28,10 @@
   ],
   "Observation": [{ "property": "observer", "type": "Member" }],
   "Permission": [{ "property": "actions", "type": "Action" }],
+  "Place": [
+    { "property": "geographicArea", "type": "Geographic Area" },
+    { "property": "roles", "type": "Role" }
+  ],
   "Protocol": [],
   "ReviewComment": [],
   "Role": [

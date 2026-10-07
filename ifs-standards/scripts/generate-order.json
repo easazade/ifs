@@ -2,6 +2,8 @@
   "Action",
   "ChangeItem",
   "Comment",
+  "Geographic Area",
+  "Group",
   "Label",
   "Protocol",
   "ReviewComment",
@@ -12,6 +14,7 @@
   "Delegation",
   "Role",
   "Member",
+  "Place",
   "Decision",
   "Observation",
   "Change"
