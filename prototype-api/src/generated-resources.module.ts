@@ -8,6 +8,7 @@ import { DecisionModule } from './decision/decision.module.js';
 import { DelegationModule } from './delegation/delegation.module.js';
 import { LabelModule } from './label/label.module.js';
 import { MemberModule } from './member/member.module.js';
+import { ObservationModule } from './observation/observation.module.js';
 import { PermissionModule } from './permission/permission.module.js';
 import { ProtocolModule } from './protocol/protocol.module.js';
 import { ReviewCommentModule } from './review-comment/review-comment.module.js';
@@ -26,6 +27,7 @@ import { VoteModule } from './vote/vote.module.js';
     DelegationModule,
     LabelModule,
     MemberModule,
+    ObservationModule,
     PermissionModule,
     ProtocolModule,
     ReviewCommentModule,

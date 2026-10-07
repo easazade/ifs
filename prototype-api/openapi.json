@@ -1296,6 +1296,165 @@
         ]
       }
     },
+    "/observations": {
+      "post": {
+        "operationId": "createObservation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateObservationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObservationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Observation.",
+        "tags": [
+          "observations"
+        ]
+      },
+      "get": {
+        "operationId": "listObservations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ObservationResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Observation records.",
+        "tags": [
+          "observations"
+        ]
+      }
+    },
+    "/observations/{id}": {
+      "get": {
+        "operationId": "getObservation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Observation ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObservationResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Observation not found."
+          }
+        },
+        "summary": "Get a Observation by ID.",
+        "tags": [
+          "observations"
+        ]
+      },
+      "patch": {
+        "operationId": "updateObservation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Observation ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateObservationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObservationResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Observation not found."
+          }
+        },
+        "summary": "Update a Observation.",
+        "tags": [
+          "observations"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteObservation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Observation ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Observation deleted."
+          },
+          "404": {
+            "description": "Observation not found."
+          }
+        },
+        "summary": "Delete a Observation.",
+        "tags": [
+          "observations"
+        ]
+      }
+    },
     "/permissions": {
       "post": {
         "operationId": "createPermission",
@@ -5115,6 +5274,210 @@
             "type": "string",
             "description": "Timestamp when this member record was last updated.",
             "format": "date-time"
+          }
+        }
+      },
+      "CreateObservationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this observation."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Observation."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Observation."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this observation record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this observation record was last updated.",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of what was observed."
+          },
+          "locations": {
+            "description": "Location identifiers or names where the observation occurred.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "timeOfObservation": {
+            "type": "string",
+            "description": "Date and time when the observation occurred.",
+            "format": "date-time"
+          },
+          "observer": {
+            "description": "Member who made the report about what they observed.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MemberResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "description",
+          "locations",
+          "timeOfObservation",
+          "observer"
+        ]
+      },
+      "ObservationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this observation."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Observation."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Observation."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this observation record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this observation record was last updated.",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of what was observed."
+          },
+          "locations": {
+            "description": "Location identifiers or names where the observation occurred.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "timeOfObservation": {
+            "type": "string",
+            "description": "Date and time when the observation occurred.",
+            "format": "date-time"
+          },
+          "observer": {
+            "description": "Member who made the report about what they observed.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MemberResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "description",
+          "locations",
+          "timeOfObservation",
+          "observer"
+        ]
+      },
+      "UpdateObservationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this observation."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Observation."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Observation."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this observation record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this observation record was last updated.",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of what was observed."
+          },
+          "locations": {
+            "description": "Location identifiers or names where the observation occurred.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "timeOfObservation": {
+            "type": "string",
+            "description": "Date and time when the observation occurred.",
+            "format": "date-time"
+          },
+          "observer": {
+            "description": "Member who made the report about what they observed.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MemberResponseDto"
+              }
+            ]
           }
         }
       },

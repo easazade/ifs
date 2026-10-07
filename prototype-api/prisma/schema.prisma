@@ -135,19 +135,22 @@ model Member {
   extensions             Json?
 
   // <generated:inverse Decision_eligibleMembers>
-  relationFromDecisionEligibleMembers Decision[] @relation("Decision_eligibleMembers")
+  relationFromDecisionEligibleMembers Decision[]    @relation("Decision_eligibleMembers")
   // </generated:inverse Decision_eligibleMembers>
   // <generated:inverse Decision_affectedMembers>
-  relationFromDecisionAffectedMembers Decision[] @relation("Decision_affectedMembers")
+  relationFromDecisionAffectedMembers Decision[]    @relation("Decision_affectedMembers")
   // </generated:inverse Decision_affectedMembers>
+  // <generated:inverse Observation_observer>
+  relationFromObservationObserver     Observation[] @relation("Observation_observer")
+  // </generated:inverse Observation_observer>
   // <generated:inverse Change_authors>
-  relationFromChangeAuthors           Change[]   @relation("Change_authors")
+  relationFromChangeAuthors           Change[]      @relation("Change_authors")
   // </generated:inverse Change_authors>
   // <generated:inverse Change_mainAuthor>
-  relationFromChangeMainAuthor        Change[]   @relation("Change_mainAuthor")
+  relationFromChangeMainAuthor        Change[]      @relation("Change_mainAuthor")
   // </generated:inverse Change_mainAuthor>
   // <generated:inverse Change_reviewers>
-  relationFromChangeReviewers         Change[]   @relation("Change_reviewers")
+  relationFromChangeReviewers         Change[]      @relation("Change_reviewers")
   // </generated:inverse Change_reviewers>
 }
 
@@ -373,3 +376,21 @@ model Change {
 }
 
 // </generated:model Change>
+
+// <generated:model Observation source="../ifs-standards/src/entities/observation/observation.schema.json">
+model Observation {
+  id                     String  @id
+  ifsId                  String
+  entityType             String
+  basedOn                String?
+  entityDocumentationUrl String
+  createdAt              String
+  updatedAt              String
+  description            String
+  locations              Json
+  timeOfObservation      String
+  observerRelationId     String
+  observer               Member  @relation("Observation_observer", fields: [observerRelationId], references: [id])
+}
+
+// </generated:model Observation>

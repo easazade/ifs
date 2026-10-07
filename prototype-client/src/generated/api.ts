@@ -1489,6 +1489,81 @@ export interface UpdateMemberDto {
   updatedAt?: string;
 }
 
+export interface CreateObservationDto {
+  /** Globally unique identifier for this observation. */
+  id: string;
+  /** IFS system identifier for this Observation. */
+  ifsId: string;
+  /** Entity category for this object, normally Observation. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this observation record was created. */
+  createdAt: string;
+  /** Timestamp when this observation record was last updated. */
+  updatedAt: string;
+  /** Description of what was observed. */
+  description: string;
+  /** Location identifiers or names where the observation occurred. */
+  locations: string[];
+  /** Date and time when the observation occurred. */
+  timeOfObservation: string;
+  /** Member who made the report about what they observed. */
+  observer: MemberResponseDto;
+}
+
+export interface ObservationResponseDto {
+  /** Globally unique identifier for this observation. */
+  id: string;
+  /** IFS system identifier for this Observation. */
+  ifsId: string;
+  /** Entity category for this object, normally Observation. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this observation record was created. */
+  createdAt: string;
+  /** Timestamp when this observation record was last updated. */
+  updatedAt: string;
+  /** Description of what was observed. */
+  description: string;
+  /** Location identifiers or names where the observation occurred. */
+  locations: string[];
+  /** Date and time when the observation occurred. */
+  timeOfObservation: string;
+  /** Member who made the report about what they observed. */
+  observer: MemberResponseDto;
+}
+
+export interface UpdateObservationDto {
+  /** Globally unique identifier for this observation. */
+  id?: string;
+  /** IFS system identifier for this Observation. */
+  ifsId?: string;
+  /** Entity category for this object, normally Observation. */
+  entityType?: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this observation record was created. */
+  createdAt?: string;
+  /** Timestamp when this observation record was last updated. */
+  updatedAt?: string;
+  /** Description of what was observed. */
+  description?: string;
+  /** Location identifiers or names where the observation occurred. */
+  locations?: string[];
+  /** Date and time when the observation occurred. */
+  timeOfObservation?: string;
+  /** Member who made the report about what they observed. */
+  observer?: MemberResponseDto;
+}
+
 /**
  * Entity type discriminator. Always "Permission" for Permission entities.
  */
@@ -4171,6 +4246,270 @@ export const deleteMember = async (
     status: res.status,
     headers: res.headers,
   } as deleteMemberResponse;
+};
+
+export type createObservationResponse201 = {
+  data: ObservationResponseDto;
+  status: 201;
+};
+
+export type createObservationResponseSuccess = createObservationResponse201 & {
+  headers: Headers;
+};
+export type createObservationResponse = createObservationResponseSuccess;
+
+export const getCreateObservationUrl = () => {
+  return `${getApiBaseUrl()}/observations`;
+};
+
+/**
+ * @summary Create a Observation.
+ */
+export const createObservation = async (
+  createObservationDto: NonReadonly<CreateObservationDto>,
+  options?: RequestInit,
+): Promise<createObservationResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateObservationUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createObservationDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createObservationResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createObservationResponse;
+};
+
+export type listObservationsResponse200 = {
+  data: ObservationResponseDto[];
+  status: 200;
+};
+
+export type listObservationsResponseSuccess = listObservationsResponse200 & {
+  headers: Headers;
+};
+export type listObservationsResponse = listObservationsResponseSuccess;
+
+export const getListObservationsUrl = () => {
+  return `${getApiBaseUrl()}/observations`;
+};
+
+/**
+ * @summary List Observation records.
+ */
+export const listObservations = async (
+  options?: RequestInit,
+): Promise<listObservationsResponse> => {
+  const res = await fetch(getListObservationsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listObservationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listObservationsResponse;
+};
+
+export type getObservationResponse200 = {
+  data: ObservationResponseDto;
+  status: 200;
+};
+
+export type getObservationResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getObservationResponseSuccess = getObservationResponse200 & {
+  headers: Headers;
+};
+export type getObservationResponseError = getObservationResponse404 & {
+  headers: Headers;
+};
+
+export type getObservationResponse =
+  getObservationResponseSuccess | getObservationResponseError;
+
+export const getGetObservationUrl = (id: string) => {
+  return `${getApiBaseUrl()}/observations/${id}`;
+};
+
+/**
+ * @summary Get a Observation by ID.
+ */
+export const getObservation = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getObservationResponse> => {
+  const res = await fetch(getGetObservationUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getObservationResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getObservationResponse;
+};
+
+export type updateObservationResponse200 = {
+  data: ObservationResponseDto;
+  status: 200;
+};
+
+export type updateObservationResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateObservationResponseSuccess = updateObservationResponse200 & {
+  headers: Headers;
+};
+export type updateObservationResponseError = updateObservationResponse404 & {
+  headers: Headers;
+};
+
+export type updateObservationResponse =
+  updateObservationResponseSuccess | updateObservationResponseError;
+
+export const getUpdateObservationUrl = (id: string) => {
+  return `${getApiBaseUrl()}/observations/${id}`;
+};
+
+/**
+ * @summary Update a Observation.
+ */
+export const updateObservation = async (
+  id: string,
+  updateObservationDto: NonReadonly<UpdateObservationDto>,
+  options?: RequestInit,
+): Promise<updateObservationResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateObservationUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateObservationDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateObservationResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateObservationResponse;
+};
+
+export type deleteObservationResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteObservationResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteObservationResponseSuccess = deleteObservationResponse204 & {
+  headers: Headers;
+};
+export type deleteObservationResponseError = deleteObservationResponse404 & {
+  headers: Headers;
+};
+
+export type deleteObservationResponse =
+  deleteObservationResponseSuccess | deleteObservationResponseError;
+
+export const getDeleteObservationUrl = (id: string) => {
+  return `${getApiBaseUrl()}/observations/${id}`;
+};
+
+/**
+ * @summary Delete a Observation.
+ */
+export const deleteObservation = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteObservationResponse> => {
+  const res = await fetch(getDeleteObservationUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteObservationResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteObservationResponse;
 };
 
 export type createPermissionResponse201 = {
