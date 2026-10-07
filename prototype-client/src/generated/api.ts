@@ -1420,20 +1420,20 @@ export interface UpdateGeographicAreaDto {
   polygons?: number[][][][];
 }
 
-export interface CreateGroupDto {
-  /** Globally unique identifier for this group. */
+export interface OrganizationResponseDto {
+  /** Globally unique identifier for this organization. */
   id: string;
-  /** IFS system identifier for this Group. */
+  /** IFS system identifier for this Organization. */
   ifsId: string;
-  /** IFS entity category/type for this group. */
+  /** IFS entity category/type for this organization. */
   entityType: string;
   /** Id of the object this object is derived from. */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this group record was created. */
+  /** Timestamp when this organization record was created. */
   createdAt: string;
-  /** Timestamp when this group record was last updated. */
+  /** Timestamp when this organization record was last updated. */
   updatedAt: string;
 }
 
@@ -1448,6 +1448,49 @@ export interface GroupResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /**
+   * Human-readable name of this group.
+   * @minLength 1
+   */
+  name: string;
+  /** Purpose and context of this group. */
+  description?: string;
+  /** Members directly belonging to this group. Membership alone does not grant delegated authority. */
+  members?: MemberResponseDto[];
+  /** Organizations directly belonging to this group. Inclusion alone does not grant delegated authority. */
+  organizations?: OrganizationResponseDto[];
+  /** Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership. */
+  groups?: GroupResponseDto[];
+  /** Timestamp when this group record was created. */
+  createdAt: string;
+  /** Timestamp when this group record was last updated. */
+  updatedAt: string;
+}
+
+export interface CreateGroupDto {
+  /** Globally unique identifier for this group. */
+  id: string;
+  /** IFS system identifier for this Group. */
+  ifsId: string;
+  /** IFS entity category/type for this group. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /**
+   * Human-readable name of this group.
+   * @minLength 1
+   */
+  name: string;
+  /** Purpose and context of this group. */
+  description?: string;
+  /** Members directly belonging to this group. Membership alone does not grant delegated authority. */
+  members?: MemberResponseDto[];
+  /** Organizations directly belonging to this group. Inclusion alone does not grant delegated authority. */
+  organizations?: OrganizationResponseDto[];
+  /** Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership. */
+  groups?: GroupResponseDto[];
   /** Timestamp when this group record was created. */
   createdAt: string;
   /** Timestamp when this group record was last updated. */
@@ -1465,6 +1508,19 @@ export interface UpdateGroupDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
+  /**
+   * Human-readable name of this group.
+   * @minLength 1
+   */
+  name?: string;
+  /** Purpose and context of this group. */
+  description?: string;
+  /** Members directly belonging to this group. Membership alone does not grant delegated authority. */
+  members?: MemberResponseDto[];
+  /** Organizations directly belonging to this group. Inclusion alone does not grant delegated authority. */
+  organizations?: OrganizationResponseDto[];
+  /** Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership. */
+  groups?: GroupResponseDto[];
   /** Timestamp when this group record was created. */
   createdAt?: string;
   /** Timestamp when this group record was last updated. */
@@ -1685,6 +1741,40 @@ export interface UpdateObservationDto {
   timeOfObservation?: string;
   /** Member who made the report about what they observed. */
   observer?: MemberResponseDto;
+}
+
+export interface CreateOrganizationDto {
+  /** Globally unique identifier for this organization. */
+  id: string;
+  /** IFS system identifier for this Organization. */
+  ifsId: string;
+  /** IFS entity category/type for this organization. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this organization record was created. */
+  createdAt: string;
+  /** Timestamp when this organization record was last updated. */
+  updatedAt: string;
+}
+
+export interface UpdateOrganizationDto {
+  /** Globally unique identifier for this organization. */
+  id?: string;
+  /** IFS system identifier for this Organization. */
+  ifsId?: string;
+  /** IFS entity category/type for this organization. */
+  entityType?: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this organization record was created. */
+  createdAt?: string;
+  /** Timestamp when this organization record was last updated. */
+  updatedAt?: string;
 }
 
 /**
@@ -4225,7 +4315,7 @@ export const getCreateGroupUrl = () => {
  * @summary Create a Group.
  */
 export const createGroup = async (
-  createGroupDto: CreateGroupDto,
+  createGroupDto: NonReadonly<CreateGroupDto>,
   options?: RequestInit,
 ): Promise<createGroupResponse> => {
   const getHeaders = (
@@ -4374,7 +4464,7 @@ export const getUpdateGroupUrl = (id: string) => {
  */
 export const updateGroup = async (
   id: string,
-  updateGroupDto: UpdateGroupDto,
+  updateGroupDto: NonReadonly<UpdateGroupDto>,
   options?: RequestInit,
 ): Promise<updateGroupResponse> => {
   const getHeaders = (
@@ -5247,6 +5337,273 @@ export const deleteObservation = async (
     status: res.status,
     headers: res.headers,
   } as deleteObservationResponse;
+};
+
+export type createOrganizationResponse201 = {
+  data: OrganizationResponseDto;
+  status: 201;
+};
+
+export type createOrganizationResponseSuccess =
+  createOrganizationResponse201 & {
+    headers: Headers;
+  };
+export type createOrganizationResponse = createOrganizationResponseSuccess;
+
+export const getCreateOrganizationUrl = () => {
+  return `${getApiBaseUrl()}/organizations`;
+};
+
+/**
+ * @summary Create a Organization.
+ */
+export const createOrganization = async (
+  createOrganizationDto: CreateOrganizationDto,
+  options?: RequestInit,
+): Promise<createOrganizationResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateOrganizationUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createOrganizationDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createOrganizationResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createOrganizationResponse;
+};
+
+export type listOrganizationsResponse200 = {
+  data: OrganizationResponseDto[];
+  status: 200;
+};
+
+export type listOrganizationsResponseSuccess = listOrganizationsResponse200 & {
+  headers: Headers;
+};
+export type listOrganizationsResponse = listOrganizationsResponseSuccess;
+
+export const getListOrganizationsUrl = () => {
+  return `${getApiBaseUrl()}/organizations`;
+};
+
+/**
+ * @summary List Organization records.
+ */
+export const listOrganizations = async (
+  options?: RequestInit,
+): Promise<listOrganizationsResponse> => {
+  const res = await fetch(getListOrganizationsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listOrganizationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listOrganizationsResponse;
+};
+
+export type getOrganizationResponse200 = {
+  data: OrganizationResponseDto;
+  status: 200;
+};
+
+export type getOrganizationResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getOrganizationResponseSuccess = getOrganizationResponse200 & {
+  headers: Headers;
+};
+export type getOrganizationResponseError = getOrganizationResponse404 & {
+  headers: Headers;
+};
+
+export type getOrganizationResponse =
+  getOrganizationResponseSuccess | getOrganizationResponseError;
+
+export const getGetOrganizationUrl = (id: string) => {
+  return `${getApiBaseUrl()}/organizations/${id}`;
+};
+
+/**
+ * @summary Get a Organization by ID.
+ */
+export const getOrganization = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getOrganizationResponse> => {
+  const res = await fetch(getGetOrganizationUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getOrganizationResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getOrganizationResponse;
+};
+
+export type updateOrganizationResponse200 = {
+  data: OrganizationResponseDto;
+  status: 200;
+};
+
+export type updateOrganizationResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateOrganizationResponseSuccess =
+  updateOrganizationResponse200 & {
+    headers: Headers;
+  };
+export type updateOrganizationResponseError = updateOrganizationResponse404 & {
+  headers: Headers;
+};
+
+export type updateOrganizationResponse =
+  updateOrganizationResponseSuccess | updateOrganizationResponseError;
+
+export const getUpdateOrganizationUrl = (id: string) => {
+  return `${getApiBaseUrl()}/organizations/${id}`;
+};
+
+/**
+ * @summary Update a Organization.
+ */
+export const updateOrganization = async (
+  id: string,
+  updateOrganizationDto: UpdateOrganizationDto,
+  options?: RequestInit,
+): Promise<updateOrganizationResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateOrganizationUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateOrganizationDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateOrganizationResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateOrganizationResponse;
+};
+
+export type deleteOrganizationResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteOrganizationResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteOrganizationResponseSuccess =
+  deleteOrganizationResponse204 & {
+    headers: Headers;
+  };
+export type deleteOrganizationResponseError = deleteOrganizationResponse404 & {
+  headers: Headers;
+};
+
+export type deleteOrganizationResponse =
+  deleteOrganizationResponseSuccess | deleteOrganizationResponseError;
+
+export const getDeleteOrganizationUrl = (id: string) => {
+  return `${getApiBaseUrl()}/organizations/${id}`;
+};
+
+/**
+ * @summary Delete a Organization.
+ */
+export const deleteOrganization = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteOrganizationResponse> => {
+  const res = await fetch(getDeleteOrganizationUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteOrganizationResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteOrganizationResponse;
 };
 
 export type createPermissionResponse201 = {

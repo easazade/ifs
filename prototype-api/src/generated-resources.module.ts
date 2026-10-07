@@ -11,6 +11,7 @@ import { GroupModule } from './group/group.module.js';
 import { LabelModule } from './label/label.module.js';
 import { MemberModule } from './member/member.module.js';
 import { ObservationModule } from './observation/observation.module.js';
+import { OrganizationModule } from './organization/organization.module.js';
 import { PermissionModule } from './permission/permission.module.js';
 import { PlaceModule } from './place/place.module.js';
 import { ProtocolModule } from './protocol/protocol.module.js';
@@ -33,6 +34,7 @@ import { VoteModule } from './vote/vote.module.js';
     LabelModule,
     MemberModule,
     ObservationModule,
+    OrganizationModule,
     PermissionModule,
     PlaceModule,
     ProtocolModule,

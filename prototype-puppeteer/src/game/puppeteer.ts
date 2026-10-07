@@ -1,4 +1,4 @@
-import { fakeMembers } from '../fake/members.js';
+import { fakeMembers } from '../fake/ifs/members.js';
 import { logger } from '../utils/logger.js';
 import type { Api } from './api.js';
 import { Puppet } from './puppet.js';

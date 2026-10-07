@@ -89,6 +89,14 @@ import {
   type CreateObservationDto,
   type UpdateObservationDto,
   type ObservationResponseDto,
+  createOrganization,
+  deleteOrganization,
+  getOrganization,
+  listOrganizations,
+  updateOrganization,
+  type CreateOrganizationDto,
+  type UpdateOrganizationDto,
+  type OrganizationResponseDto,
   createPermission,
   deletePermission,
   getPermission,
@@ -431,6 +439,30 @@ export class Api {
 
   async deleteObservation(id: string): Promise<void> {
     await deleteObservation(id);
+  }
+
+  async createOrganization(input: CreateOrganizationDto): Promise<OrganizationResponseDto | void> {
+    const response = await createOrganization(input);
+    return response.data;
+  }
+
+  async listOrganizations(): Promise<OrganizationResponseDto[]> {
+    const response = await listOrganizations();
+    return response.data;
+  }
+
+  async getOrganization(id: string): Promise<OrganizationResponseDto | void> {
+    const response = await getOrganization(id);
+    return response.data;
+  }
+
+  async updateOrganization(id: string, input: UpdateOrganizationDto): Promise<OrganizationResponseDto | void> {
+    const response = await updateOrganization(id, input);
+    return response.data;
+  }
+
+  async deleteOrganization(id: string): Promise<void> {
+    await deleteOrganization(id);
   }
 
   async createPermission(input: CreatePermissionDto): Promise<PermissionResponseDto | void> {

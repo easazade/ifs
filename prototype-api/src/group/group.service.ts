@@ -6,38 +6,81 @@ import { CreateGroupDto } from './dto/create-group.dto.js';
 import { GroupResponseDto } from './dto/group-response.dto.js';
 import { UpdateGroupDto } from './dto/update-group.dto.js';
 
+const groupRelations = {
+  groups: true,
+  members: true,
+  organizations: true,
+} as const;
+
+// API relations are expanded entities; Prisma requires nested relation operations.
+function toGroupCreateInput(data: CreateGroupDto): Prisma.GroupCreateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.groups !== undefined) {
+    prismaData.groups = { connect: data.groups.map(({ id }) => ({ id })) };
+  }
+  if (data.members !== undefined) {
+    prismaData.members = { connect: data.members.map(({ id }) => ({ id })) };
+  }
+  if (data.organizations !== undefined) {
+    prismaData.organizations = {
+      connect: data.organizations.map(({ id }) => ({ id })),
+    };
+  }
+  return prismaData as unknown as Prisma.GroupCreateInput;
+}
+
+function toGroupUpdateInput(data: UpdateGroupDto): Prisma.GroupUpdateInput {
+  const prismaData: Record<string, unknown> = { ...data };
+  if (data.groups !== undefined) {
+    prismaData.groups = { set: data.groups.map(({ id }) => ({ id })) };
+  }
+  if (data.members !== undefined) {
+    prismaData.members = { set: data.members.map(({ id }) => ({ id })) };
+  }
+  if (data.organizations !== undefined) {
+    prismaData.organizations = {
+      set: data.organizations.map(({ id }) => ({ id })),
+    };
+  }
+  return prismaData as unknown as Prisma.GroupUpdateInput;
+}
+
 @Injectable()
 export class GroupService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreateGroupDto): Promise<GroupResponseDto> {
     return this.prisma.group.create({
-      data: data as unknown as Prisma.GroupCreateInput,
+      data: toGroupCreateInput(data),
+      include: groupRelations,
     }) as unknown as Promise<GroupResponseDto>;
   }
 
   findAll(): Promise<GroupResponseDto[]> {
-    return this.prisma.group.findMany() as unknown as Promise<
-      GroupResponseDto[]
-    >;
+    return this.prisma.group.findMany({
+      include: groupRelations,
+    }) as unknown as Promise<GroupResponseDto[]>;
   }
 
   findOne(id: string): Promise<GroupResponseDto | null> {
     return this.prisma.group.findUnique({
       where: { id },
+      include: groupRelations,
     }) as unknown as Promise<GroupResponseDto | null>;
   }
 
   update(id: string, data: UpdateGroupDto): Promise<GroupResponseDto> {
     return this.prisma.group.update({
       where: { id },
-      data: data as unknown as Prisma.GroupUpdateInput,
+      data: toGroupUpdateInput(data),
+      include: groupRelations,
     }) as unknown as Promise<GroupResponseDto>;
   }
 
   remove(id: string): Promise<GroupResponseDto> {
     return this.prisma.group.delete({
       where: { id },
+      include: groupRelations,
     }) as unknown as Promise<GroupResponseDto>;
   }
 }

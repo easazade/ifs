@@ -144,6 +144,9 @@ model Member {
   // <generated:inverse Decision_affectedMembers>
   relationFromDecisionAffectedMembers Decision[]    @relation("Decision_affectedMembers")
   // </generated:inverse Decision_affectedMembers>
+  // <generated:inverse Group_members>
+  relationFromGroupMembers            Group[]       @relation("Group_members")
+  // </generated:inverse Group_members>
   // <generated:inverse Observation_observer>
   relationFromObservationObserver     Observation[] @relation("Observation_observer")
   // </generated:inverse Observation_observer>
@@ -419,14 +422,22 @@ model GeographicArea {
 
 // <generated:model Group source="../ifs-standards/src/entities/group/group.schema.json">
 model Group {
-  id                     String  @id
-  ifsId                  String
-  entityType             String
-  basedOn                String?
-  entityDocumentationUrl String
-  createdAt              String
-  updatedAt              String
-  extensions             Json?
+  id                      String         @id
+  ifsId                   String
+  entityType              String
+  basedOn                 String?
+  entityDocumentationUrl  String
+  name                    String
+  description             String?
+  members                 Member[]       @relation("Group_members")
+  organizations           Organization[] @relation("Group_organizations")
+  groups                  Group[]        @relation("Group_groups")
+  createdAt               String
+  updatedAt               String
+  extensions              Json?
+  // <generated:inverse Group_groups>
+  relationFromGroupGroups Group[]        @relation("Group_groups")
+  // </generated:inverse Group_groups>
 }
 
 // </generated:model Group>
@@ -450,3 +461,20 @@ model Place {
 }
 
 // </generated:model Place>
+
+// <generated:model Organization source="../ifs-standards/src/entities/organization/organization.schema.json">
+model Organization {
+  id                             String  @id
+  ifsId                          String
+  entityType                     String
+  basedOn                        String?
+  entityDocumentationUrl         String
+  createdAt                      String
+  updatedAt                      String
+  extensions                     Json?
+  // <generated:inverse Group_organizations>
+  relationFromGroupOrganizations Group[] @relation("Group_organizations")
+  // </generated:inverse Group_organizations>
+}
+
+// </generated:model Organization>

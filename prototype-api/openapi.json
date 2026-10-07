@@ -1773,6 +1773,165 @@
         ]
       }
     },
+    "/organizations": {
+      "post": {
+        "operationId": "createOrganization",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrganizationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Organization.",
+        "tags": [
+          "organizations"
+        ]
+      },
+      "get": {
+        "operationId": "listOrganizations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganizationResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Organization records.",
+        "tags": [
+          "organizations"
+        ]
+      }
+    },
+    "/organizations/{id}": {
+      "get": {
+        "operationId": "getOrganization",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Organization ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found."
+          }
+        },
+        "summary": "Get a Organization by ID.",
+        "tags": [
+          "organizations"
+        ]
+      },
+      "patch": {
+        "operationId": "updateOrganization",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Organization ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrganizationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found."
+          }
+        },
+        "summary": "Update a Organization.",
+        "tags": [
+          "organizations"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOrganization",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Organization ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Organization deleted."
+          },
+          "404": {
+            "description": "Organization not found."
+          }
+        },
+        "summary": "Delete a Organization.",
+        "tags": [
+          "organizations"
+        ]
+      }
+    },
     "/permissions": {
       "post": {
         "operationId": "createPermission",
@@ -5698,20 +5857,20 @@
           }
         }
       },
-      "CreateGroupDto": {
+      "OrganizationResponseDto": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this group."
+            "description": "Globally unique identifier for this organization."
           },
           "ifsId": {
             "type": "string",
-            "description": "IFS system identifier for this Group."
+            "description": "IFS system identifier for this Organization."
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this group."
+            "description": "IFS entity category/type for this organization."
           },
           "basedOn": {
             "type": "string",
@@ -5724,12 +5883,12 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this group record was created.",
+            "description": "Timestamp when this organization record was created.",
             "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
-            "description": "Timestamp when this group record was last updated.",
+            "description": "Timestamp when this organization record was last updated.",
             "format": "date-time"
           }
         },
@@ -5766,6 +5925,36 @@
             "description": "URL for documentation about this entity.",
             "format": "uri"
           },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of this group.",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "Purpose and context of this group."
+          },
+          "members": {
+            "description": "Members directly belonging to this group. Membership alone does not grant delegated authority.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "organizations": {
+            "description": "Organizations directly belonging to this group. Inclusion alone does not grant delegated authority.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationResponseDto"
+            }
+          },
+          "groups": {
+            "description": "Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupResponseDto"
+            }
+          },
           "createdAt": {
             "type": "string",
             "description": "Timestamp when this group record was created.",
@@ -5782,6 +5971,82 @@
           "ifsId",
           "entityType",
           "entityDocumentationUrl",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateGroupDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this group."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Group."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this group."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of this group.",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "Purpose and context of this group."
+          },
+          "members": {
+            "description": "Members directly belonging to this group. Membership alone does not grant delegated authority.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "organizations": {
+            "description": "Organizations directly belonging to this group. Inclusion alone does not grant delegated authority.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationResponseDto"
+            }
+          },
+          "groups": {
+            "description": "Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupResponseDto"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this group record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this group record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "name",
           "createdAt",
           "updatedAt"
         ]
@@ -5809,6 +6074,36 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of this group.",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "Purpose and context of this group."
+          },
+          "members": {
+            "description": "Members directly belonging to this group. Membership alone does not grant delegated authority.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberResponseDto"
+            }
+          },
+          "organizations": {
+            "description": "Organizations directly belonging to this group. Inclusion alone does not grant delegated authority.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationResponseDto"
+            }
+          },
+          "groups": {
+            "description": "Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupResponseDto"
+            }
           },
           "createdAt": {
             "type": "string",
@@ -6265,6 +6560,86 @@
                 "$ref": "#/components/schemas/MemberResponseDto"
               }
             ]
+          }
+        }
+      },
+      "CreateOrganizationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this organization."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Organization."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this organization."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this organization record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this organization record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateOrganizationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this organization."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Organization."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this organization."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this organization record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this organization record was last updated.",
+            "format": "date-time"
           }
         }
       },
