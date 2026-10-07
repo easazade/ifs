@@ -1,10 +1,12 @@
 {
-  "id": "aG88rL",
-  "ifsId": "A9CEizp",
+  "id": "1001",
+  "ifsId": "1001",
   "entityType": "Permission",
-  "basedOn": "eyVrl",
-  "entityDocumentationUrl": "https://test.org/data/v1",
-  "actionIds": [],
+  "basedOn": "1000",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/Permission",
+  "actionIds": [
+    "Example"
+  ],
   "scopeId": "SC",
   "state": "drafted",
   "createdAt": "2007-10-05T07:24:14Z",

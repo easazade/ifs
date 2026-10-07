@@ -1,9 +1,9 @@
 {
-  "id": "aG88rL",
-  "ifsId": "A9CEizp",
-  "entityType": "E",
-  "basedOn": "Vrlc",
-  "entityDocumentationUrl": "https://test.org/v1/v1/items",
+  "id": "1001",
+  "ifsId": "1001",
+  "entityType": "Decision",
+  "basedOn": "1000",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/Decision",
   "subject": "VlSCV9",
   "state": "open",
   "previousRevision": {

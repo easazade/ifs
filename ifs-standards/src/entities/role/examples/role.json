@@ -1,8 +1,8 @@
 {
-  "id": "a08ff49b-6f77-4263-8716-c43069c43a8c",
-  "ifsId": "SC",
+  "id": "1001",
+  "ifsId": "1001",
   "entityType": "Role",
-  "entityDocumentationUrl": "https://example.com/api/v1/users",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/Role",
   "name": "jT",
   "memberId": "q",
   "scopeId": "",

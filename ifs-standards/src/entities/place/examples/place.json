@@ -1,23 +1,41 @@
 {
-  "id": "aG88rL",
-  "ifsId": "A9CEizp",
-  "entityType": "E",
-  "basedOn": "Vrlc",
-  "entityDocumentationUrl": "https://test.org/v1/v1/items",
+  "id": "1001",
+  "ifsId": "1001",
+  "entityType": "Place",
+  "basedOn": "1000",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/Place",
   "createdAt": "2016-10-06T17:27:46Z",
   "updatedAt": "2030-03-24T03:19:24Z",
   "name": "jT",
-  "geographicArea": {
-    "id": "dM",
-    "ifsId": "o9SysP75Q",
-    "entityType": "Z5hc1s2F6R",
-    "basedOn": "6i8kyhy",
-    "entityDocumentationUrl": "https://test.org/items/api",
-    "createdAt": "2025-11-09T03:18:53Z",
-    "updatedAt": "2008-02-19T13:19:07Z",
-    "polygons": []
-  },
-  "owners": [
-    "OhFGnXp"
+  "coordinate": "hqdM1o",
+  "roles": [
+    {
+      "id": "afebede1-0d4e-48eb-8af2-f26165a881cd",
+      "ifsId": "ks3",
+      "entityType": "Role",
+      "basedOn": "O",
+      "entityDocumentationUrl": "https://example.com/api",
+      "name": "",
+      "description": "OhFGnXp",
+      "memberId": "71alb9uS1f",
+      "scopeId": "1X",
+      "scope": {
+        "id": "",
+        "ifsId": "",
+        "entityType": "Scope",
+        "entityDocumentationUrl": "",
+        "name": "",
+        "type": null,
+        "state": null,
+        "createdAt": "",
+        "updatedAt": "",
+        "groups": []
+      },
+      "permissions": [],
+      "state": "active",
+      "createdAt": "2016-04-27T07:54:51Z",
+      "updatedAt": "2019-09-08T09:18:12Z",
+      "expiresAt": "2028-12-05T07:04:02Z"
+    }
   ]
 }

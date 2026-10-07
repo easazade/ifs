@@ -1,14 +1,16 @@
 {
-  "id": "aG88rL",
-  "ifsId": "A9CEizp",
+  "id": "1001",
+  "ifsId": "1001",
   "entityType": "Change",
-  "basedOn": "eyVrl",
-  "entityDocumentationUrl": "https://test.org/data/v1",
+  "basedOn": "1000",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/Change",
   "title": "OH",
   "description": "lSCV9oUj",
   "summary": "pjTJ",
   "reason": "q",
-  "changes": [],
+  "changes": [
+    "Example"
+  ],
   "commentsUrl": "https://demo.net/v1/data",
   "authors": [
     {
@@ -245,7 +247,9 @@
     "createdAt": "2029-01-27T22:01:49Z",
     "updatedAt": "2016-07-12T02:05:41Z"
   },
-  "reviewers": [],
+  "reviewers": [
+    "Example"
+  ],
   "status": "rejected",
   "number": 687,
   "merged": true,

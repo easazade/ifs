@@ -1,8 +1,8 @@
 {
-  "id": "aG88rL",
-  "ifsId": "A9CEizp",
+  "id": "1001",
+  "ifsId": "1001",
   "entityType": "Member",
-  "entityDocumentationUrl": "https://test.org/users",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/Member",
   "name": "rlcAKXsm",
   "roles": [
     {

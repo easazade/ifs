@@ -33,8 +33,48 @@ for (const schemaDir of schemaDirs) {
     // json-schema-faker needs a parsed schema object, and generate() returns a Promise.
     const schema = JSON.parse(schemaFileContent) as JsonSchema;
     const fakeObject = await generate(schema, { refResolver: resolveLocalSchemaReferenceFirst });
+    const entityType = toPascalCase(schemaName);
+    const documentationUrl = `https://ifs-standards.org/entities/${entityType}`;
 
-    // Node's writeFile creates the file, but not missing parent folders (like Dart's File.writeAsString without recursive directory creation).
+    if (typeof fakeObject === 'object' && fakeObject !== null && !Array.isArray(fakeObject)) {
+      const example = fakeObject as Record<string, unknown>;
+      example.id = '1001';
+      example.ifsId = '1001';
+      example.entityType = entityType;
+      example.entityDocumentationUrl = documentationUrl;
+      if ('basedOn' in example) example.basedOn = '1000';
+
+      // Faker may choose empty arrays even when they represent the entity's key data.
+      for (const [property, value] of Object.entries(example)) {
+        if (Array.isArray(value) && value.length === 0) {
+          if (property === 'polygons' && entityType === 'GeographicArea') {
+            example[property] = [
+              [
+                [
+                  [-122.42, 37.77],
+                  [-122.41, 37.77],
+                  [-122.41, 37.78],
+                  [-122.42, 37.77],
+                ],
+              ],
+            ];
+            continue;
+          }
+
+          const propertySchema = (schema as Exclude<JsonSchema, boolean>).properties?.[property] as
+            | JsonSchema
+            | undefined;
+          const objectPropertySchema = propertySchema && typeof propertySchema === 'object' ? propertySchema : undefined;
+          example[property] = [
+            objectPropertySchema?.items
+              ? exampleValue(objectPropertySchema.items as Exclude<JsonSchema, boolean>)
+              : 'Example',
+          ];
+        }
+      }
+    }
+
+    // Node's writeFile creates the file, but not missing parent folders.
     await mkdir(dirname(exampleObjectPath), { recursive: true });
     await writeFile(exampleObjectPath, JSON.stringify(fakeObject, null, 2));
   } catch (error) {
@@ -173,6 +213,29 @@ function getResolutionAttempts(url: string): ResolutionAttempts {
 
 function stripHash(url: string) {
   return url.split('#', 1)[0] ?? url;
+}
+
+function toPascalCase(value: string) {
+  return value
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+}
+
+function exampleValue(schema: Exclude<JsonSchema, boolean>): unknown {
+  if (schema.type === 'array') {
+    return [exampleValue(schema.items as Exclude<JsonSchema, boolean>)];
+  }
+  if (schema.type === 'object') {
+    return Object.fromEntries(
+      Object.entries(schema.properties ?? {}).map(([key, value]) => [key, exampleValue(value as Exclude<JsonSchema, boolean>)])
+    );
+  }
+  if (schema.type === 'number' || schema.type === 'integer') return 1;
+  if (schema.type === 'boolean') return true;
+  if (schema.enum?.length) return schema.enum[0];
+  if (schema.format === 'date-time') return '2025-01-01T00:00:00Z';
+  return 'Example';
 }
 
 async function fileExists(path: string) {

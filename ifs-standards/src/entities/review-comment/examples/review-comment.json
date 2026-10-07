@@ -1,9 +1,9 @@
 {
-  "id": "aG88rL",
-  "ifsId": "A9CEizp",
+  "id": "1001",
+  "ifsId": "1001",
   "entityType": "ReviewComment",
-  "basedOn": "eyVrl",
-  "entityDocumentationUrl": "https://test.org/data/v1",
+  "basedOn": "1000",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/ReviewComment",
   "createdAt": "2006-08-17T18:11:43Z",
   "updatedAt": "2014-10-31T05:45:09Z"
 }
