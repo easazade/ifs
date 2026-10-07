@@ -2,11 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PermissionResponseDto } from '../../permission/dto/permission-response.dto.js';
 
 export class CreateMemberDto {
-  @ApiProperty({ description: 'Globally unique identifier for this member.' })
+  @ApiProperty({
+    description: 'Globally unique identifier for this member.',
+    pattern: '^Member/[^/\\s]+$',
+  })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Member.' })
-  ifsId: string;
 
   @ApiProperty({
     description:

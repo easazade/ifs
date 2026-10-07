@@ -4,11 +4,9 @@ import { PermissionResponseDto } from '../../permission/dto/permission-response.
 export class DelegationResponseDto {
   @ApiProperty({
     description: 'Globally unique identifier for this delegation.',
+    pattern: '^Delegation/[^/\\s]+$',
   })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Delegation.' })
-  ifsId: string;
 
   @ApiProperty({
     description: 'Entity category for this object, normally Delegation.',
@@ -17,6 +15,7 @@ export class DelegationResponseDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 
@@ -41,6 +40,7 @@ export class DelegationResponseDto {
   @ApiProperty({
     description:
       'Identifier of the permission delegated from the delegator to the delegate.',
+    pattern: '^Permission/[^/\\s]+$',
   })
   permissionId: string;
 
@@ -52,17 +52,16 @@ export class DelegationResponseDto {
   permission?: PermissionResponseDto;
 
   @ApiProperty({
-    description: 'Reference to the role or member delegating the permission.',
-    format: 'ifs-ref',
+    description: 'ID of the role or member delegating the permission.',
+    pattern: '^(Role|Member)/[^/\\s]+$',
   })
-  delegatorRef: string;
+  delegatorId: string;
 
   @ApiProperty({
-    description:
-      'Reference to the role or member receiving the delegated permission.',
-    format: 'ifs-ref',
+    description: 'ID of the role or member receiving the delegated permission.',
+    pattern: '^(Role|Member)/[^/\\s]+$',
   })
-  delegateRef: string;
+  delegateId: string;
 
   @ApiProperty({
     description: 'Lifecycle state of the delegation.',

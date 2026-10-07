@@ -1,11 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ProtocolResponseDto {
-  @ApiProperty({ description: 'identifier protocol.' })
+  @ApiProperty({
+    description: 'identifier protocol.',
+    pattern: '^Protocol/[^/\\s]+$',
+  })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Protocol.' })
-  ifsId: string;
 
   @ApiProperty({
     description:
@@ -16,6 +16,7 @@ export class ProtocolResponseDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 

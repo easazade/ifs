@@ -3,11 +3,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class OrganizationResponseDto {
   @ApiProperty({
     description: 'Globally unique identifier for this organization.',
+    pattern: '^Organization/[^/\\s]+$',
   })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Organization.' })
-  ifsId: string;
 
   @ApiProperty({
     description: 'IFS entity category/type for this organization.',
@@ -16,6 +14,7 @@ export class OrganizationResponseDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 

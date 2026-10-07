@@ -5,12 +5,9 @@ import { ScopeResponseDto } from '../../scope/dto/scope-response.dto.js';
 export class RoleResponseDto {
   @ApiProperty({
     description: 'Globally unique identifier for this role.',
-    format: 'uuid',
+    pattern: '^Role/[^/\\s]+$',
   })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Role.' })
-  ifsId: string;
 
   @ApiProperty({
     description: 'Entity type discriminator. Always "Role" for Role entities.',
@@ -20,6 +17,7 @@ export class RoleResponseDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 
@@ -40,11 +38,13 @@ export class RoleResponseDto {
 
   @ApiProperty({
     description: 'Identifier of the member acting through this role.',
+    pattern: '^Member/[^/\\s]+$',
   })
   memberId: string;
 
   @ApiProperty({
     description: 'Identifier of the scope where this role has authority.',
+    pattern: '^Scope/[^/\\s]+$',
   })
   scopeId: string;
 

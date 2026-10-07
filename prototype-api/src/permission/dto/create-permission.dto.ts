@@ -4,11 +4,9 @@ import { ActionResponseDto } from '../../action/dto/action-response.dto.js';
 export class CreatePermissionDto {
   @ApiProperty({
     description: 'Globally unique identifier for this permission.',
+    pattern: '^Permission/[^/\\s]+$',
   })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Permission.' })
-  ifsId: string;
 
   @ApiProperty({
     description:
@@ -19,6 +17,7 @@ export class CreatePermissionDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 
@@ -42,17 +41,20 @@ export class CreatePermissionDto {
 
   @ApiPropertyOptional({
     description: 'Identifier of the member receiving this permission.',
+    pattern: '^Member/[^/\\s]+$',
   })
   memberId?: string;
 
   @ApiPropertyOptional({
     description: 'Identifier of the role receiving this permission.',
+    pattern: '^Role/[^/\\s]+$',
   })
   roleId?: string;
 
   @ApiProperty({
     description:
       'Identifier of the scope object where this permission applies.',
+    pattern: '^Scope/[^/\\s]+$',
   })
   scopeId: string;
 

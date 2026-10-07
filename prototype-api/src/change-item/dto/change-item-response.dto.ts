@@ -3,11 +3,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class ChangeItemResponseDto {
   @ApiProperty({
     description: 'Globally unique identifier for this change item.',
+    pattern: '^ChangeItem/[^/\\s]+$',
   })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this ChangeItem.' })
-  ifsId: string;
 
   @ApiProperty({
     description:
@@ -18,6 +16,7 @@ export class ChangeItemResponseDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 
@@ -41,30 +40,27 @@ export class ChangeItemResponseDto {
 
   @ApiProperty({
     description:
-      'Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.',
-    format: 'ifs-ref',
+      'ID of the logical object being changed. Null for create operations.',
     nullable: true,
-    default: 'ifs://object/current-target',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
-  targetRef: string | null;
+  targetId: string | null;
 
   @ApiProperty({
     description:
-      'IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.',
-    format: 'ifs-ref',
+      'ID of the active version observed when authored, for conflict detection. Null for create operations.',
     nullable: true,
-    default: 'ifs://object/current-target@v1',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
-  baseRef: string | null;
+  baseId: string | null;
 
   @ApiProperty({
     description:
-      'IFS reference to the proposed object or version produced by this change item. Null for delete operations.',
-    format: 'ifs-ref',
+      'ID of the proposed object or version. Null for delete operations.',
     nullable: true,
-    default: 'ifs://change/change_1/proposed/current-target',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
-  proposedRef: string | null;
+  proposedId: string | null;
 
   @ApiPropertyOptional({
     description: 'Optional human-readable note explaining this specific item.',

@@ -1,11 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class RuleResponseDto {
-  @ApiProperty({ description: 'Globally unique identifier for this rule.' })
+  @ApiProperty({
+    description: 'Globally unique identifier for this rule.',
+    pattern: '^Rule/[^/\\s]+$',
+  })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Rule.' })
-  ifsId: string;
 
   @ApiProperty({
     description: 'Entity category for this object, normally Rule.',
@@ -14,6 +14,7 @@ export class RuleResponseDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 

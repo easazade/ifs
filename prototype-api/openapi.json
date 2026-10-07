@@ -3220,11 +3220,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this action."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Action."
+            "description": "Globally unique identifier for this action.",
+            "pattern": "^Action/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -3232,7 +3229,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -3292,7 +3290,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -3309,11 +3306,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this action."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Action."
+            "description": "Globally unique identifier for this action.",
+            "pattern": "^Action/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -3321,7 +3315,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -3381,7 +3376,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -3398,11 +3392,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this action."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Action."
+            "description": "Globally unique identifier for this action.",
+            "pattern": "^Action/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -3410,7 +3401,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -3474,11 +3466,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this change item."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this ChangeItem."
+            "description": "Globally unique identifier for this change item.",
+            "pattern": "^ChangeItem/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -3489,7 +3478,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -3510,26 +3500,23 @@
             "type": "string",
             "description": "Type of operation this item proposes for the target object."
           },
-          "targetRef": {
+          "targetId": {
             "type": "string",
             "nullable": true,
-            "description": "Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.",
-            "format": "ifs-ref",
-            "default": "ifs://object/current-target"
+            "description": "ID of the logical object being changed. Null for create operations.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
-          "baseRef": {
+          "baseId": {
             "type": "string",
             "nullable": true,
-            "description": "IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.",
-            "format": "ifs-ref",
-            "default": "ifs://object/current-target@v1"
+            "description": "ID of the active version observed when authored, for conflict detection. Null for create operations.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
-          "proposedRef": {
+          "proposedId": {
             "type": "string",
             "nullable": true,
-            "description": "IFS reference to the proposed object or version produced by this change item. Null for delete operations.",
-            "format": "ifs-ref",
-            "default": "ifs://change/change_1/proposed/current-target"
+            "description": "ID of the proposed object or version. Null for delete operations.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "description": {
             "type": "string",
@@ -3548,14 +3535,13 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "resourceType",
           "operation",
-          "targetRef",
-          "baseRef",
-          "proposedRef",
+          "targetId",
+          "baseId",
+          "proposedId",
           "createdAt",
           "updatedAt"
         ]
@@ -3566,11 +3552,7 @@
           "id": {
             "type": "string",
             "description": "Globally unique identifier for this scope.",
-            "format": "uuid"
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Scope."
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -3581,7 +3563,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -3626,7 +3609,8 @@
           },
           "parentScopeId": {
             "type": "string",
-            "description": "Identifier of a broader parent scope, when this scope is nested inside another scope."
+            "description": "Identifier of a broader parent scope, when this scope is nested inside another scope.",
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "childScopeIds": {
             "description": "Identifiers of narrower child scopes contained by this scope.",
@@ -3653,7 +3637,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "name",
@@ -3666,11 +3649,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this permission."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Permission."
+            "description": "Globally unique identifier for this permission.",
+            "pattern": "^Permission/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -3681,7 +3661,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -3704,15 +3685,18 @@
           },
           "memberId": {
             "type": "string",
-            "description": "Identifier of the member receiving this permission."
+            "description": "Identifier of the member receiving this permission.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "roleId": {
             "type": "string",
-            "description": "Identifier of the role receiving this permission."
+            "description": "Identifier of the role receiving this permission.",
+            "pattern": "^Role/[^/\\s]+$"
           },
           "scopeId": {
             "type": "string",
-            "description": "Identifier of the scope object where this permission applies."
+            "description": "Identifier of the scope object where this permission applies.",
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "scope": {
             "type": "object",
@@ -3747,7 +3731,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "actionIds",
@@ -3763,11 +3746,7 @@
           "id": {
             "type": "string",
             "description": "Globally unique identifier for this role.",
-            "format": "uuid"
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Role."
+            "pattern": "^Role/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -3778,7 +3757,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -3795,11 +3775,13 @@
           },
           "memberId": {
             "type": "string",
-            "description": "Identifier of the member acting through this role."
+            "description": "Identifier of the member acting through this role.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "scopeId": {
             "type": "string",
-            "description": "Identifier of the scope where this role has authority."
+            "description": "Identifier of the scope where this role has authority.",
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "scope": {
             "description": "Scope entity describing where this role applies.",
@@ -3846,7 +3828,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "name",
@@ -3864,11 +3845,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this member."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Member."
+            "description": "Globally unique identifier for this member.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -3916,7 +3894,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "name",
@@ -3932,11 +3909,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this vote."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Vote."
+            "description": "Globally unique identifier for this vote.",
+            "pattern": "^Vote/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -3944,7 +3918,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -3963,11 +3938,13 @@
           },
           "decisionId": {
             "type": "string",
-            "description": "Identifier of the decision this vote participates in."
+            "description": "Identifier of the decision this vote participates in.",
+            "pattern": "^Decision/[^/\\s]+$"
           },
           "memberId": {
             "type": "string",
-            "description": "Identifier of the member who cast or owns this vote."
+            "description": "Identifier of the member who cast or owns this vote.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "value": {
             "type": "string",
@@ -3975,12 +3952,12 @@
           },
           "previousRevisionId": {
             "type": "string",
-            "description": "Identifier of the previous revision of this vote, if this vote amends an earlier vote."
+            "description": "Identifier of the previous revision of this vote, if this vote amends an earlier vote.",
+            "pattern": "^Vote/[^/\\s]+$"
           }
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -3995,11 +3972,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this rule."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Rule."
+            "description": "Globally unique identifier for this rule.",
+            "pattern": "^Rule/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -4007,7 +3981,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -4027,7 +4002,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -4039,11 +4013,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this decision."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Decision."
+            "description": "Globally unique identifier for this decision.",
+            "pattern": "^Decision/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -4051,7 +4022,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -4060,8 +4032,8 @@
           },
           "subject": {
             "type": "string",
-            "description": "Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources.",
-            "format": "ifs-ref"
+            "description": "ID of the object, proposal, rule, resource, or question being decided.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "state": {
             "enum": [
@@ -4075,7 +4047,8 @@
           },
           "previousRevisionId": {
             "type": "string",
-            "description": "Id of previous revision of this decision, If this decision is a modified version of another decision."
+            "description": "Id of previous revision of this decision, If this decision is a modified version of another decision.",
+            "pattern": "^Decision/[^/\\s]+$"
           },
           "previousRevision": {
             "description": "Current outcome of the decision, if the decision has produced an outcome at least once.",
@@ -4181,7 +4154,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "subject",
@@ -4202,11 +4174,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this comment."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Comment."
+            "description": "Globally unique identifier for this comment.",
+            "pattern": "^Comment/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -4217,7 +4186,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -4237,7 +4207,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -4249,11 +4218,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this review comment."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this ReviewComment."
+            "description": "Globally unique identifier for this review comment.",
+            "pattern": "^ReviewComment/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -4264,7 +4230,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -4284,7 +4251,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -4296,11 +4262,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this change."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Change."
+            "description": "Globally unique identifier for this change.",
+            "pattern": "^Change/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -4311,7 +4274,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -4377,7 +4341,8 @@
           },
           "mainAuthorId": {
             "type": "string",
-            "description": "Identifier of the primary member responsible for this change."
+            "description": "Identifier of the primary member responsible for this change.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "mainAuthor": {
             "description": "Primary member responsible for this change.",
@@ -4467,7 +4432,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "title",
@@ -4490,11 +4454,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this change."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Change."
+            "description": "Globally unique identifier for this change.",
+            "pattern": "^Change/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -4505,7 +4466,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -4571,7 +4533,8 @@
           },
           "mainAuthorId": {
             "type": "string",
-            "description": "Identifier of the primary member responsible for this change."
+            "description": "Identifier of the primary member responsible for this change.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "mainAuthor": {
             "description": "Primary member responsible for this change.",
@@ -4661,7 +4624,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "title",
@@ -4684,11 +4646,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this change."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Change."
+            "description": "Globally unique identifier for this change.",
+            "pattern": "^Change/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -4699,7 +4658,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -4765,7 +4725,8 @@
           },
           "mainAuthorId": {
             "type": "string",
-            "description": "Identifier of the primary member responsible for this change."
+            "description": "Identifier of the primary member responsible for this change.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "mainAuthor": {
             "description": "Primary member responsible for this change.",
@@ -4859,11 +4820,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this change item."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this ChangeItem."
+            "description": "Globally unique identifier for this change item.",
+            "pattern": "^ChangeItem/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -4874,7 +4832,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -4895,26 +4854,23 @@
             "type": "string",
             "description": "Type of operation this item proposes for the target object."
           },
-          "targetRef": {
+          "targetId": {
             "type": "string",
             "nullable": true,
-            "description": "Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.",
-            "format": "ifs-ref",
-            "default": "ifs://object/current-target"
+            "description": "ID of the logical object being changed. Null for create operations.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
-          "baseRef": {
+          "baseId": {
             "type": "string",
             "nullable": true,
-            "description": "IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.",
-            "format": "ifs-ref",
-            "default": "ifs://object/current-target@v1"
+            "description": "ID of the active version observed when authored, for conflict detection. Null for create operations.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
-          "proposedRef": {
+          "proposedId": {
             "type": "string",
             "nullable": true,
-            "description": "IFS reference to the proposed object or version produced by this change item. Null for delete operations.",
-            "format": "ifs-ref",
-            "default": "ifs://change/change_1/proposed/current-target"
+            "description": "ID of the proposed object or version. Null for delete operations.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "description": {
             "type": "string",
@@ -4933,14 +4889,13 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "resourceType",
           "operation",
-          "targetRef",
-          "baseRef",
-          "proposedRef",
+          "targetId",
+          "baseId",
+          "proposedId",
           "createdAt",
           "updatedAt"
         ]
@@ -4950,11 +4905,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this change item."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this ChangeItem."
+            "description": "Globally unique identifier for this change item.",
+            "pattern": "^ChangeItem/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -4965,7 +4917,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -4986,26 +4939,23 @@
             "type": "string",
             "description": "Type of operation this item proposes for the target object."
           },
-          "targetRef": {
+          "targetId": {
             "type": "string",
             "nullable": true,
-            "description": "Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.",
-            "format": "ifs-ref",
-            "default": "ifs://object/current-target"
+            "description": "ID of the logical object being changed. Null for create operations.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
-          "baseRef": {
+          "baseId": {
             "type": "string",
             "nullable": true,
-            "description": "IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.",
-            "format": "ifs-ref",
-            "default": "ifs://object/current-target@v1"
+            "description": "ID of the active version observed when authored, for conflict detection. Null for create operations.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
-          "proposedRef": {
+          "proposedId": {
             "type": "string",
             "nullable": true,
-            "description": "IFS reference to the proposed object or version produced by this change item. Null for delete operations.",
-            "format": "ifs-ref",
-            "default": "ifs://change/change_1/proposed/current-target"
+            "description": "ID of the proposed object or version. Null for delete operations.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "description": {
             "type": "string",
@@ -5028,11 +4978,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this comment."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Comment."
+            "description": "Globally unique identifier for this comment.",
+            "pattern": "^Comment/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5043,7 +4990,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5063,7 +5011,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -5075,11 +5022,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this comment."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Comment."
+            "description": "Globally unique identifier for this comment.",
+            "pattern": "^Comment/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5090,7 +5034,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5114,11 +5059,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this decision."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Decision."
+            "description": "Globally unique identifier for this decision.",
+            "pattern": "^Decision/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5126,7 +5068,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5135,8 +5078,8 @@
           },
           "subject": {
             "type": "string",
-            "description": "Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources.",
-            "format": "ifs-ref"
+            "description": "ID of the object, proposal, rule, resource, or question being decided.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "state": {
             "enum": [
@@ -5150,7 +5093,8 @@
           },
           "previousRevisionId": {
             "type": "string",
-            "description": "Id of previous revision of this decision, If this decision is a modified version of another decision."
+            "description": "Id of previous revision of this decision, If this decision is a modified version of another decision.",
+            "pattern": "^Decision/[^/\\s]+$"
           },
           "previousRevision": {
             "description": "Current outcome of the decision, if the decision has produced an outcome at least once.",
@@ -5256,7 +5200,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "subject",
@@ -5277,11 +5220,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this decision."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Decision."
+            "description": "Globally unique identifier for this decision.",
+            "pattern": "^Decision/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5289,7 +5229,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5298,8 +5239,8 @@
           },
           "subject": {
             "type": "string",
-            "description": "Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources.",
-            "format": "ifs-ref"
+            "description": "ID of the object, proposal, rule, resource, or question being decided.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "state": {
             "enum": [
@@ -5313,7 +5254,8 @@
           },
           "previousRevisionId": {
             "type": "string",
-            "description": "Id of previous revision of this decision, If this decision is a modified version of another decision."
+            "description": "Id of previous revision of this decision, If this decision is a modified version of another decision.",
+            "pattern": "^Decision/[^/\\s]+$"
           },
           "previousRevision": {
             "description": "Current outcome of the decision, if the decision has produced an outcome at least once.",
@@ -5423,11 +5365,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this delegation."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Delegation."
+            "description": "Globally unique identifier for this delegation.",
+            "pattern": "^Delegation/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5435,7 +5374,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5454,7 +5394,8 @@
           },
           "permissionId": {
             "type": "string",
-            "description": "Identifier of the permission delegated from the delegator to the delegate."
+            "description": "Identifier of the permission delegated from the delegator to the delegate.",
+            "pattern": "^Permission/[^/\\s]+$"
           },
           "permission": {
             "description": "Permission entity represented by permissionId when expanded by an implementation.",
@@ -5464,15 +5405,15 @@
               }
             ]
           },
-          "delegatorRef": {
+          "delegatorId": {
             "type": "string",
-            "description": "Reference to the role or member delegating the permission.",
-            "format": "ifs-ref"
+            "description": "ID of the role or member delegating the permission.",
+            "pattern": "^(Role|Member)/[^/\\s]+$"
           },
-          "delegateRef": {
+          "delegateId": {
             "type": "string",
-            "description": "Reference to the role or member receiving the delegated permission.",
-            "format": "ifs-ref"
+            "description": "ID of the role or member receiving the delegated permission.",
+            "pattern": "^(Role|Member)/[^/\\s]+$"
           },
           "state": {
             "enum": [
@@ -5496,13 +5437,12 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
           "permissionId",
-          "delegatorRef",
-          "delegateRef",
+          "delegatorId",
+          "delegateId",
           "state"
         ]
       },
@@ -5511,11 +5451,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this delegation."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Delegation."
+            "description": "Globally unique identifier for this delegation.",
+            "pattern": "^Delegation/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5523,7 +5460,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5542,7 +5480,8 @@
           },
           "permissionId": {
             "type": "string",
-            "description": "Identifier of the permission delegated from the delegator to the delegate."
+            "description": "Identifier of the permission delegated from the delegator to the delegate.",
+            "pattern": "^Permission/[^/\\s]+$"
           },
           "permission": {
             "description": "Permission entity represented by permissionId when expanded by an implementation.",
@@ -5552,15 +5491,15 @@
               }
             ]
           },
-          "delegatorRef": {
+          "delegatorId": {
             "type": "string",
-            "description": "Reference to the role or member delegating the permission.",
-            "format": "ifs-ref"
+            "description": "ID of the role or member delegating the permission.",
+            "pattern": "^(Role|Member)/[^/\\s]+$"
           },
-          "delegateRef": {
+          "delegateId": {
             "type": "string",
-            "description": "Reference to the role or member receiving the delegated permission.",
-            "format": "ifs-ref"
+            "description": "ID of the role or member receiving the delegated permission.",
+            "pattern": "^(Role|Member)/[^/\\s]+$"
           },
           "state": {
             "enum": [
@@ -5584,13 +5523,12 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
           "permissionId",
-          "delegatorRef",
-          "delegateRef",
+          "delegatorId",
+          "delegateId",
           "state"
         ]
       },
@@ -5599,11 +5537,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this delegation."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Delegation."
+            "description": "Globally unique identifier for this delegation.",
+            "pattern": "^Delegation/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5611,7 +5546,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5630,7 +5566,8 @@
           },
           "permissionId": {
             "type": "string",
-            "description": "Identifier of the permission delegated from the delegator to the delegate."
+            "description": "Identifier of the permission delegated from the delegator to the delegate.",
+            "pattern": "^Permission/[^/\\s]+$"
           },
           "permission": {
             "description": "Permission entity represented by permissionId when expanded by an implementation.",
@@ -5640,15 +5577,15 @@
               }
             ]
           },
-          "delegatorRef": {
+          "delegatorId": {
             "type": "string",
-            "description": "Reference to the role or member delegating the permission.",
-            "format": "ifs-ref"
+            "description": "ID of the role or member delegating the permission.",
+            "pattern": "^(Role|Member)/[^/\\s]+$"
           },
-          "delegateRef": {
+          "delegateId": {
             "type": "string",
-            "description": "Reference to the role or member receiving the delegated permission.",
-            "format": "ifs-ref"
+            "description": "ID of the role or member receiving the delegated permission.",
+            "pattern": "^(Role|Member)/[^/\\s]+$"
           },
           "state": {
             "enum": [
@@ -5676,11 +5613,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this geographic area."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this GeographicArea."
+            "description": "Globally unique identifier for this geographic area.",
+            "pattern": "^GeographicArea/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5688,7 +5622,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5728,7 +5663,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -5741,11 +5675,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this geographic area."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this GeographicArea."
+            "description": "Globally unique identifier for this geographic area.",
+            "pattern": "^GeographicArea/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5753,7 +5684,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5793,7 +5725,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -5806,11 +5737,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this geographic area."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this GeographicArea."
+            "description": "Globally unique identifier for this geographic area.",
+            "pattern": "^GeographicArea/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5818,7 +5746,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5862,11 +5791,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this organization."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Organization."
+            "description": "Globally unique identifier for this organization.",
+            "pattern": "^Organization/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5874,7 +5800,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5894,7 +5821,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -5906,11 +5832,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this group."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Group."
+            "description": "Globally unique identifier for this group.",
+            "pattern": "^Group/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5918,7 +5841,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -5968,7 +5892,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "name",
@@ -5981,11 +5904,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this group."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Group."
+            "description": "Globally unique identifier for this group.",
+            "pattern": "^Group/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -5993,7 +5913,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6043,7 +5964,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "name",
@@ -6056,11 +5976,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this group."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Group."
+            "description": "Globally unique identifier for this group.",
+            "pattern": "^Group/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6068,7 +5985,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6122,11 +6040,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this label."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Label."
+            "description": "Globally unique identifier for this label.",
+            "pattern": "^Label/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6137,7 +6052,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6157,7 +6073,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -6169,11 +6084,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this label."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Label."
+            "description": "Globally unique identifier for this label.",
+            "pattern": "^Label/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6184,7 +6096,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6204,7 +6117,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -6216,11 +6128,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this label."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Label."
+            "description": "Globally unique identifier for this label.",
+            "pattern": "^Label/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6231,7 +6140,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6255,11 +6165,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this member."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Member."
+            "description": "Globally unique identifier for this member.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6300,7 +6207,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "name",
@@ -6315,11 +6221,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this member."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Member."
+            "description": "Globally unique identifier for this member.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6364,11 +6267,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this observation."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Observation."
+            "description": "Globally unique identifier for this observation.",
+            "pattern": "^Observation/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6376,7 +6276,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6420,7 +6321,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -6436,11 +6336,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this observation."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Observation."
+            "description": "Globally unique identifier for this observation.",
+            "pattern": "^Observation/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6448,7 +6345,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6492,7 +6390,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -6508,11 +6405,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this observation."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Observation."
+            "description": "Globally unique identifier for this observation.",
+            "pattern": "^Observation/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6520,7 +6414,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6568,11 +6463,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this organization."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Organization."
+            "description": "Globally unique identifier for this organization.",
+            "pattern": "^Organization/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6580,7 +6472,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6600,7 +6493,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -6612,11 +6504,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this organization."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Organization."
+            "description": "Globally unique identifier for this organization.",
+            "pattern": "^Organization/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6624,7 +6513,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6648,11 +6538,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this permission."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Permission."
+            "description": "Globally unique identifier for this permission.",
+            "pattern": "^Permission/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6663,7 +6550,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6686,15 +6574,18 @@
           },
           "memberId": {
             "type": "string",
-            "description": "Identifier of the member receiving this permission."
+            "description": "Identifier of the member receiving this permission.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "roleId": {
             "type": "string",
-            "description": "Identifier of the role receiving this permission."
+            "description": "Identifier of the role receiving this permission.",
+            "pattern": "^Role/[^/\\s]+$"
           },
           "scopeId": {
             "type": "string",
-            "description": "Identifier of the scope object where this permission applies."
+            "description": "Identifier of the scope object where this permission applies.",
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "scope": {
             "type": "object",
@@ -6729,7 +6620,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "actionIds",
@@ -6744,11 +6634,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this permission."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Permission."
+            "description": "Globally unique identifier for this permission.",
+            "pattern": "^Permission/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6759,7 +6646,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6782,15 +6670,18 @@
           },
           "memberId": {
             "type": "string",
-            "description": "Identifier of the member receiving this permission."
+            "description": "Identifier of the member receiving this permission.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "roleId": {
             "type": "string",
-            "description": "Identifier of the role receiving this permission."
+            "description": "Identifier of the role receiving this permission.",
+            "pattern": "^Role/[^/\\s]+$"
           },
           "scopeId": {
             "type": "string",
-            "description": "Identifier of the scope object where this permission applies."
+            "description": "Identifier of the scope object where this permission applies.",
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "scope": {
             "type": "object",
@@ -6829,11 +6720,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this place."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Place."
+            "description": "Globally unique identifier for this place.",
+            "pattern": "^Place/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6841,7 +6729,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6875,7 +6764,7 @@
             ]
           },
           "owners": {
-            "description": "References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001).",
+            "description": "IDs of entities that own this place.",
             "type": "array",
             "items": {
               "type": "string"
@@ -6891,7 +6780,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -6905,11 +6793,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this place."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Place."
+            "description": "Globally unique identifier for this place.",
+            "pattern": "^Place/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6917,7 +6802,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -6951,7 +6837,7 @@
             ]
           },
           "owners": {
-            "description": "References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001).",
+            "description": "IDs of entities that own this place.",
             "type": "array",
             "items": {
               "type": "string"
@@ -6967,7 +6853,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -6981,11 +6866,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this place."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Place."
+            "description": "Globally unique identifier for this place.",
+            "pattern": "^Place/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -6993,7 +6875,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7027,7 +6910,7 @@
             ]
           },
           "owners": {
-            "description": "References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001).",
+            "description": "IDs of entities that own this place.",
             "type": "array",
             "items": {
               "type": "string"
@@ -7047,11 +6930,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "identifier protocol."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Protocol."
+            "description": "identifier protocol.",
+            "pattern": "^Protocol/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7062,7 +6942,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7076,7 +6957,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt"
@@ -7087,11 +6967,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "identifier protocol."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Protocol."
+            "description": "identifier protocol.",
+            "pattern": "^Protocol/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7102,7 +6979,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7116,7 +6994,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt"
@@ -7127,11 +7004,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "identifier protocol."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Protocol."
+            "description": "identifier protocol.",
+            "pattern": "^Protocol/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7142,7 +7016,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7160,11 +7035,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this review comment."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this ReviewComment."
+            "description": "Globally unique identifier for this review comment.",
+            "pattern": "^ReviewComment/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7175,7 +7047,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7195,7 +7068,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -7207,11 +7079,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this review comment."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this ReviewComment."
+            "description": "Globally unique identifier for this review comment.",
+            "pattern": "^ReviewComment/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7222,7 +7091,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7247,11 +7117,7 @@
           "id": {
             "type": "string",
             "description": "Globally unique identifier for this role.",
-            "format": "uuid"
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Role."
+            "pattern": "^Role/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7262,7 +7128,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7279,11 +7146,13 @@
           },
           "memberId": {
             "type": "string",
-            "description": "Identifier of the member acting through this role."
+            "description": "Identifier of the member acting through this role.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "scopeId": {
             "type": "string",
-            "description": "Identifier of the scope where this role has authority."
+            "description": "Identifier of the scope where this role has authority.",
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "scope": {
             "description": "Scope entity describing where this role applies.",
@@ -7330,7 +7199,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "name",
@@ -7349,11 +7217,7 @@
           "id": {
             "type": "string",
             "description": "Globally unique identifier for this role.",
-            "format": "uuid"
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Role."
+            "pattern": "^Role/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7364,7 +7228,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7381,11 +7246,13 @@
           },
           "memberId": {
             "type": "string",
-            "description": "Identifier of the member acting through this role."
+            "description": "Identifier of the member acting through this role.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "scopeId": {
             "type": "string",
-            "description": "Identifier of the scope where this role has authority."
+            "description": "Identifier of the scope where this role has authority.",
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "scope": {
             "description": "Scope entity describing where this role applies.",
@@ -7436,11 +7303,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this rule."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Rule."
+            "description": "Globally unique identifier for this rule.",
+            "pattern": "^Rule/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7448,7 +7312,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7468,7 +7333,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -7480,11 +7344,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this rule."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Rule."
+            "description": "Globally unique identifier for this rule.",
+            "pattern": "^Rule/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7492,7 +7353,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7517,11 +7379,7 @@
           "id": {
             "type": "string",
             "description": "Globally unique identifier for this scope.",
-            "format": "uuid"
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Scope."
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7532,7 +7390,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7577,7 +7436,8 @@
           },
           "parentScopeId": {
             "type": "string",
-            "description": "Identifier of a broader parent scope, when this scope is nested inside another scope."
+            "description": "Identifier of a broader parent scope, when this scope is nested inside another scope.",
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "childScopeIds": {
             "description": "Identifiers of narrower child scopes contained by this scope.",
@@ -7604,7 +7464,6 @@
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "name",
@@ -7618,11 +7477,7 @@
           "id": {
             "type": "string",
             "description": "Globally unique identifier for this scope.",
-            "format": "uuid"
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Scope."
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7633,7 +7488,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7678,7 +7534,8 @@
           },
           "parentScopeId": {
             "type": "string",
-            "description": "Identifier of a broader parent scope, when this scope is nested inside another scope."
+            "description": "Identifier of a broader parent scope, when this scope is nested inside another scope.",
+            "pattern": "^Scope/[^/\\s]+$"
           },
           "childScopeIds": {
             "description": "Identifiers of narrower child scopes contained by this scope.",
@@ -7709,11 +7566,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this vote."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Vote."
+            "description": "Globally unique identifier for this vote.",
+            "pattern": "^Vote/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7721,7 +7575,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7740,11 +7595,13 @@
           },
           "decisionId": {
             "type": "string",
-            "description": "Identifier of the decision this vote participates in."
+            "description": "Identifier of the decision this vote participates in.",
+            "pattern": "^Decision/[^/\\s]+$"
           },
           "memberId": {
             "type": "string",
-            "description": "Identifier of the member who cast or owns this vote."
+            "description": "Identifier of the member who cast or owns this vote.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "value": {
             "type": "string",
@@ -7752,12 +7609,12 @@
           },
           "previousRevisionId": {
             "type": "string",
-            "description": "Identifier of the previous revision of this vote, if this vote amends an earlier vote."
+            "description": "Identifier of the previous revision of this vote, if this vote amends an earlier vote.",
+            "pattern": "^Vote/[^/\\s]+$"
           }
         },
         "required": [
           "id",
-          "ifsId",
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
@@ -7772,11 +7629,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this vote."
-          },
-          "ifsId": {
-            "type": "string",
-            "description": "IFS system identifier for this Vote."
+            "description": "Globally unique identifier for this vote.",
+            "pattern": "^Vote/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
@@ -7784,7 +7638,8 @@
           },
           "basedOn": {
             "type": "string",
-            "description": "Id of the object this object is derived from."
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
           },
           "entityDocumentationUrl": {
             "type": "string",
@@ -7803,11 +7658,13 @@
           },
           "decisionId": {
             "type": "string",
-            "description": "Identifier of the decision this vote participates in."
+            "description": "Identifier of the decision this vote participates in.",
+            "pattern": "^Decision/[^/\\s]+$"
           },
           "memberId": {
             "type": "string",
-            "description": "Identifier of the member who cast or owns this vote."
+            "description": "Identifier of the member who cast or owns this vote.",
+            "pattern": "^Member/[^/\\s]+$"
           },
           "value": {
             "type": "string",
@@ -7815,7 +7672,8 @@
           },
           "previousRevisionId": {
             "type": "string",
-            "description": "Identifier of the previous revision of this vote, if this vote amends an earlier vote."
+            "description": "Identifier of the previous revision of this vote, if this vote amends an earlier vote.",
+            "pattern": "^Vote/[^/\\s]+$"
           }
         }
       }

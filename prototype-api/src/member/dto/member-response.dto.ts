@@ -3,11 +3,11 @@ import { PermissionResponseDto } from '../../permission/dto/permission-response.
 import { RoleResponseDto } from '../../role/dto/role-response.dto.js';
 
 export class MemberResponseDto {
-  @ApiProperty({ description: 'Globally unique identifier for this member.' })
+  @ApiProperty({
+    description: 'Globally unique identifier for this member.',
+    pattern: '^Member/[^/\\s]+$',
+  })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Member.' })
-  ifsId: string;
 
   @ApiProperty({
     description:

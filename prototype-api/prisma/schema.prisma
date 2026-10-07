@@ -16,7 +16,6 @@ datasource db {
 // <generated:model Scope source="../ifs-standards/src/entities/scope/scope.schema.json">
 model Scope {
   id                     String  @id
-  ifsId                  String
   entityType             String
   basedOn                String?
   entityDocumentationUrl String
@@ -42,7 +41,6 @@ model Scope {
 // <generated:model Action source="../ifs-standards/src/entities/action/action.schema.json">
 model Action {
   id                            String       @id
-  ifsId                         String
   entityType                    String
   basedOn                       String?
   entityDocumentationUrl        String
@@ -66,7 +64,6 @@ model Action {
 // <generated:model Permission source="../ifs-standards/src/entities/permission/permission.schema.json">
 model Permission {
   id                     String   @id
-  ifsId                  String
   entityType             String
   basedOn                String?
   entityDocumentationUrl String
@@ -98,7 +95,6 @@ model Permission {
 // <generated:model Role source="../ifs-standards/src/entities/role/role.schema.json">
 model Role {
   id                     String       @id
-  ifsId                  String
   entityType             String
   basedOn                String?
   entityDocumentationUrl String
@@ -127,7 +123,6 @@ model Role {
 // <generated:model Member source="../ifs-standards/src/entities/member/member.schema.json">
 model Member {
   id                     String       @id
-  ifsId                  String
   entityType             String
   entityDocumentationUrl String
   name                   String
@@ -166,15 +161,14 @@ model Member {
 // <generated:model ChangeItem source="../ifs-standards/src/entities/change-item/change-item.schema.json">
 model ChangeItem {
   id                        String   @id
-  ifsId                     String
   entityType                String
   basedOn                   String?
   entityDocumentationUrl    String
   resourceType              String
   operation                 String
-  targetRef                 String?
-  baseRef                   String?
-  proposedRef               String?
+  targetId                  String?
+  baseId                    String?
+  proposedId                String?
   description               String?
   createdAt                 String
   updatedAt                 String
@@ -189,7 +183,6 @@ model ChangeItem {
 // <generated:model Comment source="../ifs-standards/src/entities/comment/comment.schema.json">
 model Comment {
   id                         String   @id
-  ifsId                      String
   entityType                 String
   basedOn                    String?
   entityDocumentationUrl     String
@@ -206,7 +199,6 @@ model Comment {
 // <generated:model Label source="../ifs-standards/src/entities/label/label.schema.json">
 model Label {
   id                     String  @id
-  ifsId                  String
   entityType             String
   basedOn                String?
   entityDocumentationUrl String
@@ -220,7 +212,6 @@ model Label {
 // <generated:model Protocol source="../ifs-standards/src/entities/protocol/protocol.schema.json">
 model Protocol {
   id                     String  @id
-  ifsId                  String
   entityType             String
   basedOn                String?
   entityDocumentationUrl String
@@ -233,7 +224,6 @@ model Protocol {
 // <generated:model ReviewComment source="../ifs-standards/src/entities/review-comment/review-comment.schema.json">
 model ReviewComment {
   id                               String   @id
-  ifsId                            String
   entityType                       String
   basedOn                          String?
   entityDocumentationUrl           String
@@ -250,7 +240,6 @@ model ReviewComment {
 // <generated:model Rule source="../ifs-standards/src/entities/rule/rule.schema.json">
 model Rule {
   id                        String     @id
-  ifsId                     String
   entityType                String
   basedOn                   String?
   entityDocumentationUrl    String
@@ -267,7 +256,6 @@ model Rule {
 // <generated:model Vote source="../ifs-standards/src/entities/vote/vote.schema.json">
 model Vote {
   id                        String     @id
-  ifsId                     String
   entityType                String
   basedOn                   String?
   entityDocumentationUrl    String
@@ -288,7 +276,6 @@ model Vote {
 // <generated:model Delegation source="../ifs-standards/src/entities/delegation/delegation.schema.json">
 model Delegation {
   id                     String      @id
-  ifsId                  String
   entityType             String
   basedOn                String?
   entityDocumentationUrl String
@@ -297,8 +284,8 @@ model Delegation {
   permissionId           String
   permissionRelationId   String?
   permission             Permission? @relation("Delegation_permission", fields: [permissionRelationId], references: [id])
-  delegatorRef           String
-  delegateRef            String
+  delegatorId            String
+  delegateId             String
   state                  String
   revokedAt              String?
   expiresAt              String?
@@ -310,7 +297,6 @@ model Delegation {
 // <generated:model Decision source="../ifs-standards/src/entities/decision/decision.schema.json">
 model Decision {
   id                     String    @id
-  ifsId                  String
   entityType             String
   basedOn                String?
   entityDocumentationUrl String
@@ -350,7 +336,6 @@ model Decision {
 // <generated:model Change source="../ifs-standards/src/entities/change/change.schema.json">
 model Change {
   id                     String          @id
-  ifsId                  String
   entityType             String
   basedOn                String?
   entityDocumentationUrl String
@@ -387,7 +372,6 @@ model Change {
 // <generated:model Observation source="../ifs-standards/src/entities/observation/observation.schema.json">
 model Observation {
   id                     String  @id
-  ifsId                  String
   entityType             String
   basedOn                String?
   entityDocumentationUrl String
@@ -405,7 +389,6 @@ model Observation {
 // <generated:model GeographicArea source="../ifs-standards/src/entities/geographic-area/geographic-area.schema.json">
 model GeographicArea {
   id                              String  @id
-  ifsId                           String
   entityType                      String
   basedOn                         String?
   entityDocumentationUrl          String
@@ -423,7 +406,6 @@ model GeographicArea {
 // <generated:model Group source="../ifs-standards/src/entities/group/group.schema.json">
 model Group {
   id                      String         @id
-  ifsId                   String
   entityType              String
   basedOn                 String?
   entityDocumentationUrl  String
@@ -445,7 +427,6 @@ model Group {
 // <generated:model Place source="../ifs-standards/src/entities/place/place.schema.json">
 model Place {
   id                       String          @id
-  ifsId                    String
   entityType               String
   basedOn                  String?
   entityDocumentationUrl   String
@@ -465,7 +446,6 @@ model Place {
 // <generated:model Organization source="../ifs-standards/src/entities/organization/organization.schema.json">
 model Organization {
   id                             String  @id
-  ifsId                          String
   entityType                     String
   basedOn                        String?
   entityDocumentationUrl         String

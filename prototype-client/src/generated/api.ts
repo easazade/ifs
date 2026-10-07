@@ -51,13 +51,17 @@ export const CreateActionDtoState = {
 } as const;
 
 export interface CreateActionDto {
-  /** Globally unique identifier for this action. */
+  /**
+   * Globally unique identifier for this action.
+   * @pattern ^Action/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Action. */
-  ifsId: string;
   /** Entity category for this object, normally Action. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -99,13 +103,17 @@ export const ActionResponseDtoState = {
 } as const;
 
 export interface ActionResponseDto {
-  /** Globally unique identifier for this action. */
+  /**
+   * Globally unique identifier for this action.
+   * @pattern ^Action/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Action. */
-  ifsId: string;
   /** Entity category for this object, normally Action. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -147,13 +155,17 @@ export const UpdateActionDtoState = {
 } as const;
 
 export interface UpdateActionDto {
-  /** Globally unique identifier for this action. */
+  /**
+   * Globally unique identifier for this action.
+   * @pattern ^Action/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Action. */
-  ifsId?: string;
   /** Entity category for this object, normally Action. */
   entityType?: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -203,13 +215,17 @@ export const ChangeItemResponseDtoOperation = {
 } as const;
 
 export interface ChangeItemResponseDto {
-  /** Globally unique identifier for this change item. */
+  /**
+   * Globally unique identifier for this change item.
+   * @pattern ^ChangeItem/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this ChangeItem. */
-  ifsId: string;
   /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
   entityType: ChangeItemResponseDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -218,20 +234,23 @@ export interface ChangeItemResponseDto {
   /** Type of operation this item proposes for the target object. */
   operation: ChangeItemResponseDtoOperation;
   /**
-   * Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.
+   * ID of the logical object being changed. Null for create operations.
    * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
-  targetRef: string | null;
+  targetId: string | null;
   /**
-   * IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.
+   * ID of the active version observed when authored, for conflict detection. Null for create operations.
    * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
-  baseRef: string | null;
+  baseId: string | null;
   /**
-   * IFS reference to the proposed object or version produced by this change item. Null for delete operations.
+   * ID of the proposed object or version. Null for delete operations.
    * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
-  proposedRef: string | null;
+  proposedId: string | null;
   /** Optional human-readable note explaining this specific item. */
   description?: string;
   /** Timestamp when this change item was created. */
@@ -256,13 +275,17 @@ export const ScopeResponseDtoEntityType = {
 export type ScopeResponseDtoBoundaryRules = { [key: string]: unknown };
 
 export interface ScopeResponseDto {
-  /** Globally unique identifier for this scope. */
+  /**
+   * Globally unique identifier for this scope.
+   * @pattern ^Scope/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Scope. */
-  ifsId: string;
   /** Entity type discriminator. Always "Scope" for Scope entities. */
   entityType: ScopeResponseDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -278,7 +301,10 @@ export interface ScopeResponseDto {
   objects?: string[];
   /** Entity identifiers or names included in this scope. Kept as strings for now. */
   entities?: string[];
-  /** Identifier of a broader parent scope, when this scope is nested inside another scope. */
+  /**
+   * Identifier of a broader parent scope, when this scope is nested inside another scope.
+   * @pattern ^Scope/[^/\s]+$
+   */
   parentScopeId?: string;
   /** Identifiers of narrower child scopes contained by this scope. */
   childScopeIds?: string[];
@@ -319,13 +345,17 @@ export const PermissionResponseDtoState = {
 } as const;
 
 export interface PermissionResponseDto {
-  /** Globally unique identifier for this permission. */
+  /**
+   * Globally unique identifier for this permission.
+   * @pattern ^Permission/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Permission. */
-  ifsId: string;
   /** Entity type discriminator. Always "Permission" for Permission entities. */
   entityType: PermissionResponseDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -333,11 +363,20 @@ export interface PermissionResponseDto {
   actionIds: string[];
   /** List of actions that this permission allows */
   actions?: ActionResponseDto[];
-  /** Identifier of the member receiving this permission. */
+  /**
+   * Identifier of the member receiving this permission.
+   * @pattern ^Member/[^/\s]+$
+   */
   memberId?: string;
-  /** Identifier of the role receiving this permission. */
+  /**
+   * Identifier of the role receiving this permission.
+   * @pattern ^Role/[^/\s]+$
+   */
   roleId?: string;
-  /** Identifier of the scope object where this permission applies. */
+  /**
+   * Identifier of the scope object where this permission applies.
+   * @pattern ^Scope/[^/\s]+$
+   */
   scopeId: string;
   /** Scope object describing the system, project, process, area, or other bounded context where this permission applies. */
   scope?: PermissionResponseDtoScope;
@@ -377,13 +416,17 @@ export const RoleResponseDtoState = {
 } as const;
 
 export interface RoleResponseDto {
-  /** Globally unique identifier for this role. */
+  /**
+   * Globally unique identifier for this role.
+   * @pattern ^Role/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Role. */
-  ifsId: string;
   /** Entity type discriminator. Always "Role" for Role entities. */
   entityType: RoleResponseDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -391,9 +434,15 @@ export interface RoleResponseDto {
   name: string;
   /** Optional human-readable explanation of what this role is for. */
   description?: string;
-  /** Identifier of the member acting through this role. */
+  /**
+   * Identifier of the member acting through this role.
+   * @pattern ^Member/[^/\s]+$
+   */
   memberId: string;
-  /** Identifier of the scope where this role has authority. */
+  /**
+   * Identifier of the scope where this role has authority.
+   * @pattern ^Scope/[^/\s]+$
+   */
   scopeId: string;
   /** Scope entity describing where this role applies. */
   scope: ScopeResponseDto;
@@ -420,10 +469,11 @@ export const MemberResponseDtoEntityType = {
 } as const;
 
 export interface MemberResponseDto {
-  /** Globally unique identifier for this member. */
+  /**
+   * Globally unique identifier for this member.
+   * @pattern ^Member/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Member. */
-  ifsId: string;
   /** Entity type discriminator. Always "Member" for Member entities. */
   entityType: MemberResponseDtoEntityType;
   /** URL for documentation about this entity. */
@@ -441,13 +491,17 @@ export interface MemberResponseDto {
 }
 
 export interface VoteResponseDto {
-  /** Globally unique identifier for this vote. */
+  /**
+   * Globally unique identifier for this vote.
+   * @pattern ^Vote/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Vote. */
-  ifsId: string;
   /** Entity category for this object, normally Vote. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -455,24 +509,37 @@ export interface VoteResponseDto {
   createdAt: string;
   /** Timestamp when this vote record was last updated. */
   updatedAt: string;
-  /** Identifier of the decision this vote participates in. */
+  /**
+   * Identifier of the decision this vote participates in.
+   * @pattern ^Decision/[^/\s]+$
+   */
   decisionId: string;
-  /** Identifier of the member who cast or owns this vote. */
+  /**
+   * Identifier of the member who cast or owns this vote.
+   * @pattern ^Member/[^/\s]+$
+   */
   memberId: string;
   /** Vote value recorded for the decision, such as an implementation-defined choice or consent signal. */
   value: string;
-  /** Identifier of the previous revision of this vote, if this vote amends an earlier vote. */
+  /**
+   * Identifier of the previous revision of this vote, if this vote amends an earlier vote.
+   * @pattern ^Vote/[^/\s]+$
+   */
   previousRevisionId?: string;
 }
 
 export interface RuleResponseDto {
-  /** Globally unique identifier for this rule. */
+  /**
+   * Globally unique identifier for this rule.
+   * @pattern ^Rule/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Rule. */
-  ifsId: string;
   /** Entity category for this object, normally Rule. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -496,21 +563,31 @@ export const DecisionResponseDtoState = {
 } as const;
 
 export interface DecisionResponseDto {
-  /** Globally unique identifier for this decision. */
+  /**
+   * Globally unique identifier for this decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Decision. */
-  ifsId: string;
   /** Entity category for this object, normally Decision. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources. */
+  /**
+   * ID of the object, proposal, rule, resource, or question being decided.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   subject: string;
   /** Current lifecycle state of the decision. */
   state: DecisionResponseDtoState;
-  /** Id of previous revision of this decision, If this decision is a modified version of another decision. */
+  /**
+   * Id of previous revision of this decision, If this decision is a modified version of another decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
   previousRevisionId?: string;
   /** Current outcome of the decision, if the decision has produced an outcome at least once. */
   previousRevision?: DecisionResponseDto;
@@ -573,13 +650,17 @@ export const CommentResponseDtoEntityType = {
 } as const;
 
 export interface CommentResponseDto {
-  /** Globally unique identifier for this comment. */
+  /**
+   * Globally unique identifier for this comment.
+   * @pattern ^Comment/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Comment. */
-  ifsId: string;
   /** Entity type discriminator. Always "Comment" for Comment entities. */
   entityType: CommentResponseDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -600,13 +681,17 @@ export const ReviewCommentResponseDtoEntityType = {
 } as const;
 
 export interface ReviewCommentResponseDto {
-  /** Globally unique identifier for this review comment. */
+  /**
+   * Globally unique identifier for this review comment.
+   * @pattern ^ReviewComment/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this ReviewComment. */
-  ifsId: string;
   /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
   entityType: ReviewCommentResponseDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -642,13 +727,17 @@ export const CreateChangeDtoStatus = {
 } as const;
 
 export interface CreateChangeDto {
-  /** Globally unique identifier for this change. */
+  /**
+   * Globally unique identifier for this change.
+   * @pattern ^Change/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Change. */
-  ifsId: string;
   /** Entity type discriminator. Always "Change" for Change entities. */
   entityType: CreateChangeDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -672,7 +761,10 @@ export interface CreateChangeDto {
   reviewComments?: ReviewCommentResponseDto[];
   /** Member entities that authored or co-authored this change. */
   authors: MemberResponseDto[];
-  /** Identifier of the primary member responsible for this change. */
+  /**
+   * Identifier of the primary member responsible for this change.
+   * @pattern ^Member/[^/\s]+$
+   */
   mainAuthorId: string;
   /** Primary member responsible for this change. */
   mainAuthor: MemberResponseDto;
@@ -731,13 +823,17 @@ export const ChangeResponseDtoStatus = {
 } as const;
 
 export interface ChangeResponseDto {
-  /** Globally unique identifier for this change. */
+  /**
+   * Globally unique identifier for this change.
+   * @pattern ^Change/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Change. */
-  ifsId: string;
   /** Entity type discriminator. Always "Change" for Change entities. */
   entityType: ChangeResponseDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -761,7 +857,10 @@ export interface ChangeResponseDto {
   reviewComments?: ReviewCommentResponseDto[];
   /** Member entities that authored or co-authored this change. */
   authors: MemberResponseDto[];
-  /** Identifier of the primary member responsible for this change. */
+  /**
+   * Identifier of the primary member responsible for this change.
+   * @pattern ^Member/[^/\s]+$
+   */
   mainAuthorId: string;
   /** Primary member responsible for this change. */
   mainAuthor: MemberResponseDto;
@@ -820,13 +919,17 @@ export const UpdateChangeDtoStatus = {
 } as const;
 
 export interface UpdateChangeDto {
-  /** Globally unique identifier for this change. */
+  /**
+   * Globally unique identifier for this change.
+   * @pattern ^Change/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Change. */
-  ifsId?: string;
   /** Entity type discriminator. Always "Change" for Change entities. */
   entityType?: UpdateChangeDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -850,7 +953,10 @@ export interface UpdateChangeDto {
   reviewComments?: ReviewCommentResponseDto[];
   /** Member entities that authored or co-authored this change. */
   authors?: MemberResponseDto[];
-  /** Identifier of the primary member responsible for this change. */
+  /**
+   * Identifier of the primary member responsible for this change.
+   * @pattern ^Member/[^/\s]+$
+   */
   mainAuthorId?: string;
   /** Primary member responsible for this change. */
   mainAuthor?: MemberResponseDto;
@@ -907,13 +1013,17 @@ export const CreateChangeItemDtoOperation = {
 } as const;
 
 export interface CreateChangeItemDto {
-  /** Globally unique identifier for this change item. */
+  /**
+   * Globally unique identifier for this change item.
+   * @pattern ^ChangeItem/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this ChangeItem. */
-  ifsId: string;
   /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
   entityType: CreateChangeItemDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -922,20 +1032,23 @@ export interface CreateChangeItemDto {
   /** Type of operation this item proposes for the target object. */
   operation: CreateChangeItemDtoOperation;
   /**
-   * Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.
+   * ID of the logical object being changed. Null for create operations.
    * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
-  targetRef: string | null;
+  targetId: string | null;
   /**
-   * IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.
+   * ID of the active version observed when authored, for conflict detection. Null for create operations.
    * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
-  baseRef: string | null;
+  baseId: string | null;
   /**
-   * IFS reference to the proposed object or version produced by this change item. Null for delete operations.
+   * ID of the proposed object or version. Null for delete operations.
    * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
-  proposedRef: string | null;
+  proposedId: string | null;
   /** Optional human-readable note explaining this specific item. */
   description?: string;
   /** Timestamp when this change item was created. */
@@ -968,13 +1081,17 @@ export const UpdateChangeItemDtoOperation = {
 } as const;
 
 export interface UpdateChangeItemDto {
-  /** Globally unique identifier for this change item. */
+  /**
+   * Globally unique identifier for this change item.
+   * @pattern ^ChangeItem/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this ChangeItem. */
-  ifsId?: string;
   /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
   entityType?: UpdateChangeItemDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -983,20 +1100,23 @@ export interface UpdateChangeItemDto {
   /** Type of operation this item proposes for the target object. */
   operation?: UpdateChangeItemDtoOperation;
   /**
-   * Stable IFS reference for the logical object being changed. Null for create operations where no active target exists yet.
+   * ID of the logical object being changed. Null for create operations.
    * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
-  targetRef?: string | null;
+  targetId?: string | null;
   /**
-   * IFS reference to the active version observed when the change item was authored. Used for conflict detection. Null for create operations.
+   * ID of the active version observed when authored, for conflict detection. Null for create operations.
    * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
-  baseRef?: string | null;
+  baseId?: string | null;
   /**
-   * IFS reference to the proposed object or version produced by this change item. Null for delete operations.
+   * ID of the proposed object or version. Null for delete operations.
    * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
-  proposedRef?: string | null;
+  proposedId?: string | null;
   /** Optional human-readable note explaining this specific item. */
   description?: string;
   /** Timestamp when this change item was created. */
@@ -1016,13 +1136,17 @@ export const CreateCommentDtoEntityType = {
 } as const;
 
 export interface CreateCommentDto {
-  /** Globally unique identifier for this comment. */
+  /**
+   * Globally unique identifier for this comment.
+   * @pattern ^Comment/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Comment. */
-  ifsId: string;
   /** Entity type discriminator. Always "Comment" for Comment entities. */
   entityType: CreateCommentDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1043,13 +1167,17 @@ export const UpdateCommentDtoEntityType = {
 } as const;
 
 export interface UpdateCommentDto {
-  /** Globally unique identifier for this comment. */
+  /**
+   * Globally unique identifier for this comment.
+   * @pattern ^Comment/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Comment. */
-  ifsId?: string;
   /** Entity type discriminator. Always "Comment" for Comment entities. */
   entityType?: UpdateCommentDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -1073,21 +1201,31 @@ export const CreateDecisionDtoState = {
 } as const;
 
 export interface CreateDecisionDto {
-  /** Globally unique identifier for this decision. */
+  /**
+   * Globally unique identifier for this decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Decision. */
-  ifsId: string;
   /** Entity category for this object, normally Decision. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources. */
+  /**
+   * ID of the object, proposal, rule, resource, or question being decided.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   subject: string;
   /** Current lifecycle state of the decision. */
   state: CreateDecisionDtoState;
-  /** Id of previous revision of this decision, If this decision is a modified version of another decision. */
+  /**
+   * Id of previous revision of this decision, If this decision is a modified version of another decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
   previousRevisionId?: string;
   /** Current outcome of the decision, if the decision has produced an outcome at least once. */
   previousRevision?: DecisionResponseDto;
@@ -1153,21 +1291,31 @@ export const UpdateDecisionDtoState = {
 } as const;
 
 export interface UpdateDecisionDto {
-  /** Globally unique identifier for this decision. */
+  /**
+   * Globally unique identifier for this decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Decision. */
-  ifsId?: string;
   /** Entity category for this object, normally Decision. */
   entityType?: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources. */
+  /**
+   * ID of the object, proposal, rule, resource, or question being decided.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   subject?: string;
   /** Current lifecycle state of the decision. */
   state?: UpdateDecisionDtoState;
-  /** Id of previous revision of this decision, If this decision is a modified version of another decision. */
+  /**
+   * Id of previous revision of this decision, If this decision is a modified version of another decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
   previousRevisionId?: string;
   /** Current outcome of the decision, if the decision has produced an outcome at least once. */
   previousRevision?: DecisionResponseDto;
@@ -1232,13 +1380,17 @@ export const CreateDelegationDtoState = {
 } as const;
 
 export interface CreateDelegationDto {
-  /** Globally unique identifier for this delegation. */
+  /**
+   * Globally unique identifier for this delegation.
+   * @pattern ^Delegation/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Delegation. */
-  ifsId: string;
   /** Entity category for this object, normally Delegation. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1246,14 +1398,23 @@ export interface CreateDelegationDto {
   createdAt: string;
   /** Timestamp when this delegation record was last updated. */
   updatedAt?: string;
-  /** Identifier of the permission delegated from the delegator to the delegate. */
+  /**
+   * Identifier of the permission delegated from the delegator to the delegate.
+   * @pattern ^Permission/[^/\s]+$
+   */
   permissionId: string;
   /** Permission entity represented by permissionId when expanded by an implementation. */
   permission?: PermissionResponseDto;
-  /** Reference to the role or member delegating the permission. */
-  delegatorRef: string;
-  /** Reference to the role or member receiving the delegated permission. */
-  delegateRef: string;
+  /**
+   * ID of the role or member delegating the permission.
+   * @pattern ^(Role|Member)/[^/\s]+$
+   */
+  delegatorId: string;
+  /**
+   * ID of the role or member receiving the delegated permission.
+   * @pattern ^(Role|Member)/[^/\s]+$
+   */
+  delegateId: string;
   /** Lifecycle state of the delegation. */
   state: CreateDelegationDtoState;
   /** Timestamp when this delegation was revoked, if applicable. */
@@ -1275,13 +1436,17 @@ export const DelegationResponseDtoState = {
 } as const;
 
 export interface DelegationResponseDto {
-  /** Globally unique identifier for this delegation. */
+  /**
+   * Globally unique identifier for this delegation.
+   * @pattern ^Delegation/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Delegation. */
-  ifsId: string;
   /** Entity category for this object, normally Delegation. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1289,14 +1454,23 @@ export interface DelegationResponseDto {
   createdAt: string;
   /** Timestamp when this delegation record was last updated. */
   updatedAt?: string;
-  /** Identifier of the permission delegated from the delegator to the delegate. */
+  /**
+   * Identifier of the permission delegated from the delegator to the delegate.
+   * @pattern ^Permission/[^/\s]+$
+   */
   permissionId: string;
   /** Permission entity represented by permissionId when expanded by an implementation. */
   permission?: PermissionResponseDto;
-  /** Reference to the role or member delegating the permission. */
-  delegatorRef: string;
-  /** Reference to the role or member receiving the delegated permission. */
-  delegateRef: string;
+  /**
+   * ID of the role or member delegating the permission.
+   * @pattern ^(Role|Member)/[^/\s]+$
+   */
+  delegatorId: string;
+  /**
+   * ID of the role or member receiving the delegated permission.
+   * @pattern ^(Role|Member)/[^/\s]+$
+   */
+  delegateId: string;
   /** Lifecycle state of the delegation. */
   state: DelegationResponseDtoState;
   /** Timestamp when this delegation was revoked, if applicable. */
@@ -1318,13 +1492,17 @@ export const UpdateDelegationDtoState = {
 } as const;
 
 export interface UpdateDelegationDto {
-  /** Globally unique identifier for this delegation. */
+  /**
+   * Globally unique identifier for this delegation.
+   * @pattern ^Delegation/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Delegation. */
-  ifsId?: string;
   /** Entity category for this object, normally Delegation. */
   entityType?: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -1332,14 +1510,23 @@ export interface UpdateDelegationDto {
   createdAt?: string;
   /** Timestamp when this delegation record was last updated. */
   updatedAt?: string;
-  /** Identifier of the permission delegated from the delegator to the delegate. */
+  /**
+   * Identifier of the permission delegated from the delegator to the delegate.
+   * @pattern ^Permission/[^/\s]+$
+   */
   permissionId?: string;
   /** Permission entity represented by permissionId when expanded by an implementation. */
   permission?: PermissionResponseDto;
-  /** Reference to the role or member delegating the permission. */
-  delegatorRef?: string;
-  /** Reference to the role or member receiving the delegated permission. */
-  delegateRef?: string;
+  /**
+   * ID of the role or member delegating the permission.
+   * @pattern ^(Role|Member)/[^/\s]+$
+   */
+  delegatorId?: string;
+  /**
+   * ID of the role or member receiving the delegated permission.
+   * @pattern ^(Role|Member)/[^/\s]+$
+   */
+  delegateId?: string;
   /** Lifecycle state of the delegation. */
   state?: UpdateDelegationDtoState;
   /** Timestamp when this delegation was revoked, if applicable. */
@@ -1349,13 +1536,17 @@ export interface UpdateDelegationDto {
 }
 
 export interface CreateGeographicAreaDto {
-  /** Globally unique identifier for this geographic area. */
+  /**
+   * Globally unique identifier for this geographic area.
+   * @pattern ^GeographicArea/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this GeographicArea. */
-  ifsId: string;
   /** IFS entity category/type for this geographic area. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1373,13 +1564,17 @@ export interface CreateGeographicAreaDto {
 }
 
 export interface GeographicAreaResponseDto {
-  /** Globally unique identifier for this geographic area. */
+  /**
+   * Globally unique identifier for this geographic area.
+   * @pattern ^GeographicArea/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this GeographicArea. */
-  ifsId: string;
   /** IFS entity category/type for this geographic area. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1397,13 +1592,17 @@ export interface GeographicAreaResponseDto {
 }
 
 export interface UpdateGeographicAreaDto {
-  /** Globally unique identifier for this geographic area. */
+  /**
+   * Globally unique identifier for this geographic area.
+   * @pattern ^GeographicArea/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this GeographicArea. */
-  ifsId?: string;
   /** IFS entity category/type for this geographic area. */
   entityType?: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -1421,13 +1620,17 @@ export interface UpdateGeographicAreaDto {
 }
 
 export interface OrganizationResponseDto {
-  /** Globally unique identifier for this organization. */
+  /**
+   * Globally unique identifier for this organization.
+   * @pattern ^Organization/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Organization. */
-  ifsId: string;
   /** IFS entity category/type for this organization. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1438,13 +1641,17 @@ export interface OrganizationResponseDto {
 }
 
 export interface GroupResponseDto {
-  /** Globally unique identifier for this group. */
+  /**
+   * Globally unique identifier for this group.
+   * @pattern ^Group/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Group. */
-  ifsId: string;
   /** IFS entity category/type for this group. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1468,13 +1675,17 @@ export interface GroupResponseDto {
 }
 
 export interface CreateGroupDto {
-  /** Globally unique identifier for this group. */
+  /**
+   * Globally unique identifier for this group.
+   * @pattern ^Group/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Group. */
-  ifsId: string;
   /** IFS entity category/type for this group. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1498,13 +1709,17 @@ export interface CreateGroupDto {
 }
 
 export interface UpdateGroupDto {
-  /** Globally unique identifier for this group. */
+  /**
+   * Globally unique identifier for this group.
+   * @pattern ^Group/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Group. */
-  ifsId?: string;
   /** IFS entity category/type for this group. */
   entityType?: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -1538,13 +1753,17 @@ export const CreateLabelDtoEntityType = {
 } as const;
 
 export interface CreateLabelDto {
-  /** Globally unique identifier for this label. */
+  /**
+   * Globally unique identifier for this label.
+   * @pattern ^Label/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Label. */
-  ifsId: string;
   /** Entity type discriminator. Always "Label" for Label entities. */
   entityType: CreateLabelDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1565,13 +1784,17 @@ export const LabelResponseDtoEntityType = {
 } as const;
 
 export interface LabelResponseDto {
-  /** Globally unique identifier for this label. */
+  /**
+   * Globally unique identifier for this label.
+   * @pattern ^Label/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Label. */
-  ifsId: string;
   /** Entity type discriminator. Always "Label" for Label entities. */
   entityType: LabelResponseDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1592,13 +1815,17 @@ export const UpdateLabelDtoEntityType = {
 } as const;
 
 export interface UpdateLabelDto {
-  /** Globally unique identifier for this label. */
+  /**
+   * Globally unique identifier for this label.
+   * @pattern ^Label/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Label. */
-  ifsId?: string;
   /** Entity type discriminator. Always "Label" for Label entities. */
   entityType?: UpdateLabelDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -1619,10 +1846,11 @@ export const CreateMemberDtoEntityType = {
 } as const;
 
 export interface CreateMemberDto {
-  /** Globally unique identifier for this member. */
+  /**
+   * Globally unique identifier for this member.
+   * @pattern ^Member/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Member. */
-  ifsId: string;
   /** Entity type discriminator. Always "Member" for Member entities. */
   entityType: CreateMemberDtoEntityType;
   /** URL for documentation about this entity. */
@@ -1649,10 +1877,11 @@ export const UpdateMemberDtoEntityType = {
 } as const;
 
 export interface UpdateMemberDto {
-  /** Globally unique identifier for this member. */
+  /**
+   * Globally unique identifier for this member.
+   * @pattern ^Member/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Member. */
-  ifsId?: string;
   /** Entity type discriminator. Always "Member" for Member entities. */
   entityType?: UpdateMemberDtoEntityType;
   /** URL for documentation about this entity. */
@@ -1669,13 +1898,17 @@ export interface UpdateMemberDto {
 }
 
 export interface CreateObservationDto {
-  /** Globally unique identifier for this observation. */
+  /**
+   * Globally unique identifier for this observation.
+   * @pattern ^Observation/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Observation. */
-  ifsId: string;
   /** Entity category for this object, normally Observation. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1694,13 +1927,17 @@ export interface CreateObservationDto {
 }
 
 export interface ObservationResponseDto {
-  /** Globally unique identifier for this observation. */
+  /**
+   * Globally unique identifier for this observation.
+   * @pattern ^Observation/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Observation. */
-  ifsId: string;
   /** Entity category for this object, normally Observation. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1719,13 +1956,17 @@ export interface ObservationResponseDto {
 }
 
 export interface UpdateObservationDto {
-  /** Globally unique identifier for this observation. */
+  /**
+   * Globally unique identifier for this observation.
+   * @pattern ^Observation/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Observation. */
-  ifsId?: string;
   /** Entity category for this object, normally Observation. */
   entityType?: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -1744,13 +1985,17 @@ export interface UpdateObservationDto {
 }
 
 export interface CreateOrganizationDto {
-  /** Globally unique identifier for this organization. */
+  /**
+   * Globally unique identifier for this organization.
+   * @pattern ^Organization/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Organization. */
-  ifsId: string;
   /** IFS entity category/type for this organization. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1761,13 +2006,17 @@ export interface CreateOrganizationDto {
 }
 
 export interface UpdateOrganizationDto {
-  /** Globally unique identifier for this organization. */
+  /**
+   * Globally unique identifier for this organization.
+   * @pattern ^Organization/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Organization. */
-  ifsId?: string;
   /** IFS entity category/type for this organization. */
   entityType?: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -1806,13 +2055,17 @@ export const CreatePermissionDtoState = {
 } as const;
 
 export interface CreatePermissionDto {
-  /** Globally unique identifier for this permission. */
+  /**
+   * Globally unique identifier for this permission.
+   * @pattern ^Permission/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Permission. */
-  ifsId: string;
   /** Entity type discriminator. Always "Permission" for Permission entities. */
   entityType: CreatePermissionDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1820,11 +2073,20 @@ export interface CreatePermissionDto {
   actionIds: string[];
   /** List of actions that this permission allows */
   actions?: ActionResponseDto[];
-  /** Identifier of the member receiving this permission. */
+  /**
+   * Identifier of the member receiving this permission.
+   * @pattern ^Member/[^/\s]+$
+   */
   memberId?: string;
-  /** Identifier of the role receiving this permission. */
+  /**
+   * Identifier of the role receiving this permission.
+   * @pattern ^Role/[^/\s]+$
+   */
   roleId?: string;
-  /** Identifier of the scope object where this permission applies. */
+  /**
+   * Identifier of the scope object where this permission applies.
+   * @pattern ^Scope/[^/\s]+$
+   */
   scopeId: string;
   /** Scope object describing the system, project, process, area, or other bounded context where this permission applies. */
   scope?: CreatePermissionDtoScope;
@@ -1867,13 +2129,17 @@ export const UpdatePermissionDtoState = {
 } as const;
 
 export interface UpdatePermissionDto {
-  /** Globally unique identifier for this permission. */
+  /**
+   * Globally unique identifier for this permission.
+   * @pattern ^Permission/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Permission. */
-  ifsId?: string;
   /** Entity type discriminator. Always "Permission" for Permission entities. */
   entityType?: UpdatePermissionDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -1881,11 +2147,20 @@ export interface UpdatePermissionDto {
   actionIds?: string[];
   /** List of actions that this permission allows */
   actions?: ActionResponseDto[];
-  /** Identifier of the member receiving this permission. */
+  /**
+   * Identifier of the member receiving this permission.
+   * @pattern ^Member/[^/\s]+$
+   */
   memberId?: string;
-  /** Identifier of the role receiving this permission. */
+  /**
+   * Identifier of the role receiving this permission.
+   * @pattern ^Role/[^/\s]+$
+   */
   roleId?: string;
-  /** Identifier of the scope object where this permission applies. */
+  /**
+   * Identifier of the scope object where this permission applies.
+   * @pattern ^Scope/[^/\s]+$
+   */
   scopeId?: string;
   /** Scope object describing the system, project, process, area, or other bounded context where this permission applies. */
   scope?: UpdatePermissionDtoScope;
@@ -1900,13 +2175,17 @@ export interface UpdatePermissionDto {
 }
 
 export interface CreatePlaceDto {
-  /** Globally unique identifier for this place. */
+  /**
+   * Globally unique identifier for this place.
+   * @pattern ^Place/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Place. */
-  ifsId: string;
   /** IFS entity category/type for this place. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1920,20 +2199,24 @@ export interface CreatePlaceDto {
   coordinate: string;
   /** Geographic area occupied by this place, including disconnected areas when applicable. */
   geographicArea?: GeographicAreaResponseDto;
-  /** References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001). */
+  /** IDs of entities that own this place. */
   owners?: string[];
   /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
   roles?: RoleResponseDto[];
 }
 
 export interface PlaceResponseDto {
-  /** Globally unique identifier for this place. */
+  /**
+   * Globally unique identifier for this place.
+   * @pattern ^Place/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Place. */
-  ifsId: string;
   /** IFS entity category/type for this place. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -1947,20 +2230,24 @@ export interface PlaceResponseDto {
   coordinate: string;
   /** Geographic area occupied by this place, including disconnected areas when applicable. */
   geographicArea?: GeographicAreaResponseDto;
-  /** References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001). */
+  /** IDs of entities that own this place. */
   owners?: string[];
   /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
   roles?: RoleResponseDto[];
 }
 
 export interface UpdatePlaceDto {
-  /** Globally unique identifier for this place. */
+  /**
+   * Globally unique identifier for this place.
+   * @pattern ^Place/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Place. */
-  ifsId?: string;
   /** IFS entity category/type for this place. */
   entityType?: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -1974,7 +2261,7 @@ export interface UpdatePlaceDto {
   coordinate?: string;
   /** Geographic area occupied by this place, including disconnected areas when applicable. */
   geographicArea?: GeographicAreaResponseDto;
-  /** References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001). */
+  /** IDs of entities that own this place. */
   owners?: string[];
   /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
   roles?: RoleResponseDto[];
@@ -1991,13 +2278,17 @@ export const CreateProtocolDtoEntityType = {
 } as const;
 
 export interface CreateProtocolDto {
-  /** identifier protocol. */
+  /**
+   * identifier protocol.
+   * @pattern ^Protocol/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Protocol. */
-  ifsId: string;
   /** Entity type discriminator. Always "Protocol" for Protocol entities. */
   entityType: CreateProtocolDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -2015,13 +2306,17 @@ export const ProtocolResponseDtoEntityType = {
 } as const;
 
 export interface ProtocolResponseDto {
-  /** identifier protocol. */
+  /**
+   * identifier protocol.
+   * @pattern ^Protocol/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Protocol. */
-  ifsId: string;
   /** Entity type discriminator. Always "Protocol" for Protocol entities. */
   entityType: ProtocolResponseDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -2039,13 +2334,17 @@ export const UpdateProtocolDtoEntityType = {
 } as const;
 
 export interface UpdateProtocolDto {
-  /** identifier protocol. */
+  /**
+   * identifier protocol.
+   * @pattern ^Protocol/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Protocol. */
-  ifsId?: string;
   /** Entity type discriminator. Always "Protocol" for Protocol entities. */
   entityType?: UpdateProtocolDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -2063,13 +2362,17 @@ export const CreateReviewCommentDtoEntityType = {
 } as const;
 
 export interface CreateReviewCommentDto {
-  /** Globally unique identifier for this review comment. */
+  /**
+   * Globally unique identifier for this review comment.
+   * @pattern ^ReviewComment/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this ReviewComment. */
-  ifsId: string;
   /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
   entityType: CreateReviewCommentDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -2090,13 +2393,17 @@ export const UpdateReviewCommentDtoEntityType = {
 } as const;
 
 export interface UpdateReviewCommentDto {
-  /** Globally unique identifier for this review comment. */
+  /**
+   * Globally unique identifier for this review comment.
+   * @pattern ^ReviewComment/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this ReviewComment. */
-  ifsId?: string;
   /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
   entityType?: UpdateReviewCommentDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -2132,13 +2439,17 @@ export const CreateRoleDtoState = {
 } as const;
 
 export interface CreateRoleDto {
-  /** Globally unique identifier for this role. */
+  /**
+   * Globally unique identifier for this role.
+   * @pattern ^Role/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Role. */
-  ifsId: string;
   /** Entity type discriminator. Always "Role" for Role entities. */
   entityType: CreateRoleDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -2146,9 +2457,15 @@ export interface CreateRoleDto {
   name: string;
   /** Optional human-readable explanation of what this role is for. */
   description?: string;
-  /** Identifier of the member acting through this role. */
+  /**
+   * Identifier of the member acting through this role.
+   * @pattern ^Member/[^/\s]+$
+   */
   memberId: string;
-  /** Identifier of the scope where this role has authority. */
+  /**
+   * Identifier of the scope where this role has authority.
+   * @pattern ^Scope/[^/\s]+$
+   */
   scopeId: string;
   /** Scope entity describing where this role applies. */
   scope: ScopeResponseDto;
@@ -2190,13 +2507,17 @@ export const UpdateRoleDtoState = {
 } as const;
 
 export interface UpdateRoleDto {
-  /** Globally unique identifier for this role. */
+  /**
+   * Globally unique identifier for this role.
+   * @pattern ^Role/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Role. */
-  ifsId?: string;
   /** Entity type discriminator. Always "Role" for Role entities. */
   entityType?: UpdateRoleDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -2204,9 +2525,15 @@ export interface UpdateRoleDto {
   name?: string;
   /** Optional human-readable explanation of what this role is for. */
   description?: string;
-  /** Identifier of the member acting through this role. */
+  /**
+   * Identifier of the member acting through this role.
+   * @pattern ^Member/[^/\s]+$
+   */
   memberId?: string;
-  /** Identifier of the scope where this role has authority. */
+  /**
+   * Identifier of the scope where this role has authority.
+   * @pattern ^Scope/[^/\s]+$
+   */
   scopeId?: string;
   /** Scope entity describing where this role applies. */
   scope?: ScopeResponseDto;
@@ -2223,13 +2550,17 @@ export interface UpdateRoleDto {
 }
 
 export interface CreateRuleDto {
-  /** Globally unique identifier for this rule. */
+  /**
+   * Globally unique identifier for this rule.
+   * @pattern ^Rule/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Rule. */
-  ifsId: string;
   /** Entity category for this object, normally Rule. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -2240,13 +2571,17 @@ export interface CreateRuleDto {
 }
 
 export interface UpdateRuleDto {
-  /** Globally unique identifier for this rule. */
+  /**
+   * Globally unique identifier for this rule.
+   * @pattern ^Rule/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Rule. */
-  ifsId?: string;
   /** Entity category for this object, normally Rule. */
   entityType?: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -2272,13 +2607,17 @@ export const CreateScopeDtoEntityType = {
 export type CreateScopeDtoBoundaryRules = { [key: string]: unknown };
 
 export interface CreateScopeDto {
-  /** Globally unique identifier for this scope. */
+  /**
+   * Globally unique identifier for this scope.
+   * @pattern ^Scope/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Scope. */
-  ifsId: string;
   /** Entity type discriminator. Always "Scope" for Scope entities. */
   entityType: CreateScopeDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -2294,7 +2633,10 @@ export interface CreateScopeDto {
   objects?: string[];
   /** Entity identifiers or names included in this scope. Kept as strings for now. */
   entities?: string[];
-  /** Identifier of a broader parent scope, when this scope is nested inside another scope. */
+  /**
+   * Identifier of a broader parent scope, when this scope is nested inside another scope.
+   * @pattern ^Scope/[^/\s]+$
+   */
   parentScopeId?: string;
   /** Identifiers of narrower child scopes contained by this scope. */
   childScopeIds?: string[];
@@ -2322,13 +2664,17 @@ export const UpdateScopeDtoEntityType = {
 export type UpdateScopeDtoBoundaryRules = { [key: string]: unknown };
 
 export interface UpdateScopeDto {
-  /** Globally unique identifier for this scope. */
+  /**
+   * Globally unique identifier for this scope.
+   * @pattern ^Scope/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Scope. */
-  ifsId?: string;
   /** Entity type discriminator. Always "Scope" for Scope entities. */
   entityType?: UpdateScopeDtoEntityType;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -2344,7 +2690,10 @@ export interface UpdateScopeDto {
   objects?: string[];
   /** Entity identifiers or names included in this scope. Kept as strings for now. */
   entities?: string[];
-  /** Identifier of a broader parent scope, when this scope is nested inside another scope. */
+  /**
+   * Identifier of a broader parent scope, when this scope is nested inside another scope.
+   * @pattern ^Scope/[^/\s]+$
+   */
   parentScopeId?: string;
   /** Identifiers of narrower child scopes contained by this scope. */
   childScopeIds?: string[];
@@ -2357,13 +2706,17 @@ export interface UpdateScopeDto {
 }
 
 export interface CreateVoteDto {
-  /** Globally unique identifier for this vote. */
+  /**
+   * Globally unique identifier for this vote.
+   * @pattern ^Vote/[^/\s]+$
+   */
   id: string;
-  /** IFS system identifier for this Vote. */
-  ifsId: string;
   /** Entity category for this object, normally Vote. */
   entityType: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
@@ -2371,24 +2724,37 @@ export interface CreateVoteDto {
   createdAt: string;
   /** Timestamp when this vote record was last updated. */
   updatedAt: string;
-  /** Identifier of the decision this vote participates in. */
+  /**
+   * Identifier of the decision this vote participates in.
+   * @pattern ^Decision/[^/\s]+$
+   */
   decisionId: string;
-  /** Identifier of the member who cast or owns this vote. */
+  /**
+   * Identifier of the member who cast or owns this vote.
+   * @pattern ^Member/[^/\s]+$
+   */
   memberId: string;
   /** Vote value recorded for the decision, such as an implementation-defined choice or consent signal. */
   value: string;
-  /** Identifier of the previous revision of this vote, if this vote amends an earlier vote. */
+  /**
+   * Identifier of the previous revision of this vote, if this vote amends an earlier vote.
+   * @pattern ^Vote/[^/\s]+$
+   */
   previousRevisionId?: string;
 }
 
 export interface UpdateVoteDto {
-  /** Globally unique identifier for this vote. */
+  /**
+   * Globally unique identifier for this vote.
+   * @pattern ^Vote/[^/\s]+$
+   */
   id?: string;
-  /** IFS system identifier for this Vote. */
-  ifsId?: string;
   /** Entity category for this object, normally Vote. */
   entityType?: string;
-  /** Id of the object this object is derived from. */
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
@@ -2396,13 +2762,22 @@ export interface UpdateVoteDto {
   createdAt?: string;
   /** Timestamp when this vote record was last updated. */
   updatedAt?: string;
-  /** Identifier of the decision this vote participates in. */
+  /**
+   * Identifier of the decision this vote participates in.
+   * @pattern ^Decision/[^/\s]+$
+   */
   decisionId?: string;
-  /** Identifier of the member who cast or owns this vote. */
+  /**
+   * Identifier of the member who cast or owns this vote.
+   * @pattern ^Member/[^/\s]+$
+   */
   memberId?: string;
   /** Vote value recorded for the decision, such as an implementation-defined choice or consent signal. */
   value?: string;
-  /** Identifier of the previous revision of this vote, if this vote amends an earlier vote. */
+  /**
+   * Identifier of the previous revision of this vote, if this vote amends an earlier vote.
+   * @pattern ^Vote/[^/\s]+$
+   */
   previousRevisionId?: string;
 }
 

@@ -1,11 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class VoteResponseDto {
-  @ApiProperty({ description: 'Globally unique identifier for this vote.' })
+  @ApiProperty({
+    description: 'Globally unique identifier for this vote.',
+    pattern: '^Vote/[^/\\s]+$',
+  })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Vote.' })
-  ifsId: string;
 
   @ApiProperty({
     description: 'Entity category for this object, normally Vote.',
@@ -14,6 +14,7 @@ export class VoteResponseDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 
@@ -37,11 +38,13 @@ export class VoteResponseDto {
 
   @ApiProperty({
     description: 'Identifier of the decision this vote participates in.',
+    pattern: '^Decision/[^/\\s]+$',
   })
   decisionId: string;
 
   @ApiProperty({
     description: 'Identifier of the member who cast or owns this vote.',
+    pattern: '^Member/[^/\\s]+$',
   })
   memberId: string;
 
@@ -54,6 +57,7 @@ export class VoteResponseDto {
   @ApiPropertyOptional({
     description:
       'Identifier of the previous revision of this vote, if this vote amends an earlier vote.',
+    pattern: '^Vote/[^/\\s]+$',
   })
   previousRevisionId?: string;
 

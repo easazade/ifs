@@ -3,13 +3,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class CreateGeographicAreaDto {
   @ApiProperty({
     description: 'Globally unique identifier for this geographic area.',
+    pattern: '^GeographicArea/[^/\\s]+$',
   })
   id: string;
-
-  @ApiProperty({
-    description: 'IFS system identifier for this GeographicArea.',
-  })
-  ifsId: string;
 
   @ApiProperty({
     description: 'IFS entity category/type for this geographic area.',
@@ -18,6 +14,7 @@ export class CreateGeographicAreaDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 

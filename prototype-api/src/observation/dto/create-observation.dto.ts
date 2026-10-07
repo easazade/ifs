@@ -4,11 +4,9 @@ import { MemberResponseDto } from '../../member/dto/member-response.dto.js';
 export class CreateObservationDto {
   @ApiProperty({
     description: 'Globally unique identifier for this observation.',
+    pattern: '^Observation/[^/\\s]+$',
   })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Observation.' })
-  ifsId: string;
 
   @ApiProperty({
     description: 'Entity category for this object, normally Observation.',
@@ -17,6 +15,7 @@ export class CreateObservationDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 

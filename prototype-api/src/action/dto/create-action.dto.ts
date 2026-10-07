@@ -1,11 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateActionDto {
-  @ApiProperty({ description: 'Globally unique identifier for this action.' })
+  @ApiProperty({
+    description: 'Globally unique identifier for this action.',
+    pattern: '^Action/[^/\\s]+$',
+  })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Action.' })
-  ifsId: string;
 
   @ApiProperty({
     description: 'Entity category for this object, normally Action.',
@@ -14,6 +14,7 @@ export class CreateActionDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 

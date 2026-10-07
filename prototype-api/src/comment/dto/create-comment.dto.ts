@@ -1,11 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateCommentDto {
-  @ApiProperty({ description: 'Globally unique identifier for this comment.' })
+  @ApiProperty({
+    description: 'Globally unique identifier for this comment.',
+    pattern: '^Comment/[^/\\s]+$',
+  })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Comment.' })
-  ifsId: string;
 
   @ApiProperty({
     description:
@@ -16,6 +16,7 @@ export class CreateCommentDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 

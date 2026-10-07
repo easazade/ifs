@@ -4,11 +4,11 @@ import { RuleResponseDto } from '../../rule/dto/rule-response.dto.js';
 import { VoteResponseDto } from '../../vote/dto/vote-response.dto.js';
 
 export class DecisionResponseDto {
-  @ApiProperty({ description: 'Globally unique identifier for this decision.' })
+  @ApiProperty({
+    description: 'Globally unique identifier for this decision.',
+    pattern: '^Decision/[^/\\s]+$',
+  })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Decision.' })
-  ifsId: string;
 
   @ApiProperty({
     description: 'Entity category for this object, normally Decision.',
@@ -17,6 +17,7 @@ export class DecisionResponseDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 
@@ -28,8 +29,8 @@ export class DecisionResponseDto {
 
   @ApiProperty({
     description:
-      'Stable IFS reference to the object, proposal, rule, resource, or question being decided. Kept as a reference string because a decision subject can point to heterogeneous resources.',
-    format: 'ifs-ref',
+      'ID of the object, proposal, rule, resource, or question being decided.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   subject: string;
 
@@ -42,6 +43,7 @@ export class DecisionResponseDto {
   @ApiPropertyOptional({
     description:
       'Id of previous revision of this decision, If this decision is a modified version of another decision.',
+    pattern: '^Decision/[^/\\s]+$',
   })
   previousRevisionId?: string;
 

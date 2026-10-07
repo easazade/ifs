@@ -4,17 +4,18 @@ import { MemberResponseDto } from '../../member/dto/member-response.dto.js';
 import { OrganizationResponseDto } from '../../organization/dto/organization-response.dto.js';
 
 export class CreateGroupDto {
-  @ApiProperty({ description: 'Globally unique identifier for this group.' })
+  @ApiProperty({
+    description: 'Globally unique identifier for this group.',
+    pattern: '^Group/[^/\\s]+$',
+  })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Group.' })
-  ifsId: string;
 
   @ApiProperty({ description: 'IFS entity category/type for this group.' })
   entityType: string;
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 

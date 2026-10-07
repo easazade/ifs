@@ -3,11 +3,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class ReviewCommentResponseDto {
   @ApiProperty({
     description: 'Globally unique identifier for this review comment.',
+    pattern: '^ReviewComment/[^/\\s]+$',
   })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this ReviewComment.' })
-  ifsId: string;
 
   @ApiProperty({
     description:
@@ -18,6 +16,7 @@ export class ReviewCommentResponseDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 

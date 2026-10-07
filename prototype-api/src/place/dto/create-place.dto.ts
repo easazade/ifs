@@ -3,17 +3,18 @@ import { GeographicAreaResponseDto } from '../../geographic-area/dto/geographic-
 import { RoleResponseDto } from '../../role/dto/role-response.dto.js';
 
 export class CreatePlaceDto {
-  @ApiProperty({ description: 'Globally unique identifier for this place.' })
+  @ApiProperty({
+    description: 'Globally unique identifier for this place.',
+    pattern: '^Place/[^/\\s]+$',
+  })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Place.' })
-  ifsId: string;
 
   @ApiProperty({ description: 'IFS entity category/type for this place.' })
   entityType: string;
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 
@@ -52,8 +53,7 @@ export class CreatePlaceDto {
   geographicArea?: GeographicAreaResponseDto;
 
   @ApiPropertyOptional({
-    description:
-      'References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001).',
+    description: 'IDs of entities that own this place.',
     type: [String],
   })
   owners?: Array<string>;

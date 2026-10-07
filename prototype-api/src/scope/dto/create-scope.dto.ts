@@ -3,12 +3,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class CreateScopeDto {
   @ApiProperty({
     description: 'Globally unique identifier for this scope.',
-    format: 'uuid',
+    pattern: '^Scope/[^/\\s]+$',
   })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Scope.' })
-  ifsId: string;
 
   @ApiProperty({
     description:
@@ -19,6 +16,7 @@ export class CreateScopeDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 
@@ -68,6 +66,7 @@ export class CreateScopeDto {
   @ApiPropertyOptional({
     description:
       'Identifier of a broader parent scope, when this scope is nested inside another scope.',
+    pattern: '^Scope/[^/\\s]+$',
   })
   parentScopeId?: string;
 

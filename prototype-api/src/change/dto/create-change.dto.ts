@@ -6,11 +6,11 @@ import { MemberResponseDto } from '../../member/dto/member-response.dto.js';
 import { ReviewCommentResponseDto } from '../../review-comment/dto/review-comment-response.dto.js';
 
 export class CreateChangeDto {
-  @ApiProperty({ description: 'Globally unique identifier for this change.' })
+  @ApiProperty({
+    description: 'Globally unique identifier for this change.',
+    pattern: '^Change/[^/\\s]+$',
+  })
   id: string;
-
-  @ApiProperty({ description: 'IFS system identifier for this Change.' })
-  ifsId: string;
 
   @ApiProperty({
     description:
@@ -21,6 +21,7 @@ export class CreateChangeDto {
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
   })
   basedOn?: string;
 
@@ -95,6 +96,7 @@ export class CreateChangeDto {
   @ApiProperty({
     description:
       'Identifier of the primary member responsible for this change.',
+    pattern: '^Member/[^/\\s]+$',
   })
   mainAuthorId: string;
 
