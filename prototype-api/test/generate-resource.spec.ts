@@ -97,6 +97,75 @@ function run(temporaryApi: string, entity = 'member') {
 }
 
 describe('resource generator', () => {
+  it('normalizes display titles to match DTO and Prisma model names', () => {
+    const temporaryApi = fixture();
+    const standardsRoot = join(temporaryApi, '..', 'ifs-standards');
+    const entityDirectory = join(
+      standardsRoot,
+      'src',
+      'entities',
+      'geographic-area',
+    );
+    mkdirSync(entityDirectory, { recursive: true });
+    cpSync(
+      join(
+        workspaceRoot,
+        'ifs-standards',
+        'src',
+        'entities',
+        'geographic-area',
+        'geographic-area.schema.json',
+      ),
+      join(entityDirectory, 'geographic-area.schema.json'),
+    );
+    writeFileSync(
+      join(standardsRoot, 'scripts', 'entity-relations.json'),
+      JSON.stringify({ 'Geographic Area': [] }),
+    );
+    writeFileSync(
+      join(temporaryApi, 'prisma', 'schema.prisma'),
+      'model GeographicArea {\n  id String @id\n}\n',
+    );
+    const dtoDirectory = join(temporaryApi, 'src', 'geographic-area', 'dto');
+    mkdirSync(dtoDirectory, { recursive: true });
+    for (const [fileName, className] of [
+      ['create-geographic-area.dto.ts', 'CreateGeographicAreaDto'],
+      ['update-geographic-area.dto.ts', 'UpdateGeographicAreaDto'],
+      ['geographic-area-response.dto.ts', 'GeographicAreaResponseDto'],
+    ]) {
+      writeFileSync(
+        join(dtoDirectory, fileName),
+        `export class ${className} {}\n`,
+      );
+    }
+
+    const result = run(temporaryApi, 'geographic-area');
+
+    expect(result.status, result.stderr).toBe(0);
+    const serviceSource = readFileSync(
+      join(
+        temporaryApi,
+        'src',
+        'geographic-area',
+        'geographic-area.service.ts',
+      ),
+      'utf8',
+    );
+    expect(serviceSource).toContain('Prisma.GeographicAreaCreateInput');
+    expect(serviceSource).toContain('this.prisma.geographicArea.findMany()');
+    const controllerSource = readFileSync(
+      join(
+        temporaryApi,
+        'src',
+        'geographic-area',
+        'geographic-area.controller.ts',
+      ),
+      'utf8',
+    );
+    expect(controllerSource).toContain("operationId: 'createGeographicArea'");
+    expect(controllerSource).toContain('CreateGeographicAreaDto');
+  });
+
   it('rejects entities that are not defined by IFS standards', () => {
     const temporaryApi = fixture();
     const result = run(temporaryApi, 'unknown-entity');

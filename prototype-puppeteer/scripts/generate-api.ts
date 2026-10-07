@@ -7,6 +7,14 @@ const repositoryRoot = path.resolve(scriptDirectory, "../..");
 const entitiesDirectory = path.join(repositoryRoot, "ifs-standards/src/entities");
 const outputFile = path.join(repositoryRoot, "prototype-puppeteer/src/game/api.ts");
 
+function pascalCase(value: string): string {
+  return value
+    .split(/[^A-Za-z0-9]+/)
+    .filter(Boolean)
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .join("");
+}
+
 const entityDirectories = await readdir(entitiesDirectory, { withFileTypes: true });
 const entities = await Promise.all(
   entityDirectories
@@ -14,10 +22,14 @@ const entities = await Promise.all(
     .map(async (entry) => {
       const schemaPath = path.join(entitiesDirectory, entry.name, `${entry.name}.schema.json`);
       const schema = JSON.parse(await readFile(schemaPath, "utf8")) as { title?: string };
-      if (!schema.title || !/^[A-Z][A-Za-z0-9]*$/.test(schema.title)) {
+      if (typeof schema.title !== "string") {
         throw new Error(`Invalid or missing entity title in ${schemaPath}`);
       }
-      return schema.title;
+      const modelName = pascalCase(schema.title);
+      if (!/^[A-Z][A-Za-z0-9]*$/.test(modelName)) {
+        throw new Error(`Invalid or missing entity title in ${schemaPath}`);
+      }
+      return modelName;
     }),
 );
 entities.sort((left, right) => left.localeCompare(right));

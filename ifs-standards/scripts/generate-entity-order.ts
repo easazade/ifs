@@ -55,7 +55,7 @@ async function readEntities(filePaths: string[]): Promise<EntityNode[]> {
       const schema = JSON.parse(await readFile(filePath, 'utf8')) as JSONSchema7;
 
       return {
-        name: schema.title || basename(filePath, '.schema.json'),
+        name: basename(filePath, '.schema.json'),
         schemaId: schema.$id,
         filePath,
         references: new Set<string>(),

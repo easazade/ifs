@@ -236,6 +236,40 @@ function propertyType(property) {
   return 'Record<string, unknown>';
 }
 
+function arrayItemSchema(property) {
+  const [type] = scalarTypes(property);
+  const schema = { type: type ?? 'object' };
+  for (const key of [
+    'description',
+    'format',
+    'enum',
+    'minimum',
+    'maximum',
+    'minLength',
+    'maxLength',
+    'pattern',
+    'minItems',
+    'maxItems',
+    'uniqueItems',
+    'required',
+    'additionalProperties',
+  ]) {
+    if (property[key] !== undefined) schema[key] = property[key];
+  }
+  if (property.const !== undefined) schema.enum = [property.const];
+  if (isNullable(property)) schema.nullable = true;
+  if (type === 'array') schema.items = arrayItemSchema(property.items ?? {});
+  if (property.properties) {
+    schema.properties = Object.fromEntries(
+      Object.entries(property.properties).map(([name, value]) => [
+        name,
+        arrayItemSchema(value),
+      ]),
+    );
+  }
+  return schema;
+}
+
 function decoratorFor(property, required) {
   const decorator = required ? 'ApiProperty' : 'ApiPropertyOptional';
   const options = [];
@@ -288,8 +322,15 @@ function decoratorFor(property, required) {
           ? 'Number'
           : itemType === 'boolean'
             ? 'Boolean'
-            : "'object'";
-    options.push(`type: [${swaggerType}]`);
+            : undefined;
+    if (swaggerType) {
+      options.push(`type: [${swaggerType}]`);
+    } else {
+      options.push(
+        "type: 'array'",
+        `items: ${JSON.stringify(arrayItemSchema(property.items ?? {}))}`,
+      );
+    }
   } else if (scalarTypes(property)[0] === 'object' || !property.type) {
     options.push("type: 'object'", 'additionalProperties: true');
   }

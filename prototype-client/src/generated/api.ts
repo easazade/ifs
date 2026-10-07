@@ -1348,6 +1348,129 @@ export interface UpdateDelegationDto {
   expiresAt?: string;
 }
 
+export interface CreateGeographicAreaDto {
+  /** Globally unique identifier for this geographic area. */
+  id: string;
+  /** IFS system identifier for this GeographicArea. */
+  ifsId: string;
+  /** IFS entity category/type for this geographic area. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this geographic area record was created. */
+  createdAt: string;
+  /** Timestamp when this geographic area record was last updated. */
+  updatedAt: string;
+  /**
+   * Polygon geometries making up this area. Separate polygons can represent disconnected regions. Coordinates use [longitude, latitude, optional altitude] positions.
+   * @items.items.minItems 4
+   * @items.items.items.minItems 2
+   * @items.items.items.maxItems 3
+   */
+  polygons: number[][][][];
+}
+
+export interface GeographicAreaResponseDto {
+  /** Globally unique identifier for this geographic area. */
+  id: string;
+  /** IFS system identifier for this GeographicArea. */
+  ifsId: string;
+  /** IFS entity category/type for this geographic area. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this geographic area record was created. */
+  createdAt: string;
+  /** Timestamp when this geographic area record was last updated. */
+  updatedAt: string;
+  /**
+   * Polygon geometries making up this area. Separate polygons can represent disconnected regions. Coordinates use [longitude, latitude, optional altitude] positions.
+   * @items.items.minItems 4
+   * @items.items.items.minItems 2
+   * @items.items.items.maxItems 3
+   */
+  polygons: number[][][][];
+}
+
+export interface UpdateGeographicAreaDto {
+  /** Globally unique identifier for this geographic area. */
+  id?: string;
+  /** IFS system identifier for this GeographicArea. */
+  ifsId?: string;
+  /** IFS entity category/type for this geographic area. */
+  entityType?: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this geographic area record was created. */
+  createdAt?: string;
+  /** Timestamp when this geographic area record was last updated. */
+  updatedAt?: string;
+  /**
+   * Polygon geometries making up this area. Separate polygons can represent disconnected regions. Coordinates use [longitude, latitude, optional altitude] positions.
+   * @items.items.minItems 4
+   * @items.items.items.minItems 2
+   * @items.items.items.maxItems 3
+   */
+  polygons?: number[][][][];
+}
+
+export interface CreateGroupDto {
+  /** Globally unique identifier for this group. */
+  id: string;
+  /** IFS system identifier for this Group. */
+  ifsId: string;
+  /** IFS entity category/type for this group. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this group record was created. */
+  createdAt: string;
+  /** Timestamp when this group record was last updated. */
+  updatedAt: string;
+}
+
+export interface GroupResponseDto {
+  /** Globally unique identifier for this group. */
+  id: string;
+  /** IFS system identifier for this Group. */
+  ifsId: string;
+  /** IFS entity category/type for this group. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this group record was created. */
+  createdAt: string;
+  /** Timestamp when this group record was last updated. */
+  updatedAt: string;
+}
+
+export interface UpdateGroupDto {
+  /** Globally unique identifier for this group. */
+  id?: string;
+  /** IFS system identifier for this Group. */
+  ifsId?: string;
+  /** IFS entity category/type for this group. */
+  entityType?: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this group record was created. */
+  createdAt?: string;
+  /** Timestamp when this group record was last updated. */
+  updatedAt?: string;
+}
+
 /**
  * Entity type discriminator. Always "Label" for Label entities.
  */
@@ -1684,6 +1807,87 @@ export interface UpdatePermissionDto {
   updatedAt?: string;
   /** Optional timestamp after which this permission no longer applies. */
   expiresAt?: string;
+}
+
+export interface CreatePlaceDto {
+  /** Globally unique identifier for this place. */
+  id: string;
+  /** IFS system identifier for this Place. */
+  ifsId: string;
+  /** IFS entity category/type for this place. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this place record was created. */
+  createdAt: string;
+  /** Timestamp when this place record was last updated. */
+  updatedAt: string;
+  /** Human-readable name of the real-world place. */
+  name: string;
+  /** Optional latitude, longitude, and altitude location, represented as a comma-separated string. */
+  coordinate: string;
+  /** Geographic area occupied by this place, including disconnected areas when applicable. */
+  geographicArea?: GeographicAreaResponseDto;
+  /** References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001). */
+  owners?: string[];
+  /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
+  roles?: RoleResponseDto[];
+}
+
+export interface PlaceResponseDto {
+  /** Globally unique identifier for this place. */
+  id: string;
+  /** IFS system identifier for this Place. */
+  ifsId: string;
+  /** IFS entity category/type for this place. */
+  entityType: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this place record was created. */
+  createdAt: string;
+  /** Timestamp when this place record was last updated. */
+  updatedAt: string;
+  /** Human-readable name of the real-world place. */
+  name: string;
+  /** Optional latitude, longitude, and altitude location, represented as a comma-separated string. */
+  coordinate: string;
+  /** Geographic area occupied by this place, including disconnected areas when applicable. */
+  geographicArea?: GeographicAreaResponseDto;
+  /** References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001). */
+  owners?: string[];
+  /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
+  roles?: RoleResponseDto[];
+}
+
+export interface UpdatePlaceDto {
+  /** Globally unique identifier for this place. */
+  id?: string;
+  /** IFS system identifier for this Place. */
+  ifsId?: string;
+  /** IFS entity category/type for this place. */
+  entityType?: string;
+  /** Id of the object this object is derived from. */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this place record was created. */
+  createdAt?: string;
+  /** Timestamp when this place record was last updated. */
+  updatedAt?: string;
+  /** Human-readable name of the real-world place. */
+  name?: string;
+  /** Optional latitude, longitude, and altitude location, represented as a comma-separated string. */
+  coordinate?: string;
+  /** Geographic area occupied by this place, including disconnected areas when applicable. */
+  geographicArea?: GeographicAreaResponseDto;
+  /** References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001). */
+  owners?: string[];
+  /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
+  roles?: RoleResponseDto[];
 }
 
 /**
@@ -3727,6 +3931,539 @@ export const deleteDelegation = async (
   } as deleteDelegationResponse;
 };
 
+export type createGeographicAreaResponse201 = {
+  data: GeographicAreaResponseDto;
+  status: 201;
+};
+
+export type createGeographicAreaResponseSuccess =
+  createGeographicAreaResponse201 & {
+    headers: Headers;
+  };
+export type createGeographicAreaResponse = createGeographicAreaResponseSuccess;
+
+export const getCreateGeographicAreaUrl = () => {
+  return `${getApiBaseUrl()}/geographic-areas`;
+};
+
+/**
+ * @summary Create a GeographicArea.
+ */
+export const createGeographicArea = async (
+  createGeographicAreaDto: CreateGeographicAreaDto,
+  options?: RequestInit,
+): Promise<createGeographicAreaResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateGeographicAreaUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createGeographicAreaDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createGeographicAreaResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createGeographicAreaResponse;
+};
+
+export type listGeographicAreasResponse200 = {
+  data: GeographicAreaResponseDto[];
+  status: 200;
+};
+
+export type listGeographicAreasResponseSuccess =
+  listGeographicAreasResponse200 & {
+    headers: Headers;
+  };
+export type listGeographicAreasResponse = listGeographicAreasResponseSuccess;
+
+export const getListGeographicAreasUrl = () => {
+  return `${getApiBaseUrl()}/geographic-areas`;
+};
+
+/**
+ * @summary List GeographicArea records.
+ */
+export const listGeographicAreas = async (
+  options?: RequestInit,
+): Promise<listGeographicAreasResponse> => {
+  const res = await fetch(getListGeographicAreasUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listGeographicAreasResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listGeographicAreasResponse;
+};
+
+export type getGeographicAreaResponse200 = {
+  data: GeographicAreaResponseDto;
+  status: 200;
+};
+
+export type getGeographicAreaResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getGeographicAreaResponseSuccess = getGeographicAreaResponse200 & {
+  headers: Headers;
+};
+export type getGeographicAreaResponseError = getGeographicAreaResponse404 & {
+  headers: Headers;
+};
+
+export type getGeographicAreaResponse =
+  getGeographicAreaResponseSuccess | getGeographicAreaResponseError;
+
+export const getGetGeographicAreaUrl = (id: string) => {
+  return `${getApiBaseUrl()}/geographic-areas/${id}`;
+};
+
+/**
+ * @summary Get a GeographicArea by ID.
+ */
+export const getGeographicArea = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getGeographicAreaResponse> => {
+  const res = await fetch(getGetGeographicAreaUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getGeographicAreaResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getGeographicAreaResponse;
+};
+
+export type updateGeographicAreaResponse200 = {
+  data: GeographicAreaResponseDto;
+  status: 200;
+};
+
+export type updateGeographicAreaResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateGeographicAreaResponseSuccess =
+  updateGeographicAreaResponse200 & {
+    headers: Headers;
+  };
+export type updateGeographicAreaResponseError =
+  updateGeographicAreaResponse404 & {
+    headers: Headers;
+  };
+
+export type updateGeographicAreaResponse =
+  updateGeographicAreaResponseSuccess | updateGeographicAreaResponseError;
+
+export const getUpdateGeographicAreaUrl = (id: string) => {
+  return `${getApiBaseUrl()}/geographic-areas/${id}`;
+};
+
+/**
+ * @summary Update a GeographicArea.
+ */
+export const updateGeographicArea = async (
+  id: string,
+  updateGeographicAreaDto: UpdateGeographicAreaDto,
+  options?: RequestInit,
+): Promise<updateGeographicAreaResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateGeographicAreaUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateGeographicAreaDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateGeographicAreaResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateGeographicAreaResponse;
+};
+
+export type deleteGeographicAreaResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteGeographicAreaResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteGeographicAreaResponseSuccess =
+  deleteGeographicAreaResponse204 & {
+    headers: Headers;
+  };
+export type deleteGeographicAreaResponseError =
+  deleteGeographicAreaResponse404 & {
+    headers: Headers;
+  };
+
+export type deleteGeographicAreaResponse =
+  deleteGeographicAreaResponseSuccess | deleteGeographicAreaResponseError;
+
+export const getDeleteGeographicAreaUrl = (id: string) => {
+  return `${getApiBaseUrl()}/geographic-areas/${id}`;
+};
+
+/**
+ * @summary Delete a GeographicArea.
+ */
+export const deleteGeographicArea = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteGeographicAreaResponse> => {
+  const res = await fetch(getDeleteGeographicAreaUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteGeographicAreaResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteGeographicAreaResponse;
+};
+
+export type createGroupResponse201 = {
+  data: GroupResponseDto;
+  status: 201;
+};
+
+export type createGroupResponseSuccess = createGroupResponse201 & {
+  headers: Headers;
+};
+export type createGroupResponse = createGroupResponseSuccess;
+
+export const getCreateGroupUrl = () => {
+  return `${getApiBaseUrl()}/groups`;
+};
+
+/**
+ * @summary Create a Group.
+ */
+export const createGroup = async (
+  createGroupDto: CreateGroupDto,
+  options?: RequestInit,
+): Promise<createGroupResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateGroupUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createGroupDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createGroupResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createGroupResponse;
+};
+
+export type listGroupsResponse200 = {
+  data: GroupResponseDto[];
+  status: 200;
+};
+
+export type listGroupsResponseSuccess = listGroupsResponse200 & {
+  headers: Headers;
+};
+export type listGroupsResponse = listGroupsResponseSuccess;
+
+export const getListGroupsUrl = () => {
+  return `${getApiBaseUrl()}/groups`;
+};
+
+/**
+ * @summary List Group records.
+ */
+export const listGroups = async (
+  options?: RequestInit,
+): Promise<listGroupsResponse> => {
+  const res = await fetch(getListGroupsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listGroupsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listGroupsResponse;
+};
+
+export type getGroupResponse200 = {
+  data: GroupResponseDto;
+  status: 200;
+};
+
+export type getGroupResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getGroupResponseSuccess = getGroupResponse200 & {
+  headers: Headers;
+};
+export type getGroupResponseError = getGroupResponse404 & {
+  headers: Headers;
+};
+
+export type getGroupResponse = getGroupResponseSuccess | getGroupResponseError;
+
+export const getGetGroupUrl = (id: string) => {
+  return `${getApiBaseUrl()}/groups/${id}`;
+};
+
+/**
+ * @summary Get a Group by ID.
+ */
+export const getGroup = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getGroupResponse> => {
+  const res = await fetch(getGetGroupUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getGroupResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as getGroupResponse;
+};
+
+export type updateGroupResponse200 = {
+  data: GroupResponseDto;
+  status: 200;
+};
+
+export type updateGroupResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateGroupResponseSuccess = updateGroupResponse200 & {
+  headers: Headers;
+};
+export type updateGroupResponseError = updateGroupResponse404 & {
+  headers: Headers;
+};
+
+export type updateGroupResponse =
+  updateGroupResponseSuccess | updateGroupResponseError;
+
+export const getUpdateGroupUrl = (id: string) => {
+  return `${getApiBaseUrl()}/groups/${id}`;
+};
+
+/**
+ * @summary Update a Group.
+ */
+export const updateGroup = async (
+  id: string,
+  updateGroupDto: UpdateGroupDto,
+  options?: RequestInit,
+): Promise<updateGroupResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateGroupUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateGroupDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateGroupResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateGroupResponse;
+};
+
+export type deleteGroupResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteGroupResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteGroupResponseSuccess = deleteGroupResponse204 & {
+  headers: Headers;
+};
+export type deleteGroupResponseError = deleteGroupResponse404 & {
+  headers: Headers;
+};
+
+export type deleteGroupResponse =
+  deleteGroupResponseSuccess | deleteGroupResponseError;
+
+export const getDeleteGroupUrl = (id: string) => {
+  return `${getApiBaseUrl()}/groups/${id}`;
+};
+
+/**
+ * @summary Delete a Group.
+ */
+export const deleteGroup = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteGroupResponse> => {
+  const res = await fetch(getDeleteGroupUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteGroupResponse['data'] = body ? JSON.parse(body) : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteGroupResponse;
+};
+
 export type createLabelResponse201 = {
   data: LabelResponseDto;
   status: 201;
@@ -4774,6 +5511,263 @@ export const deletePermission = async (
     status: res.status,
     headers: res.headers,
   } as deletePermissionResponse;
+};
+
+export type createPlaceResponse201 = {
+  data: PlaceResponseDto;
+  status: 201;
+};
+
+export type createPlaceResponseSuccess = createPlaceResponse201 & {
+  headers: Headers;
+};
+export type createPlaceResponse = createPlaceResponseSuccess;
+
+export const getCreatePlaceUrl = () => {
+  return `${getApiBaseUrl()}/places`;
+};
+
+/**
+ * @summary Create a Place.
+ */
+export const createPlace = async (
+  createPlaceDto: CreatePlaceDto,
+  options?: RequestInit,
+): Promise<createPlaceResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreatePlaceUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createPlaceDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createPlaceResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createPlaceResponse;
+};
+
+export type listPlacesResponse200 = {
+  data: PlaceResponseDto[];
+  status: 200;
+};
+
+export type listPlacesResponseSuccess = listPlacesResponse200 & {
+  headers: Headers;
+};
+export type listPlacesResponse = listPlacesResponseSuccess;
+
+export const getListPlacesUrl = () => {
+  return `${getApiBaseUrl()}/places`;
+};
+
+/**
+ * @summary List Place records.
+ */
+export const listPlaces = async (
+  options?: RequestInit,
+): Promise<listPlacesResponse> => {
+  const res = await fetch(getListPlacesUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listPlacesResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listPlacesResponse;
+};
+
+export type getPlaceResponse200 = {
+  data: PlaceResponseDto;
+  status: 200;
+};
+
+export type getPlaceResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getPlaceResponseSuccess = getPlaceResponse200 & {
+  headers: Headers;
+};
+export type getPlaceResponseError = getPlaceResponse404 & {
+  headers: Headers;
+};
+
+export type getPlaceResponse = getPlaceResponseSuccess | getPlaceResponseError;
+
+export const getGetPlaceUrl = (id: string) => {
+  return `${getApiBaseUrl()}/places/${id}`;
+};
+
+/**
+ * @summary Get a Place by ID.
+ */
+export const getPlace = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getPlaceResponse> => {
+  const res = await fetch(getGetPlaceUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getPlaceResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as getPlaceResponse;
+};
+
+export type updatePlaceResponse200 = {
+  data: PlaceResponseDto;
+  status: 200;
+};
+
+export type updatePlaceResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updatePlaceResponseSuccess = updatePlaceResponse200 & {
+  headers: Headers;
+};
+export type updatePlaceResponseError = updatePlaceResponse404 & {
+  headers: Headers;
+};
+
+export type updatePlaceResponse =
+  updatePlaceResponseSuccess | updatePlaceResponseError;
+
+export const getUpdatePlaceUrl = (id: string) => {
+  return `${getApiBaseUrl()}/places/${id}`;
+};
+
+/**
+ * @summary Update a Place.
+ */
+export const updatePlace = async (
+  id: string,
+  updatePlaceDto: UpdatePlaceDto,
+  options?: RequestInit,
+): Promise<updatePlaceResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdatePlaceUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updatePlaceDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updatePlaceResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updatePlaceResponse;
+};
+
+export type deletePlaceResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deletePlaceResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deletePlaceResponseSuccess = deletePlaceResponse204 & {
+  headers: Headers;
+};
+export type deletePlaceResponseError = deletePlaceResponse404 & {
+  headers: Headers;
+};
+
+export type deletePlaceResponse =
+  deletePlaceResponseSuccess | deletePlaceResponseError;
+
+export const getDeletePlaceUrl = (id: string) => {
+  return `${getApiBaseUrl()}/places/${id}`;
+};
+
+/**
+ * @summary Delete a Place.
+ */
+export const deletePlace = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deletePlaceResponse> => {
+  const res = await fetch(getDeletePlaceUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deletePlaceResponse['data'] = body ? JSON.parse(body) : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deletePlaceResponse;
 };
 
 export type createProtocolResponse201 = {

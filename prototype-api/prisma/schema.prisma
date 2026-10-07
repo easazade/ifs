@@ -97,25 +97,29 @@ model Permission {
 
 // <generated:model Role source="../ifs-standards/src/entities/role/role.schema.json">
 model Role {
-  id                      String       @id
-  ifsId                   String
-  entityType              String
-  basedOn                 String?
-  entityDocumentationUrl  String
-  name                    String
-  description             String?
-  memberId                String
-  scopeId                 String
-  scope                   Scope        @relation("Role_scope", fields: [scopeId], references: [id])
-  permissions             Permission[] @relation("Role_permissions")
-  state                   String
-  createdAt               String
-  updatedAt               String
-  expiresAt               String?
-  extensions              Json?
+  id                     String       @id
+  ifsId                  String
+  entityType             String
+  basedOn                String?
+  entityDocumentationUrl String
+  name                   String
+  description            String?
+  memberId               String
+  scopeId                String
+  scope                  Scope        @relation("Role_scope", fields: [scopeId], references: [id])
+  permissions            Permission[] @relation("Role_permissions")
+  state                  String
+  createdAt              String
+  updatedAt              String
+  expiresAt              String?
+  extensions             Json?
+
   // <generated:inverse Member_roles>
-  relationFromMemberRoles Member[]     @relation("Member_roles")
+  relationFromMemberRoles Member[] @relation("Member_roles")
   // </generated:inverse Member_roles>
+  // <generated:inverse Place_roles>
+  relationFromPlaceRoles  Place[]  @relation("Place_roles")
+  // </generated:inverse Place_roles>
 }
 
 // </generated:model Role>
@@ -394,3 +398,55 @@ model Observation {
 }
 
 // </generated:model Observation>
+
+// <generated:model GeographicArea source="../ifs-standards/src/entities/geographic-area/geographic-area.schema.json">
+model GeographicArea {
+  id                              String  @id
+  ifsId                           String
+  entityType                      String
+  basedOn                         String?
+  entityDocumentationUrl          String
+  createdAt                       String
+  updatedAt                       String
+  polygons                        Json
+  extensions                      Json?
+  // <generated:inverse Place_geographicArea>
+  relationFromPlaceGeographicArea Place[] @relation("Place_geographicArea")
+  // </generated:inverse Place_geographicArea>
+}
+
+// </generated:model GeographicArea>
+
+// <generated:model Group source="../ifs-standards/src/entities/group/group.schema.json">
+model Group {
+  id                     String  @id
+  ifsId                  String
+  entityType             String
+  basedOn                String?
+  entityDocumentationUrl String
+  createdAt              String
+  updatedAt              String
+  extensions             Json?
+}
+
+// </generated:model Group>
+
+// <generated:model Place source="../ifs-standards/src/entities/place/place.schema.json">
+model Place {
+  id                       String          @id
+  ifsId                    String
+  entityType               String
+  basedOn                  String?
+  entityDocumentationUrl   String
+  createdAt                String
+  updatedAt                String
+  name                     String
+  coordinate               String
+  geographicAreaRelationId String?
+  geographicArea           GeographicArea? @relation("Place_geographicArea", fields: [geographicAreaRelationId], references: [id])
+  owners                   Json?
+  roles                    Role[]          @relation("Place_roles")
+  extensions               Json?
+}
+
+// </generated:model Place>

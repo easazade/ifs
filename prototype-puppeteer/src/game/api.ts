@@ -49,6 +49,22 @@ import {
   type CreateDelegationDto,
   type UpdateDelegationDto,
   type DelegationResponseDto,
+  createGeographicArea,
+  deleteGeographicArea,
+  getGeographicArea,
+  listGeographicAreas,
+  updateGeographicArea,
+  type CreateGeographicAreaDto,
+  type UpdateGeographicAreaDto,
+  type GeographicAreaResponseDto,
+  createGroup,
+  deleteGroup,
+  getGroup,
+  listGroups,
+  updateGroup,
+  type CreateGroupDto,
+  type UpdateGroupDto,
+  type GroupResponseDto,
   createLabel,
   deleteLabel,
   getLabel,
@@ -81,6 +97,14 @@ import {
   type CreatePermissionDto,
   type UpdatePermissionDto,
   type PermissionResponseDto,
+  createPlace,
+  deletePlace,
+  getPlace,
+  listPlaces,
+  updatePlace,
+  type CreatePlaceDto,
+  type UpdatePlaceDto,
+  type PlaceResponseDto,
   createProtocol,
   deleteProtocol,
   getProtocol,
@@ -289,6 +313,54 @@ export class Api {
     await deleteDelegation(id);
   }
 
+  async createGeographicArea(input: CreateGeographicAreaDto): Promise<GeographicAreaResponseDto | void> {
+    const response = await createGeographicArea(input);
+    return response.data;
+  }
+
+  async listGeographicAreas(): Promise<GeographicAreaResponseDto[]> {
+    const response = await listGeographicAreas();
+    return response.data;
+  }
+
+  async getGeographicArea(id: string): Promise<GeographicAreaResponseDto | void> {
+    const response = await getGeographicArea(id);
+    return response.data;
+  }
+
+  async updateGeographicArea(id: string, input: UpdateGeographicAreaDto): Promise<GeographicAreaResponseDto | void> {
+    const response = await updateGeographicArea(id, input);
+    return response.data;
+  }
+
+  async deleteGeographicArea(id: string): Promise<void> {
+    await deleteGeographicArea(id);
+  }
+
+  async createGroup(input: CreateGroupDto): Promise<GroupResponseDto | void> {
+    const response = await createGroup(input);
+    return response.data;
+  }
+
+  async listGroups(): Promise<GroupResponseDto[]> {
+    const response = await listGroups();
+    return response.data;
+  }
+
+  async getGroup(id: string): Promise<GroupResponseDto | void> {
+    const response = await getGroup(id);
+    return response.data;
+  }
+
+  async updateGroup(id: string, input: UpdateGroupDto): Promise<GroupResponseDto | void> {
+    const response = await updateGroup(id, input);
+    return response.data;
+  }
+
+  async deleteGroup(id: string): Promise<void> {
+    await deleteGroup(id);
+  }
+
   async createLabel(input: CreateLabelDto): Promise<LabelResponseDto | void> {
     const response = await createLabel(input);
     return response.data;
@@ -383,6 +455,30 @@ export class Api {
 
   async deletePermission(id: string): Promise<void> {
     await deletePermission(id);
+  }
+
+  async createPlace(input: CreatePlaceDto): Promise<PlaceResponseDto | void> {
+    const response = await createPlace(input);
+    return response.data;
+  }
+
+  async listPlaces(): Promise<PlaceResponseDto[]> {
+    const response = await listPlaces();
+    return response.data;
+  }
+
+  async getPlace(id: string): Promise<PlaceResponseDto | void> {
+    const response = await getPlace(id);
+    return response.data;
+  }
+
+  async updatePlace(id: string, input: UpdatePlaceDto): Promise<PlaceResponseDto | void> {
+    const response = await updatePlace(id, input);
+    return response.data;
+  }
+
+  async deletePlace(id: string): Promise<void> {
+    await deletePlace(id);
   }
 
   async createProtocol(input: CreateProtocolDto): Promise<ProtocolResponseDto | void> {

@@ -6,10 +6,13 @@ import { ChangeItemModule } from './change-item/change-item.module.js';
 import { CommentModule } from './comment/comment.module.js';
 import { DecisionModule } from './decision/decision.module.js';
 import { DelegationModule } from './delegation/delegation.module.js';
+import { GeographicAreaModule } from './geographic-area/geographic-area.module.js';
+import { GroupModule } from './group/group.module.js';
 import { LabelModule } from './label/label.module.js';
 import { MemberModule } from './member/member.module.js';
 import { ObservationModule } from './observation/observation.module.js';
 import { PermissionModule } from './permission/permission.module.js';
+import { PlaceModule } from './place/place.module.js';
 import { ProtocolModule } from './protocol/protocol.module.js';
 import { ReviewCommentModule } from './review-comment/review-comment.module.js';
 import { RoleModule } from './role/role.module.js';
@@ -25,10 +28,13 @@ import { VoteModule } from './vote/vote.module.js';
     CommentModule,
     DecisionModule,
     DelegationModule,
+    GeographicAreaModule,
+    GroupModule,
     LabelModule,
     MemberModule,
     ObservationModule,
     PermissionModule,
+    PlaceModule,
     ProtocolModule,
     ReviewCommentModule,
     RoleModule,

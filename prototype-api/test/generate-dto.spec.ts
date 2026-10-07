@@ -39,7 +39,13 @@ function fixture() {
   // Keep fixture independent from generated models committed in the real schema.
   writeFileSync(join(temporaryApi, 'prisma', 'schema.prisma'), '');
 
-  for (const entity of ['member', 'role', 'permission', 'scope']) {
+  for (const entity of [
+    'member',
+    'role',
+    'permission',
+    'scope',
+    'geographic-area',
+  ]) {
     const entityDirectory = join(standardsEntities, entity);
     mkdirSync(entityDirectory, { recursive: true });
     cpSync(
@@ -86,6 +92,63 @@ function run(temporaryApi: string, entity = 'member') {
 }
 
 describe('DTO generator', () => {
+  it('emits nested array schemas for geographic polygons', () => {
+    const temporaryApi = fixture();
+    run(temporaryApi, 'geographic-area');
+
+    for (const fileName of [
+      'create-geographic-area.dto.ts',
+      'geographic-area-response.dto.ts',
+    ]) {
+      const source = readFileSync(
+        join(temporaryApi, 'src', 'geographic-area', 'dto', fileName),
+        'utf8',
+      );
+      expect(source).not.toContain("type: ['object']");
+      expect(source).toContain("type: 'array'");
+      expect(source).toContain(
+        '"items":{"type":"array","minItems":4,"items":{"type":"array","minItems":2,"maxItems":3,"items":{"type":"number"}}}',
+      );
+      expect(source).toContain('polygons: Array<Array<Array<Array<number>>>>');
+    }
+  });
+
+  it('emits object item schemas rather than arrays of string literals', () => {
+    const temporaryApi = fixture();
+    const schemaPath = join(
+      temporaryApi,
+      '..',
+      'ifs-standards',
+      'src',
+      'entities',
+      'geographic-area',
+      'geographic-area.schema.json',
+    );
+    const schema = JSON.parse(readFileSync(schemaPath, 'utf8'));
+    schema.properties.polygons.items = {
+      type: 'object',
+      properties: { name: { type: 'string' } },
+      required: ['name'],
+    };
+    writeFileSync(schemaPath, JSON.stringify(schema));
+    run(temporaryApi, 'geographic-area');
+
+    const source = readFileSync(
+      join(
+        temporaryApi,
+        'src',
+        'geographic-area',
+        'dto',
+        'create-geographic-area.dto.ts',
+      ),
+      'utf8',
+    );
+    expect(source).not.toContain("type: ['object']");
+    expect(source).toContain(
+      'items: {"type":"object","required":["name"],"properties":{"name":{"type":"string"}}}',
+    );
+  });
+
   it('fails before writing when related Prisma models are missing', () => {
     const temporaryApi = fixture();
     const result = spawnSync(

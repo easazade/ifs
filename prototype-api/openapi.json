@@ -978,6 +978,324 @@
         ]
       }
     },
+    "/geographic-areas": {
+      "post": {
+        "operationId": "createGeographicArea",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGeographicAreaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeographicAreaResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a GeographicArea.",
+        "tags": [
+          "geographic-areas"
+        ]
+      },
+      "get": {
+        "operationId": "listGeographicAreas",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GeographicAreaResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List GeographicArea records.",
+        "tags": [
+          "geographic-areas"
+        ]
+      }
+    },
+    "/geographic-areas/{id}": {
+      "get": {
+        "operationId": "getGeographicArea",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "GeographicArea ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeographicAreaResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "GeographicArea not found."
+          }
+        },
+        "summary": "Get a GeographicArea by ID.",
+        "tags": [
+          "geographic-areas"
+        ]
+      },
+      "patch": {
+        "operationId": "updateGeographicArea",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "GeographicArea ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGeographicAreaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeographicAreaResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "GeographicArea not found."
+          }
+        },
+        "summary": "Update a GeographicArea.",
+        "tags": [
+          "geographic-areas"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteGeographicArea",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "GeographicArea ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "GeographicArea deleted."
+          },
+          "404": {
+            "description": "GeographicArea not found."
+          }
+        },
+        "summary": "Delete a GeographicArea.",
+        "tags": [
+          "geographic-areas"
+        ]
+      }
+    },
+    "/groups": {
+      "post": {
+        "operationId": "createGroup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Group.",
+        "tags": [
+          "groups"
+        ]
+      },
+      "get": {
+        "operationId": "listGroups",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GroupResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Group records.",
+        "tags": [
+          "groups"
+        ]
+      }
+    },
+    "/groups/{id}": {
+      "get": {
+        "operationId": "getGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Group ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group not found."
+          }
+        },
+        "summary": "Get a Group by ID.",
+        "tags": [
+          "groups"
+        ]
+      },
+      "patch": {
+        "operationId": "updateGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Group ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group not found."
+          }
+        },
+        "summary": "Update a Group.",
+        "tags": [
+          "groups"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Group ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Group deleted."
+          },
+          "404": {
+            "description": "Group not found."
+          }
+        },
+        "summary": "Delete a Group.",
+        "tags": [
+          "groups"
+        ]
+      }
+    },
     "/labels": {
       "post": {
         "operationId": "createLabel",
@@ -1611,6 +1929,165 @@
         "summary": "Delete a Permission.",
         "tags": [
           "permissions"
+        ]
+      }
+    },
+    "/places": {
+      "post": {
+        "operationId": "createPlace",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePlaceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Place.",
+        "tags": [
+          "places"
+        ]
+      },
+      "get": {
+        "operationId": "listPlaces",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlaceResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Place records.",
+        "tags": [
+          "places"
+        ]
+      }
+    },
+    "/places/{id}": {
+      "get": {
+        "operationId": "getPlace",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Place ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Place not found."
+          }
+        },
+        "summary": "Get a Place by ID.",
+        "tags": [
+          "places"
+        ]
+      },
+      "patch": {
+        "operationId": "updatePlace",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Place ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePlaceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Place not found."
+          }
+        },
+        "summary": "Update a Place.",
+        "tags": [
+          "places"
+        ]
+      },
+      "delete": {
+        "operationId": "deletePlace",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Place ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Place deleted."
+          },
+          "404": {
+            "description": "Place not found."
+          }
+        },
+        "summary": "Delete a Place.",
+        "tags": [
+          "places"
         ]
       }
     },
@@ -5035,6 +5512,316 @@
           }
         }
       },
+      "CreateGeographicAreaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this geographic area."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this GeographicArea."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this geographic area."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this geographic area record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this geographic area record was last updated.",
+            "format": "date-time"
+          },
+          "polygons": {
+            "type": "array",
+            "description": "Polygon geometries making up this area. Separate polygons can represent disconnected regions. Coordinates use [longitude, latitude, optional altitude] positions.",
+            "items": {
+              "type": "array",
+              "description": "A polygon ring represented by coordinate positions; the first ring is the exterior boundary and subsequent rings, if any, are holes.",
+              "items": {
+                "type": "array",
+                "minItems": 4,
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 3,
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "polygons"
+        ]
+      },
+      "GeographicAreaResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this geographic area."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this GeographicArea."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this geographic area."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this geographic area record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this geographic area record was last updated.",
+            "format": "date-time"
+          },
+          "polygons": {
+            "type": "array",
+            "description": "Polygon geometries making up this area. Separate polygons can represent disconnected regions. Coordinates use [longitude, latitude, optional altitude] positions.",
+            "items": {
+              "type": "array",
+              "description": "A polygon ring represented by coordinate positions; the first ring is the exterior boundary and subsequent rings, if any, are holes.",
+              "items": {
+                "type": "array",
+                "minItems": 4,
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 3,
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "polygons"
+        ]
+      },
+      "UpdateGeographicAreaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this geographic area."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this GeographicArea."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this geographic area."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this geographic area record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this geographic area record was last updated.",
+            "format": "date-time"
+          },
+          "polygons": {
+            "type": "array",
+            "description": "Polygon geometries making up this area. Separate polygons can represent disconnected regions. Coordinates use [longitude, latitude, optional altitude] positions.",
+            "items": {
+              "type": "array",
+              "description": "A polygon ring represented by coordinate positions; the first ring is the exterior boundary and subsequent rings, if any, are holes.",
+              "items": {
+                "type": "array",
+                "minItems": 4,
+                "items": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 3,
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateGroupDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this group."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Group."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this group."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this group record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this group record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this group."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Group."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this group."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this group record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this group record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateGroupDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this group."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Group."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this group."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this group record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this group record was last updated.",
+            "format": "date-time"
+          }
+        }
+      },
       "CreateLabelDto": {
         "type": "object",
         "properties": {
@@ -5659,6 +6446,224 @@
             "type": "string",
             "description": "Optional timestamp after which this permission no longer applies.",
             "format": "date-time"
+          }
+        }
+      },
+      "CreatePlaceDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this place."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Place."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this place."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this place record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this place record was last updated.",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the real-world place."
+          },
+          "coordinate": {
+            "type": "string",
+            "description": "Optional latitude, longitude, and altitude location, represented as a comma-separated string."
+          },
+          "geographicArea": {
+            "description": "Geographic area occupied by this place, including disconnected areas when applicable.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GeographicAreaResponseDto"
+              }
+            ]
+          },
+          "owners": {
+            "description": "References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "roles": {
+            "description": "Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "name",
+          "coordinate"
+        ]
+      },
+      "PlaceResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this place."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Place."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this place."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this place record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this place record was last updated.",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the real-world place."
+          },
+          "coordinate": {
+            "type": "string",
+            "description": "Optional latitude, longitude, and altitude location, represented as a comma-separated string."
+          },
+          "geographicArea": {
+            "description": "Geographic area occupied by this place, including disconnected areas when applicable.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GeographicAreaResponseDto"
+              }
+            ]
+          },
+          "owners": {
+            "description": "References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "roles": {
+            "description": "Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "ifsId",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "name",
+          "coordinate"
+        ]
+      },
+      "UpdatePlaceDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this place."
+          },
+          "ifsId": {
+            "type": "string",
+            "description": "IFS system identifier for this Place."
+          },
+          "entityType": {
+            "type": "string",
+            "description": "IFS entity category/type for this place."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this place record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this place record was last updated.",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the real-world place."
+          },
+          "coordinate": {
+            "type": "string",
+            "description": "Optional latitude, longitude, and altitude location, represented as a comma-separated string."
+          },
+          "geographicArea": {
+            "description": "Geographic area occupied by this place, including disconnected areas when applicable.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GeographicAreaResponseDto"
+              }
+            ]
+          },
+          "owners": {
+            "description": "References to entities that own this place, formatted as EntityType/id (for example, Organization/123, Member/86787, or Group/1001).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "roles": {
+            "description": "Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleResponseDto"
+            }
           }
         }
       },

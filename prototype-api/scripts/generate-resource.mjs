@@ -45,6 +45,14 @@ function kebabCase(value) {
     .toLowerCase();
 }
 
+function pascalCase(value) {
+  return value
+    .split(/[^A-Za-z0-9]+/)
+    .filter(Boolean)
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .join('');
+}
+
 function lowerCamelCase(value) {
   return value[0].toLowerCase() + value.slice(1);
 }
@@ -86,14 +94,19 @@ function readEntity(entityInput) {
   if (
     schema.type !== 'object' ||
     typeof schema.title !== 'string' ||
-    !/^[A-Za-z][A-Za-z0-9]*$/.test(schema.title)
+    !/^[A-Za-z][A-Za-z0-9]*$/.test(pascalCase(schema.title))
   ) {
     throw new Error(
       `Entity schema ${schemaPath} must define an object with a valid title.`,
     );
   }
 
-  return { entityName, modelName: schema.title, schemaPath, schema };
+  return {
+    entityName,
+    modelName: pascalCase(schema.title),
+    schemaPath,
+    schema,
+  };
 }
 
 function expectedDtos(entityName, modelName) {
@@ -165,7 +178,9 @@ function readEntityRelations(modelName, schema) {
   }
 
   const relations =
-    metadata && typeof metadata === 'object' ? metadata[modelName] : undefined;
+    metadata && typeof metadata === 'object'
+      ? metadata[schema.title]
+      : undefined;
   if (!Array.isArray(relations)) {
     throw new Error(`Entity relations metadata is missing ${modelName}.`);
   }
