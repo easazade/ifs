@@ -1,6 +1,6 @@
-import type { MemberResponseDto } from "prototype-client";
-import { personalities } from "../fake/personalities.js";
-import type { Personality } from "./personality.js";
+import type { MemberResponseDto } from 'prototype-client';
+import { personalities } from '../fake/personalities.js';
+import type { Personality } from './personality.js';
 
 export class Puppet {
   personality: Personality;

@@ -1,5 +1,5 @@
-import { logger } from "../utils/logger.js";
-import type { Puppeteer } from "./puppeteer.js";
+import { logger } from '../utils/logger.js';
+import type { Puppeteer } from './puppeteer.js';
 
 const days = 60;
 

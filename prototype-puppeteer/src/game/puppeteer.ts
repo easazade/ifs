@@ -6,12 +6,12 @@ import {
   type CreateObservationDto,
   type MemberResponseDto,
   type ObservationResponseDto,
-} from "prototype-client";
+} from 'prototype-client';
 
-import { getHello as isResponsive } from "prototype-client";
-import { fakeMembers } from "../fake/members.js";
-import { logger } from "../utils/logger.js";
-import { Puppet } from "./puppet.js";
+import { getHello as isResponsive } from 'prototype-client';
+import { fakeMembers } from '../fake/members.js';
+import { logger } from '../utils/logger.js';
+import { Puppet } from './puppet.js';
 export class Puppeteer {
   constructor(private baseUrl: string) {
     setApiBaseUrl(baseUrl);
@@ -19,22 +19,20 @@ export class Puppeteer {
 
   async bootstrap(): Promise<boolean> {
     try {
-      logger.info("Puppeteer is trying to bootstrap the server...");
+      logger.info('Puppeteer is trying to bootstrap the server...');
       if (!(await isResponsive())) {
         return false;
       }
       const members = await this.getAllMembers();
       if (members.length !== 0) {
-        logger.info(
-          "No members found. Trying to register All fake members into the server",
-        );
+        logger.info('No members found. Trying to register All fake members into the server');
         await this.registerAllMembers();
       }
 
-      logger.info("Puppeteer successfully bootstrapped");
+      logger.info('Puppeteer successfully bootstrapped');
       return true;
     } catch (error) {
-      logger.error("Puppeteer Could not bootstrap server");
+      logger.error('Puppeteer Could not bootstrap server');
       logger.error(error);
       return false;
     }
@@ -44,11 +42,11 @@ export class Puppeteer {
     try {
       const response = await isResponsive();
       if (response.status === 200) {
-        logger.info("Server is responsive");
+        logger.info('Server is responsive');
       }
       return response.status === 200;
     } catch (error) {
-      logger.warn("Server is NOT responsive");
+      logger.warn('Server is NOT responsive');
       logger.error(error);
       return false;
     }
@@ -64,18 +62,14 @@ export class Puppeteer {
   }
 
   async getAllPuppets(): Promise<Puppet[]> {
-    return await this.getAllMembers().then((members) =>
-      members.map((member) => new Puppet(member)),
-    );
+    return await this.getAllMembers().then((members) => members.map((member) => new Puppet(member)));
   }
 
   private async registerAllMembers(): Promise<void> {
     await Promise.all(fakeMembers.map((member) => createMember(member)));
   }
 
-  async createObservation(
-    observation: CreateObservationDto,
-  ): Promise<ObservationResponseDto> {
+  async createObservation(observation: CreateObservationDto): Promise<ObservationResponseDto> {
     const response = await createObservation(observation);
     return response.data;
   }

@@ -1,6 +1,6 @@
-import type { FormativeExperience } from "../generation/pools/formative-experiences.js";
-import type { Trait } from "../generation/pools/trait-pool.js";
-import type { Worldview } from "../generation/pools/worldview-pool.js";
+import type { FormativeExperience } from '../generation/pools/formative-experiences.js';
+import type { Trait } from '../generation/pools/trait-pool.js';
+import type { Worldview } from '../generation/pools/worldview-pool.js';
 
 // Composition preserves each selected pool object's type and boundary.
 export type PersonalityParameters = {

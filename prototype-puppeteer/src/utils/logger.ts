@@ -1,14 +1,14 @@
 // logger.ts
-import pino from "pino";
+import pino from 'pino';
 
 export const logger = pino({
   transport: {
-    target: "pino-pretty",
+    target: 'pino-pretty',
     options: {
       colorize: true,
       singleLine: false,
-      translateTime: "HH:MM:ss",
-      ignore: "pid,hostname",
+      translateTime: 'HH:MM:ss',
+      ignore: 'pid,hostname',
     },
   },
 });
