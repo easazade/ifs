@@ -22,7 +22,7 @@ const entities = await Promise.all(
 );
 entities.sort((left, right) => left.localeCompare(right));
 
-const imports = entities.flatMap((entity) => {
+const imports = ["  getHello,", "  setApiBaseUrl,", ...entities.flatMap((entity) => {
   return [
     `  create${entity},`,
     `  delete${entity},`,
@@ -33,9 +33,12 @@ const imports = entities.flatMap((entity) => {
     `  type Update${entity}Dto,`,
     `  type ${entity}ResponseDto,`,
   ];
-});
+})];
 
-const methods = entities.flatMap((entity) => {
+const methods = [
+  `  setApiBaseUrl(url: string): void {\n    setApiBaseUrl(url);\n  }`,
+  `  async hello(): Promise<boolean> {\n    try {\n      await getHello();\n      return true;\n    } catch {\n      return false;\n    }\n  }`,
+  ...entities.flatMap((entity) => {
   return [
     `  async create${entity}(input: Create${entity}Dto): Promise<${entity}ResponseDto | void> {\n    const response = await create${entity}(input);\n    return response.data;\n  }`,
     `  async list${entity}s(): Promise<${entity}ResponseDto[]> {\n    const response = await list${entity}s();\n    return response.data;\n  }`,
@@ -43,7 +46,8 @@ const methods = entities.flatMap((entity) => {
     `  async update${entity}(id: string, input: Update${entity}Dto): Promise<${entity}ResponseDto | void> {\n    const response = await update${entity}(id, input);\n    return response.data;\n  }`,
     `  async delete${entity}(id: string): Promise<void> {\n    await delete${entity}(id);\n  }`,
   ];
-});
+}),
+];
 
 const source = `import {\n${imports.join("\n")}\n} from "prototype-client";\n\nexport class Api {\n${methods.join("\n\n")}\n}\n`;
 await writeFile(outputFile, source);

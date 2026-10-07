@@ -1,4 +1,6 @@
 import {
+  getHello,
+  setApiBaseUrl,
   createAction,
   deleteAction,
   getAction,
@@ -130,6 +132,19 @@ import {
 } from "prototype-client";
 
 export class Api {
+  setApiBaseUrl(url: string): void {
+    setApiBaseUrl(url);
+  }
+
+  async hello(): Promise<boolean> {
+    try {
+      await getHello();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async createAction(input: CreateActionDto): Promise<ActionResponseDto | void> {
     const response = await createAction(input);
     return response.data;
