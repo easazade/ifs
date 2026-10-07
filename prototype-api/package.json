@@ -30,6 +30,7 @@
     "db:deploy": "prisma migrate deploy",
     "db:status": "prisma migrate status",
     "db:studio": "prisma studio --url \"file://$PWD/prisma/dev.db\"",
+    "db:reset": "rm prisma/dev.db && prisma generate && prisma migrate deploy",
     "dto:generate": "node scripts/generate-dto.mjs",
     "dto:generate:all": "node scripts/generate-dtos.mjs",
     "resource:generate": "node scripts/generate-resource.mjs",
