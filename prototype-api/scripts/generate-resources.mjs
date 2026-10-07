@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// Generates DTOs and API resources for every entity in the configured generation order.
 
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';

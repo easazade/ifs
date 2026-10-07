@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// Generates a NestJS API resource and related Prisma/schema artifacts for one entity.
 
 import { execFileSync } from 'node:child_process';
 import {

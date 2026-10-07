@@ -1,3 +1,4 @@
+// Checks generated fixture modules for references that do not point to known fixture identities.
 import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';

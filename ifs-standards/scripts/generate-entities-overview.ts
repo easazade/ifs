@@ -1,3 +1,4 @@
+// Generates the entity overview and relationship visualization from entity schemas.
 import type { JSONSchema7, JSONSchema7Definition } from 'json-schema';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';

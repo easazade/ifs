@@ -1,3 +1,4 @@
+// Builds the entity-relations.json map from references in the entity schemas.
 import type { JSONSchema7 } from 'json-schema';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';

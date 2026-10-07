@@ -1,3 +1,4 @@
+// Converts design-system token values into the standards site's generated CSS.
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

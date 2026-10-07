@@ -1,3 +1,4 @@
+// Creates valid example JSON documents for entity schemas, resolving local and remote references.
 import { createRemoteResolver, generate } from 'json-schema-faker';
 import type { JsonSchema } from 'json-schema-faker';
 import { access, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';

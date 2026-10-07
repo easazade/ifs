@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// Generates Prisma and NestJS DTO artifacts from one IFS entity schema.
 
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';

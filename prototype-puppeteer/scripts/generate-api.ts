@@ -1,3 +1,4 @@
+// Generates typed simulation API entity definitions from the canonical entity schemas.
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

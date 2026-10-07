@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// Generates DTO artifacts for all entities in the configured generation order.
 
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
