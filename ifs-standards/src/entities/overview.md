@@ -138,6 +138,11 @@ erDiagram
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
+    name string "required"
+    description string "optional"
+    members array FK "Member[]"
+    organizations array FK "Organization[]"
+    groups array FK "Group[]"
     createdAt string "required, date-time"
     updatedAt string "required, date-time"
   }
@@ -175,6 +180,15 @@ erDiagram
     timeOfObservation string "required, date-time"
     observer object FK "required, Member"
   }
+  ORGANIZATION {
+    id string PK "required"
+    ifsId string "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
+    updatedAt string "required, date-time"
+  }
   PERMISSION {
     id string PK "required"
     ifsId string "required"
@@ -201,7 +215,7 @@ erDiagram
     createdAt string "required, date-time"
     updatedAt string "required, date-time"
     name string "required"
-    coordinate string "optional"
+    coordinate string "required"
     geographicArea object FK "GeographicArea"
     owners array "optional"
     roles array FK "Role[]"
@@ -290,6 +304,9 @@ erDiagram
   DECISION ||--o{ RULE : rules
   DECISION ||--o{ VOTE : votes_fk_decisionId
   DELEGATION ||--|| PERMISSION : permission_fk_permissionId
+  GROUP ||--o{ GROUP : groups
+  GROUP ||--o{ MEMBER : members
+  GROUP ||--o{ ORGANIZATION : organizations
   MEMBER ||--o{ PERMISSION : permissions_fk_memberId
   MEMBER ||--o{ ROLE : roles_fk_memberId
   OBSERVATION ||--|| MEMBER : observer
@@ -322,6 +339,9 @@ erDiagram
 - `Vote.decisionId` → `Decision` (id, one)
 - `Delegation.permission` → `Permission` ($ref, one)
 - `Delegation.permissionId` → `Permission` (id, one)
+- `Group.groups` → `Group` ($ref, many)
+- `Group.members` → `Member` ($ref, many)
+- `Group.organizations` → `Organization` ($ref, many)
 - `Member.permissions` → `Permission` ($ref, many)
 - `Permission.memberId` → `Member` (id, one)
 - `Member.roles` → `Role` ($ref, many)

@@ -20,13 +20,18 @@
   ],
   "Delegation": [{ "property": "permission", "type": "Permission" }],
   "Geographic Area": [],
-  "Group": [],
+  "Group": [
+    { "property": "groups", "type": "Group" },
+    { "property": "members", "type": "Member" },
+    { "property": "organizations", "type": "Organization" }
+  ],
   "Label": [],
   "Member": [
     { "property": "permissions", "type": "Permission" },
     { "property": "roles", "type": "Role" }
   ],
   "Observation": [{ "property": "observer", "type": "Member" }],
+  "Organization": [],
   "Permission": [{ "property": "actions", "type": "Action" }],
   "Place": [
     { "property": "geographicArea", "type": "Geographic Area" },

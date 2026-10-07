@@ -26,6 +26,36 @@
       "format": "uri",
       "description": "URL for documentation about this entity."
     },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable name of this group."
+    },
+    "description": {
+      "type": "string",
+      "description": "Purpose and context of this group."
+    },
+    "members": {
+      "type": "array",
+      "description": "Members directly belonging to this group. Membership alone does not grant delegated authority.",
+      "items": {
+        "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json"
+      }
+    },
+    "organizations": {
+      "type": "array",
+      "description": "Organizations directly belonging to this group. Inclusion alone does not grant delegated authority.",
+      "items": {
+        "$ref": "https://ifs-standards.org/schemas/v1/entities/organization.schema.json"
+      }
+    },
+    "groups": {
+      "type": "array",
+      "description": "Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership.",
+      "items": {
+        "$ref": "https://ifs-standards.org/schemas/v1/entities/group.schema.json"
+      }
+    },
     "createdAt": {
       "type": "string",
       "format": "date-time",
@@ -42,6 +72,7 @@
     "ifsId",
     "entityType",
     "entityDocumentationUrl",
+    "name",
     "createdAt",
     "updatedAt"
   ]
