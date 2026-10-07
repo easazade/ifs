@@ -1,12 +1,4 @@
-import {
-  createMember,
-  createObservation,
-  listMembers,
-  setApiBaseUrl,
-  type CreateObservationDto,
-  type MemberResponseDto,
-  type ObservationResponseDto,
-} from 'prototype-client';
+import { createMember, listMembers, setApiBaseUrl, type MemberResponseDto } from 'prototype-client';
 
 import { getHello as isResponsive } from 'prototype-client';
 import { fakeMembers } from '../fake/members.js';
@@ -67,10 +59,5 @@ export class Puppeteer {
 
   private async registerAllMembers(): Promise<void> {
     await Promise.all(fakeMembers.map((member) => createMember(member)));
-  }
-
-  async createObservation(observation: CreateObservationDto): Promise<ObservationResponseDto> {
-    const response = await createObservation(observation);
-    return response.data;
   }
 }
