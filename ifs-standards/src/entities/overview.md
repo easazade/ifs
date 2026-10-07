@@ -143,6 +143,19 @@ erDiagram
     createdAt string "required, date-time"
     updatedAt string "required, date-time"
   }
+  OBSERVATION {
+    id string PK "required"
+    ifsId string "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
+    updatedAt string "required, date-time"
+    description string "required"
+    locations array "required"
+    timeOfObservation string "required, date-time"
+    observer object FK "required, Member"
+  }
   PERMISSION {
     id string PK "required"
     ifsId string "required"
@@ -246,6 +259,7 @@ erDiagram
   DELEGATION ||--|| PERMISSION : permission_fk_permissionId
   MEMBER ||--o{ PERMISSION : permissions_fk_memberId
   MEMBER ||--o{ ROLE : roles_fk_memberId
+  OBSERVATION ||--|| MEMBER : observer
   PERMISSION ||--o{ ACTION : actions_fk_actionIds
   PERMISSION ||--|| SCOPE : scopeId
   ROLE ||--o{ PERMISSION : permissions_fk_roleId
@@ -277,6 +291,7 @@ erDiagram
 - `Permission.memberId` → `Member` (id, one)
 - `Member.roles` → `Role` ($ref, many)
 - `Role.memberId` → `Member` (id, one)
+- `Observation.observer` → `Member` ($ref, one)
 - `Permission.actions` → `Action` ($ref, many)
 - `Permission.actionIds` → `Action` (id, many)
 - `Permission.scopeId` → `Scope` (id, one)

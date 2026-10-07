@@ -75,6 +75,90 @@ export type Scope = {
   [k: string]: unknown;
 };
 
+export interface Observation {
+  /**
+   * Globally unique identifier for this observation.
+   */
+  id: string;
+  /**
+   * IFS system identifier for this Observation.
+   */
+  ifsId: string;
+  /**
+   * Entity category for this object, normally Observation.
+   */
+  entityType: string;
+  /**
+   * Id of the object this object is derived from.
+   */
+  basedOn?: string;
+  /**
+   * URL for documentation about this entity.
+   */
+  entityDocumentationUrl: string;
+  /**
+   * Timestamp when this observation record was created.
+   */
+  createdAt: string;
+  /**
+   * Timestamp when this observation record was last updated.
+   */
+  updatedAt: string;
+  /**
+   * Description of what was observed.
+   */
+  description: string;
+  /**
+   * Location identifiers or names where the observation occurred.
+   */
+  locations: string[];
+  /**
+   * Date and time when the observation occurred.
+   */
+  timeOfObservation: string;
+  observer: Member;
+}
+/**
+ * Member who made the report about what they observed.
+ */
+export interface Member {
+  /**
+   * Globally unique identifier for this member.
+   */
+  id: string;
+  /**
+   * IFS system identifier for this Member.
+   */
+  ifsId: string;
+  /**
+   * Entity type discriminator. Always "Member" for Member entities.
+   */
+  entityType: "Member";
+  /**
+   * URL for documentation about this entity.
+   */
+  entityDocumentationUrl: string;
+  /**
+   * Human-readable name of the member.
+   */
+  name: string;
+  roles: Role[];
+  permissions: Permission[];
+  /**
+   * Whether this member is considered an owner of the system.
+   */
+  isOwner: boolean;
+  /**
+   * Timestamp when this member record was created.
+   */
+  createdAt: string;
+  /**
+   * Timestamp when this member record was last updated.
+   */
+  updatedAt: string;
+  [k: string]: unknown;
+}
+
 export interface Role {
   /**
    * Globally unique identifier for this role.

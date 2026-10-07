@@ -24,6 +24,7 @@
     { "property": "permissions", "type": "Permission" },
     { "property": "roles", "type": "Role" }
   ],
+  "Observation": [{ "property": "observer", "type": "Member" }],
   "Permission": [{ "property": "actions", "type": "Action" }],
   "Protocol": [],
   "ReviewComment": [],
