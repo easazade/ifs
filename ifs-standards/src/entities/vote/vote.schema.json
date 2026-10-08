@@ -69,5 +69,6 @@
     "decisionId",
     "memberId",
     "value"
-  ]
+  ],
+  "x-ifs-relationships": []
 }

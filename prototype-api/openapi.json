@@ -7815,19 +7815,19 @@
           }
         }
       },
-      "OrganizationResponseDto": {
+      "CreateGroupDto": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
-            "description": "Globally unique identifier for this organization.",
-            "pattern": "^Organization/[^/\\s]+$"
+            "description": "Globally unique identifier for this group.",
+            "pattern": "^Group/[^/\\s]+$"
           },
           "entityType": {
             "type": "string",
-            "description": "Entity type discriminator. Always \"Organization\" for Organization entities.",
+            "description": "Entity type discriminator. Always \"Group\" for Group entities.",
             "enum": [
-              "Organization"
+              "Group"
             ]
           },
           "basedOn": {
@@ -7840,14 +7840,23 @@
             "description": "URL for documentation about this entity.",
             "format": "uri"
           },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of this group.",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "Purpose and context of this group."
+          },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this organization record was created.",
+            "description": "Timestamp when this group record was created.",
             "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
-            "description": "Timestamp when this organization record was last updated.",
+            "description": "Timestamp when this group record was last updated.",
             "format": "date-time"
           }
         },
@@ -7855,6 +7864,7 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "name",
           "createdAt",
           "updatedAt"
         ]
@@ -7892,102 +7902,6 @@
           "description": {
             "type": "string",
             "description": "Purpose and context of this group."
-          },
-          "members": {
-            "description": "Members directly belonging to this group. Membership alone does not grant delegated authority.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MemberResponseDto"
-            }
-          },
-          "organizations": {
-            "description": "Organizations directly belonging to this group. Inclusion alone does not grant delegated authority.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrganizationResponseDto"
-            }
-          },
-          "groups": {
-            "description": "Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GroupResponseDto"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this group record was created.",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "description": "Timestamp when this group record was last updated.",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "id",
-          "entityType",
-          "entityDocumentationUrl",
-          "name",
-          "createdAt",
-          "updatedAt"
-        ]
-      },
-      "CreateGroupDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Globally unique identifier for this group.",
-            "pattern": "^Group/[^/\\s]+$"
-          },
-          "entityType": {
-            "type": "string",
-            "description": "Entity type discriminator. Always \"Group\" for Group entities.",
-            "enum": [
-              "Group"
-            ]
-          },
-          "basedOn": {
-            "type": "string",
-            "description": "Id of the object this object is derived from.",
-            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
-          },
-          "entityDocumentationUrl": {
-            "type": "string",
-            "description": "URL for documentation about this entity.",
-            "format": "uri"
-          },
-          "name": {
-            "type": "string",
-            "description": "Human-readable name of this group.",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string",
-            "description": "Purpose and context of this group."
-          },
-          "members": {
-            "description": "Members directly belonging to this group. Membership alone does not grant delegated authority.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MemberResponseDto"
-            }
-          },
-          "organizations": {
-            "description": "Organizations directly belonging to this group. Inclusion alone does not grant delegated authority.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrganizationResponseDto"
-            }
-          },
-          "groups": {
-            "description": "Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GroupResponseDto"
-            }
           },
           "createdAt": {
             "type": "string",
@@ -8042,27 +7956,6 @@
           "description": {
             "type": "string",
             "description": "Purpose and context of this group."
-          },
-          "members": {
-            "description": "Members directly belonging to this group. Membership alone does not grant delegated authority.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MemberResponseDto"
-            }
-          },
-          "organizations": {
-            "description": "Organizations directly belonging to this group. Inclusion alone does not grant delegated authority.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrganizationResponseDto"
-            }
-          },
-          "groups": {
-            "description": "Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GroupResponseDto"
-            }
           },
           "createdAt": {
             "type": "string",
@@ -8552,6 +8445,50 @@
           "updatedAt"
         ]
       },
+      "OrganizationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this organization.",
+            "pattern": "^Organization/[^/\\s]+$"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Organization\" for Organization entities.",
+            "enum": [
+              "Organization"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this organization record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this organization record was last updated.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "UpdateOrganizationDto": {
         "type": "object",
         "properties": {
@@ -8822,13 +8759,6 @@
               }
             ]
           },
-          "owners": {
-            "description": "IDs of entities that own this place.",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "roles": {
             "description": "Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc.",
             "type": "array",
@@ -8898,13 +8828,6 @@
               }
             ]
           },
-          "owners": {
-            "description": "IDs of entities that own this place.",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "roles": {
             "description": "Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc.",
             "type": "array",
@@ -8973,13 +8896,6 @@
                 "$ref": "#/components/schemas/GeographicAreaResponseDto"
               }
             ]
-          },
-          "owners": {
-            "description": "IDs of entities that own this place.",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           },
           "roles": {
             "description": "Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc.",

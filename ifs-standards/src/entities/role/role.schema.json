@@ -27,14 +27,8 @@
       "format": "uri",
       "description": "URL for documentation about this entity."
     },
-    "name": {
-      "type": "string",
-      "description": "Human-readable name of the role."
-    },
-    "description": {
-      "type": "string",
-      "description": "Optional human-readable explanation of what this role is for."
-    },
+    "name": { "type": "string", "description": "Human-readable name of the role." },
+    "description": { "type": "string", "description": "Optional human-readable explanation of what this role is for." },
     "memberId": {
       "type": "string",
       "x-ifs-id": true,
@@ -53,9 +47,7 @@
     },
     "permissions": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json" },
       "description": "Permission entities bundled into this role."
     },
     "state": {
@@ -91,5 +83,6 @@
     "state",
     "createdAt",
     "updatedAt"
-  ]
+  ],
+  "x-ifs-relationships": []
 }

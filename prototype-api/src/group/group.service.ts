@@ -8,26 +8,7 @@ import { CreateGroupDto } from './dto/create-group.dto.js';
 import { GroupResponseDto } from './dto/group-response.dto.js';
 import { UpdateGroupDto } from './dto/update-group.dto.js';
 
-const relations = [
-  {
-    property: 'groups',
-    table: 'group',
-    isArray: true,
-    readOnly: false,
-  },
-  {
-    property: 'members',
-    table: 'member',
-    isArray: true,
-    readOnly: false,
-  },
-  {
-    property: 'organizations',
-    table: 'organization',
-    isArray: true,
-    readOnly: false,
-  },
-] as const;
+const relations = [] as const;
 
 @Injectable()
 export class GroupService {

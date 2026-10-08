@@ -37,15 +37,10 @@
       "format": "date-time",
       "description": "Timestamp when this observation record was last updated."
     },
-    "description": {
-      "type": "string",
-      "description": "Description of what was observed."
-    },
+    "description": { "type": "string", "description": "Description of what was observed." },
     "locations": {
       "type": "array",
-      "items": {
-        "type": "string"
-      },
+      "items": { "type": "string" },
       "description": "Location identifiers or names where the observation occurred."
     },
     "timeOfObservation": {
@@ -68,5 +63,6 @@
     "locations",
     "timeOfObservation",
     "observer"
-  ]
+  ],
+  "x-ifs-relationships": []
 }

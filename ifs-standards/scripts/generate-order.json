@@ -3,6 +3,7 @@
   "change-item",
   "comment",
   "geographic-area",
+  "group",
   "label",
   "organization",
   "protocol",
@@ -18,7 +19,6 @@
   "member",
   "place",
   "decision",
-  "group",
   "observation",
   "change"
 ]

@@ -29,18 +29,12 @@
     },
     "actionIds": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "x-ifs-id": true,
-        "pattern": "^Action/[^/\\s]+$"
-      },
+      "items": { "type": "string", "x-ifs-id": true, "pattern": "^Action/[^/\\s]+$" },
       "description": "ID list of actions that this permission allows"
     },
     "actions": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/action.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/action.schema.json" },
       "description": "List of actions that this permission allows"
     },
     "memberId": {
@@ -87,5 +81,6 @@
       "description": "Optional timestamp after which this permission no longer applies."
     }
   },
-  "required": ["id", "entityType", "entityDocumentationUrl", "actionIds", "scopeId", "state", "createdAt", "expiresAt"]
+  "required": ["id", "entityType", "entityDocumentationUrl", "actionIds", "scopeId", "state", "createdAt", "expiresAt"],
+  "x-ifs-relationships": []
 }

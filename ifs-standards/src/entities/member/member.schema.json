@@ -21,27 +21,17 @@
       "format": "uri",
       "description": "URL for documentation about this entity."
     },
-    "name": {
-      "type": "string",
-      "description": "Human-readable name of the member."
-    },
+    "name": { "type": "string", "description": "Human-readable name of the member." },
     "roles": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/role.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/role.schema.json" },
       "readOnly": true
     },
     "permissions": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json"
-      }
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json" }
     },
-    "isOwner": {
-      "type": "boolean",
-      "description": "Whether this member is considered an owner of the system."
-    },
+    "isOwner": { "type": "boolean", "description": "Whether this member is considered an owner of the system." },
     "createdAt": {
       "type": "string",
       "format": "date-time",
@@ -63,5 +53,17 @@
     "isOwner",
     "createdAt",
     "updatedAt"
+  ],
+  "x-ifs-relationships": [
+    { "relationshipTypeId": "RelationshipType/ifs.employed-by", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.employed-by", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.manages", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.member-of", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.oversees", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.owns", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.partnered-with", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.partnered-with", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.protects", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.protects", "endpoint": "target" }
   ]
 }

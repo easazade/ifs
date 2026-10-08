@@ -7,6 +7,8 @@ export function createAjv() {
     strict: true,
   });
 
+  // Generated relationship metadata is an annotation, not an instance validation constraint.
+  ajv.addKeyword({ keyword: 'x-ifs-relationships', schemaType: 'array', valid: true });
   addFormats(ajv);
 
   return ajv;

@@ -39,5 +39,19 @@
       "description": "Timestamp when this organization record was last updated."
     }
   },
-  "required": ["id", "entityType", "entityDocumentationUrl", "createdAt", "updatedAt"]
+  "required": ["id", "entityType", "entityDocumentationUrl", "createdAt", "updatedAt"],
+  "x-ifs-relationships": [
+    { "relationshipTypeId": "RelationshipType/ifs.employed-by", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.manages", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.manages", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.member-of", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.oversees", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.oversees", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.owns", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.owns", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.partnered-with", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.partnered-with", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.protects", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.protects", "endpoint": "target" }
+  ]
 }

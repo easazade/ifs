@@ -27,40 +27,29 @@
       "format": "uri",
       "description": "URL for documentation about this entity."
     },
-    "name": {
-      "type": "string",
-      "description": "Human-readable name of the scope."
-    },
+    "name": { "type": "string", "description": "Human-readable name of the scope." },
     "description": {
       "type": "string",
       "description": "Optional human-readable explanation of what this scope includes and excludes."
     },
     "locations": {
       "type": "array",
-      "items": {
-        "type": "string"
-      },
+      "items": { "type": "string" },
       "description": "Location identifiers or names included in this scope. Kept as strings for now."
     },
     "groups": {
       "type": "array",
-      "items": {
-        "type": "string"
-      },
+      "items": { "type": "string" },
       "description": "Group identifiers or names included in this scope. Kept as strings for now."
     },
     "objects": {
       "type": "array",
-      "items": {
-        "type": "string"
-      },
+      "items": { "type": "string" },
       "description": "Object identifiers or names included in this scope. Kept as strings for now."
     },
     "entities": {
       "type": "array",
-      "items": {
-        "type": "string"
-      },
+      "items": { "type": "string" },
       "description": "Entity identifiers or names included in this scope. Kept as strings for now."
     },
     "parentScopeId": {
@@ -71,11 +60,7 @@
     },
     "childScopeIds": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "x-ifs-id": true,
-        "pattern": "^Scope/[^/\\s]+$"
-      },
+      "items": { "type": "string", "x-ifs-id": true, "pattern": "^Scope/[^/\\s]+$" },
       "description": "Identifiers of narrower child scopes contained by this scope."
     },
     "boundaryRules": {
@@ -96,17 +81,10 @@
   },
   "required": ["id", "entityType", "entityDocumentationUrl", "name", "type", "state", "createdAt", "updatedAt"],
   "anyOf": [
-    {
-      "required": ["locations"]
-    },
-    {
-      "required": ["groups"]
-    },
-    {
-      "required": ["objects"]
-    },
-    {
-      "required": ["entities"]
-    }
-  ]
+    { "required": ["locations"] },
+    { "required": ["groups"] },
+    { "required": ["objects"] },
+    { "required": ["entities"] }
+  ],
+  "x-ifs-relationships": []
 }

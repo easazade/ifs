@@ -54,10 +54,7 @@
       "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
       "description": "ID of the proposed object or version. Null for delete operations."
     },
-    "description": {
-      "type": "string",
-      "description": "Optional human-readable note explaining this specific item."
-    },
+    "description": { "type": "string", "description": "Optional human-readable note explaining this specific item." },
     "createdAt": {
       "type": "string",
       "format": "date-time",
@@ -83,73 +80,35 @@
   ],
   "allOf": [
     {
-      "if": {
-        "properties": {
-          "operation": {
-            "const": "create"
-          }
-        },
-        "required": ["operation"]
-      },
+      "if": { "properties": { "operation": { "const": "create" } }, "required": ["operation"] },
       "then": {
         "properties": {
-          "targetId": {
-            "type": "null"
-          },
-          "baseId": {
-            "type": "null"
-          },
-          "proposedId": {
-            "type": "string"
-          }
+          "targetId": { "type": "null" },
+          "baseId": { "type": "null" },
+          "proposedId": { "type": "string" }
         }
       }
     },
     {
-      "if": {
-        "properties": {
-          "operation": {
-            "const": "delete"
-          }
-        },
-        "required": ["operation"]
-      },
+      "if": { "properties": { "operation": { "const": "delete" } }, "required": ["operation"] },
       "then": {
         "properties": {
-          "targetId": {
-            "type": "string"
-          },
-          "baseId": {
-            "type": "string"
-          },
-          "proposedId": {
-            "type": "null"
-          }
+          "targetId": { "type": "string" },
+          "baseId": { "type": "string" },
+          "proposedId": { "type": "null" }
         }
       }
     },
     {
-      "if": {
-        "properties": {
-          "operation": {
-            "enum": ["update", "replace"]
-          }
-        },
-        "required": ["operation"]
-      },
+      "if": { "properties": { "operation": { "enum": ["update", "replace"] } }, "required": ["operation"] },
       "then": {
         "properties": {
-          "targetId": {
-            "type": "string"
-          },
-          "baseId": {
-            "type": "string"
-          },
-          "proposedId": {
-            "type": "string"
-          }
+          "targetId": { "type": "string" },
+          "baseId": { "type": "string" },
+          "proposedId": { "type": "string" }
         }
       }
     }
-  ]
+  ],
+  "x-ifs-relationships": []
 }

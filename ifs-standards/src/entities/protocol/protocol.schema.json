@@ -27,10 +27,8 @@
       "format": "uri",
       "description": "URL for documentation about this entity."
     },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time"
-    }
+    "createdAt": { "type": "string", "format": "date-time" }
   },
-  "required": ["id", "createdAt", "entityType", "entityDocumentationUrl"]
+  "required": ["id", "createdAt", "entityType", "entityDocumentationUrl"],
+  "x-ifs-relationships": []
 }

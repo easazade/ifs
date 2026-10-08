@@ -50,30 +50,22 @@
     },
     "eligibleMembers": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json" },
       "description": "Member entities eligible to participate in this decision."
     },
     "affectedMembers": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json" },
       "description": "Member entities affected by this decision under the IFS scope rule."
     },
     "votes": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/vote.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/vote.schema.json" },
       "description": "Vote entities cast directly by members or by delegates acting on their behalf."
     },
     "rules": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/rule.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/rule.schema.json" },
       "description": "Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision."
     },
     "eligibleMemberCount": {
@@ -157,5 +149,6 @@
     "openedAt",
     "createdAt",
     "updatedAt"
-  ]
+  ],
+  "x-ifs-relationships": []
 }

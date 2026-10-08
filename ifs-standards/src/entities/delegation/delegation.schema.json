@@ -84,5 +84,6 @@
     "delegatorId",
     "delegateId",
     "state"
-  ]
+  ],
+  "x-ifs-relationships": []
 }

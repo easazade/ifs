@@ -20,11 +20,7 @@
   ],
   "Delegation": [{ "property": "permission", "type": "Permission" }],
   "Geographic Area": [],
-  "Group": [
-    { "property": "groups", "type": "Group" },
-    { "property": "members", "type": "Member" },
-    { "property": "organizations", "type": "Organization" }
-  ],
+  "Group": [],
   "Label": [],
   "Member": [
     { "property": "permissions", "type": "Permission" },

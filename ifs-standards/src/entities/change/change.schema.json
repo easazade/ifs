@@ -27,10 +27,7 @@
       "format": "uri",
       "description": "URL for documentation about this entity."
     },
-    "title": {
-      "type": "string",
-      "description": "Human-readable title summarizing the proposed change."
-    },
+    "title": { "type": "string", "description": "Human-readable title summarizing the proposed change." },
     "description": {
       "type": "string",
       "description": "Detailed explanation of what this change proposes and why it is needed."
@@ -39,15 +36,10 @@
       "type": "string",
       "description": "Short explanation of what this change proposes and why it is needed."
     },
-    "reason": {
-      "type": "string",
-      "description": "explanation of why this change is being proposed."
-    },
+    "reason": { "type": "string", "description": "explanation of why this change is being proposed." },
     "changes": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/change-item.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/change-item.schema.json" },
       "description": "ChangeItem entities describing each proposed object-level operation in this change."
     },
     "decision": {
@@ -56,9 +48,7 @@
     },
     "comments": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/comment.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/comment.schema.json" },
       "description": "Recent Comment entities for this change, such as the first page of comments."
     },
     "commentsUrl": {
@@ -68,16 +58,12 @@
     },
     "reviewComments": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/review-comment.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/review-comment.schema.json" },
       "description": "ReviewComment entities tied to changed objects, fields, records, or diff entries."
     },
     "authors": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json" },
       "description": "Member entities that authored or co-authored this change."
     },
     "mainAuthorId": {
@@ -92,9 +78,7 @@
     },
     "reviewers": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json" },
       "description": "Member entities requested or assigned to review this change."
     },
     "status": {
@@ -112,13 +96,7 @@
       "minimum": 1,
       "description": "Human-friendly sequence number for this change inside the relevant system or scope."
     },
-    "labels": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "Label assigned to this change."
-    },
+    "labels": { "type": "array", "items": { "type": "string" }, "description": "Label assigned to this change." },
     "merged": {
       "type": "boolean",
       "default": false,
@@ -131,17 +109,10 @@
     },
     "links": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "format": "uri"
-      },
+      "items": { "type": "string", "format": "uri" },
       "description": "Any links related to this change."
     },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Timestamp when this change was created."
-    },
+    "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when this change was created." },
     "updatedAt": {
       "type": "string",
       "format": "date-time",
@@ -176,5 +147,6 @@
     "hasConflict",
     "createdAt",
     "updatedAt"
-  ]
+  ],
+  "x-ifs-relationships": []
 }

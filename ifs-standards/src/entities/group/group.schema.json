@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ifs-standards.org/schemas/v1/entities/group.schema.json",
   "title": "Group",
+  "description": "A named grouping of members, organizations, or subgroups. Direct membership and subgroup inclusion are recorded as Relationship objects, not embedded collections. Each relationship connects the included entity to this group using a RelationshipType that allows those endpoint types, with startedAt and optional endedAt recording its duration. Membership and containment alone do not grant delegated authority or imply transitive membership.",
   "type": "object",
   "additionalProperties": true,
   "properties": {
@@ -27,36 +28,8 @@
       "format": "uri",
       "description": "URL for documentation about this entity."
     },
-    "name": {
-      "type": "string",
-      "minLength": 1,
-      "description": "Human-readable name of this group."
-    },
-    "description": {
-      "type": "string",
-      "description": "Purpose and context of this group."
-    },
-    "members": {
-      "type": "array",
-      "description": "Members directly belonging to this group. Membership alone does not grant delegated authority.",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json"
-      }
-    },
-    "organizations": {
-      "type": "array",
-      "description": "Organizations directly belonging to this group. Inclusion alone does not grant delegated authority.",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/organization.schema.json"
-      }
-    },
-    "groups": {
-      "type": "array",
-      "description": "Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership.",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/group.schema.json"
-      }
-    },
+    "name": { "type": "string", "minLength": 1, "description": "Human-readable name of this group." },
+    "description": { "type": "string", "description": "Purpose and context of this group." },
     "createdAt": {
       "type": "string",
       "format": "date-time",
@@ -68,5 +41,18 @@
       "description": "Timestamp when this group record was last updated."
     }
   },
-  "required": ["id", "entityType", "entityDocumentationUrl", "name", "createdAt", "updatedAt"]
+  "required": ["id", "entityType", "entityDocumentationUrl", "name", "createdAt", "updatedAt"],
+  "x-ifs-relationships": [
+    { "relationshipTypeId": "RelationshipType/ifs.employed-by", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.manages", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.manages", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.member-of", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.oversees", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.oversees", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.owns", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.partnered-with", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.partnered-with", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.protects", "endpoint": "source" },
+    { "relationshipTypeId": "RelationshipType/ifs.protects", "endpoint": "target" }
+  ]
 }

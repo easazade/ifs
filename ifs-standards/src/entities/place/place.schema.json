@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ifs-standards.org/schemas/v1/entities/place.schema.json",
   "title": "Place",
+  "description": "A real-world place. Ownership is recorded as Relationship objects from each owning entity to this place, using an ownership RelationshipType that allows those endpoint types, with startedAt and optional endedAt recording its duration. Ownership relationships alone do not grant permissions; authority is defined through roles, permissions, and delegations.",
   "type": "object",
   "additionalProperties": true,
   "properties": {
@@ -37,10 +38,7 @@
       "format": "date-time",
       "description": "Timestamp when this place record was last updated."
     },
-    "name": {
-      "type": "string",
-      "description": "Human-readable name of the real-world place."
-    },
+    "name": { "type": "string", "description": "Human-readable name of the real-world place." },
     "coordinate": {
       "type": "string",
       "description": "Optional latitude, longitude, and altitude location, represented as a comma-separated string."
@@ -49,22 +47,17 @@
       "$ref": "https://ifs-standards.org/schemas/v1/entities/geographic-area.schema.json",
       "description": "Geographic area occupied by this place, including disconnected areas when applicable."
     },
-    "owners": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "x-ifs-id": true,
-        "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
-      },
-      "description": "IDs of entities that own this place."
-    },
     "roles": {
       "type": "array",
-      "items": {
-        "$ref": "https://ifs-standards.org/schemas/v1/entities/role.schema.json"
-      },
+      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/role.schema.json" },
       "description": "Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc."
     }
   },
-  "required": ["id", "entityType", "entityDocumentationUrl", "createdAt", "updatedAt", "name", "coordinate"]
+  "required": ["id", "entityType", "entityDocumentationUrl", "createdAt", "updatedAt", "name", "coordinate"],
+  "x-ifs-relationships": [
+    { "relationshipTypeId": "RelationshipType/ifs.manages", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.oversees", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.owns", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.protects", "endpoint": "target" }
+  ]
 }

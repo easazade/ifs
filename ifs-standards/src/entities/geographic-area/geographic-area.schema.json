@@ -43,12 +43,7 @@
         "type": "array",
         "items": {
           "type": "array",
-          "items": {
-            "type": "array",
-            "items": { "type": "number" },
-            "minItems": 2,
-            "maxItems": 3
-          },
+          "items": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 3 },
           "minItems": 4
         },
         "description": "A polygon ring represented by coordinate positions; the first ring is the exterior boundary and subsequent rings, if any, are holes."
@@ -56,5 +51,6 @@
       "description": "Polygon geometries making up this area. Separate polygons can represent disconnected regions. Coordinates use [longitude, latitude, optional altitude] positions."
     }
   },
-  "required": ["id", "entityType", "entityDocumentationUrl", "createdAt", "updatedAt", "polygons"]
+  "required": ["id", "entityType", "entityDocumentationUrl", "createdAt", "updatedAt", "polygons"],
+  "x-ifs-relationships": []
 }

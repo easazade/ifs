@@ -1820,23 +1820,23 @@ export interface UpdateGeographicAreaDto {
 }
 
 /**
- * Entity type discriminator. Always "Organization" for Organization entities.
+ * Entity type discriminator. Always "Group" for Group entities.
  */
-export type OrganizationResponseDtoEntityType =
-  (typeof OrganizationResponseDtoEntityType)[keyof typeof OrganizationResponseDtoEntityType];
+export type CreateGroupDtoEntityType =
+  (typeof CreateGroupDtoEntityType)[keyof typeof CreateGroupDtoEntityType];
 
-export const OrganizationResponseDtoEntityType = {
-  Organization: 'Organization',
+export const CreateGroupDtoEntityType = {
+  Group: 'Group',
 } as const;
 
-export interface OrganizationResponseDto {
+export interface CreateGroupDto {
   /**
-   * Globally unique identifier for this organization.
-   * @pattern ^Organization/[^/\s]+$
+   * Globally unique identifier for this group.
+   * @pattern ^Group/[^/\s]+$
    */
   id: string;
-  /** Entity type discriminator. Always "Organization" for Organization entities. */
-  entityType: OrganizationResponseDtoEntityType;
+  /** Entity type discriminator. Always "Group" for Group entities. */
+  entityType: CreateGroupDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1844,9 +1844,16 @@ export interface OrganizationResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this organization record was created. */
+  /**
+   * Human-readable name of this group.
+   * @minLength 1
+   */
+  name: string;
+  /** Purpose and context of this group. */
+  description?: string;
+  /** Timestamp when this group record was created. */
   createdAt: string;
-  /** Timestamp when this organization record was last updated. */
+  /** Timestamp when this group record was last updated. */
   updatedAt: string;
 }
 
@@ -1882,56 +1889,6 @@ export interface GroupResponseDto {
   name: string;
   /** Purpose and context of this group. */
   description?: string;
-  /** Members directly belonging to this group. Membership alone does not grant delegated authority. */
-  members?: MemberResponseDto[];
-  /** Organizations directly belonging to this group. Inclusion alone does not grant delegated authority. */
-  organizations?: OrganizationResponseDto[];
-  /** Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership. */
-  groups?: GroupResponseDto[];
-  /** Timestamp when this group record was created. */
-  createdAt: string;
-  /** Timestamp when this group record was last updated. */
-  updatedAt: string;
-}
-
-/**
- * Entity type discriminator. Always "Group" for Group entities.
- */
-export type CreateGroupDtoEntityType =
-  (typeof CreateGroupDtoEntityType)[keyof typeof CreateGroupDtoEntityType];
-
-export const CreateGroupDtoEntityType = {
-  Group: 'Group',
-} as const;
-
-export interface CreateGroupDto {
-  /**
-   * Globally unique identifier for this group.
-   * @pattern ^Group/[^/\s]+$
-   */
-  id: string;
-  /** Entity type discriminator. Always "Group" for Group entities. */
-  entityType: CreateGroupDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity. */
-  entityDocumentationUrl: string;
-  /**
-   * Human-readable name of this group.
-   * @minLength 1
-   */
-  name: string;
-  /** Purpose and context of this group. */
-  description?: string;
-  /** Members directly belonging to this group. Membership alone does not grant delegated authority. */
-  members?: MemberResponseDto[];
-  /** Organizations directly belonging to this group. Inclusion alone does not grant delegated authority. */
-  organizations?: OrganizationResponseDto[];
-  /** Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership. */
-  groups?: GroupResponseDto[];
   /** Timestamp when this group record was created. */
   createdAt: string;
   /** Timestamp when this group record was last updated. */
@@ -1970,12 +1927,6 @@ export interface UpdateGroupDto {
   name?: string;
   /** Purpose and context of this group. */
   description?: string;
-  /** Members directly belonging to this group. Membership alone does not grant delegated authority. */
-  members?: MemberResponseDto[];
-  /** Organizations directly belonging to this group. Inclusion alone does not grant delegated authority. */
-  organizations?: OrganizationResponseDto[];
-  /** Subgroups directly belonging to this group. Containment alone does not grant delegated authority or imply transitive membership. */
-  groups?: GroupResponseDto[];
   /** Timestamp when this group record was created. */
   createdAt?: string;
   /** Timestamp when this group record was last updated. */
@@ -2288,6 +2239,37 @@ export interface CreateOrganizationDto {
 /**
  * Entity type discriminator. Always "Organization" for Organization entities.
  */
+export type OrganizationResponseDtoEntityType =
+  (typeof OrganizationResponseDtoEntityType)[keyof typeof OrganizationResponseDtoEntityType];
+
+export const OrganizationResponseDtoEntityType = {
+  Organization: 'Organization',
+} as const;
+
+export interface OrganizationResponseDto {
+  /**
+   * Globally unique identifier for this organization.
+   * @pattern ^Organization/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Organization" for Organization entities. */
+  entityType: OrganizationResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this organization record was created. */
+  createdAt: string;
+  /** Timestamp when this organization record was last updated. */
+  updatedAt: string;
+}
+
+/**
+ * Entity type discriminator. Always "Organization" for Organization entities.
+ */
 export type UpdateOrganizationDtoEntityType =
   (typeof UpdateOrganizationDtoEntityType)[keyof typeof UpdateOrganizationDtoEntityType];
 
@@ -2499,8 +2481,6 @@ export interface CreatePlaceDto {
   coordinate: string;
   /** Geographic area occupied by this place, including disconnected areas when applicable. */
   geographicArea?: GeographicAreaResponseDto;
-  /** IDs of entities that own this place. */
-  owners?: string[];
   /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
   roles?: RoleResponseDto[];
 }
@@ -2540,8 +2520,6 @@ export interface PlaceResponseDto {
   coordinate: string;
   /** Geographic area occupied by this place, including disconnected areas when applicable. */
   geographicArea?: GeographicAreaResponseDto;
-  /** IDs of entities that own this place. */
-  owners?: string[];
   /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
   roles?: RoleResponseDto[];
 }
@@ -2581,8 +2559,6 @@ export interface UpdatePlaceDto {
   coordinate?: string;
   /** Geographic area occupied by this place, including disconnected areas when applicable. */
   geographicArea?: GeographicAreaResponseDto;
-  /** IDs of entities that own this place. */
-  owners?: string[];
   /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
   roles?: RoleResponseDto[];
 }
@@ -6400,7 +6376,7 @@ export const getCreateGroupUrl = () => {
  * @summary Create a Group.
  */
 export const createGroup = async (
-  createGroupDto: NonReadonly<CreateGroupDto>,
+  createGroupDto: CreateGroupDto,
   options?: RequestInit,
 ): Promise<createGroupResponse> => {
   const getHeaders = (
@@ -6556,7 +6532,7 @@ export const getUpdateGroupUrl = (id: string) => {
  */
 export const updateGroup = async (
   id: string,
-  updateGroupDto: NonReadonly<UpdateGroupDto>,
+  updateGroupDto: UpdateGroupDto,
   options?: RequestInit,
 ): Promise<updateGroupResponse> => {
   const getHeaders = (

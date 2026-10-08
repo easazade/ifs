@@ -57,12 +57,6 @@ export class CreatePlaceDto {
   geographicArea?: GeographicAreaResponseDto;
 
   @ApiPropertyOptional({
-    description: 'IDs of entities that own this place.',
-    type: [String],
-  })
-  owners?: Array<string>;
-
-  @ApiPropertyOptional({
     description:
       'Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc.',
     type: () => [RoleResponseDto],
