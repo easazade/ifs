@@ -1,0 +1,13 @@
+{
+  "id": "RelationshipType/ifs.protects",
+  "entityType": "RelationshipType",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/RelationshipType",
+  "createdAt": "2026-10-08T21:31:01Z",
+  "updatedAt": "2026-10-08T21:31:01Z",
+  "type": "protects",
+  "description": "A member, group, or organization undertakes to safeguard a member, group, organization, or place against harm. Protection does not imply ownership, control over the protected party, or delegated authority; any authority must be established separately.",
+  "sourceTypes": ["Member", "Group", "Organization"],
+  "targetTypes": ["Member", "Group", "Organization", "Place"],
+  "symmetric": false,
+  "inverseType": "protected by"
+}

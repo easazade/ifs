@@ -1,0 +1,13 @@
+{
+  "id": "RelationshipType/ifs.oversees",
+  "entityType": "RelationshipType",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/RelationshipType",
+  "createdAt": "2026-10-08T21:31:01Z",
+  "updatedAt": "2026-10-08T21:31:01Z",
+  "type": "oversees",
+  "description": "A member, group, or organization monitors and reviews the operation or stewardship of a group, organization, or place for accountability. Oversight is distinct from day-to-day management and does not itself grant authority to intervene, access restricted information, or make decisions.",
+  "sourceTypes": ["Member", "Group", "Organization"],
+  "targetTypes": ["Group", "Organization", "Place"],
+  "symmetric": false,
+  "inverseType": "overseen by"
+}

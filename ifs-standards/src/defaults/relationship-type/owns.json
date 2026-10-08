@@ -1,0 +1,13 @@
+{
+  "id": "RelationshipType/ifs.owns",
+  "entityType": "RelationshipType",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/RelationshipType",
+  "createdAt": "2026-10-08T21:31:01Z",
+  "updatedAt": "2026-10-08T21:31:01Z",
+  "type": "owns",
+  "description": "A member, group, or organization holds an ownership interest in an organization or place. This records ownership without specifying its share or granting delegated authority. Ownership does not imply ownership of the organization's members.",
+  "sourceTypes": ["Member", "Group", "Organization"],
+  "targetTypes": ["Organization", "Place"],
+  "symmetric": false,
+  "inverseType": "owned by"
+}

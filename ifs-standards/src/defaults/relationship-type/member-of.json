@@ -1,0 +1,13 @@
+{
+  "id": "RelationshipType/ifs.member-of",
+  "entityType": "RelationshipType",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/RelationshipType",
+  "createdAt": "2026-10-08T21:18:05Z",
+  "updatedAt": "2026-10-08T21:18:05Z",
+  "type": "member of",
+  "description": "A member directly belongs to a group or organization. Membership alone does not grant delegated authority or imply transitive membership.",
+  "sourceTypes": ["Member"],
+  "targetTypes": ["Group", "Organization"],
+  "symmetric": false,
+  "inverseType": "has member"
+}

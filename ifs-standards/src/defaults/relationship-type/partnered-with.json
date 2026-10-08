@@ -1,0 +1,13 @@
+{
+  "id": "RelationshipType/ifs.partnered-with",
+  "entityType": "RelationshipType",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/RelationshipType",
+  "createdAt": "2026-10-08T21:31:01Z",
+  "updatedAt": "2026-10-08T21:31:01Z",
+  "type": "partnered with",
+  "description": "Two members, groups, or organizations mutually agree to cooperate toward shared goals. Partnership is symmetric and does not imply ownership, employment, membership, or authority for either party to act on behalf of the other.",
+  "sourceTypes": ["Member", "Group", "Organization"],
+  "targetTypes": ["Member", "Group", "Organization"],
+  "symmetric": true,
+  "inverseType": "partnered with"
+}

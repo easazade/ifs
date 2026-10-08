@@ -1,0 +1,13 @@
+{
+  "id": "RelationshipType/ifs.employed-by",
+  "entityType": "RelationshipType",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/RelationshipType",
+  "createdAt": "2026-10-08T21:31:01Z",
+  "updatedAt": "2026-10-08T21:31:01Z",
+  "type": "employed by",
+  "description": "A member works as an employee of another member, a group, or an organization under an employment arrangement. Employment is distinct from membership, partnership, and independent contracting, and does not itself grant delegated authority or define contractual terms.",
+  "sourceTypes": ["Member"],
+  "targetTypes": ["Member", "Group", "Organization"],
+  "symmetric": false,
+  "inverseType": "employs"
+}

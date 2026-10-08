@@ -1,0 +1,13 @@
+{
+  "id": "RelationshipType/ifs.manages",
+  "entityType": "RelationshipType",
+  "entityDocumentationUrl": "https://ifs-standards.org/entities/RelationshipType",
+  "createdAt": "2026-10-08T21:31:01Z",
+  "updatedAt": "2026-10-08T21:31:01Z",
+  "type": "manages",
+  "description": "A member, group, or organization coordinates the day-to-day operation of a group, organization, or place. Management does not imply ownership or grant delegated authority; applicable roles, permissions, and revocable delegations determine that authority.",
+  "sourceTypes": ["Member", "Group", "Organization"],
+  "targetTypes": ["Group", "Organization", "Place"],
+  "symmetric": false,
+  "inverseType": "managed by"
+}
