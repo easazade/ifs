@@ -216,6 +216,15 @@ describe('resource generator', () => {
     );
     expect(controllerSource).toContain("operationId: 'createGeographicArea'");
     expect(controllerSource).toContain('CreateGeographicAreaDto');
+    expect(controllerSource).toContain("@Get(':id/relations')");
+    expect(controllerSource).toContain(
+      "operationId: 'listGeographicAreaRelations'",
+    );
+    expect(controllerSource).toContain('@Query() query: RelationsQueryDto');
+    expect(serviceSource).toContain(
+      "this.database.findRelations('geographic_area', id, query)",
+    );
+    expect(serviceSource).toContain('Promise<RelationshipResponseDto[]>');
   });
 
   it('rejects entities that are not defined by IFS standards', () => {

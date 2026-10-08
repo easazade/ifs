@@ -122,6 +122,42 @@ describe('AppController (e2e)', () => {
       .send(edge)
       .expect(201);
     expect(created.body).toEqual(edge);
+    await db.update('member', edge.targetId, { name: 'Alice' });
+    const relationsUrl = `/organizations/${encodeURIComponent(edge.sourceId)}/relations`;
+    const associated = await request(app.getHttpServer())
+      .get(relationsUrl)
+      .query({
+        direction: 'outgoing',
+        filter: JSON.stringify({ type: edge.type, 'out.name': 'Alice' }),
+      })
+      .expect(200);
+    expect(associated.body).toEqual([edge]);
+    expect(
+      (
+        await request(app.getHttpServer())
+          .get(relationsUrl)
+          .query({ direction: 'incoming' })
+          .expect(200)
+      ).body,
+    ).toEqual([]);
+    expect(
+      (
+        await request(app.getHttpServer())
+          .get(`/members/${encodeURIComponent(edge.targetId)}/relations`)
+          .expect(200)
+      ).body,
+    ).toEqual([edge]);
+    await request(app.getHttpServer())
+      .get(relationsUrl)
+      .query({ filter: '[]' })
+      .expect(400);
+    await request(app.getHttpServer())
+      .get(relationsUrl)
+      .query({ direction: 'invalid' })
+      .expect(400);
+    await request(app.getHttpServer())
+      .get('/members/Member%2Fmissing/relations')
+      .expect(404);
     await request(app.getHttpServer())
       .post('/relationships')
       .send(edge)

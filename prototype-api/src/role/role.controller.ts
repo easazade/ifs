@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateRoleDto } from './dto/create-role.dto.js';
 import { RoleResponseDto } from './dto/role-response.dto.js';
 import { UpdateRoleDto } from './dto/update-role.dto.js';
 import { RoleService } from './role.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('roles')
 @Controller('roles')
@@ -55,6 +59,28 @@ export class RoleController {
     const result = await this.roleService.findOne(id);
     if (!result) throw new NotFoundException('Role not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listRoleRelations',
+    summary: 'Query relationships associated with a Role.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Role ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Role not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.roleService.findRelations(id, query);
   }
 
   @Patch(':id')

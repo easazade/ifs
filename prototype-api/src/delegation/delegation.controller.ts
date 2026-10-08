@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateDelegationDto } from './dto/create-delegation.dto.js';
 import { DelegationResponseDto } from './dto/delegation-response.dto.js';
 import { UpdateDelegationDto } from './dto/update-delegation.dto.js';
 import { DelegationService } from './delegation.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('delegations')
 @Controller('delegations')
@@ -64,6 +68,28 @@ export class DelegationController {
     const result = await this.delegationService.findOne(id);
     if (!result) throw new NotFoundException('Delegation not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listDelegationRelations',
+    summary: 'Query relationships associated with a Delegation.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Delegation ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Delegation not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.delegationService.findRelations(id, query);
   }
 
   @Patch(':id')

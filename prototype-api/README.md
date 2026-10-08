@@ -70,6 +70,17 @@ Setup refuses an existing non-relation `relationship` table rather than silently
 
 Tables are schemaless, not database-enforced copies of JSON Schema. Swagger DTOs are documentation/types, **not runtime validation**. This prototype does not add runtime JSON Schema validation. Ordinary `$ref` record links do not have database-level foreign-key/delete constraints; their existence checks occur before writes, so concurrent deletes can leave dangling links. Graph edges have the special enforcement described above. Review/extend validation, transactions, relation ownership, and authorization before production use.
 
+### Query associated relationships
+
+Every generated resource exposes `GET /<plural-route>/:id/relations` (for example `/members/Member%2F1/relations`) and a service `findRelations(id, query)` method. Results are `RelationshipResponseDto[]`, with public `sourceId`/`targetId`, not raw database edges or expanded endpoints. This queries `Relationship` graph edges, not ordinary embedded `$ref` properties. A missing object returns 404; an existing object without matching edges returns `[]`.
+
+Optional query parameters:
+
+- `direction`: `both` (default), `incoming` (object is `out`), or `outgoing` (object is `in`).
+- `filter`: URL-encoded JSON object of equality predicates, combined with AND. Relation fields and dotted endpoint fields are supported, including custom schemaless fields: `{"type":"has member","out.name":"Alice"}`. `in` means source and `out` means target. `in`/`out`, `in.id`/`out.id`, and `sourceId`/`targetId` accept canonical endpoint IDs. `id` accepts a canonical `Relationship/id`. Arrays/objects compare as whole JSON values; `null` matches explicit null, not absent fields. There are no comparison operators or raw SQL filters.
+
+Malformed filters/directions return 400. Field paths must contain identifier segments (at most eight), values are bound SQL parameters, and filters are limited to 100 fields and a 16 KiB JSON string. Endpoint fields are dereferenced for filtering only; the response remains the public relationship shape. Result ordering is unspecified and this prototype endpoint is not paginated.
+
 ## Generation and OpenAPI
 
 Canonical entity schemas remain `ifs-standards/src/entities/**/*.schema.json`.

@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateGroupDto } from './dto/create-group.dto.js';
 import { GroupResponseDto } from './dto/group-response.dto.js';
 import { UpdateGroupDto } from './dto/update-group.dto.js';
 import { GroupService } from './group.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('groups')
 @Controller('groups')
@@ -55,6 +59,28 @@ export class GroupController {
     const result = await this.groupService.findOne(id);
     if (!result) throw new NotFoundException('Group not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listGroupRelations',
+    summary: 'Query relationships associated with a Group.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Group ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Group not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.groupService.findRelations(id, query);
   }
 
   @Patch(':id')

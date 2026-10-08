@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateReviewCommentDto } from './dto/create-review-comment.dto.js';
 import { ReviewCommentResponseDto } from './dto/review-comment-response.dto.js';
 import { UpdateReviewCommentDto } from './dto/update-review-comment.dto.js';
 import { ReviewCommentService } from './review-comment.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('review-comments')
 @Controller('review-comments')
@@ -66,6 +70,28 @@ export class ReviewCommentController {
     const result = await this.reviewCommentService.findOne(id);
     if (!result) throw new NotFoundException('ReviewComment not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listReviewCommentRelations',
+    summary: 'Query relationships associated with a ReviewComment.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'ReviewComment ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'ReviewComment not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.reviewCommentService.findRelations(id, query);
   }
 
   @Patch(':id')

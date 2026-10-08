@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateDecisionDto } from './dto/create-decision.dto.js';
 import { DecisionResponseDto } from './dto/decision-response.dto.js';
 import { UpdateDecisionDto } from './dto/update-decision.dto.js';
 import { DecisionService } from './decision.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('decisions')
 @Controller('decisions')
@@ -64,6 +68,28 @@ export class DecisionController {
     const result = await this.decisionService.findOne(id);
     if (!result) throw new NotFoundException('Decision not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listDecisionRelations',
+    summary: 'Query relationships associated with a Decision.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Decision ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Decision not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.decisionService.findRelations(id, query);
   }
 
   @Patch(':id')

@@ -36,6 +36,23 @@ console.log(response.data); // string: "Hello World!"
 
 The default base URL is `/api`. Start both apps (`pnpm --filter prototype-api dev` and `pnpm --filter prototype dev` in separate terminals); Vite proxies `/api/*` to `http://localhost:3000/*`, avoiding development CORS issues. If you change the API port, update the proxy target in `prototype/vite.config.ts`.
 
+## Associated relationships
+
+Each resource has a generated `list<Entity>Relations` function, exported from `prototype-client`:
+
+```ts
+import { listMemberRelations } from 'prototype-client';
+
+const response = await listMemberRelations('Member/1', {
+  direction: 'incoming', // 'both' (default), 'incoming', or 'outgoing'
+  filter: JSON.stringify({ type: 'has member', 'in.name': 'Example organization' }),
+});
+if (response.status !== 200) throw new Error(`API returned ${response.status}`);
+console.log(response.data); // RelationshipResponseDto[]
+```
+
+The client encodes IDs and query parameters; pass unencoded strings. Filters are ANDed equality checks on relation fields or dotted source (`in`) / target (`out`) fields. `in.id`/`out.id`, `in`/`out`, and `sourceId`/`targetId` accept canonical endpoint IDs. Responses retain public `sourceId`/`targetId` fields. Missing objects return 404, invalid filters return 400, and no matching relationships returns an empty array. See the API README for filter limits and semantics.
+
 ## Runtime base URL / Node.js
 
 ```ts

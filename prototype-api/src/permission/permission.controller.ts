@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreatePermissionDto } from './dto/create-permission.dto.js';
 import { PermissionResponseDto } from './dto/permission-response.dto.js';
 import { UpdatePermissionDto } from './dto/update-permission.dto.js';
 import { PermissionService } from './permission.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('permissions')
 @Controller('permissions')
@@ -64,6 +68,28 @@ export class PermissionController {
     const result = await this.permissionService.findOne(id);
     if (!result) throw new NotFoundException('Permission not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listPermissionRelations',
+    summary: 'Query relationships associated with a Permission.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Permission ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Permission not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.permissionService.findRelations(id, query);
   }
 
   @Patch(':id')

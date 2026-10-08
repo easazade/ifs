@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateScopeDto } from './dto/create-scope.dto.js';
 import { ScopeResponseDto } from './dto/scope-response.dto.js';
 import { UpdateScopeDto } from './dto/update-scope.dto.js';
 import { ScopeService } from './scope.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('scopes')
 @Controller('scopes')
@@ -55,6 +59,28 @@ export class ScopeController {
     const result = await this.scopeService.findOne(id);
     if (!result) throw new NotFoundException('Scope not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listScopeRelations',
+    summary: 'Query relationships associated with a Scope.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Scope ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Scope not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.scopeService.findRelations(id, query);
   }
 
   @Patch(':id')

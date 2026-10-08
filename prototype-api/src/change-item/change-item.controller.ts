@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateChangeItemDto } from './dto/create-change-item.dto.js';
 import { ChangeItemResponseDto } from './dto/change-item-response.dto.js';
 import { UpdateChangeItemDto } from './dto/update-change-item.dto.js';
 import { ChangeItemService } from './change-item.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('change-items')
 @Controller('change-items')
@@ -64,6 +68,28 @@ export class ChangeItemController {
     const result = await this.changeItemService.findOne(id);
     if (!result) throw new NotFoundException('ChangeItem not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listChangeItemRelations',
+    summary: 'Query relationships associated with a ChangeItem.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'ChangeItem ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'ChangeItem not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.changeItemService.findRelations(id, query);
   }
 
   @Patch(':id')

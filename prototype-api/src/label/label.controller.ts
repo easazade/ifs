@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateLabelDto } from './dto/create-label.dto.js';
 import { LabelResponseDto } from './dto/label-response.dto.js';
 import { UpdateLabelDto } from './dto/update-label.dto.js';
 import { LabelService } from './label.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('labels')
 @Controller('labels')
@@ -55,6 +59,28 @@ export class LabelController {
     const result = await this.labelService.findOne(id);
     if (!result) throw new NotFoundException('Label not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listLabelRelations',
+    summary: 'Query relationships associated with a Label.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Label ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Label not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.labelService.findRelations(id, query);
   }
 
   @Patch(':id')

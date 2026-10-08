@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateGeographicAreaDto } from './dto/create-geographic-area.dto.js';
 import { GeographicAreaResponseDto } from './dto/geographic-area-response.dto.js';
 import { UpdateGeographicAreaDto } from './dto/update-geographic-area.dto.js';
 import { GeographicAreaService } from './geographic-area.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('geographic-areas')
 @Controller('geographic-areas')
@@ -66,6 +70,28 @@ export class GeographicAreaController {
     const result = await this.geographicAreaService.findOne(id);
     if (!result) throw new NotFoundException('GeographicArea not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listGeographicAreaRelations',
+    summary: 'Query relationships associated with a GeographicArea.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'GeographicArea ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'GeographicArea not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.geographicAreaService.findRelations(id, query);
   }
 
   @Patch(':id')

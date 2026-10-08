@@ -221,6 +221,8 @@ function renderService(entityName, modelName, relations) {
   return `${generatedMarker}
 import { Injectable } from '@nestjs/common';
 import { SurrealService } from '../surreal/surreal.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+${entityName === 'relationship' ? '' : "import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';"}
 import { Create${modelName}Dto } from './dto/create-${entityName}.dto.js';
 import { ${modelName}ResponseDto } from './dto/${entityName}-response.dto.js';
 import { Update${modelName}Dto } from './dto/update-${entityName}.dto.js';
@@ -241,6 +243,10 @@ export class ${modelName}Service {
 
   findOne(id: string): Promise<${modelName}ResponseDto | null> {
     return this.database.findOne('${table}', id, relations);
+  }
+
+  findRelations(id: string, query: RelationsQueryDto = {}): Promise<RelationshipResponseDto[]> {
+    return this.database.findRelations('${table}', id, query);
   }
 
   update(id: string, data: Update${modelName}Dto): Promise<${modelName}ResponseDto> {
@@ -269,9 +275,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -284,6 +292,8 @@ import { Create${modelName}Dto } from './dto/create-${entityName}.dto.js';
 import { ${modelName}ResponseDto } from './dto/${entityName}-response.dto.js';
 import { Update${modelName}Dto } from './dto/update-${entityName}.dto.js';
 import { ${modelName}Service } from './${entityName}.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+${entityName === 'relationship' ? '' : "import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';"}
 
 @ApiTags('${route}')
 @Controller('${route}')
@@ -314,6 +324,16 @@ export class ${modelName}Controller {
     const result = await this.${serviceName}Service.findOne(id);
     if (!result) throw new NotFoundException('${modelName} not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({ operationId: 'list${modelName}Relations', summary: 'Query relationships associated with a ${modelName}.' })
+  @ApiParam({ name: 'id', type: String, description: '${modelName} ID (URL-encode slashes).' })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({ description: 'Invalid direction or equality filters.' })
+  @ApiNotFoundResponse({ description: '${modelName} not found.' })
+  findRelations(@Param('id') id: string, @Query() query: RelationsQueryDto): Promise<RelationshipResponseDto[]> {
+    return this.${serviceName}Service.findRelations(id, query);
   }
 
   @Patch(':id')

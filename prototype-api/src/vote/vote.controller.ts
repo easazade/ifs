@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateVoteDto } from './dto/create-vote.dto.js';
 import { VoteResponseDto } from './dto/vote-response.dto.js';
 import { UpdateVoteDto } from './dto/update-vote.dto.js';
 import { VoteService } from './vote.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('votes')
 @Controller('votes')
@@ -55,6 +59,28 @@ export class VoteController {
     const result = await this.voteService.findOne(id);
     if (!result) throw new NotFoundException('Vote not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listVoteRelations',
+    summary: 'Query relationships associated with a Vote.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Vote ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Vote not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.voteService.findRelations(id, query);
   }
 
   @Patch(':id')

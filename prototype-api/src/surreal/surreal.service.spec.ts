@@ -84,6 +84,67 @@ describe('SurrealService (real database)', () => {
       service.createEdge('relationship', data),
     ).rejects.toBeInstanceOf(ConflictException);
     expect(await service.findAll('relationship')).toEqual([data]);
+    await service.update('member', data.targetId, { name: 'Alice' });
+    expect(await service.findRelations('organization', data.sourceId)).toEqual([
+      data,
+    ]);
+    expect(
+      await service.findRelations('member', data.targetId, {
+        direction: 'incoming',
+      }),
+    ).toEqual([data]);
+    expect(
+      await service.findRelations('member', data.targetId, {
+        direction: 'outgoing',
+      }),
+    ).toEqual([]);
+    for (const filter of [
+      { type: 'has member', 'out.name': 'Alice' },
+      { 'in.id': data.sourceId, 'out.id': data.targetId },
+      { in: data.sourceId, out: data.targetId },
+      { sourceId: data.sourceId, targetId: data.targetId },
+      { id: data.id, relationshipTypeId: data.relationshipTypeId },
+      { 'notes.trace': 'test', startedAt: '2026-01-01' },
+    ]) {
+      expect(
+        await service.findRelations('organization', data.sourceId, {
+          filter: JSON.stringify(filter),
+        }),
+      ).toEqual([data]);
+    }
+    for (const filter of [
+      { type: 'wrong' },
+      { 'out.name': "Alice' OR true" },
+      { 'in.id': 'Organization/other' },
+    ]) {
+      expect(
+        await service.findRelations('organization', data.sourceId, {
+          filter: JSON.stringify(filter),
+        }),
+      ).toEqual([]);
+    }
+    for (const filter of [
+      'bad',
+      '[]',
+      'null',
+      '1',
+      '{"type OR true":1}',
+      '{"out..name":"Alice"}',
+      '{"in":"bad"}',
+      '{"id":"Member/target"}',
+    ]) {
+      await expect(
+        service.findRelations('organization', data.sourceId, { filter }),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    }
+    await expect(
+      service.findRelations('organization', data.sourceId, {
+        direction: 'invalid' as 'both',
+      }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+    await expect(
+      service.findRelations('member', 'Member/missing'),
+    ).rejects.toBeInstanceOf(NotFoundException);
     expect(
       await service.updateEdge('relationship', data.id, {
         endedAt: '2026-02-01',
@@ -151,6 +212,78 @@ describe('SurrealService (real database)', () => {
     );
     expect(afterDelete).toEqual([]);
     await service.remove('organization', data.sourceId);
+  });
+
+  it('keeps association constraints with filters and returns self-loops once', async () => {
+    for (const id of ['Member/a', 'Member/b', 'Member/c']) {
+      await service.create('member', { id, name: id });
+    }
+    await service.create('relationship_type', {
+      id: 'RelationshipType/peer',
+      type: 'peer',
+      inverseType: 'peer',
+      sourceTypes: ['Member'],
+      targetTypes: ['Member'],
+    });
+    const edges = [
+      ['outgoing', 'Member/a', 'Member/b'],
+      ['incoming', 'Member/b', 'Member/a'],
+      ['self', 'Member/a', 'Member/a'],
+      ['unrelated', 'Member/b', 'Member/c'],
+    ];
+    for (const [name, sourceId, targetId] of edges) {
+      await service.createEdge('relationship', {
+        id: `Relationship/${name}`,
+        sourceId,
+        targetId,
+        relationshipTypeId: 'RelationshipType/peer',
+        type: 'peer',
+        inverseType: 'peer',
+        metadata: { tags: ['one', 'two'], ended: null },
+      });
+    }
+    const ids = async (direction: 'both' | 'incoming' | 'outgoing') =>
+      (
+        await service.findRelations<{ id: string }>('member', 'Member/a', {
+          direction,
+          filter: JSON.stringify({
+            type: 'peer',
+            'metadata.tags': ['one', 'two'],
+            'metadata.ended': null,
+          }),
+        })
+      )
+        .map(({ id }) => id)
+        .sort();
+    expect(await ids('both')).toEqual([
+      'Relationship/incoming',
+      'Relationship/outgoing',
+      'Relationship/self',
+    ]);
+    expect(await ids('incoming')).toEqual([
+      'Relationship/incoming',
+      'Relationship/self',
+    ]);
+    expect(await ids('outgoing')).toEqual([
+      'Relationship/outgoing',
+      'Relationship/self',
+    ]);
+    await expect(
+      service.findRelations('member', 'Member/a', {
+        filter: ' '.repeat(16_385),
+      }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+    await expect(
+      service.findRelations('member', 'Member/a', {
+        filter: JSON.stringify(
+          Object.fromEntries(
+            Array.from({ length: 101 }, (_, i) => [`field${i}`, i]),
+          ),
+        ),
+      }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+    for (const id of ['Member/a', 'Member/b', 'Member/c'])
+      await service.remove('member', id);
   });
 
   it('sets up relation tables idempotently and refuses ordinary-table conversion without data loss', async () => {

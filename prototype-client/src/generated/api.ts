@@ -139,6 +139,56 @@ export interface ActionResponseDto {
   state: ActionResponseDtoState;
 }
 
+export interface RelationshipResponseDto {
+  /**
+   * Globally unique identifier for this relationship.
+   * @pattern ^Relationship/[^/\s]+$
+   */
+  id: string;
+  /** Entity category for this object, normally Relationship. */
+  entityType: string;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this relationship record was created. */
+  createdAt: string;
+  /** Timestamp when this relationship record was last updated. */
+  updatedAt: string;
+  /**
+   * ID of the RelationshipType defining this relationship's type, inverse type, and allowed source and target types.
+   * @pattern ^RelationshipType/[^/\s]+$
+   */
+  relationshipTypeId: string;
+  /**
+   * Relationship name copied from the selected RelationshipType object's type field.
+   * @minLength 1
+   */
+  type: string;
+  /**
+   * Inverse relationship name copied from the selected RelationshipType object's inverseType field.
+   * @minLength 1
+   */
+  inverseType: string;
+  /**
+   * ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  sourceId: string;
+  /**
+   * ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  targetId: string;
+  /** Calendar date when this relationship began. */
+  startedAt: string;
+  /** Optional calendar date when this relationship ended; must not precede startedAt. */
+  endedAt?: string;
+}
+
 /**
  * Lifecycle state of the action.
  */
@@ -2401,56 +2451,6 @@ export interface CreateRelationshipDto {
   endedAt?: string;
 }
 
-export interface RelationshipResponseDto {
-  /**
-   * Globally unique identifier for this relationship.
-   * @pattern ^Relationship/[^/\s]+$
-   */
-  id: string;
-  /** Entity category for this object, normally Relationship. */
-  entityType: string;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity. */
-  entityDocumentationUrl: string;
-  /** Timestamp when this relationship record was created. */
-  createdAt: string;
-  /** Timestamp when this relationship record was last updated. */
-  updatedAt: string;
-  /**
-   * ID of the RelationshipType defining this relationship's type, inverse type, and allowed source and target types.
-   * @pattern ^RelationshipType/[^/\s]+$
-   */
-  relationshipTypeId: string;
-  /**
-   * Relationship name copied from the selected RelationshipType object's type field.
-   * @minLength 1
-   */
-  type: string;
-  /**
-   * Inverse relationship name copied from the selected RelationshipType object's inverseType field.
-   * @minLength 1
-   */
-  inverseType: string;
-  /**
-   * ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  sourceId: string;
-  /**
-   * ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  targetId: string;
-  /** Calendar date when this relationship began. */
-  startedAt: string;
-  /** Optional calendar date when this relationship ended; must not precede startedAt. */
-  endedAt?: string;
-}
-
 export interface UpdateRelationshipDto {
   /**
    * Globally unique identifier for this relationship.
@@ -3056,6 +3056,446 @@ export interface UpdateVoteDto {
   previousRevisionId?: string;
 }
 
+export type ListActionRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListActionRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListActionRelationsDirection =
+  (typeof ListActionRelationsDirection)[keyof typeof ListActionRelationsDirection];
+
+export const ListActionRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListChangeRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListChangeRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListChangeRelationsDirection =
+  (typeof ListChangeRelationsDirection)[keyof typeof ListChangeRelationsDirection];
+
+export const ListChangeRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListChangeItemRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListChangeItemRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListChangeItemRelationsDirection =
+  (typeof ListChangeItemRelationsDirection)[keyof typeof ListChangeItemRelationsDirection];
+
+export const ListChangeItemRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListCommentRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListCommentRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListCommentRelationsDirection =
+  (typeof ListCommentRelationsDirection)[keyof typeof ListCommentRelationsDirection];
+
+export const ListCommentRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListDecisionRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListDecisionRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListDecisionRelationsDirection =
+  (typeof ListDecisionRelationsDirection)[keyof typeof ListDecisionRelationsDirection];
+
+export const ListDecisionRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListDelegationRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListDelegationRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListDelegationRelationsDirection =
+  (typeof ListDelegationRelationsDirection)[keyof typeof ListDelegationRelationsDirection];
+
+export const ListDelegationRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListGeographicAreaRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListGeographicAreaRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListGeographicAreaRelationsDirection =
+  (typeof ListGeographicAreaRelationsDirection)[keyof typeof ListGeographicAreaRelationsDirection];
+
+export const ListGeographicAreaRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListGroupRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListGroupRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListGroupRelationsDirection =
+  (typeof ListGroupRelationsDirection)[keyof typeof ListGroupRelationsDirection];
+
+export const ListGroupRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListLabelRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListLabelRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListLabelRelationsDirection =
+  (typeof ListLabelRelationsDirection)[keyof typeof ListLabelRelationsDirection];
+
+export const ListLabelRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListMemberRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListMemberRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListMemberRelationsDirection =
+  (typeof ListMemberRelationsDirection)[keyof typeof ListMemberRelationsDirection];
+
+export const ListMemberRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListObservationRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListObservationRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListObservationRelationsDirection =
+  (typeof ListObservationRelationsDirection)[keyof typeof ListObservationRelationsDirection];
+
+export const ListObservationRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListOrganizationRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListOrganizationRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListOrganizationRelationsDirection =
+  (typeof ListOrganizationRelationsDirection)[keyof typeof ListOrganizationRelationsDirection];
+
+export const ListOrganizationRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListPermissionRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListPermissionRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListPermissionRelationsDirection =
+  (typeof ListPermissionRelationsDirection)[keyof typeof ListPermissionRelationsDirection];
+
+export const ListPermissionRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListPlaceRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListPlaceRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListPlaceRelationsDirection =
+  (typeof ListPlaceRelationsDirection)[keyof typeof ListPlaceRelationsDirection];
+
+export const ListPlaceRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListProtocolRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListProtocolRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListProtocolRelationsDirection =
+  (typeof ListProtocolRelationsDirection)[keyof typeof ListProtocolRelationsDirection];
+
+export const ListProtocolRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListRelationshipRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListRelationshipRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListRelationshipRelationsDirection =
+  (typeof ListRelationshipRelationsDirection)[keyof typeof ListRelationshipRelationsDirection];
+
+export const ListRelationshipRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListRelationshipTypeRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListRelationshipTypeRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListRelationshipTypeRelationsDirection =
+  (typeof ListRelationshipTypeRelationsDirection)[keyof typeof ListRelationshipTypeRelationsDirection];
+
+export const ListRelationshipTypeRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListReviewCommentRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListReviewCommentRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListReviewCommentRelationsDirection =
+  (typeof ListReviewCommentRelationsDirection)[keyof typeof ListReviewCommentRelationsDirection];
+
+export const ListReviewCommentRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListRoleRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListRoleRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListRoleRelationsDirection =
+  (typeof ListRoleRelationsDirection)[keyof typeof ListRoleRelationsDirection];
+
+export const ListRoleRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListRuleRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListRuleRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListRuleRelationsDirection =
+  (typeof ListRuleRelationsDirection)[keyof typeof ListRuleRelationsDirection];
+
+export const ListRuleRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListScopeRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListScopeRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListScopeRelationsDirection =
+  (typeof ListScopeRelationsDirection)[keyof typeof ListScopeRelationsDirection];
+
+export const ListScopeRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListVoteRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListVoteRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListVoteRelationsDirection =
+  (typeof ListVoteRelationsDirection)[keyof typeof ListVoteRelationsDirection];
+
+export const ListVoteRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
 export type getHelloResponse200 = {
   data: string;
   status: 200;
@@ -3351,6 +3791,78 @@ export const deleteAction = async (
   } as deleteActionResponse;
 };
 
+export type listActionRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listActionRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listActionRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listActionRelationsResponseSuccess =
+  listActionRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listActionRelationsResponseError = (
+  listActionRelationsResponse400 | listActionRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listActionRelationsResponse =
+  listActionRelationsResponseSuccess | listActionRelationsResponseError;
+
+export const getListActionRelationsUrl = (
+  id: string,
+  params?: ListActionRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/actions/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/actions/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Action.
+ */
+export const listActionRelations = async (
+  id: string,
+  params?: ListActionRelationsParams,
+  options?: RequestInit,
+): Promise<listActionRelationsResponse> => {
+  const res = await fetch(getListActionRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listActionRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listActionRelationsResponse;
+};
+
 export type createChangeResponse201 = {
   data: ChangeResponseDto;
   status: 201;
@@ -3613,6 +4125,78 @@ export const deleteChange = async (
     status: res.status,
     headers: res.headers,
   } as deleteChangeResponse;
+};
+
+export type listChangeRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listChangeRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listChangeRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listChangeRelationsResponseSuccess =
+  listChangeRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listChangeRelationsResponseError = (
+  listChangeRelationsResponse400 | listChangeRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listChangeRelationsResponse =
+  listChangeRelationsResponseSuccess | listChangeRelationsResponseError;
+
+export const getListChangeRelationsUrl = (
+  id: string,
+  params?: ListChangeRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/changes/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/changes/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Change.
+ */
+export const listChangeRelations = async (
+  id: string,
+  params?: ListChangeRelationsParams,
+  options?: RequestInit,
+): Promise<listChangeRelationsResponse> => {
+  const res = await fetch(getListChangeRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listChangeRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listChangeRelationsResponse;
 };
 
 export type createChangeItemResponse201 = {
@@ -3879,6 +4463,78 @@ export const deleteChangeItem = async (
   } as deleteChangeItemResponse;
 };
 
+export type listChangeItemRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listChangeItemRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listChangeItemRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listChangeItemRelationsResponseSuccess =
+  listChangeItemRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listChangeItemRelationsResponseError = (
+  listChangeItemRelationsResponse400 | listChangeItemRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listChangeItemRelationsResponse =
+  listChangeItemRelationsResponseSuccess | listChangeItemRelationsResponseError;
+
+export const getListChangeItemRelationsUrl = (
+  id: string,
+  params?: ListChangeItemRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/change-items/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/change-items/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a ChangeItem.
+ */
+export const listChangeItemRelations = async (
+  id: string,
+  params?: ListChangeItemRelationsParams,
+  options?: RequestInit,
+): Promise<listChangeItemRelationsResponse> => {
+  const res = await fetch(getListChangeItemRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listChangeItemRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listChangeItemRelationsResponse;
+};
+
 export type createCommentResponse201 = {
   data: CommentResponseDto;
   status: 201;
@@ -4141,6 +4797,78 @@ export const deleteComment = async (
     status: res.status,
     headers: res.headers,
   } as deleteCommentResponse;
+};
+
+export type listCommentRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listCommentRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listCommentRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listCommentRelationsResponseSuccess =
+  listCommentRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listCommentRelationsResponseError = (
+  listCommentRelationsResponse400 | listCommentRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listCommentRelationsResponse =
+  listCommentRelationsResponseSuccess | listCommentRelationsResponseError;
+
+export const getListCommentRelationsUrl = (
+  id: string,
+  params?: ListCommentRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/comments/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/comments/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Comment.
+ */
+export const listCommentRelations = async (
+  id: string,
+  params?: ListCommentRelationsParams,
+  options?: RequestInit,
+): Promise<listCommentRelationsResponse> => {
+  const res = await fetch(getListCommentRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listCommentRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listCommentRelationsResponse;
 };
 
 export type createDecisionResponse201 = {
@@ -4407,6 +5135,78 @@ export const deleteDecision = async (
   } as deleteDecisionResponse;
 };
 
+export type listDecisionRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listDecisionRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listDecisionRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listDecisionRelationsResponseSuccess =
+  listDecisionRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listDecisionRelationsResponseError = (
+  listDecisionRelationsResponse400 | listDecisionRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listDecisionRelationsResponse =
+  listDecisionRelationsResponseSuccess | listDecisionRelationsResponseError;
+
+export const getListDecisionRelationsUrl = (
+  id: string,
+  params?: ListDecisionRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/decisions/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/decisions/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Decision.
+ */
+export const listDecisionRelations = async (
+  id: string,
+  params?: ListDecisionRelationsParams,
+  options?: RequestInit,
+): Promise<listDecisionRelationsResponse> => {
+  const res = await fetch(getListDecisionRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listDecisionRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listDecisionRelationsResponse;
+};
+
 export type createDelegationResponse201 = {
   data: DelegationResponseDto;
   status: 201;
@@ -4669,6 +5469,78 @@ export const deleteDelegation = async (
     status: res.status,
     headers: res.headers,
   } as deleteDelegationResponse;
+};
+
+export type listDelegationRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listDelegationRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listDelegationRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listDelegationRelationsResponseSuccess =
+  listDelegationRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listDelegationRelationsResponseError = (
+  listDelegationRelationsResponse400 | listDelegationRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listDelegationRelationsResponse =
+  listDelegationRelationsResponseSuccess | listDelegationRelationsResponseError;
+
+export const getListDelegationRelationsUrl = (
+  id: string,
+  params?: ListDelegationRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/delegations/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/delegations/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Delegation.
+ */
+export const listDelegationRelations = async (
+  id: string,
+  params?: ListDelegationRelationsParams,
+  options?: RequestInit,
+): Promise<listDelegationRelationsResponse> => {
+  const res = await fetch(getListDelegationRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listDelegationRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listDelegationRelationsResponse;
 };
 
 export type createGeographicAreaResponse201 = {
@@ -4947,6 +5819,80 @@ export const deleteGeographicArea = async (
   } as deleteGeographicAreaResponse;
 };
 
+export type listGeographicAreaRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listGeographicAreaRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listGeographicAreaRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listGeographicAreaRelationsResponseSuccess =
+  listGeographicAreaRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listGeographicAreaRelationsResponseError = (
+  | listGeographicAreaRelationsResponse400
+  | listGeographicAreaRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listGeographicAreaRelationsResponse =
+  | listGeographicAreaRelationsResponseSuccess
+  | listGeographicAreaRelationsResponseError;
+
+export const getListGeographicAreaRelationsUrl = (
+  id: string,
+  params?: ListGeographicAreaRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/geographic-areas/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/geographic-areas/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a GeographicArea.
+ */
+export const listGeographicAreaRelations = async (
+  id: string,
+  params?: ListGeographicAreaRelationsParams,
+  options?: RequestInit,
+): Promise<listGeographicAreaRelationsResponse> => {
+  const res = await fetch(getListGeographicAreaRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listGeographicAreaRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listGeographicAreaRelationsResponse;
+};
+
 export type createGroupResponse201 = {
   data: GroupResponseDto;
   status: 201;
@@ -5204,6 +6150,76 @@ export const deleteGroup = async (
   } as deleteGroupResponse;
 };
 
+export type listGroupRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listGroupRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listGroupRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listGroupRelationsResponseSuccess =
+  listGroupRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listGroupRelationsResponseError = (
+  listGroupRelationsResponse400 | listGroupRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listGroupRelationsResponse =
+  listGroupRelationsResponseSuccess | listGroupRelationsResponseError;
+
+export const getListGroupRelationsUrl = (
+  id: string,
+  params?: ListGroupRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/groups/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/groups/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Group.
+ */
+export const listGroupRelations = async (
+  id: string,
+  params?: ListGroupRelationsParams,
+  options?: RequestInit,
+): Promise<listGroupRelationsResponse> => {
+  const res = await fetch(getListGroupRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listGroupRelationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listGroupRelationsResponse;
+};
+
 export type createLabelResponse201 = {
   data: LabelResponseDto;
   status: 201;
@@ -5459,6 +6475,76 @@ export const deleteLabel = async (
     status: res.status,
     headers: res.headers,
   } as deleteLabelResponse;
+};
+
+export type listLabelRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listLabelRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listLabelRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listLabelRelationsResponseSuccess =
+  listLabelRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listLabelRelationsResponseError = (
+  listLabelRelationsResponse400 | listLabelRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listLabelRelationsResponse =
+  listLabelRelationsResponseSuccess | listLabelRelationsResponseError;
+
+export const getListLabelRelationsUrl = (
+  id: string,
+  params?: ListLabelRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/labels/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/labels/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Label.
+ */
+export const listLabelRelations = async (
+  id: string,
+  params?: ListLabelRelationsParams,
+  options?: RequestInit,
+): Promise<listLabelRelationsResponse> => {
+  const res = await fetch(getListLabelRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listLabelRelationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listLabelRelationsResponse;
 };
 
 export type createMemberResponse201 = {
@@ -5725,6 +6811,78 @@ export const deleteMember = async (
   } as deleteMemberResponse;
 };
 
+export type listMemberRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listMemberRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listMemberRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listMemberRelationsResponseSuccess =
+  listMemberRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listMemberRelationsResponseError = (
+  listMemberRelationsResponse400 | listMemberRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listMemberRelationsResponse =
+  listMemberRelationsResponseSuccess | listMemberRelationsResponseError;
+
+export const getListMemberRelationsUrl = (
+  id: string,
+  params?: ListMemberRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/members/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/members/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Member.
+ */
+export const listMemberRelations = async (
+  id: string,
+  params?: ListMemberRelationsParams,
+  options?: RequestInit,
+): Promise<listMemberRelationsResponse> => {
+  const res = await fetch(getListMemberRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listMemberRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listMemberRelationsResponse;
+};
+
 export type createObservationResponse201 = {
   data: ObservationResponseDto;
   status: 201;
@@ -5987,6 +7145,79 @@ export const deleteObservation = async (
     status: res.status,
     headers: res.headers,
   } as deleteObservationResponse;
+};
+
+export type listObservationRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listObservationRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listObservationRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listObservationRelationsResponseSuccess =
+  listObservationRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listObservationRelationsResponseError = (
+  listObservationRelationsResponse400 | listObservationRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listObservationRelationsResponse =
+  | listObservationRelationsResponseSuccess
+  | listObservationRelationsResponseError;
+
+export const getListObservationRelationsUrl = (
+  id: string,
+  params?: ListObservationRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/observations/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/observations/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Observation.
+ */
+export const listObservationRelations = async (
+  id: string,
+  params?: ListObservationRelationsParams,
+  options?: RequestInit,
+): Promise<listObservationRelationsResponse> => {
+  const res = await fetch(getListObservationRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listObservationRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listObservationRelationsResponse;
 };
 
 export type createOrganizationResponse201 = {
@@ -6256,6 +7487,79 @@ export const deleteOrganization = async (
   } as deleteOrganizationResponse;
 };
 
+export type listOrganizationRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listOrganizationRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listOrganizationRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listOrganizationRelationsResponseSuccess =
+  listOrganizationRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listOrganizationRelationsResponseError = (
+  listOrganizationRelationsResponse400 | listOrganizationRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listOrganizationRelationsResponse =
+  | listOrganizationRelationsResponseSuccess
+  | listOrganizationRelationsResponseError;
+
+export const getListOrganizationRelationsUrl = (
+  id: string,
+  params?: ListOrganizationRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/organizations/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/organizations/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Organization.
+ */
+export const listOrganizationRelations = async (
+  id: string,
+  params?: ListOrganizationRelationsParams,
+  options?: RequestInit,
+): Promise<listOrganizationRelationsResponse> => {
+  const res = await fetch(getListOrganizationRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listOrganizationRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listOrganizationRelationsResponse;
+};
+
 export type createPermissionResponse201 = {
   data: PermissionResponseDto;
   status: 201;
@@ -6520,6 +7824,78 @@ export const deletePermission = async (
   } as deletePermissionResponse;
 };
 
+export type listPermissionRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listPermissionRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listPermissionRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listPermissionRelationsResponseSuccess =
+  listPermissionRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listPermissionRelationsResponseError = (
+  listPermissionRelationsResponse400 | listPermissionRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listPermissionRelationsResponse =
+  listPermissionRelationsResponseSuccess | listPermissionRelationsResponseError;
+
+export const getListPermissionRelationsUrl = (
+  id: string,
+  params?: ListPermissionRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/permissions/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/permissions/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Permission.
+ */
+export const listPermissionRelations = async (
+  id: string,
+  params?: ListPermissionRelationsParams,
+  options?: RequestInit,
+): Promise<listPermissionRelationsResponse> => {
+  const res = await fetch(getListPermissionRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listPermissionRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listPermissionRelationsResponse;
+};
+
 export type createPlaceResponse201 = {
   data: PlaceResponseDto;
   status: 201;
@@ -6775,6 +8151,76 @@ export const deletePlace = async (
     status: res.status,
     headers: res.headers,
   } as deletePlaceResponse;
+};
+
+export type listPlaceRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listPlaceRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listPlaceRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listPlaceRelationsResponseSuccess =
+  listPlaceRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listPlaceRelationsResponseError = (
+  listPlaceRelationsResponse400 | listPlaceRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listPlaceRelationsResponse =
+  listPlaceRelationsResponseSuccess | listPlaceRelationsResponseError;
+
+export const getListPlaceRelationsUrl = (
+  id: string,
+  params?: ListPlaceRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/places/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/places/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Place.
+ */
+export const listPlaceRelations = async (
+  id: string,
+  params?: ListPlaceRelationsParams,
+  options?: RequestInit,
+): Promise<listPlaceRelationsResponse> => {
+  const res = await fetch(getListPlaceRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listPlaceRelationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listPlaceRelationsResponse;
 };
 
 export type createProtocolResponse201 = {
@@ -7039,6 +8485,78 @@ export const deleteProtocol = async (
     status: res.status,
     headers: res.headers,
   } as deleteProtocolResponse;
+};
+
+export type listProtocolRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listProtocolRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listProtocolRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listProtocolRelationsResponseSuccess =
+  listProtocolRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listProtocolRelationsResponseError = (
+  listProtocolRelationsResponse400 | listProtocolRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listProtocolRelationsResponse =
+  listProtocolRelationsResponseSuccess | listProtocolRelationsResponseError;
+
+export const getListProtocolRelationsUrl = (
+  id: string,
+  params?: ListProtocolRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/protocols/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/protocols/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Protocol.
+ */
+export const listProtocolRelations = async (
+  id: string,
+  params?: ListProtocolRelationsParams,
+  options?: RequestInit,
+): Promise<listProtocolRelationsResponse> => {
+  const res = await fetch(getListProtocolRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listProtocolRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listProtocolRelationsResponse;
 };
 
 export type createRelationshipResponse201 = {
@@ -7306,6 +8824,79 @@ export const deleteRelationship = async (
     status: res.status,
     headers: res.headers,
   } as deleteRelationshipResponse;
+};
+
+export type listRelationshipRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listRelationshipRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listRelationshipRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listRelationshipRelationsResponseSuccess =
+  listRelationshipRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listRelationshipRelationsResponseError = (
+  listRelationshipRelationsResponse400 | listRelationshipRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listRelationshipRelationsResponse =
+  | listRelationshipRelationsResponseSuccess
+  | listRelationshipRelationsResponseError;
+
+export const getListRelationshipRelationsUrl = (
+  id: string,
+  params?: ListRelationshipRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/relationships/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/relationships/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Relationship.
+ */
+export const listRelationshipRelations = async (
+  id: string,
+  params?: ListRelationshipRelationsParams,
+  options?: RequestInit,
+): Promise<listRelationshipRelationsResponse> => {
+  const res = await fetch(getListRelationshipRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listRelationshipRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listRelationshipRelationsResponse;
 };
 
 export type createRelationshipTypeResponse201 = {
@@ -7590,6 +9181,80 @@ export const deleteRelationshipType = async (
   } as deleteRelationshipTypeResponse;
 };
 
+export type listRelationshipTypeRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listRelationshipTypeRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listRelationshipTypeRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listRelationshipTypeRelationsResponseSuccess =
+  listRelationshipTypeRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listRelationshipTypeRelationsResponseError = (
+  | listRelationshipTypeRelationsResponse400
+  | listRelationshipTypeRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listRelationshipTypeRelationsResponse =
+  | listRelationshipTypeRelationsResponseSuccess
+  | listRelationshipTypeRelationsResponseError;
+
+export const getListRelationshipTypeRelationsUrl = (
+  id: string,
+  params?: ListRelationshipTypeRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/relationship-types/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/relationship-types/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a RelationshipType.
+ */
+export const listRelationshipTypeRelations = async (
+  id: string,
+  params?: ListRelationshipTypeRelationsParams,
+  options?: RequestInit,
+): Promise<listRelationshipTypeRelationsResponse> => {
+  const res = await fetch(getListRelationshipTypeRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listRelationshipTypeRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listRelationshipTypeRelationsResponse;
+};
+
 export type createReviewCommentResponse201 = {
   data: ReviewCommentResponseDto;
   status: 201;
@@ -7864,6 +9529,79 @@ export const deleteReviewComment = async (
   } as deleteReviewCommentResponse;
 };
 
+export type listReviewCommentRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listReviewCommentRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listReviewCommentRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listReviewCommentRelationsResponseSuccess =
+  listReviewCommentRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listReviewCommentRelationsResponseError = (
+  listReviewCommentRelationsResponse400 | listReviewCommentRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listReviewCommentRelationsResponse =
+  | listReviewCommentRelationsResponseSuccess
+  | listReviewCommentRelationsResponseError;
+
+export const getListReviewCommentRelationsUrl = (
+  id: string,
+  params?: ListReviewCommentRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/review-comments/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/review-comments/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a ReviewComment.
+ */
+export const listReviewCommentRelations = async (
+  id: string,
+  params?: ListReviewCommentRelationsParams,
+  options?: RequestInit,
+): Promise<listReviewCommentRelationsResponse> => {
+  const res = await fetch(getListReviewCommentRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listReviewCommentRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listReviewCommentRelationsResponse;
+};
+
 export type createRoleResponse201 = {
   data: RoleResponseDto;
   status: 201;
@@ -8119,6 +9857,75 @@ export const deleteRole = async (
     status: res.status,
     headers: res.headers,
   } as deleteRoleResponse;
+};
+
+export type listRoleRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listRoleRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listRoleRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listRoleRelationsResponseSuccess = listRoleRelationsResponse200 & {
+  headers: Headers;
+};
+export type listRoleRelationsResponseError = (
+  listRoleRelationsResponse400 | listRoleRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listRoleRelationsResponse =
+  listRoleRelationsResponseSuccess | listRoleRelationsResponseError;
+
+export const getListRoleRelationsUrl = (
+  id: string,
+  params?: ListRoleRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/roles/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/roles/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Role.
+ */
+export const listRoleRelations = async (
+  id: string,
+  params?: ListRoleRelationsParams,
+  options?: RequestInit,
+): Promise<listRoleRelationsResponse> => {
+  const res = await fetch(getListRoleRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listRoleRelationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listRoleRelationsResponse;
 };
 
 export type createRuleResponse201 = {
@@ -8378,6 +10185,75 @@ export const deleteRule = async (
   } as deleteRuleResponse;
 };
 
+export type listRuleRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listRuleRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listRuleRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listRuleRelationsResponseSuccess = listRuleRelationsResponse200 & {
+  headers: Headers;
+};
+export type listRuleRelationsResponseError = (
+  listRuleRelationsResponse400 | listRuleRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listRuleRelationsResponse =
+  listRuleRelationsResponseSuccess | listRuleRelationsResponseError;
+
+export const getListRuleRelationsUrl = (
+  id: string,
+  params?: ListRuleRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/rules/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/rules/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Rule.
+ */
+export const listRuleRelations = async (
+  id: string,
+  params?: ListRuleRelationsParams,
+  options?: RequestInit,
+): Promise<listRuleRelationsResponse> => {
+  const res = await fetch(getListRuleRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listRuleRelationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listRuleRelationsResponse;
+};
+
 export type createScopeResponse201 = {
   data: ScopeResponseDto;
   status: 201;
@@ -8635,6 +10511,76 @@ export const deleteScope = async (
   } as deleteScopeResponse;
 };
 
+export type listScopeRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listScopeRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listScopeRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listScopeRelationsResponseSuccess =
+  listScopeRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listScopeRelationsResponseError = (
+  listScopeRelationsResponse400 | listScopeRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listScopeRelationsResponse =
+  listScopeRelationsResponseSuccess | listScopeRelationsResponseError;
+
+export const getListScopeRelationsUrl = (
+  id: string,
+  params?: ListScopeRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/scopes/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/scopes/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Scope.
+ */
+export const listScopeRelations = async (
+  id: string,
+  params?: ListScopeRelationsParams,
+  options?: RequestInit,
+): Promise<listScopeRelationsResponse> => {
+  const res = await fetch(getListScopeRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listScopeRelationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listScopeRelationsResponse;
+};
+
 export type createVoteResponse201 = {
   data: VoteResponseDto;
   status: 201;
@@ -8890,4 +10836,73 @@ export const deleteVote = async (
     status: res.status,
     headers: res.headers,
   } as deleteVoteResponse;
+};
+
+export type listVoteRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listVoteRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listVoteRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listVoteRelationsResponseSuccess = listVoteRelationsResponse200 & {
+  headers: Headers;
+};
+export type listVoteRelationsResponseError = (
+  listVoteRelationsResponse400 | listVoteRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listVoteRelationsResponse =
+  listVoteRelationsResponseSuccess | listVoteRelationsResponseError;
+
+export const getListVoteRelationsUrl = (
+  id: string,
+  params?: ListVoteRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/votes/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/votes/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Vote.
+ */
+export const listVoteRelations = async (
+  id: string,
+  params?: ListVoteRelationsParams,
+  options?: RequestInit,
+): Promise<listVoteRelationsResponse> => {
+  const res = await fetch(getListVoteRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listVoteRelationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listVoteRelationsResponse;
 };

@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateRelationshipTypeDto } from './dto/create-relationship-type.dto.js
 import { RelationshipTypeResponseDto } from './dto/relationship-type-response.dto.js';
 import { UpdateRelationshipTypeDto } from './dto/update-relationship-type.dto.js';
 import { RelationshipTypeService } from './relationship-type.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('relationship-types')
 @Controller('relationship-types')
@@ -68,6 +72,28 @@ export class RelationshipTypeController {
     const result = await this.relationshipTypeService.findOne(id);
     if (!result) throw new NotFoundException('RelationshipType not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listRelationshipTypeRelations',
+    summary: 'Query relationships associated with a RelationshipType.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'RelationshipType ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'RelationshipType not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.relationshipTypeService.findRelations(id, query);
   }
 
   @Patch(':id')

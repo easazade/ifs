@@ -5,6 +5,7 @@ import { after, before, test } from 'node:test';
 import {
   createRelationship,
   updateRelationship,
+  listMemberRelations,
   getApiBaseUrl,
   getGetHelloUrl,
   getHello,
@@ -22,6 +23,19 @@ before(async () => {
       method: request.method,
       headers: request.headers,
     };
+    if (request.url.startsWith('/members/')) {
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end(
+        JSON.stringify([
+          {
+            id: 'Relationship/client',
+            sourceId: 'Organization/1',
+            targetId: 'Member/1',
+          },
+        ]),
+      );
+      return;
+    }
     if (request.url.startsWith('/relationships')) {
       let body = '';
       for await (const chunk of request) body += chunk;
@@ -85,6 +99,26 @@ test('relationship client keeps public endpoints and encodes canonical IDs', asy
   assert.equal(lastRequest.method, 'PATCH');
   assert.equal(lastRequest.url, '/relationships/Relationship%2Fclient');
   assert.deepEqual(lastRequest.body, { endedAt: '2026-02-01' });
+});
+
+test('queries associated relationships through the public module with encoded filters', async () => {
+  setApiBaseUrl(baseUrl);
+  const filter = JSON.stringify({
+    type: 'has member',
+    'in.name': 'A & B',
+    'out.id': 'Member/1',
+  });
+  const result = await listMemberRelations('Member/1', {
+    direction: 'incoming',
+    filter,
+  });
+  assert.equal(result.status, 200);
+  assert.equal(result.data[0].id, 'Relationship/client');
+  assert.equal(lastRequest.method, 'GET');
+  const url = new URL(lastRequest.url, baseUrl);
+  assert.equal(url.pathname, '/members/Member%2F1/relations');
+  assert.equal(url.searchParams.get('direction'), 'incoming');
+  assert.equal(url.searchParams.get('filter'), filter);
 });
 
 test('passes AbortSignal through to fetch', async () => {

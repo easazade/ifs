@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,7 @@ import { CreateRelationshipDto } from './dto/create-relationship.dto.js';
 import { RelationshipResponseDto } from './dto/relationship-response.dto.js';
 import { UpdateRelationshipDto } from './dto/update-relationship.dto.js';
 import { RelationshipService } from './relationship.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
 
 @ApiTags('relationships')
 @Controller('relationships')
@@ -66,6 +69,28 @@ export class RelationshipController {
     const result = await this.relationshipService.findOne(id);
     if (!result) throw new NotFoundException('Relationship not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listRelationshipRelations',
+    summary: 'Query relationships associated with a Relationship.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Relationship ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Relationship not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.relationshipService.findRelations(id, query);
   }
 
   @Patch(':id')

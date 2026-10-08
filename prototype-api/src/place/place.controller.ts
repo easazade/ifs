@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreatePlaceDto } from './dto/create-place.dto.js';
 import { PlaceResponseDto } from './dto/place-response.dto.js';
 import { UpdatePlaceDto } from './dto/update-place.dto.js';
 import { PlaceService } from './place.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('places')
 @Controller('places')
@@ -55,6 +59,28 @@ export class PlaceController {
     const result = await this.placeService.findOne(id);
     if (!result) throw new NotFoundException('Place not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listPlaceRelations',
+    summary: 'Query relationships associated with a Place.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Place ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Place not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.placeService.findRelations(id, query);
   }
 
   @Patch(':id')

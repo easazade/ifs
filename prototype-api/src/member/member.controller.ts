@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateMemberDto } from './dto/create-member.dto.js';
 import { MemberResponseDto } from './dto/member-response.dto.js';
 import { UpdateMemberDto } from './dto/update-member.dto.js';
 import { MemberService } from './member.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('members')
 @Controller('members')
@@ -55,6 +59,28 @@ export class MemberController {
     const result = await this.memberService.findOne(id);
     if (!result) throw new NotFoundException('Member not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listMemberRelations',
+    summary: 'Query relationships associated with a Member.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Member ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Member not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.memberService.findRelations(id, query);
   }
 
   @Patch(':id')

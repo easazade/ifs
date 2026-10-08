@@ -10,6 +10,7 @@ import { AlreadyExistsError, RecordId, Surreal, Table } from 'surrealdb';
 import { getDatabaseConfig } from './database.config.js';
 import { graphEdges } from './entity-storage.js';
 import { entityTables } from './entity-tables.generated.js';
+import { RelationsQueryDto } from './relations-query.dto.js';
 
 export interface Relation {
   property: string;
@@ -138,6 +139,77 @@ export class SurrealService implements OnModuleInit, OnModuleDestroy {
       { record: new RecordId(table, id) },
     );
     return records[0] ? this.response<T>(records[0], relations) : null;
+  }
+
+  async findRelations<T>(
+    table: string,
+    id: string,
+    query: RelationsQueryDto = {},
+  ): Promise<T[]> {
+    const direction = query.direction ?? 'both';
+    if (!['both', 'incoming', 'outgoing'].includes(direction)) {
+      throw new BadRequestException('Invalid relation direction.');
+    }
+    let filters: Document = {};
+    if (query.filter !== undefined) {
+      if (typeof query.filter !== 'string' || query.filter.length > 16_384) {
+        throw new BadRequestException(
+          'filter must be a JSON object string (at most 16 KiB).',
+        );
+      }
+      try {
+        const parsed: unknown = JSON.parse(query.filter);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+          throw new Error('Not an object');
+        }
+        filters = parsed as Document;
+      } catch {
+        throw new BadRequestException('filter must be a JSON object string.');
+      }
+    }
+    const entries = Object.entries(filters);
+    if (entries.length > 100) {
+      throw new BadRequestException(
+        'At most 100 equality filters are allowed.',
+      );
+    }
+    const bindings: Document = {
+      record: new RecordId(table, id),
+      table: new Table('relationship'),
+    };
+    const association =
+      direction === 'incoming'
+        ? 'out = $record'
+        : direction === 'outgoing'
+          ? 'in = $record'
+          : '(in = $record OR out = $record)';
+    const conditions = [association];
+    entries.forEach(([key, value], index) => {
+      let path = key;
+      if (path === 'sourceId' || path === 'in.id') path = 'in';
+      if (path === 'targetId' || path === 'out.id') path = 'out';
+      const segments = path.split('.');
+      if (
+        segments.length > 8 ||
+        !segments.every((segment) => /^[A-Za-z_][A-Za-z0-9_]*$/.test(segment))
+      ) {
+        throw new BadRequestException(`Invalid filter field: ${key}.`);
+      }
+      // Quote every identifier and bind every value: filters never supply SQL.
+      const field = segments.map((segment) => `\`${segment}\``).join('.');
+      bindings[`filter${index}`] = ['in', 'out', 'id'].includes(path)
+        ? this.entityRecord(value, path === 'id' ? 'Relationship' : undefined)
+        : value;
+      conditions.push(`${field} = $filter${index}`);
+    });
+    if (!(await this.client.select(bindings.record as RecordId))) {
+      throw new NotFoundException(`${table} not found.`);
+    }
+    const [records] = await this.client.query<[Document[]]>(
+      `SELECT * FROM $table WHERE ${conditions.join(' AND ')};`,
+      bindings,
+    );
+    return records.map((record) => this.response<T>(record, []));
   }
 
   private entityRecord(value: unknown, expectedType?: string): RecordId {

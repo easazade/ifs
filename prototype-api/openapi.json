@@ -183,6 +183,72 @@
         ]
       }
     },
+    "/actions/{id}/relations": {
+      "get": {
+        "operationId": "listActionRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Action ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Action not found."
+          }
+        },
+        "summary": "Query relationships associated with a Action.",
+        "tags": [
+          "actions"
+        ]
+      }
+    },
     "/changes": {
       "post": {
         "operationId": "createChange",
@@ -337,6 +403,72 @@
           }
         },
         "summary": "Delete a Change.",
+        "tags": [
+          "changes"
+        ]
+      }
+    },
+    "/changes/{id}/relations": {
+      "get": {
+        "operationId": "listChangeRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Change ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Change not found."
+          }
+        },
+        "summary": "Query relationships associated with a Change.",
         "tags": [
           "changes"
         ]
@@ -501,6 +633,72 @@
         ]
       }
     },
+    "/change-items/{id}/relations": {
+      "get": {
+        "operationId": "listChangeItemRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ChangeItem ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "ChangeItem not found."
+          }
+        },
+        "summary": "Query relationships associated with a ChangeItem.",
+        "tags": [
+          "change-items"
+        ]
+      }
+    },
     "/comments": {
       "post": {
         "operationId": "createComment",
@@ -655,6 +853,72 @@
           }
         },
         "summary": "Delete a Comment.",
+        "tags": [
+          "comments"
+        ]
+      }
+    },
+    "/comments/{id}/relations": {
+      "get": {
+        "operationId": "listCommentRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Comment ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Comment not found."
+          }
+        },
+        "summary": "Query relationships associated with a Comment.",
         "tags": [
           "comments"
         ]
@@ -819,6 +1083,72 @@
         ]
       }
     },
+    "/decisions/{id}/relations": {
+      "get": {
+        "operationId": "listDecisionRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Decision ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Decision not found."
+          }
+        },
+        "summary": "Query relationships associated with a Decision.",
+        "tags": [
+          "decisions"
+        ]
+      }
+    },
     "/delegations": {
       "post": {
         "operationId": "createDelegation",
@@ -973,6 +1303,72 @@
           }
         },
         "summary": "Delete a Delegation.",
+        "tags": [
+          "delegations"
+        ]
+      }
+    },
+    "/delegations/{id}/relations": {
+      "get": {
+        "operationId": "listDelegationRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Delegation ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Delegation not found."
+          }
+        },
+        "summary": "Query relationships associated with a Delegation.",
         "tags": [
           "delegations"
         ]
@@ -1137,6 +1533,72 @@
         ]
       }
     },
+    "/geographic-areas/{id}/relations": {
+      "get": {
+        "operationId": "listGeographicAreaRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "GeographicArea ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "GeographicArea not found."
+          }
+        },
+        "summary": "Query relationships associated with a GeographicArea.",
+        "tags": [
+          "geographic-areas"
+        ]
+      }
+    },
     "/groups": {
       "post": {
         "operationId": "createGroup",
@@ -1291,6 +1753,72 @@
           }
         },
         "summary": "Delete a Group.",
+        "tags": [
+          "groups"
+        ]
+      }
+    },
+    "/groups/{id}/relations": {
+      "get": {
+        "operationId": "listGroupRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Group ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Group not found."
+          }
+        },
+        "summary": "Query relationships associated with a Group.",
         "tags": [
           "groups"
         ]
@@ -1455,6 +1983,72 @@
         ]
       }
     },
+    "/labels/{id}/relations": {
+      "get": {
+        "operationId": "listLabelRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Label ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Label not found."
+          }
+        },
+        "summary": "Query relationships associated with a Label.",
+        "tags": [
+          "labels"
+        ]
+      }
+    },
     "/members": {
       "post": {
         "operationId": "createMember",
@@ -1609,6 +2203,72 @@
           }
         },
         "summary": "Delete a Member.",
+        "tags": [
+          "members"
+        ]
+      }
+    },
+    "/members/{id}/relations": {
+      "get": {
+        "operationId": "listMemberRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Member ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Member not found."
+          }
+        },
+        "summary": "Query relationships associated with a Member.",
         "tags": [
           "members"
         ]
@@ -1773,6 +2433,72 @@
         ]
       }
     },
+    "/observations/{id}/relations": {
+      "get": {
+        "operationId": "listObservationRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Observation ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Observation not found."
+          }
+        },
+        "summary": "Query relationships associated with a Observation.",
+        "tags": [
+          "observations"
+        ]
+      }
+    },
     "/organizations": {
       "post": {
         "operationId": "createOrganization",
@@ -1927,6 +2653,72 @@
           }
         },
         "summary": "Delete a Organization.",
+        "tags": [
+          "organizations"
+        ]
+      }
+    },
+    "/organizations/{id}/relations": {
+      "get": {
+        "operationId": "listOrganizationRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Organization ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Organization not found."
+          }
+        },
+        "summary": "Query relationships associated with a Organization.",
         "tags": [
           "organizations"
         ]
@@ -2091,6 +2883,72 @@
         ]
       }
     },
+    "/permissions/{id}/relations": {
+      "get": {
+        "operationId": "listPermissionRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Permission ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Permission not found."
+          }
+        },
+        "summary": "Query relationships associated with a Permission.",
+        "tags": [
+          "permissions"
+        ]
+      }
+    },
     "/places": {
       "post": {
         "operationId": "createPlace",
@@ -2245,6 +3103,72 @@
           }
         },
         "summary": "Delete a Place.",
+        "tags": [
+          "places"
+        ]
+      }
+    },
+    "/places/{id}/relations": {
+      "get": {
+        "operationId": "listPlaceRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Place ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Place not found."
+          }
+        },
+        "summary": "Query relationships associated with a Place.",
         "tags": [
           "places"
         ]
@@ -2409,6 +3333,72 @@
         ]
       }
     },
+    "/protocols/{id}/relations": {
+      "get": {
+        "operationId": "listProtocolRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Protocol ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Protocol not found."
+          }
+        },
+        "summary": "Query relationships associated with a Protocol.",
+        "tags": [
+          "protocols"
+        ]
+      }
+    },
     "/relationships": {
       "post": {
         "operationId": "createRelationship",
@@ -2563,6 +3553,72 @@
           }
         },
         "summary": "Delete a Relationship.",
+        "tags": [
+          "relationships"
+        ]
+      }
+    },
+    "/relationships/{id}/relations": {
+      "get": {
+        "operationId": "listRelationshipRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Relationship ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Relationship not found."
+          }
+        },
+        "summary": "Query relationships associated with a Relationship.",
         "tags": [
           "relationships"
         ]
@@ -2727,6 +3783,72 @@
         ]
       }
     },
+    "/relationship-types/{id}/relations": {
+      "get": {
+        "operationId": "listRelationshipTypeRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "RelationshipType ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "RelationshipType not found."
+          }
+        },
+        "summary": "Query relationships associated with a RelationshipType.",
+        "tags": [
+          "relationship-types"
+        ]
+      }
+    },
     "/review-comments": {
       "post": {
         "operationId": "createReviewComment",
@@ -2881,6 +4003,72 @@
           }
         },
         "summary": "Delete a ReviewComment.",
+        "tags": [
+          "review-comments"
+        ]
+      }
+    },
+    "/review-comments/{id}/relations": {
+      "get": {
+        "operationId": "listReviewCommentRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ReviewComment ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "ReviewComment not found."
+          }
+        },
+        "summary": "Query relationships associated with a ReviewComment.",
         "tags": [
           "review-comments"
         ]
@@ -3045,6 +4233,72 @@
         ]
       }
     },
+    "/roles/{id}/relations": {
+      "get": {
+        "operationId": "listRoleRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Role ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Role not found."
+          }
+        },
+        "summary": "Query relationships associated with a Role.",
+        "tags": [
+          "roles"
+        ]
+      }
+    },
     "/rules": {
       "post": {
         "operationId": "createRule",
@@ -3199,6 +4453,72 @@
           }
         },
         "summary": "Delete a Rule.",
+        "tags": [
+          "rules"
+        ]
+      }
+    },
+    "/rules/{id}/relations": {
+      "get": {
+        "operationId": "listRuleRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Rule ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Rule not found."
+          }
+        },
+        "summary": "Query relationships associated with a Rule.",
         "tags": [
           "rules"
         ]
@@ -3363,6 +4683,72 @@
         ]
       }
     },
+    "/scopes/{id}/relations": {
+      "get": {
+        "operationId": "listScopeRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Scope ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Scope not found."
+          }
+        },
+        "summary": "Query relationships associated with a Scope.",
+        "tags": [
+          "scopes"
+        ]
+      }
+    },
     "/votes": {
       "post": {
         "operationId": "createVote",
@@ -3517,6 +4903,72 @@
           }
         },
         "summary": "Delete a Vote.",
+        "tags": [
+          "votes"
+        ]
+      }
+    },
+    "/votes/{id}/relations": {
+      "get": {
+        "operationId": "listVoteRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Vote ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Vote not found."
+          }
+        },
+        "summary": "Query relationships associated with a Vote.",
         "tags": [
           "votes"
         ]
@@ -3703,6 +5155,88 @@
           "requiresPermission",
           "description",
           "state"
+        ]
+      },
+      "RelationshipResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this relationship.",
+            "pattern": "^Relationship/[^/\\s]+$"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Relationship."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship record was last updated.",
+            "format": "date-time"
+          },
+          "relationshipTypeId": {
+            "type": "string",
+            "description": "ID of the RelationshipType defining this relationship's type, inverse type, and allowed source and target types.",
+            "pattern": "^RelationshipType/[^/\\s]+$"
+          },
+          "type": {
+            "type": "string",
+            "description": "Relationship name copied from the selected RelationshipType object's type field.",
+            "minLength": 1
+          },
+          "inverseType": {
+            "type": "string",
+            "description": "Inverse relationship name copied from the selected RelationshipType object's inverseType field.",
+            "minLength": 1
+          },
+          "sourceId": {
+            "type": "string",
+            "description": "ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "targetId": {
+            "type": "string",
+            "description": "ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "startedAt": {
+            "type": "string",
+            "description": "Calendar date when this relationship began.",
+            "format": "date"
+          },
+          "endedAt": {
+            "type": "string",
+            "description": "Optional calendar date when this relationship ended; must not precede startedAt.",
+            "format": "date"
+          }
+        },
+        "required": [
+          "id",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "relationshipTypeId",
+          "type",
+          "inverseType",
+          "sourceId",
+          "targetId",
+          "startedAt"
         ]
       },
       "UpdateActionDto": {
@@ -7349,88 +8883,6 @@
         }
       },
       "CreateRelationshipDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Globally unique identifier for this relationship.",
-            "pattern": "^Relationship/[^/\\s]+$"
-          },
-          "entityType": {
-            "type": "string",
-            "description": "Entity category for this object, normally Relationship."
-          },
-          "basedOn": {
-            "type": "string",
-            "description": "Id of the object this object is derived from.",
-            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
-          },
-          "entityDocumentationUrl": {
-            "type": "string",
-            "description": "URL for documentation about this entity.",
-            "format": "uri"
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this relationship record was created.",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "description": "Timestamp when this relationship record was last updated.",
-            "format": "date-time"
-          },
-          "relationshipTypeId": {
-            "type": "string",
-            "description": "ID of the RelationshipType defining this relationship's type, inverse type, and allowed source and target types.",
-            "pattern": "^RelationshipType/[^/\\s]+$"
-          },
-          "type": {
-            "type": "string",
-            "description": "Relationship name copied from the selected RelationshipType object's type field.",
-            "minLength": 1
-          },
-          "inverseType": {
-            "type": "string",
-            "description": "Inverse relationship name copied from the selected RelationshipType object's inverseType field.",
-            "minLength": 1
-          },
-          "sourceId": {
-            "type": "string",
-            "description": "ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.",
-            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
-          },
-          "targetId": {
-            "type": "string",
-            "description": "ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.",
-            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
-          },
-          "startedAt": {
-            "type": "string",
-            "description": "Calendar date when this relationship began.",
-            "format": "date"
-          },
-          "endedAt": {
-            "type": "string",
-            "description": "Optional calendar date when this relationship ended; must not precede startedAt.",
-            "format": "date"
-          }
-        },
-        "required": [
-          "id",
-          "entityType",
-          "entityDocumentationUrl",
-          "createdAt",
-          "updatedAt",
-          "relationshipTypeId",
-          "type",
-          "inverseType",
-          "sourceId",
-          "targetId",
-          "startedAt"
-        ]
-      },
-      "RelationshipResponseDto": {
         "type": "object",
         "properties": {
           "id": {

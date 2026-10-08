@@ -10,9 +10,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,8 @@ import { CreateProtocolDto } from './dto/create-protocol.dto.js';
 import { ProtocolResponseDto } from './dto/protocol-response.dto.js';
 import { UpdateProtocolDto } from './dto/update-protocol.dto.js';
 import { ProtocolService } from './protocol.service.js';
+import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
+import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';
 
 @ApiTags('protocols')
 @Controller('protocols')
@@ -64,6 +68,28 @@ export class ProtocolController {
     const result = await this.protocolService.findOne(id);
     if (!result) throw new NotFoundException('Protocol not found.');
     return result;
+  }
+
+  @Get(':id/relations')
+  @ApiOperation({
+    operationId: 'listProtocolRelations',
+    summary: 'Query relationships associated with a Protocol.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Protocol ID (URL-encode slashes).',
+  })
+  @ApiOkResponse({ type: RelationshipResponseDto, isArray: true })
+  @ApiBadRequestResponse({
+    description: 'Invalid direction or equality filters.',
+  })
+  @ApiNotFoundResponse({ description: 'Protocol not found.' })
+  findRelations(
+    @Param('id') id: string,
+    @Query() query: RelationsQueryDto,
+  ): Promise<RelationshipResponseDto[]> {
+    return this.protocolService.findRelations(id, query);
   }
 
   @Patch(':id')
