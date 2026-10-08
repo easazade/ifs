@@ -70,6 +70,14 @@ Check each workspace's `package.json` before assuming a script exists. Prefer th
 - Never reset or destructively migrate a database without explicit approval. Verify `SURREALDB_URL`, namespace, and database first.
 - Keep secrets out of source; use `.env.example` for documented configuration.
 
+## Draft documentation workflow
+
+- Keep discussion-derived documentation drafts in the root `draft-docs/` directory, with one topic per Markdown file and descriptive filenames.
+- When a discussion produces a useful insight, design rationale, convention, or solution worth documenting, ask the user whether to save it. Wait for explicit approval before creating or updating a topic draft; approval to establish this workflow is not blanket approval to record every discussion.
+- After approval, capture the context, conclusion, reasoning, examples where useful, and any unresolved questions so the knowledge does not become an undocumented assumption. Distinguish agreed conclusions from proposals.
+- Drafts may eventually belong in IFS Standards, the repository README, or other documentation. Note the intended destination when known; otherwise leave it undecided.
+- Check for an existing draft on the same topic and update it rather than creating duplicates. Drafts are not canonical standards or implemented behavior; do not promote them or change schemas/code merely because they exist.
+
 ## UI and design work
 
 Follow `DESIGN.md`; reuse existing components and tokens instead of inventing styles.

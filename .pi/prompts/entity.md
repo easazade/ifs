@@ -36,6 +36,23 @@ Use only existing `*.schema.json` files in `ifs-standards/src/entities/` as styl
 - `.mdx` docs, generated examples, classes, indexes, and every other derived artifact must be generated from `*.schema.json` files.
 - Never reverse-engineer or update a schema from an `.mdx` file.
 
+## Connection modeling and Relationship approval
+
+Classify each connection by its meaning, not by the number of possible relationships between the two entity types:
+
+- **Fixed-purpose connection:** the meaning is defined by a named schema field. Use composition, an entity `$ref`, or an `Id`/`Ids` field as appropriate; do not introduce a generic `Relationship` object. Examples: `Change.changes` connects change items, `Comment.subjectId` identifies what a comment is about, and `Comment.authorId` identifies its author. These are modeling examples, not instructions to add fields automatically.
+- **Variable-purpose connection:** the meaning is selected for each association through a `RelationshipType`. Consider a `Relationship` object when, for example, a member may reside in, work in, or represent a place. Having many possible connections between the same entity types does not make every connection generic: `Organization.createdById` is still a fixed-purpose reference.
+- **Specialized connection:** when the connection carries specific domain data or rules, prefer a dedicated entity such as `Delegation` or `Vote`, with named references, rather than reducing it to a generic `Relationship`.
+
+Whenever you recommend representing a connection with a `Relationship` object:
+
+1. Explain the proposed source and target types, relationship meaning/type, and why this is preferable to a named field or a dedicated entity.
+2. Ask explicitly whether the user approves that specific connection being modeled with `Relationship`. Include the recommendation and approval question in the initial numbered questionnaire when known; if discovered later, ask a numbered follow-up and wait before applying it.
+3. General permission to infer fields or create/update schemas is not approval to use `Relationship`. Proceed only when the user explicitly approves the specific recommendation; a new or materially changed recommendation needs its own approval.
+4. Do not silently replace existing named fields with generic relationships, add a generic relationship alongside the same authoritative field, or introduce associated `RelationshipType` definitions without approval. If the user declines, agree on a named-field or specialized-entity alternative before applying it.
+
+This prompt edits entity schemas, not instance data. Approval of a modeling recommendation does not authorize creating persisted `Relationship` records or changing other workspaces.
+
 ## Interaction flow
 
 Do not create or update files immediately. First interview the user in one batch so `pi-questions-helper` can extract every question and help the user answer them at once.
@@ -46,7 +63,7 @@ Important interaction rules:
 - After the numbered questions, stop and wait for the user's next message.
 - Do not create or update files in the first response.
 - The next user message may be a `pi-questions-helper` draft such as "Here are my answers to your questions:". Parse those answers.
-- If answers are sufficient and the user granted final approval, proceed directly to schema creation or update.
+- If answers are sufficient and the user granted final approval, proceed to schema creation or update only after any proposed `Relationship` modeling has also received specific approval.
 - If required answers are missing or ambiguous, ask only the missing follow-up questions and wait.
 - If the user did not grant final approval, present the final property plan and ask for approval before writing files.
 - If project rules require a trace footer, include it after the numbered questions.
@@ -55,7 +72,7 @@ Important interaction rules:
 
 First check whether `ifs-standards/src/entities/<kebab-case-entity-name>/<kebab-case-entity-name>.schema.json` exists.
 
-If it does not exist, briefly restate what you understand about the entity from the name and specification, then ask this numbered creation questionnaire and wait:
+If it does not exist, briefly restate what you understand about the entity from the name and specification, then ask this numbered creation questionnaire, append any specific `Relationship` recommendations and approval questions, and wait:
 
 1. Is this meaning correct? If not, what should change?
 2. What user-defined properties should this entity include? Reply with one property per line using `name: type - description`, or say `none`.
@@ -65,7 +82,7 @@ If it does not exist, briefly restate what you understand about the entity from 
 6. Should the schema be strict with `additionalProperties: false`, or flexible with `additionalProperties: true`? Reply `strict` or `flexible`.
 7. Do you approve me to create the schema file(s) immediately after applying your answers and any requested inference? Reply `yes` or `no`.
 
-If it exists, read the existing schema first, briefly summarize current fields, then ask only this update questionnaire and wait:
+If it exists, read the existing schema first, briefly summarize current fields, then ask this update questionnaire, append any specific `Relationship` recommendations and approval questions, and wait:
 
 1. What should change? List fields to add/change/remove using `name: type - description`, or describe the desired behavior.
 2. Should existing compatible fields stay unchanged? Reply `yes` unless you want removals/renames.
@@ -102,7 +119,7 @@ After the user answers:
 - Think through the entity in the IFS context.
 - Add likely required fields unless contradicted by the user.
 - Add useful optional fields unless contradicted by the user.
-- Add possible relations to other entities under `ifs-standards/src/entities/` when useful.
+- Add useful fixed-purpose references to other entities under `ifs-standards/src/entities/`. For any inferred connection better modeled with `Relationship`, recommend it and obtain specific approval under the connection-modeling rules before applying it.
 - If a useful relation targets a missing entity, create a basic related-entity schema for it and reference it.
 - Keep ID fields as strings in `EntityType/ID` form, not expanded entity objects.
 - Explain inferred fields and relations in the final report.
@@ -111,7 +128,7 @@ After the user answers:
 
 - Use only user-provided properties plus the selected common properties and the mandatory fixed `entityType` discriminator.
 
-12. If the user approved immediate creation/update, create or update the schema file(s).
+12. If the user approved immediate creation/update and explicitly approved every proposed `Relationship` modeling choice, create or update the schema file(s). If a proposed `Relationship` choice is still pending, ask for that approval and wait before writing files.
 13. If the user did not approve immediate creation/update, show the final property plan and ask for approval.
 
 ### Step 3: Create or update schema files
