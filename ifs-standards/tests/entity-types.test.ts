@@ -19,9 +19,5 @@ describe('immutable entity types', () => {
         expect(validate(value)).toBe(false);
       }
     });
-    it(`${entry.name} generated example preserves its fixed entityType`, () => {
-      const example = JSON.parse(readFileSync(join(entitiesDir, entry.name, 'examples', `${entry.name}.json`), 'utf8'));
-      expect(example.entityType).toBe(schema.title);
-    });
   }
 });

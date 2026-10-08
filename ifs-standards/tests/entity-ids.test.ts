@@ -12,25 +12,6 @@ const entities = readdirSync(entitiesDir, { withFileTypes: true })
     schema: JSON.parse(readFileSync(join(entitiesDir, name, `${name}.schema.json`), 'utf8')) as JSONSchema7,
   }));
 
-const idPattern = /^[A-Z][A-Za-z0-9]*\/[^/\s]+$/;
-
-function checkExampleIds(value: unknown) {
-  if (Array.isArray(value)) {
-    value.forEach(checkExampleIds);
-  } else if (value && typeof value === 'object') {
-    for (const [key, child] of Object.entries(value)) {
-      expect(key).not.toBe('ifsId');
-      expect(key).not.toMatch(/(Ref|Refs|Reference|References)$/);
-      if (key === 'id' || key === 'basedOn' || /Ids?$/.test(key) || key === 'subject' || key === 'owners') {
-        for (const id of Array.isArray(child) ? child : [child]) {
-          if (id !== null) expect(id).toMatch(idPattern);
-        }
-      }
-      checkExampleIds(child);
-    }
-  }
-}
-
 describe('unified entity IDs', () => {
   for (const { name, schema } of entities) {
     it(`${schema.title} uses typed string IDs without a separate IFS ID`, () => {
@@ -75,10 +56,6 @@ describe('unified entity IDs', () => {
         }
         if (property === 'id') expect(validate('Unknown/1')).toBe(false);
       }
-    });
-
-    it(`${schema.title} generated examples use unified IDs, including nested entities`, () => {
-      checkExampleIds(JSON.parse(readFileSync(join(entitiesDir, name, 'examples', `${name}.json`), 'utf8')));
     });
   }
 

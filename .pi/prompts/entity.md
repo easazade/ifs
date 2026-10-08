@@ -33,7 +33,8 @@ Use only existing `*.schema.json` files in `ifs-standards/src/entities/` as styl
 ## Source of truth
 
 - `*.schema.json` files are the only source of truth for entities.
-- `.mdx` docs, generated examples, classes, indexes, and every other derived artifact must be generated from `*.schema.json` files.
+- `.mdx` docs, classes, indexes, and every other derived artifact must be generated from `*.schema.json` files.
+- Never create or generate entity examples, example instance files, `examples/` directories, or JSON Schema `examples` annotations. This prohibition also applies to basic related-entity schemas and derived generation.
 - Never reverse-engineer or update a schema from an `.mdx` file.
 
 ## Connection modeling and Relationship approval
@@ -174,7 +175,7 @@ Only after approval:
 
 ## Derived artifact rules
 
-Do not write `.mdx` documentation directly. If docs, examples, classes, indexes, or other derived files are needed, generate them from `*.schema.json` files via the project generation command. Schemas flow outward; derived artifacts never flow back into schemas.
+Do not write `.mdx` documentation directly. If docs, classes, indexes, or other derived files are needed, generate them from `*.schema.json` files via the project generation command. Never generate entity examples or run an example generator. Schemas flow outward; derived artifacts never flow back into schemas.
 
 ### Step 4: Regenerate derived entity artifacts
 

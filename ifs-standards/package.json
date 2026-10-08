@@ -14,7 +14,7 @@
     "tokens:code": "tsx scripts/tokens-to-code.ts",
     "entities:order": "tsx scripts/generate-entity-order.ts",
     "entities:relations": "tsx scripts/generate-entity-relations.ts",
-    "entities": "tsx scripts/generate-entity-order.ts && tsx scripts/generate-entity-relations.ts && tsx scripts/generate-entities-overview.ts && tsx scripts/generate-valid-examples.ts",
+    "entities": "tsx scripts/generate-entity-order.ts && tsx scripts/generate-entity-relations.ts && tsx scripts/generate-entities-overview.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -45,7 +45,6 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
     "jiti": "^2.7.0",
-    "json-schema-faker": "^0.6.1",
     "prettier": "^3.8.1",
     "tsx": "^4.23.13",
     "typescript": "^5.9.3",

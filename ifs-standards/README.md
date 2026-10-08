@@ -20,7 +20,7 @@ The application uses React, TypeScript, Vite, Tailwind CSS v4, and MDX.
 | `npm run test:watch`         | Watch tests                                                                               |
 | `npm run preview`            | Serve the production bundle locally                                                       |
 | `npm run format`             | Format source, tests, scripts, and TypeScript configs                                     |
-| `npm run entities`           | Regenerate entity order, relations, overview, TypeScript interfaces, and examples         |
+| `npm run entities`           | Regenerate entity order, relations, overview, and TypeScript interfaces                   |
 | `npm run entities:relations` | Regenerate `scripts/entity-relations.json` from direct entity schema references           |
 | `npm run tokens:code`        | Regenerate CSS from the existing design token library                                     |
 

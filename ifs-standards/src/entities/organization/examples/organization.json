@@ -1,8 +1,0 @@
-{
-  "id": "Organization/1001",
-  "entityType": "Organization",
-  "basedOn": "Organization/1000",
-  "entityDocumentationUrl": "https://ifs-standards.org/entities/Organization",
-  "createdAt": "2023-04-06T01:25:35Z",
-  "updatedAt": "2024-04-07T15:32:45Z"
-}
