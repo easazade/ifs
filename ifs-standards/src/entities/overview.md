@@ -213,6 +213,35 @@ erDiagram
     entityDocumentationUrl string "required, uri"
     createdAt string "required, date-time"
   }
+  RELATIONSHIP {
+    id string PK "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
+    updatedAt string "required, date-time"
+    relationshipTypeId string FK "optional"
+    type string "required"
+    inverseType string "required"
+    sourceId string "required"
+    targetId string "required"
+    startedAt string "required, date"
+    endedAt string "date"
+  }
+  RELATIONSHIPTYPE {
+    id string PK "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
+    updatedAt string "required, date-time"
+    type string "required"
+    description string "required"
+    sourceTypes array "required"
+    targetTypes array "required"
+    symmetric boolean "required"
+    inverseType string "required"
+  }
   REVIEWCOMMENT {
     id string PK "required"
     entityType string "required"
@@ -294,6 +323,7 @@ erDiagram
   PERMISSION ||--|| SCOPE : scopeId
   PLACE ||--|| GEOGRAPHICAREA : geographicArea
   PLACE ||--o{ ROLE : roles
+  RELATIONSHIP ||--|| RELATIONSHIPTYPE : relationshipTypeId
   ROLE ||--o{ PERMISSION : permissions_fk_roleId
   ROLE ||--|| SCOPE : scope_fk_scopeId
   SCOPE ||--o{ SCOPE : childScopeIds_fk_parentScopeId
@@ -332,6 +362,7 @@ erDiagram
 - `Permission.scopeId` → `Scope` (id, one)
 - `Place.geographicArea` → `Geographic Area` ($ref, one)
 - `Place.roles` → `Role` ($ref, many)
+- `Relationship.relationshipTypeId` → `RelationshipType` (id, one)
 - `Permission.roleId` → `Role` (id, one)
 - `Role.permissions` → `Permission` ($ref, many)
 - `Role.scope` → `Scope` ($ref, one)

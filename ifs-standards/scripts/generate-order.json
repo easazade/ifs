@@ -6,6 +6,8 @@
   "label",
   "organization",
   "protocol",
+  "relationship",
+  "relationship-type",
   "review-comment",
   "rule",
   "scope",

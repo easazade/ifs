@@ -38,6 +38,8 @@
     { "property": "roles", "type": "Role" }
   ],
   "Protocol": [],
+  "Relationship": [],
+  "RelationshipType": [],
   "ReviewComment": [],
   "Role": [
     { "property": "permissions", "type": "Permission" },
