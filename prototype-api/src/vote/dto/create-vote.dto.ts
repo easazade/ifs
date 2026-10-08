@@ -8,9 +8,10 @@ export class CreateVoteDto {
   id: string;
 
   @ApiProperty({
-    description: 'Entity category for this object, normally Vote.',
+    description: 'Entity type discriminator. Always "Vote" for Vote entities.',
+    enum: ['Vote'],
   })
-  entityType: string;
+  entityType: 'Vote';
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',

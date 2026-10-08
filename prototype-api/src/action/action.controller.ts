@@ -39,6 +39,9 @@ export class ActionController {
   @ApiOperation({ operationId: 'createAction', summary: 'Create a Action.' })
   @ApiBody({ type: CreateActionDto })
   @ApiCreatedResponse({ type: ActionResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateActionDto): Promise<ActionResponseDto> {
     return this.actionService.create(data);
   }
@@ -88,6 +91,9 @@ export class ActionController {
   @ApiParam({ name: 'id', type: String, description: 'Action ID.' })
   @ApiBody({ type: UpdateActionDto })
   @ApiOkResponse({ type: ActionResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Action not found.' })
   update(
     @Param('id') id: string,

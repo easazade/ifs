@@ -14,7 +14,8 @@
     },
     "entityType": {
       "type": "string",
-      "description": "IFS entity category/type for this organization."
+      "const": "Organization",
+      "description": "Entity type discriminator. Always \"Organization\" for Organization entities."
     },
     "basedOn": {
       "type": "string",

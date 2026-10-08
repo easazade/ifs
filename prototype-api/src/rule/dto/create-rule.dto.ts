@@ -8,9 +8,10 @@ export class CreateRuleDto {
   id: string;
 
   @ApiProperty({
-    description: 'Entity category for this object, normally Rule.',
+    description: 'Entity type discriminator. Always "Rule" for Rule entities.',
+    enum: ['Rule'],
   })
-  entityType: string;
+  entityType: 'Rule';
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',

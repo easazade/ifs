@@ -8,9 +8,11 @@ export class OrganizationResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'IFS entity category/type for this organization.',
+    description:
+      'Entity type discriminator. Always "Organization" for Organization entities.',
+    enum: ['Organization'],
   })
-  entityType: string;
+  entityType: 'Organization';
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',

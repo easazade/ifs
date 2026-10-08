@@ -42,6 +42,9 @@ export class PermissionController {
   })
   @ApiBody({ type: CreatePermissionDto })
   @ApiCreatedResponse({ type: PermissionResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreatePermissionDto): Promise<PermissionResponseDto> {
     return this.permissionService.create(data);
   }
@@ -100,6 +103,9 @@ export class PermissionController {
   @ApiParam({ name: 'id', type: String, description: 'Permission ID.' })
   @ApiBody({ type: UpdatePermissionDto })
   @ApiOkResponse({ type: PermissionResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Permission not found.' })
   update(
     @Param('id') id: string,

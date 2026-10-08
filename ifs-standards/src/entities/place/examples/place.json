@@ -1,151 +1,20 @@
 {
   "id": "Place/1001",
   "entityType": "Place",
+  "basedOn": "Place/1000",
   "entityDocumentationUrl": "https://ifs-standards.org/entities/Place",
-  "createdAt": "2007-02-14T01:23:46Z",
-  "updatedAt": "2008-03-02T10:35:47Z",
-  "name": "mOH",
-  "coordinate": "lSCV9oUj",
-  "geographicArea": {
-    "id": "GeographicArea/vn@",
-    "entityType": "hqdM1o",
-    "entityDocumentationUrl": "https://test.org/data",
-    "createdAt": "2029-12-22T22:50:56Z",
-    "updatedAt": "2003-01-27T07:52:30Z",
-    "polygons": [
-      [
-        [
-          null,
-          null,
-          null,
-          null
-        ],
-        [
-          null,
-          null,
-          null,
-          null
-        ]
-      ],
-      [],
-      [
-        [
-          null,
-          null,
-          null,
-          null
-        ],
-        [
-          null,
-          null,
-          null,
-          null
-        ]
-      ]
-    ]
-  },
+  "createdAt": "2023-04-06T01:25:35Z",
+  "updatedAt": "2024-04-07T15:32:45Z",
+  "name": "SC",
+  "coordinate": "9oUjuzpj",
   "roles": [
     {
-      "id": "Role/H",
+      "id": "Role/2",
       "entityType": "Role",
-      "basedOn": "Ko/Ug-",
-      "entityDocumentationUrl": "https://example.com/v1",
-      "name": "riOIuhies",
-      "memberId": "Member/kSTs",
-      "scopeId": "Scope/v?,]",
-      "scope": {
-        "id": "Scope/1001",
-        "entityType": "Scope",
-        "entityDocumentationUrl": "",
-        "name": "",
-        "type": null,
-        "state": null,
-        "createdAt": "",
-        "updatedAt": "",
-        "groups": []
-      },
-      "permissions": [
-        {
-          "id": "Permission/1001",
-          "entityType": "Permission",
-          "entityDocumentationUrl": "",
-          "actionIds": [],
-          "scopeId": "Scope/1001",
-          "state": "granted",
-          "createdAt": "",
-          "expiresAt": ""
-        },
-        {
-          "id": "Permission/1001",
-          "entityType": "Permission",
-          "entityDocumentationUrl": "",
-          "actionIds": [],
-          "scopeId": "Scope/1001",
-          "state": "granted",
-          "createdAt": "",
-          "expiresAt": ""
-        },
-        {
-          "id": "Permission/1001",
-          "entityType": "Permission",
-          "entityDocumentationUrl": "",
-          "actionIds": [],
-          "scopeId": "Scope/1001",
-          "state": "granted",
-          "createdAt": "",
-          "expiresAt": ""
-        }
-      ],
-      "state": "under-review",
-      "createdAt": "2022-11-03T06:52:47Z",
-      "updatedAt": "2024-03-03T03:24:32Z",
-      "expiresAt": "2027-04-28T20:37:40Z"
-    },
-    {
-      "id": "Role/HA",
-      "entityType": "Role",
-      "basedOn": "G7JUEC/Hvm_",
-      "entityDocumentationUrl": "https://demo.net/users/data",
-      "name": "pHV",
-      "memberId": "Member/s",
-      "scopeId": "Scope/4cCL",
-      "scope": {
-        "id": "Scope/1001",
-        "entityType": "Scope",
-        "entityDocumentationUrl": "",
-        "name": "",
-        "type": null,
-        "state": null,
-        "createdAt": "",
-        "updatedAt": "",
-        "objects": []
-      },
-      "permissions": [
-        {
-          "id": "Permission/1001",
-          "entityType": "Permission",
-          "entityDocumentationUrl": "",
-          "actionIds": [],
-          "scopeId": "Scope/1001",
-          "state": "granted",
-          "createdAt": "",
-          "expiresAt": ""
-        }
-      ],
-      "state": "suspended",
-      "createdAt": "2000-12-17T13:38:07Z",
-      "updatedAt": "2002-10-05T17:16:38Z",
-      "expiresAt": "2016-12-03T02:10:40Z"
-    },
-    {
-      "id": "Role/T",
-      "entityType": "Role",
-      "basedOn": "UF/>b[jI",
-      "entityDocumentationUrl": "https://test.org/data/api",
-      "name": "7MH",
-      "description": "M",
-      "memberId": "Member/n3",
-      "scopeId": "Scope/bfcI",
+      "entityDocumentationUrl": "https://demo.net/users/v1/data",
+      "name": "5Q4Z5hc1s2",
+      "memberId": "Member/9o6,l",
+      "scopeId": "Scope/oHkIC",
       "scope": {
         "id": "Scope/1001",
         "entityType": "Scope",
@@ -157,32 +26,11 @@
         "updatedAt": "",
         "locations": []
       },
-      "permissions": [
-        {
-          "id": "Permission/1001",
-          "entityType": "Permission",
-          "entityDocumentationUrl": "",
-          "actionIds": [],
-          "scopeId": "Scope/1001",
-          "state": "granted",
-          "createdAt": "",
-          "expiresAt": ""
-        },
-        {
-          "id": "Permission/1001",
-          "entityType": "Permission",
-          "entityDocumentationUrl": "",
-          "actionIds": [],
-          "scopeId": "Scope/1001",
-          "state": "granted",
-          "createdAt": "",
-          "expiresAt": ""
-        }
-      ],
+      "permissions": [],
       "state": "revoked",
-      "createdAt": "2029-01-27T22:01:49Z",
-      "updatedAt": "2016-07-12T02:05:41Z",
-      "expiresAt": "2000-07-18T16:51:29Z"
+      "createdAt": "2026-04-05T07:53:17Z",
+      "updatedAt": "2004-08-18T07:07:08Z",
+      "expiresAt": "2009-09-20T02:30:31Z"
     }
   ]
 }

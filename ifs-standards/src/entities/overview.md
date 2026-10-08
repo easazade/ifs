@@ -220,7 +220,7 @@ erDiagram
     entityDocumentationUrl string "required, uri"
     createdAt string "required, date-time"
     updatedAt string "required, date-time"
-    relationshipTypeId string FK "optional"
+    relationshipTypeId string FK "required"
     type string "required"
     inverseType string "required"
     sourceId string "required"

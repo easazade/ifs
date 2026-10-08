@@ -1,21 +1,22 @@
 {
   "id": "Observation/1001",
   "entityType": "Observation",
+  "basedOn": "Observation/1000",
   "entityDocumentationUrl": "https://ifs-standards.org/entities/Observation",
-  "createdAt": "2007-02-14T01:23:46Z",
-  "updatedAt": "2008-03-02T10:35:47Z",
-  "description": "mOH",
+  "createdAt": "2023-04-06T01:25:35Z",
+  "updatedAt": "2024-04-07T15:32:45Z",
+  "description": "SC",
   "locations": [
-    "SC",
-    "9oUjuzpj",
-    "JhqdM1o"
+    "oUjuzpjTJh",
+    "dM",
+    "o9SysP75Q"
   ],
-  "timeOfObservation": "2030-09-13T07:40:57Z",
+  "timeOfObservation": "2028-11-29T02:02:52Z",
   "observer": {
-    "id": "Member/8;='j",
+    "id": "Member/{S",
     "entityType": "Member",
-    "entityDocumentationUrl": "https://demo.net/resource",
-    "name": "6RkP6",
+    "entityDocumentationUrl": "https://demo.net/data",
+    "name": "i8kyhyuOFG",
     "roles": [],
     "permissions": [
       {
@@ -49,8 +50,8 @@
         "expiresAt": ""
       }
     ],
-    "isOwner": true,
-    "createdAt": "2012-02-12T07:39:30Z",
-    "updatedAt": "2016-01-26T20:16:09Z"
+    "isOwner": false,
+    "createdAt": "2008-02-09T21:17:08Z",
+    "updatedAt": "2020-07-11T02:08:04Z"
   }
 }

@@ -203,6 +203,12 @@ describe('resource generator', () => {
     );
     expect(serviceSource).toContain('SurrealService');
     expect(serviceSource).toContain(
+      'assertEntityType(data, "Geographic Area");',
+    );
+    expect(serviceSource).toContain(
+      'assertEntityType(data, "Geographic Area", true);',
+    );
+    expect(serviceSource).toContain(
       "this.database.findAll('geographic_area', relations)",
     );
     const controllerSource = readFileSync(

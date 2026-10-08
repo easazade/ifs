@@ -32,7 +32,7 @@ for (const schemaDir of schemaDirs) {
     const schemaFileContent = await readFile(schemaFilePath, 'utf8');
 
     // json-schema-faker needs a parsed schema object, and generate() returns a Promise.
-    const schema = JSON.parse(schemaFileContent) as JsonSchema;
+    const schema = JSON.parse(schemaFileContent) as Exclude<JsonSchema, boolean>;
     const fakeObject = await generate(schema, { refResolver: resolveLocalSchemaReferenceFirst });
     const entityType = toPascalCase(schemaName);
     const documentationUrl = `https://ifs-standards.org/entities/${entityType}`;
@@ -40,7 +40,7 @@ for (const schemaDir of schemaDirs) {
     if (typeof fakeObject === 'object' && fakeObject !== null && !Array.isArray(fakeObject)) {
       const example = fakeObject as Record<string, unknown>;
       example.id = `${entityType}/1001`;
-      example.entityType = entityType;
+      example.entityType = schema.title;
       example.entityDocumentationUrl = documentationUrl;
       if ('basedOn' in example) example.basedOn = `${entityType}/1000`;
 
@@ -225,6 +225,7 @@ function toPascalCase(value: string) {
 }
 
 function exampleValue(schema: Exclude<JsonSchema, boolean>): unknown {
+  if (schema.const !== undefined) return schema.const;
   if (schema.type === 'array') {
     return [exampleValue(schema.items as Exclude<JsonSchema, boolean>)];
   }
@@ -251,6 +252,7 @@ function exampleValue(schema: Exclude<JsonSchema, boolean>): unknown {
 // Faker truncates recursive relations with empty strings and may ignore conditional nullability.
 async function normalizeExampleIds(value: unknown, schema: JsonSchema): Promise<unknown> {
   if (!schema || typeof schema !== 'object') return value;
+  if (schema.const !== undefined) return schema.const;
   if (schema.$ref) {
     return normalizeExampleIds(value, await resolveLocalSchemaReferenceFirst(schema.$ref));
   }

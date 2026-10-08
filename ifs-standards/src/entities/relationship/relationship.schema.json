@@ -14,7 +14,8 @@
     },
     "entityType": {
       "type": "string",
-      "description": "Entity category for this object, normally Relationship."
+      "const": "Relationship",
+      "description": "Entity type discriminator. Always \"Relationship\" for Relationship entities."
     },
     "basedOn": {
       "type": "string",

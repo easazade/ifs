@@ -9,9 +9,11 @@ export class ObservationResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'Entity category for this object, normally Observation.',
+    description:
+      'Entity type discriminator. Always "Observation" for Observation entities.',
+    enum: ['Observation'],
   })
-  entityType: string;
+  entityType: 'Observation';
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',

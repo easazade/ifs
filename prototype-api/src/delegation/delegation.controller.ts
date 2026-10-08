@@ -42,6 +42,9 @@ export class DelegationController {
   })
   @ApiBody({ type: CreateDelegationDto })
   @ApiCreatedResponse({ type: DelegationResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateDelegationDto): Promise<DelegationResponseDto> {
     return this.delegationService.create(data);
   }
@@ -100,6 +103,9 @@ export class DelegationController {
   @ApiParam({ name: 'id', type: String, description: 'Delegation ID.' })
   @ApiBody({ type: UpdateDelegationDto })
   @ApiOkResponse({ type: DelegationResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Delegation not found.' })
   update(
     @Param('id') id: string,

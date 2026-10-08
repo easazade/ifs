@@ -72,13 +72,38 @@ describe('AppController (e2e)', () => {
   });
 
   it('supports generated CRUD routes and missing-record responses', async () => {
-    const data = { id: 'member-e2e', name: 'Alice', permissions: [] };
+    const data = {
+      id: 'member-e2e',
+      entityType: 'Member',
+      name: 'Alice',
+      permissions: [],
+    };
+    for (const entityType of ['Organization', 'member', null, 123]) {
+      await request(app.getHttpServer())
+        .post('/members')
+        .send({ ...data, entityType })
+        .expect(400);
+    }
+    await request(app.getHttpServer())
+      .post('/members')
+      .send({ id: data.id })
+      .expect(400);
     const created = await request(app.getHttpServer())
       .post('/members')
       .send(data)
       .expect(201);
     expect(created.body).toMatchObject(data);
     expect(created.body.roles).toEqual([]);
+    for (const entityType of ['Organization', 'member', null, 123]) {
+      await request(app.getHttpServer())
+        .patch('/members/member-e2e')
+        .send({ entityType, name: 'Should not be saved' })
+        .expect(400);
+    }
+    const unchanged = await request(app.getHttpServer())
+      .get('/members/member-e2e')
+      .expect(200);
+    expect(unchanged.body).toMatchObject(data);
     await request(app.getHttpServer()).get('/members/member-e2e').expect(200);
     const updated = await request(app.getHttpServer())
       .patch('/members/member-e2e')
@@ -111,6 +136,7 @@ describe('AppController (e2e)', () => {
     });
     const edge = {
       id: 'Relationship/e2e',
+      entityType: 'Relationship',
       sourceId: 'Organization/e2e',
       targetId: 'Member/e2e',
       relationshipTypeId: 'RelationshipType/e2e',

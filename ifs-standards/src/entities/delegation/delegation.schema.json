@@ -13,7 +13,8 @@
     },
     "entityType": {
       "type": "string",
-      "description": "Entity category for this object, normally Delegation."
+      "const": "Delegation",
+      "description": "Entity type discriminator. Always \"Delegation\" for Delegation entities."
     },
     "basedOn": {
       "type": "string",

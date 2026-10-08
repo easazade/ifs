@@ -39,6 +39,9 @@ export class ChangeController {
   @ApiOperation({ operationId: 'createChange', summary: 'Create a Change.' })
   @ApiBody({ type: CreateChangeDto })
   @ApiCreatedResponse({ type: ChangeResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateChangeDto): Promise<ChangeResponseDto> {
     return this.changeService.create(data);
   }
@@ -88,6 +91,9 @@ export class ChangeController {
   @ApiParam({ name: 'id', type: String, description: 'Change ID.' })
   @ApiBody({ type: UpdateChangeDto })
   @ApiOkResponse({ type: ChangeResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Change not found.' })
   update(
     @Param('id') id: string,

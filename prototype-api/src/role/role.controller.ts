@@ -39,6 +39,9 @@ export class RoleController {
   @ApiOperation({ operationId: 'createRole', summary: 'Create a Role.' })
   @ApiBody({ type: CreateRoleDto })
   @ApiCreatedResponse({ type: RoleResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateRoleDto): Promise<RoleResponseDto> {
     return this.roleService.create(data);
   }
@@ -88,6 +91,9 @@ export class RoleController {
   @ApiParam({ name: 'id', type: String, description: 'Role ID.' })
   @ApiBody({ type: UpdateRoleDto })
   @ApiOkResponse({ type: RoleResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Role not found.' })
   update(
     @Param('id') id: string,

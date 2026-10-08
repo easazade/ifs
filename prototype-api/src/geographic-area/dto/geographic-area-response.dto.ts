@@ -8,9 +8,11 @@ export class GeographicAreaResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'IFS entity category/type for this geographic area.',
+    description:
+      'Entity type discriminator. Always "Geographic Area" for Geographic Area entities.',
+    enum: ['Geographic Area'],
   })
-  entityType: string;
+  entityType: 'Geographic Area';
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',

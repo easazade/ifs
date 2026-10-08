@@ -42,6 +42,9 @@ export class GeographicAreaController {
   })
   @ApiBody({ type: CreateGeographicAreaDto })
   @ApiCreatedResponse({ type: GeographicAreaResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(
     @Body() data: CreateGeographicAreaDto,
   ): Promise<GeographicAreaResponseDto> {
@@ -102,6 +105,9 @@ export class GeographicAreaController {
   @ApiParam({ name: 'id', type: String, description: 'GeographicArea ID.' })
   @ApiBody({ type: UpdateGeographicAreaDto })
   @ApiOkResponse({ type: GeographicAreaResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'GeographicArea not found.' })
   update(
     @Param('id') id: string,

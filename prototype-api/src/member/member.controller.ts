@@ -39,6 +39,9 @@ export class MemberController {
   @ApiOperation({ operationId: 'createMember', summary: 'Create a Member.' })
   @ApiBody({ type: CreateMemberDto })
   @ApiCreatedResponse({ type: MemberResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateMemberDto): Promise<MemberResponseDto> {
     return this.memberService.create(data);
   }
@@ -88,6 +91,9 @@ export class MemberController {
   @ApiParam({ name: 'id', type: String, description: 'Member ID.' })
   @ApiBody({ type: UpdateMemberDto })
   @ApiOkResponse({ type: MemberResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Member not found.' })
   update(
     @Param('id') id: string,

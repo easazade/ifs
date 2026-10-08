@@ -42,6 +42,9 @@ export class ReviewCommentController {
   })
   @ApiBody({ type: CreateReviewCommentDto })
   @ApiCreatedResponse({ type: ReviewCommentResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(
     @Body() data: CreateReviewCommentDto,
   ): Promise<ReviewCommentResponseDto> {
@@ -102,6 +105,9 @@ export class ReviewCommentController {
   @ApiParam({ name: 'id', type: String, description: 'ReviewComment ID.' })
   @ApiBody({ type: UpdateReviewCommentDto })
   @ApiOkResponse({ type: ReviewCommentResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'ReviewComment not found.' })
   update(
     @Param('id') id: string,

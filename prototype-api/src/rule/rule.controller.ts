@@ -39,6 +39,9 @@ export class RuleController {
   @ApiOperation({ operationId: 'createRule', summary: 'Create a Rule.' })
   @ApiBody({ type: CreateRuleDto })
   @ApiCreatedResponse({ type: RuleResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateRuleDto): Promise<RuleResponseDto> {
     return this.ruleService.create(data);
   }
@@ -88,6 +91,9 @@ export class RuleController {
   @ApiParam({ name: 'id', type: String, description: 'Rule ID.' })
   @ApiBody({ type: UpdateRuleDto })
   @ApiOkResponse({ type: RuleResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Rule not found.' })
   update(
     @Param('id') id: string,

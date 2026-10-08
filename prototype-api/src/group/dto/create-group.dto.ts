@@ -10,8 +10,12 @@ export class CreateGroupDto {
   })
   id: string;
 
-  @ApiProperty({ description: 'IFS entity category/type for this group.' })
-  entityType: string;
+  @ApiProperty({
+    description:
+      'Entity type discriminator. Always "Group" for Group entities.',
+    enum: ['Group'],
+  })
+  entityType: 'Group';
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',

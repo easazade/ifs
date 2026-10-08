@@ -13,7 +13,8 @@
     },
     "entityType": {
       "type": "string",
-      "description": "IFS entity category/type for this geographic area."
+      "const": "Geographic Area",
+      "description": "Entity type discriminator. Always \"Geographic Area\" for Geographic Area entities."
     },
     "basedOn": {
       "type": "string",

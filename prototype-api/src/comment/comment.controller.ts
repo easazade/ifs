@@ -39,6 +39,9 @@ export class CommentController {
   @ApiOperation({ operationId: 'createComment', summary: 'Create a Comment.' })
   @ApiBody({ type: CreateCommentDto })
   @ApiCreatedResponse({ type: CommentResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateCommentDto): Promise<CommentResponseDto> {
     return this.commentService.create(data);
   }
@@ -91,6 +94,9 @@ export class CommentController {
   @ApiParam({ name: 'id', type: String, description: 'Comment ID.' })
   @ApiBody({ type: UpdateCommentDto })
   @ApiOkResponse({ type: CommentResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Comment not found.' })
   update(
     @Param('id') id: string,

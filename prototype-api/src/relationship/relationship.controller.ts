@@ -41,6 +41,9 @@ export class RelationshipController {
   })
   @ApiBody({ type: CreateRelationshipDto })
   @ApiCreatedResponse({ type: RelationshipResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(
     @Body() data: CreateRelationshipDto,
   ): Promise<RelationshipResponseDto> {
@@ -101,6 +104,9 @@ export class RelationshipController {
   @ApiParam({ name: 'id', type: String, description: 'Relationship ID.' })
   @ApiBody({ type: UpdateRelationshipDto })
   @ApiOkResponse({ type: RelationshipResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Relationship not found.' })
   update(
     @Param('id') id: string,

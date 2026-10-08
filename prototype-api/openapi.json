@@ -48,6 +48,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Action.",
@@ -146,6 +149,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Action not found."
@@ -273,6 +279,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Change.",
@@ -371,6 +380,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Change not found."
@@ -498,6 +510,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a ChangeItem.",
@@ -596,6 +611,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "ChangeItem not found."
@@ -723,6 +741,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Comment.",
@@ -821,6 +842,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Comment not found."
@@ -948,6 +972,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Decision.",
@@ -1046,6 +1073,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Decision not found."
@@ -1173,6 +1203,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Delegation.",
@@ -1271,6 +1304,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Delegation not found."
@@ -1398,6 +1434,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a GeographicArea.",
@@ -1496,6 +1535,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "GeographicArea not found."
@@ -1623,6 +1665,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Group.",
@@ -1721,6 +1766,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Group not found."
@@ -1848,6 +1896,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Label.",
@@ -1946,6 +1997,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Label not found."
@@ -2073,6 +2127,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Member.",
@@ -2171,6 +2228,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Member not found."
@@ -2298,6 +2358,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Observation.",
@@ -2396,6 +2459,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Observation not found."
@@ -2523,6 +2589,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Organization.",
@@ -2621,6 +2690,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Organization not found."
@@ -2748,6 +2820,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Permission.",
@@ -2846,6 +2921,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Permission not found."
@@ -2973,6 +3051,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Place.",
@@ -3071,6 +3152,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Place not found."
@@ -3198,6 +3282,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Protocol.",
@@ -3296,6 +3383,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Protocol not found."
@@ -3423,6 +3513,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Relationship.",
@@ -3521,6 +3614,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Relationship not found."
@@ -3648,6 +3744,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a RelationshipType.",
@@ -3746,6 +3845,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "RelationshipType not found."
@@ -3873,6 +3975,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a ReviewComment.",
@@ -3971,6 +4076,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "ReviewComment not found."
@@ -4098,6 +4206,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Role.",
@@ -4196,6 +4307,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Role not found."
@@ -4323,6 +4437,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Rule.",
@@ -4421,6 +4538,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Rule not found."
@@ -4548,6 +4668,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Scope.",
@@ -4646,6 +4769,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Scope not found."
@@ -4773,6 +4899,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
           }
         },
         "summary": "Create a Vote.",
@@ -4871,6 +5000,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
           },
           "404": {
             "description": "Vote not found."
@@ -4995,7 +5127,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Action."
+            "description": "Entity type discriminator. Always \"Action\" for Action entities.",
+            "enum": [
+              "Action"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -5081,7 +5216,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Action."
+            "description": "Entity type discriminator. Always \"Action\" for Action entities.",
+            "enum": [
+              "Action"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -5167,7 +5305,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Relationship."
+            "description": "Entity type discriminator. Always \"Relationship\" for Relationship entities.",
+            "enum": [
+              "Relationship"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -5249,7 +5390,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Action."
+            "description": "Entity type discriminator. Always \"Action\" for Action entities.",
+            "enum": [
+              "Action"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -5766,7 +5910,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Vote."
+            "description": "Entity type discriminator. Always \"Vote\" for Vote entities.",
+            "enum": [
+              "Vote"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -5829,7 +5976,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Rule."
+            "description": "Entity type discriminator. Always \"Rule\" for Rule entities.",
+            "enum": [
+              "Rule"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -5870,7 +6020,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Decision."
+            "description": "Entity type discriminator. Always \"Decision\" for Decision entities.",
+            "enum": [
+              "Decision"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -6916,7 +7069,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Decision."
+            "description": "Entity type discriminator. Always \"Decision\" for Decision entities.",
+            "enum": [
+              "Decision"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -7077,7 +7233,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Decision."
+            "description": "Entity type discriminator. Always \"Decision\" for Decision entities.",
+            "enum": [
+              "Decision"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -7222,7 +7381,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Delegation."
+            "description": "Entity type discriminator. Always \"Delegation\" for Delegation entities.",
+            "enum": [
+              "Delegation"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -7308,7 +7470,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Delegation."
+            "description": "Entity type discriminator. Always \"Delegation\" for Delegation entities.",
+            "enum": [
+              "Delegation"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -7394,7 +7559,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Delegation."
+            "description": "Entity type discriminator. Always \"Delegation\" for Delegation entities.",
+            "enum": [
+              "Delegation"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -7470,7 +7638,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this geographic area."
+            "description": "Entity type discriminator. Always \"Geographic Area\" for Geographic Area entities.",
+            "enum": [
+              "Geographic Area"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -7532,7 +7703,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this geographic area."
+            "description": "Entity type discriminator. Always \"Geographic Area\" for Geographic Area entities.",
+            "enum": [
+              "Geographic Area"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -7594,7 +7768,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this geographic area."
+            "description": "Entity type discriminator. Always \"Geographic Area\" for Geographic Area entities.",
+            "enum": [
+              "Geographic Area"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -7648,7 +7825,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this organization."
+            "description": "Entity type discriminator. Always \"Organization\" for Organization entities.",
+            "enum": [
+              "Organization"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -7689,7 +7869,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this group."
+            "description": "Entity type discriminator. Always \"Group\" for Group entities.",
+            "enum": [
+              "Group"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -7761,7 +7944,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this group."
+            "description": "Entity type discriminator. Always \"Group\" for Group entities.",
+            "enum": [
+              "Group"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -7833,7 +8019,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this group."
+            "description": "Entity type discriminator. Always \"Group\" for Group entities.",
+            "enum": [
+              "Group"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -8124,7 +8313,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Observation."
+            "description": "Entity type discriminator. Always \"Observation\" for Observation entities.",
+            "enum": [
+              "Observation"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -8193,7 +8385,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Observation."
+            "description": "Entity type discriminator. Always \"Observation\" for Observation entities.",
+            "enum": [
+              "Observation"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -8262,7 +8457,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Observation."
+            "description": "Entity type discriminator. Always \"Observation\" for Observation entities.",
+            "enum": [
+              "Observation"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -8320,7 +8518,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this organization."
+            "description": "Entity type discriminator. Always \"Organization\" for Organization entities.",
+            "enum": [
+              "Organization"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -8361,7 +8562,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this organization."
+            "description": "Entity type discriminator. Always \"Organization\" for Organization entities.",
+            "enum": [
+              "Organization"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -8577,7 +8781,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this place."
+            "description": "Entity type discriminator. Always \"Place\" for Place entities.",
+            "enum": [
+              "Place"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -8650,7 +8857,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this place."
+            "description": "Entity type discriminator. Always \"Place\" for Place entities.",
+            "enum": [
+              "Place"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -8723,7 +8933,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "IFS entity category/type for this place."
+            "description": "Entity type discriminator. Always \"Place\" for Place entities.",
+            "enum": [
+              "Place"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -8892,7 +9105,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Relationship."
+            "description": "Entity type discriminator. Always \"Relationship\" for Relationship entities.",
+            "enum": [
+              "Relationship"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -8974,7 +9190,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Relationship."
+            "description": "Entity type discriminator. Always \"Relationship\" for Relationship entities.",
+            "enum": [
+              "Relationship"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -9033,7 +9252,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally RelationshipType."
+            "description": "Entity type discriminator. Always \"RelationshipType\" for RelationshipType entities.",
+            "enum": [
+              "RelationshipType"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -9116,7 +9338,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally RelationshipType."
+            "description": "Entity type discriminator. Always \"RelationshipType\" for RelationshipType entities.",
+            "enum": [
+              "RelationshipType"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -9199,7 +9424,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally RelationshipType."
+            "description": "Entity type discriminator. Always \"RelationshipType\" for RelationshipType entities.",
+            "enum": [
+              "RelationshipType"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -9537,7 +9765,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Rule."
+            "description": "Entity type discriminator. Always \"Rule\" for Rule entities.",
+            "enum": [
+              "Rule"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -9578,7 +9809,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Rule."
+            "description": "Entity type discriminator. Always \"Rule\" for Rule entities.",
+            "enum": [
+              "Rule"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -9800,7 +10034,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Vote."
+            "description": "Entity type discriminator. Always \"Vote\" for Vote entities.",
+            "enum": [
+              "Vote"
+            ]
           },
           "basedOn": {
             "type": "string",
@@ -9863,7 +10100,10 @@
           },
           "entityType": {
             "type": "string",
-            "description": "Entity category for this object, normally Vote."
+            "description": "Entity type discriminator. Always \"Vote\" for Vote entities.",
+            "enum": [
+              "Vote"
+            ]
           },
           "basedOn": {
             "type": "string",

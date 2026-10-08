@@ -8,9 +8,11 @@ export class CreateRelationshipTypeDto {
   id: string;
 
   @ApiProperty({
-    description: 'Entity category for this object, normally RelationshipType.',
+    description:
+      'Entity type discriminator. Always "RelationshipType" for RelationshipType entities.',
+    enum: ['RelationshipType'],
   })
-  entityType: string;
+  entityType: 'RelationshipType';
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',

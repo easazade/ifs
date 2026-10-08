@@ -84,6 +84,37 @@ test('compiled OpenAPI export is deterministic and does not connect to SurrealDB
       assert.ok(relations.responses['404']);
     }
     const schemas = spec.components.schemas;
+    const entitiesRoot = new URL(
+      '../../ifs-standards/src/entities/',
+      import.meta.url,
+    );
+    for (const entry of await readdir(entitiesRoot, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const entity = JSON.parse(
+        await readFile(
+          new URL(`${entry.name}/${entry.name}.schema.json`, entitiesRoot),
+          'utf8',
+        ),
+      );
+      const modelName = entity.title.replace(/[^A-Za-z0-9]+/g, '');
+      for (const dto of [
+        `Create${modelName}Dto`,
+        `Update${modelName}Dto`,
+        `${modelName}ResponseDto`,
+      ]) {
+        assert.deepEqual(
+          schemas[dto].properties.entityType.enum,
+          [entity.title],
+          `${dto} must have a fixed entityType`,
+        );
+      }
+      assert.ok(
+        schemas[`Create${modelName}Dto`].required.includes('entityType'),
+      );
+      assert.ok(
+        !schemas[`Update${modelName}Dto`].required?.includes('entityType'),
+      );
+    }
     assert.ok(schemas.CreateRelationshipDto.required.includes('sourceId'));
     assert.ok(schemas.CreateRelationshipDto.required.includes('targetId'));
     assert.ok(schemas.RelationshipResponseDto.properties.sourceId);

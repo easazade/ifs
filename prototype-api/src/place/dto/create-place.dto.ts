@@ -9,8 +9,12 @@ export class CreatePlaceDto {
   })
   id: string;
 
-  @ApiProperty({ description: 'IFS entity category/type for this place.' })
-  entityType: string;
+  @ApiProperty({
+    description:
+      'Entity type discriminator. Always "Place" for Place entities.',
+    enum: ['Place'],
+  })
+  entityType: 'Place';
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',

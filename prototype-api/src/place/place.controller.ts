@@ -39,6 +39,9 @@ export class PlaceController {
   @ApiOperation({ operationId: 'createPlace', summary: 'Create a Place.' })
   @ApiBody({ type: CreatePlaceDto })
   @ApiCreatedResponse({ type: PlaceResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreatePlaceDto): Promise<PlaceResponseDto> {
     return this.placeService.create(data);
   }
@@ -88,6 +91,9 @@ export class PlaceController {
   @ApiParam({ name: 'id', type: String, description: 'Place ID.' })
   @ApiBody({ type: UpdatePlaceDto })
   @ApiOkResponse({ type: PlaceResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Place not found.' })
   update(
     @Param('id') id: string,

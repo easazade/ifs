@@ -34,7 +34,7 @@
       "actions": [
         {
           "id": "Action/1001",
-          "entityType": "",
+          "entityType": "Action",
           "entityDocumentationUrl": "",
           "createdAt": "",
           "updatedAt": "",
@@ -46,7 +46,7 @@
         },
         {
           "id": "Action/1001",
-          "entityType": "",
+          "entityType": "Action",
           "entityDocumentationUrl": "",
           "createdAt": "",
           "updatedAt": "",
@@ -75,7 +75,7 @@
       "actions": [
         {
           "id": "Action/1001",
-          "entityType": "",
+          "entityType": "Action",
           "entityDocumentationUrl": "",
           "createdAt": "",
           "updatedAt": "",
@@ -87,7 +87,7 @@
         },
         {
           "id": "Action/1001",
-          "entityType": "",
+          "entityType": "Action",
           "entityDocumentationUrl": "",
           "createdAt": "",
           "updatedAt": "",

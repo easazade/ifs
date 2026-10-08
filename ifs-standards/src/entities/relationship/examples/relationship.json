@@ -1,14 +1,14 @@
 {
   "id": "Relationship/1001",
   "entityType": "Relationship",
+  "basedOn": "Relationship/1000",
   "entityDocumentationUrl": "https://ifs-standards.org/entities/Relationship",
-  "createdAt": "2007-02-14T01:23:46Z",
-  "updatedAt": "2008-03-02T10:35:47Z",
-  "relationshipTypeId": "RelationshipType/5V",
-  "type": "lSCV9oUju",
-  "inverseType": "pjTJh",
-  "sourceId": "G/]u?!",
-  "targetId": "Kp/:8;='",
-  "startedAt": "2003-01-27",
-  "endedAt": "2027-07-30"
+  "createdAt": "2023-04-06T01:25:35Z",
+  "updatedAt": "2024-04-07T15:32:45Z",
+  "relationshipTypeId": "RelationshipType/!",
+  "type": "V9oUj",
+  "inverseType": "zpjT",
+  "sourceId": "O/e2",
+  "targetId": "W9/IA6,",
+  "startedAt": "2028-09-28"
 }

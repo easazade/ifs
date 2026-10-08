@@ -36,6 +36,16 @@ type NonReadonly<T> = [T] extends [UnionToIntersection<T>]
   : DistributeReadOnlyOverUnions<T>;
 
 /**
+ * Entity type discriminator. Always "Action" for Action entities.
+ */
+export type CreateActionDtoEntityType =
+  (typeof CreateActionDtoEntityType)[keyof typeof CreateActionDtoEntityType];
+
+export const CreateActionDtoEntityType = {
+  Action: 'Action',
+} as const;
+
+/**
  * Lifecycle state of the action.
  */
 export type CreateActionDtoState =
@@ -56,8 +66,8 @@ export interface CreateActionDto {
    * @pattern ^Action/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Action. */
-  entityType: string;
+  /** Entity type discriminator. Always "Action" for Action entities. */
+  entityType: CreateActionDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -88,6 +98,16 @@ export interface CreateActionDto {
 }
 
 /**
+ * Entity type discriminator. Always "Action" for Action entities.
+ */
+export type ActionResponseDtoEntityType =
+  (typeof ActionResponseDtoEntityType)[keyof typeof ActionResponseDtoEntityType];
+
+export const ActionResponseDtoEntityType = {
+  Action: 'Action',
+} as const;
+
+/**
  * Lifecycle state of the action.
  */
 export type ActionResponseDtoState =
@@ -108,8 +128,8 @@ export interface ActionResponseDto {
    * @pattern ^Action/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Action. */
-  entityType: string;
+  /** Entity type discriminator. Always "Action" for Action entities. */
+  entityType: ActionResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -139,14 +159,24 @@ export interface ActionResponseDto {
   state: ActionResponseDtoState;
 }
 
+/**
+ * Entity type discriminator. Always "Relationship" for Relationship entities.
+ */
+export type RelationshipResponseDtoEntityType =
+  (typeof RelationshipResponseDtoEntityType)[keyof typeof RelationshipResponseDtoEntityType];
+
+export const RelationshipResponseDtoEntityType = {
+  Relationship: 'Relationship',
+} as const;
+
 export interface RelationshipResponseDto {
   /**
    * Globally unique identifier for this relationship.
    * @pattern ^Relationship/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Relationship. */
-  entityType: string;
+  /** Entity type discriminator. Always "Relationship" for Relationship entities. */
+  entityType: RelationshipResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -190,6 +220,16 @@ export interface RelationshipResponseDto {
 }
 
 /**
+ * Entity type discriminator. Always "Action" for Action entities.
+ */
+export type UpdateActionDtoEntityType =
+  (typeof UpdateActionDtoEntityType)[keyof typeof UpdateActionDtoEntityType];
+
+export const UpdateActionDtoEntityType = {
+  Action: 'Action',
+} as const;
+
+/**
  * Lifecycle state of the action.
  */
 export type UpdateActionDtoState =
@@ -210,8 +250,8 @@ export interface UpdateActionDto {
    * @pattern ^Action/[^/\s]+$
    */
   id?: string;
-  /** Entity category for this object, normally Action. */
-  entityType?: string;
+  /** Entity type discriminator. Always "Action" for Action entities. */
+  entityType?: UpdateActionDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -540,14 +580,24 @@ export interface MemberResponseDto {
   updatedAt: string;
 }
 
+/**
+ * Entity type discriminator. Always "Vote" for Vote entities.
+ */
+export type VoteResponseDtoEntityType =
+  (typeof VoteResponseDtoEntityType)[keyof typeof VoteResponseDtoEntityType];
+
+export const VoteResponseDtoEntityType = {
+  Vote: 'Vote',
+} as const;
+
 export interface VoteResponseDto {
   /**
    * Globally unique identifier for this vote.
    * @pattern ^Vote/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Vote. */
-  entityType: string;
+  /** Entity type discriminator. Always "Vote" for Vote entities. */
+  entityType: VoteResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -578,14 +628,24 @@ export interface VoteResponseDto {
   previousRevisionId?: string;
 }
 
+/**
+ * Entity type discriminator. Always "Rule" for Rule entities.
+ */
+export type RuleResponseDtoEntityType =
+  (typeof RuleResponseDtoEntityType)[keyof typeof RuleResponseDtoEntityType];
+
+export const RuleResponseDtoEntityType = {
+  Rule: 'Rule',
+} as const;
+
 export interface RuleResponseDto {
   /**
    * Globally unique identifier for this rule.
    * @pattern ^Rule/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Rule. */
-  entityType: string;
+  /** Entity type discriminator. Always "Rule" for Rule entities. */
+  entityType: RuleResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -598,6 +658,16 @@ export interface RuleResponseDto {
   /** Timestamp when this rule record was last updated. */
   updatedAt: string;
 }
+
+/**
+ * Entity type discriminator. Always "Decision" for Decision entities.
+ */
+export type DecisionResponseDtoEntityType =
+  (typeof DecisionResponseDtoEntityType)[keyof typeof DecisionResponseDtoEntityType];
+
+export const DecisionResponseDtoEntityType = {
+  Decision: 'Decision',
+} as const;
 
 /**
  * Current lifecycle state of the decision.
@@ -618,8 +688,8 @@ export interface DecisionResponseDto {
    * @pattern ^Decision/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Decision. */
-  entityType: string;
+  /** Entity type discriminator. Always "Decision" for Decision entities. */
+  entityType: DecisionResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1238,6 +1308,16 @@ export interface UpdateCommentDto {
 }
 
 /**
+ * Entity type discriminator. Always "Decision" for Decision entities.
+ */
+export type CreateDecisionDtoEntityType =
+  (typeof CreateDecisionDtoEntityType)[keyof typeof CreateDecisionDtoEntityType];
+
+export const CreateDecisionDtoEntityType = {
+  Decision: 'Decision',
+} as const;
+
+/**
  * Current lifecycle state of the decision.
  */
 export type CreateDecisionDtoState =
@@ -1256,8 +1336,8 @@ export interface CreateDecisionDto {
    * @pattern ^Decision/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Decision. */
-  entityType: string;
+  /** Entity type discriminator. Always "Decision" for Decision entities. */
+  entityType: CreateDecisionDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1328,6 +1408,16 @@ export interface CreateDecisionDto {
 }
 
 /**
+ * Entity type discriminator. Always "Decision" for Decision entities.
+ */
+export type UpdateDecisionDtoEntityType =
+  (typeof UpdateDecisionDtoEntityType)[keyof typeof UpdateDecisionDtoEntityType];
+
+export const UpdateDecisionDtoEntityType = {
+  Decision: 'Decision',
+} as const;
+
+/**
  * Current lifecycle state of the decision.
  */
 export type UpdateDecisionDtoState =
@@ -1346,8 +1436,8 @@ export interface UpdateDecisionDto {
    * @pattern ^Decision/[^/\s]+$
    */
   id?: string;
-  /** Entity category for this object, normally Decision. */
-  entityType?: string;
+  /** Entity type discriminator. Always "Decision" for Decision entities. */
+  entityType?: UpdateDecisionDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1418,6 +1508,16 @@ export interface UpdateDecisionDto {
 }
 
 /**
+ * Entity type discriminator. Always "Delegation" for Delegation entities.
+ */
+export type CreateDelegationDtoEntityType =
+  (typeof CreateDelegationDtoEntityType)[keyof typeof CreateDelegationDtoEntityType];
+
+export const CreateDelegationDtoEntityType = {
+  Delegation: 'Delegation',
+} as const;
+
+/**
  * Lifecycle state of the delegation.
  */
 export type CreateDelegationDtoState =
@@ -1435,8 +1535,8 @@ export interface CreateDelegationDto {
    * @pattern ^Delegation/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Delegation. */
-  entityType: string;
+  /** Entity type discriminator. Always "Delegation" for Delegation entities. */
+  entityType: CreateDelegationDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1474,6 +1574,16 @@ export interface CreateDelegationDto {
 }
 
 /**
+ * Entity type discriminator. Always "Delegation" for Delegation entities.
+ */
+export type DelegationResponseDtoEntityType =
+  (typeof DelegationResponseDtoEntityType)[keyof typeof DelegationResponseDtoEntityType];
+
+export const DelegationResponseDtoEntityType = {
+  Delegation: 'Delegation',
+} as const;
+
+/**
  * Lifecycle state of the delegation.
  */
 export type DelegationResponseDtoState =
@@ -1491,8 +1601,8 @@ export interface DelegationResponseDto {
    * @pattern ^Delegation/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Delegation. */
-  entityType: string;
+  /** Entity type discriminator. Always "Delegation" for Delegation entities. */
+  entityType: DelegationResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1530,6 +1640,16 @@ export interface DelegationResponseDto {
 }
 
 /**
+ * Entity type discriminator. Always "Delegation" for Delegation entities.
+ */
+export type UpdateDelegationDtoEntityType =
+  (typeof UpdateDelegationDtoEntityType)[keyof typeof UpdateDelegationDtoEntityType];
+
+export const UpdateDelegationDtoEntityType = {
+  Delegation: 'Delegation',
+} as const;
+
+/**
  * Lifecycle state of the delegation.
  */
 export type UpdateDelegationDtoState =
@@ -1547,8 +1667,8 @@ export interface UpdateDelegationDto {
    * @pattern ^Delegation/[^/\s]+$
    */
   id?: string;
-  /** Entity category for this object, normally Delegation. */
-  entityType?: string;
+  /** Entity type discriminator. Always "Delegation" for Delegation entities. */
+  entityType?: UpdateDelegationDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1585,14 +1705,24 @@ export interface UpdateDelegationDto {
   expiresAt?: string;
 }
 
+/**
+ * Entity type discriminator. Always "Geographic Area" for Geographic Area entities.
+ */
+export type CreateGeographicAreaDtoEntityType =
+  (typeof CreateGeographicAreaDtoEntityType)[keyof typeof CreateGeographicAreaDtoEntityType];
+
+export const CreateGeographicAreaDtoEntityType = {
+  Geographic_Area: 'Geographic Area',
+} as const;
+
 export interface CreateGeographicAreaDto {
   /**
    * Globally unique identifier for this geographic area.
    * @pattern ^GeographicArea/[^/\s]+$
    */
   id: string;
-  /** IFS entity category/type for this geographic area. */
-  entityType: string;
+  /** Entity type discriminator. Always "Geographic Area" for Geographic Area entities. */
+  entityType: CreateGeographicAreaDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1612,6 +1742,16 @@ export interface CreateGeographicAreaDto {
    */
   polygons: number[][][][];
 }
+
+/**
+ * Entity type discriminator. Always "Geographic Area" for Geographic Area entities.
+ */
+export type GeographicAreaResponseDtoEntityType =
+  (typeof GeographicAreaResponseDtoEntityType)[keyof typeof GeographicAreaResponseDtoEntityType];
+
+export const GeographicAreaResponseDtoEntityType = {
+  Geographic_Area: 'Geographic Area',
+} as const;
 
 export interface GeographicAreaResponseDto {
   /**
@@ -1619,8 +1759,8 @@ export interface GeographicAreaResponseDto {
    * @pattern ^GeographicArea/[^/\s]+$
    */
   id: string;
-  /** IFS entity category/type for this geographic area. */
-  entityType: string;
+  /** Entity type discriminator. Always "Geographic Area" for Geographic Area entities. */
+  entityType: GeographicAreaResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1641,14 +1781,24 @@ export interface GeographicAreaResponseDto {
   polygons: number[][][][];
 }
 
+/**
+ * Entity type discriminator. Always "Geographic Area" for Geographic Area entities.
+ */
+export type UpdateGeographicAreaDtoEntityType =
+  (typeof UpdateGeographicAreaDtoEntityType)[keyof typeof UpdateGeographicAreaDtoEntityType];
+
+export const UpdateGeographicAreaDtoEntityType = {
+  Geographic_Area: 'Geographic Area',
+} as const;
+
 export interface UpdateGeographicAreaDto {
   /**
    * Globally unique identifier for this geographic area.
    * @pattern ^GeographicArea/[^/\s]+$
    */
   id?: string;
-  /** IFS entity category/type for this geographic area. */
-  entityType?: string;
+  /** Entity type discriminator. Always "Geographic Area" for Geographic Area entities. */
+  entityType?: UpdateGeographicAreaDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1669,14 +1819,24 @@ export interface UpdateGeographicAreaDto {
   polygons?: number[][][][];
 }
 
+/**
+ * Entity type discriminator. Always "Organization" for Organization entities.
+ */
+export type OrganizationResponseDtoEntityType =
+  (typeof OrganizationResponseDtoEntityType)[keyof typeof OrganizationResponseDtoEntityType];
+
+export const OrganizationResponseDtoEntityType = {
+  Organization: 'Organization',
+} as const;
+
 export interface OrganizationResponseDto {
   /**
    * Globally unique identifier for this organization.
    * @pattern ^Organization/[^/\s]+$
    */
   id: string;
-  /** IFS entity category/type for this organization. */
-  entityType: string;
+  /** Entity type discriminator. Always "Organization" for Organization entities. */
+  entityType: OrganizationResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1690,14 +1850,24 @@ export interface OrganizationResponseDto {
   updatedAt: string;
 }
 
+/**
+ * Entity type discriminator. Always "Group" for Group entities.
+ */
+export type GroupResponseDtoEntityType =
+  (typeof GroupResponseDtoEntityType)[keyof typeof GroupResponseDtoEntityType];
+
+export const GroupResponseDtoEntityType = {
+  Group: 'Group',
+} as const;
+
 export interface GroupResponseDto {
   /**
    * Globally unique identifier for this group.
    * @pattern ^Group/[^/\s]+$
    */
   id: string;
-  /** IFS entity category/type for this group. */
-  entityType: string;
+  /** Entity type discriminator. Always "Group" for Group entities. */
+  entityType: GroupResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1723,6 +1893,16 @@ export interface GroupResponseDto {
   /** Timestamp when this group record was last updated. */
   updatedAt: string;
 }
+
+/**
+ * Entity type discriminator. Always "Group" for Group entities.
+ */
+export type CreateGroupDtoEntityType =
+  (typeof CreateGroupDtoEntityType)[keyof typeof CreateGroupDtoEntityType];
+
+export const CreateGroupDtoEntityType = {
+  Group: 'Group',
+} as const;
 
 export interface CreateGroupDto {
   /**
@@ -1730,8 +1910,8 @@ export interface CreateGroupDto {
    * @pattern ^Group/[^/\s]+$
    */
   id: string;
-  /** IFS entity category/type for this group. */
-  entityType: string;
+  /** Entity type discriminator. Always "Group" for Group entities. */
+  entityType: CreateGroupDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1758,14 +1938,24 @@ export interface CreateGroupDto {
   updatedAt: string;
 }
 
+/**
+ * Entity type discriminator. Always "Group" for Group entities.
+ */
+export type UpdateGroupDtoEntityType =
+  (typeof UpdateGroupDtoEntityType)[keyof typeof UpdateGroupDtoEntityType];
+
+export const UpdateGroupDtoEntityType = {
+  Group: 'Group',
+} as const;
+
 export interface UpdateGroupDto {
   /**
    * Globally unique identifier for this group.
    * @pattern ^Group/[^/\s]+$
    */
   id?: string;
-  /** IFS entity category/type for this group. */
-  entityType?: string;
+  /** Entity type discriminator. Always "Group" for Group entities. */
+  entityType?: UpdateGroupDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1947,14 +2137,24 @@ export interface UpdateMemberDto {
   updatedAt?: string;
 }
 
+/**
+ * Entity type discriminator. Always "Observation" for Observation entities.
+ */
+export type CreateObservationDtoEntityType =
+  (typeof CreateObservationDtoEntityType)[keyof typeof CreateObservationDtoEntityType];
+
+export const CreateObservationDtoEntityType = {
+  Observation: 'Observation',
+} as const;
+
 export interface CreateObservationDto {
   /**
    * Globally unique identifier for this observation.
    * @pattern ^Observation/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Observation. */
-  entityType: string;
+  /** Entity type discriminator. Always "Observation" for Observation entities. */
+  entityType: CreateObservationDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1975,6 +2175,16 @@ export interface CreateObservationDto {
   /** Member who made the report about what they observed. */
   observer: MemberResponseDto;
 }
+
+/**
+ * Entity type discriminator. Always "Observation" for Observation entities.
+ */
+export type ObservationResponseDtoEntityType =
+  (typeof ObservationResponseDtoEntityType)[keyof typeof ObservationResponseDtoEntityType];
+
+export const ObservationResponseDtoEntityType = {
+  Observation: 'Observation',
+} as const;
 
 export interface ObservationResponseDto {
   /**
@@ -1982,8 +2192,8 @@ export interface ObservationResponseDto {
    * @pattern ^Observation/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Observation. */
-  entityType: string;
+  /** Entity type discriminator. Always "Observation" for Observation entities. */
+  entityType: ObservationResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2005,14 +2215,24 @@ export interface ObservationResponseDto {
   observer: MemberResponseDto;
 }
 
+/**
+ * Entity type discriminator. Always "Observation" for Observation entities.
+ */
+export type UpdateObservationDtoEntityType =
+  (typeof UpdateObservationDtoEntityType)[keyof typeof UpdateObservationDtoEntityType];
+
+export const UpdateObservationDtoEntityType = {
+  Observation: 'Observation',
+} as const;
+
 export interface UpdateObservationDto {
   /**
    * Globally unique identifier for this observation.
    * @pattern ^Observation/[^/\s]+$
    */
   id?: string;
-  /** Entity category for this object, normally Observation. */
-  entityType?: string;
+  /** Entity type discriminator. Always "Observation" for Observation entities. */
+  entityType?: UpdateObservationDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2034,14 +2254,24 @@ export interface UpdateObservationDto {
   observer?: MemberResponseDto;
 }
 
+/**
+ * Entity type discriminator. Always "Organization" for Organization entities.
+ */
+export type CreateOrganizationDtoEntityType =
+  (typeof CreateOrganizationDtoEntityType)[keyof typeof CreateOrganizationDtoEntityType];
+
+export const CreateOrganizationDtoEntityType = {
+  Organization: 'Organization',
+} as const;
+
 export interface CreateOrganizationDto {
   /**
    * Globally unique identifier for this organization.
    * @pattern ^Organization/[^/\s]+$
    */
   id: string;
-  /** IFS entity category/type for this organization. */
-  entityType: string;
+  /** Entity type discriminator. Always "Organization" for Organization entities. */
+  entityType: CreateOrganizationDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2055,14 +2285,24 @@ export interface CreateOrganizationDto {
   updatedAt: string;
 }
 
+/**
+ * Entity type discriminator. Always "Organization" for Organization entities.
+ */
+export type UpdateOrganizationDtoEntityType =
+  (typeof UpdateOrganizationDtoEntityType)[keyof typeof UpdateOrganizationDtoEntityType];
+
+export const UpdateOrganizationDtoEntityType = {
+  Organization: 'Organization',
+} as const;
+
 export interface UpdateOrganizationDto {
   /**
    * Globally unique identifier for this organization.
    * @pattern ^Organization/[^/\s]+$
    */
   id?: string;
-  /** IFS entity category/type for this organization. */
-  entityType?: string;
+  /** Entity type discriminator. Always "Organization" for Organization entities. */
+  entityType?: UpdateOrganizationDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2224,14 +2464,24 @@ export interface UpdatePermissionDto {
   expiresAt?: string;
 }
 
+/**
+ * Entity type discriminator. Always "Place" for Place entities.
+ */
+export type CreatePlaceDtoEntityType =
+  (typeof CreatePlaceDtoEntityType)[keyof typeof CreatePlaceDtoEntityType];
+
+export const CreatePlaceDtoEntityType = {
+  Place: 'Place',
+} as const;
+
 export interface CreatePlaceDto {
   /**
    * Globally unique identifier for this place.
    * @pattern ^Place/[^/\s]+$
    */
   id: string;
-  /** IFS entity category/type for this place. */
-  entityType: string;
+  /** Entity type discriminator. Always "Place" for Place entities. */
+  entityType: CreatePlaceDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2254,6 +2504,16 @@ export interface CreatePlaceDto {
   /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
   roles?: RoleResponseDto[];
 }
+
+/**
+ * Entity type discriminator. Always "Place" for Place entities.
+ */
+export type PlaceResponseDtoEntityType =
+  (typeof PlaceResponseDtoEntityType)[keyof typeof PlaceResponseDtoEntityType];
+
+export const PlaceResponseDtoEntityType = {
+  Place: 'Place',
+} as const;
 
 export interface PlaceResponseDto {
   /**
@@ -2261,8 +2521,8 @@ export interface PlaceResponseDto {
    * @pattern ^Place/[^/\s]+$
    */
   id: string;
-  /** IFS entity category/type for this place. */
-  entityType: string;
+  /** Entity type discriminator. Always "Place" for Place entities. */
+  entityType: PlaceResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2286,14 +2546,24 @@ export interface PlaceResponseDto {
   roles?: RoleResponseDto[];
 }
 
+/**
+ * Entity type discriminator. Always "Place" for Place entities.
+ */
+export type UpdatePlaceDtoEntityType =
+  (typeof UpdatePlaceDtoEntityType)[keyof typeof UpdatePlaceDtoEntityType];
+
+export const UpdatePlaceDtoEntityType = {
+  Place: 'Place',
+} as const;
+
 export interface UpdatePlaceDto {
   /**
    * Globally unique identifier for this place.
    * @pattern ^Place/[^/\s]+$
    */
   id?: string;
-  /** IFS entity category/type for this place. */
-  entityType?: string;
+  /** Entity type discriminator. Always "Place" for Place entities. */
+  entityType?: UpdatePlaceDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2401,14 +2671,24 @@ export interface UpdateProtocolDto {
   createdAt?: string;
 }
 
+/**
+ * Entity type discriminator. Always "Relationship" for Relationship entities.
+ */
+export type CreateRelationshipDtoEntityType =
+  (typeof CreateRelationshipDtoEntityType)[keyof typeof CreateRelationshipDtoEntityType];
+
+export const CreateRelationshipDtoEntityType = {
+  Relationship: 'Relationship',
+} as const;
+
 export interface CreateRelationshipDto {
   /**
    * Globally unique identifier for this relationship.
    * @pattern ^Relationship/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Relationship. */
-  entityType: string;
+  /** Entity type discriminator. Always "Relationship" for Relationship entities. */
+  entityType: CreateRelationshipDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2451,14 +2731,24 @@ export interface CreateRelationshipDto {
   endedAt?: string;
 }
 
+/**
+ * Entity type discriminator. Always "Relationship" for Relationship entities.
+ */
+export type UpdateRelationshipDtoEntityType =
+  (typeof UpdateRelationshipDtoEntityType)[keyof typeof UpdateRelationshipDtoEntityType];
+
+export const UpdateRelationshipDtoEntityType = {
+  Relationship: 'Relationship',
+} as const;
+
 export interface UpdateRelationshipDto {
   /**
    * Globally unique identifier for this relationship.
    * @pattern ^Relationship/[^/\s]+$
    */
   id?: string;
-  /** Entity category for this object, normally Relationship. */
-  entityType?: string;
+  /** Entity type discriminator. Always "Relationship" for Relationship entities. */
+  entityType?: UpdateRelationshipDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2491,14 +2781,24 @@ export interface UpdateRelationshipDto {
   endedAt?: string;
 }
 
+/**
+ * Entity type discriminator. Always "RelationshipType" for RelationshipType entities.
+ */
+export type CreateRelationshipTypeDtoEntityType =
+  (typeof CreateRelationshipTypeDtoEntityType)[keyof typeof CreateRelationshipTypeDtoEntityType];
+
+export const CreateRelationshipTypeDtoEntityType = {
+  RelationshipType: 'RelationshipType',
+} as const;
+
 export interface CreateRelationshipTypeDto {
   /**
    * Globally unique identifier for this relationship type.
    * @pattern ^RelationshipType/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally RelationshipType. */
-  entityType: string;
+  /** Entity type discriminator. Always "RelationshipType" for RelationshipType entities. */
+  entityType: CreateRelationshipTypeDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2535,6 +2835,16 @@ export interface CreateRelationshipTypeDto {
    */
   inverseType: string;
 }
+
+/**
+ * Entity type discriminator. Always "RelationshipType" for RelationshipType entities.
+ */
+export type RelationshipTypeResponseDtoEntityType =
+  (typeof RelationshipTypeResponseDtoEntityType)[keyof typeof RelationshipTypeResponseDtoEntityType];
+
+export const RelationshipTypeResponseDtoEntityType = {
+  RelationshipType: 'RelationshipType',
+} as const;
 
 export interface RelationshipTypeResponseDto {
   /**
@@ -2542,8 +2852,8 @@ export interface RelationshipTypeResponseDto {
    * @pattern ^RelationshipType/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally RelationshipType. */
-  entityType: string;
+  /** Entity type discriminator. Always "RelationshipType" for RelationshipType entities. */
+  entityType: RelationshipTypeResponseDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2581,14 +2891,24 @@ export interface RelationshipTypeResponseDto {
   inverseType: string;
 }
 
+/**
+ * Entity type discriminator. Always "RelationshipType" for RelationshipType entities.
+ */
+export type UpdateRelationshipTypeDtoEntityType =
+  (typeof UpdateRelationshipTypeDtoEntityType)[keyof typeof UpdateRelationshipTypeDtoEntityType];
+
+export const UpdateRelationshipTypeDtoEntityType = {
+  RelationshipType: 'RelationshipType',
+} as const;
+
 export interface UpdateRelationshipTypeDto {
   /**
    * Globally unique identifier for this relationship type.
    * @pattern ^RelationshipType/[^/\s]+$
    */
   id?: string;
-  /** Entity category for this object, normally RelationshipType. */
-  entityType?: string;
+  /** Entity type discriminator. Always "RelationshipType" for RelationshipType entities. */
+  entityType?: UpdateRelationshipTypeDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2824,14 +3144,24 @@ export interface UpdateRoleDto {
   expiresAt?: string;
 }
 
+/**
+ * Entity type discriminator. Always "Rule" for Rule entities.
+ */
+export type CreateRuleDtoEntityType =
+  (typeof CreateRuleDtoEntityType)[keyof typeof CreateRuleDtoEntityType];
+
+export const CreateRuleDtoEntityType = {
+  Rule: 'Rule',
+} as const;
+
 export interface CreateRuleDto {
   /**
    * Globally unique identifier for this rule.
    * @pattern ^Rule/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Rule. */
-  entityType: string;
+  /** Entity type discriminator. Always "Rule" for Rule entities. */
+  entityType: CreateRuleDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2845,14 +3175,24 @@ export interface CreateRuleDto {
   updatedAt: string;
 }
 
+/**
+ * Entity type discriminator. Always "Rule" for Rule entities.
+ */
+export type UpdateRuleDtoEntityType =
+  (typeof UpdateRuleDtoEntityType)[keyof typeof UpdateRuleDtoEntityType];
+
+export const UpdateRuleDtoEntityType = {
+  Rule: 'Rule',
+} as const;
+
 export interface UpdateRuleDto {
   /**
    * Globally unique identifier for this rule.
    * @pattern ^Rule/[^/\s]+$
    */
   id?: string;
-  /** Entity category for this object, normally Rule. */
-  entityType?: string;
+  /** Entity type discriminator. Always "Rule" for Rule entities. */
+  entityType?: UpdateRuleDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2980,14 +3320,24 @@ export interface UpdateScopeDto {
   updatedAt?: string;
 }
 
+/**
+ * Entity type discriminator. Always "Vote" for Vote entities.
+ */
+export type CreateVoteDtoEntityType =
+  (typeof CreateVoteDtoEntityType)[keyof typeof CreateVoteDtoEntityType];
+
+export const CreateVoteDtoEntityType = {
+  Vote: 'Vote',
+} as const;
+
 export interface CreateVoteDto {
   /**
    * Globally unique identifier for this vote.
    * @pattern ^Vote/[^/\s]+$
    */
   id: string;
-  /** Entity category for this object, normally Vote. */
-  entityType: string;
+  /** Entity type discriminator. Always "Vote" for Vote entities. */
+  entityType: CreateVoteDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -3018,14 +3368,24 @@ export interface CreateVoteDto {
   previousRevisionId?: string;
 }
 
+/**
+ * Entity type discriminator. Always "Vote" for Vote entities.
+ */
+export type UpdateVoteDtoEntityType =
+  (typeof UpdateVoteDtoEntityType)[keyof typeof UpdateVoteDtoEntityType];
+
+export const UpdateVoteDtoEntityType = {
+  Vote: 'Vote',
+} as const;
+
 export interface UpdateVoteDto {
   /**
    * Globally unique identifier for this vote.
    * @pattern ^Vote/[^/\s]+$
    */
   id?: string;
-  /** Entity category for this object, normally Vote. */
-  entityType?: string;
+  /** Entity type discriminator. Always "Vote" for Vote entities. */
+  entityType?: UpdateVoteDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -3532,10 +3892,20 @@ export type createActionResponse201 = {
   status: 201;
 };
 
+export type createActionResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createActionResponseSuccess = createActionResponse201 & {
   headers: Headers;
 };
-export type createActionResponse = createActionResponseSuccess;
+export type createActionResponseError = createActionResponse400 & {
+  headers: Headers;
+};
+
+export type createActionResponse =
+  createActionResponseSuccess | createActionResponseError;
 
 export const getCreateActionUrl = () => {
   return `${getApiBaseUrl()}/actions`;
@@ -3675,6 +4045,11 @@ export type updateActionResponse200 = {
   status: 200;
 };
 
+export type updateActionResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateActionResponse404 = {
   data: void;
   status: 404;
@@ -3683,7 +4058,9 @@ export type updateActionResponse404 = {
 export type updateActionResponseSuccess = updateActionResponse200 & {
   headers: Headers;
 };
-export type updateActionResponseError = updateActionResponse404 & {
+export type updateActionResponseError = (
+  updateActionResponse400 | updateActionResponse404
+) & {
   headers: Headers;
 };
 
@@ -3868,10 +4245,20 @@ export type createChangeResponse201 = {
   status: 201;
 };
 
+export type createChangeResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createChangeResponseSuccess = createChangeResponse201 & {
   headers: Headers;
 };
-export type createChangeResponse = createChangeResponseSuccess;
+export type createChangeResponseError = createChangeResponse400 & {
+  headers: Headers;
+};
+
+export type createChangeResponse =
+  createChangeResponseSuccess | createChangeResponseError;
 
 export const getCreateChangeUrl = () => {
   return `${getApiBaseUrl()}/changes`;
@@ -4011,6 +4398,11 @@ export type updateChangeResponse200 = {
   status: 200;
 };
 
+export type updateChangeResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateChangeResponse404 = {
   data: void;
   status: 404;
@@ -4019,7 +4411,9 @@ export type updateChangeResponse404 = {
 export type updateChangeResponseSuccess = updateChangeResponse200 & {
   headers: Headers;
 };
-export type updateChangeResponseError = updateChangeResponse404 & {
+export type updateChangeResponseError = (
+  updateChangeResponse400 | updateChangeResponse404
+) & {
   headers: Headers;
 };
 
@@ -4204,10 +4598,20 @@ export type createChangeItemResponse201 = {
   status: 201;
 };
 
+export type createChangeItemResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createChangeItemResponseSuccess = createChangeItemResponse201 & {
   headers: Headers;
 };
-export type createChangeItemResponse = createChangeItemResponseSuccess;
+export type createChangeItemResponseError = createChangeItemResponse400 & {
+  headers: Headers;
+};
+
+export type createChangeItemResponse =
+  createChangeItemResponseSuccess | createChangeItemResponseError;
 
 export const getCreateChangeItemUrl = () => {
   return `${getApiBaseUrl()}/change-items`;
@@ -4347,6 +4751,11 @@ export type updateChangeItemResponse200 = {
   status: 200;
 };
 
+export type updateChangeItemResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateChangeItemResponse404 = {
   data: void;
   status: 404;
@@ -4355,7 +4764,9 @@ export type updateChangeItemResponse404 = {
 export type updateChangeItemResponseSuccess = updateChangeItemResponse200 & {
   headers: Headers;
 };
-export type updateChangeItemResponseError = updateChangeItemResponse404 & {
+export type updateChangeItemResponseError = (
+  updateChangeItemResponse400 | updateChangeItemResponse404
+) & {
   headers: Headers;
 };
 
@@ -4540,10 +4951,20 @@ export type createCommentResponse201 = {
   status: 201;
 };
 
+export type createCommentResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createCommentResponseSuccess = createCommentResponse201 & {
   headers: Headers;
 };
-export type createCommentResponse = createCommentResponseSuccess;
+export type createCommentResponseError = createCommentResponse400 & {
+  headers: Headers;
+};
+
+export type createCommentResponse =
+  createCommentResponseSuccess | createCommentResponseError;
 
 export const getCreateCommentUrl = () => {
   return `${getApiBaseUrl()}/comments`;
@@ -4683,6 +5104,11 @@ export type updateCommentResponse200 = {
   status: 200;
 };
 
+export type updateCommentResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateCommentResponse404 = {
   data: void;
   status: 404;
@@ -4691,7 +5117,9 @@ export type updateCommentResponse404 = {
 export type updateCommentResponseSuccess = updateCommentResponse200 & {
   headers: Headers;
 };
-export type updateCommentResponseError = updateCommentResponse404 & {
+export type updateCommentResponseError = (
+  updateCommentResponse400 | updateCommentResponse404
+) & {
   headers: Headers;
 };
 
@@ -4876,10 +5304,20 @@ export type createDecisionResponse201 = {
   status: 201;
 };
 
+export type createDecisionResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createDecisionResponseSuccess = createDecisionResponse201 & {
   headers: Headers;
 };
-export type createDecisionResponse = createDecisionResponseSuccess;
+export type createDecisionResponseError = createDecisionResponse400 & {
+  headers: Headers;
+};
+
+export type createDecisionResponse =
+  createDecisionResponseSuccess | createDecisionResponseError;
 
 export const getCreateDecisionUrl = () => {
   return `${getApiBaseUrl()}/decisions`;
@@ -5019,6 +5457,11 @@ export type updateDecisionResponse200 = {
   status: 200;
 };
 
+export type updateDecisionResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateDecisionResponse404 = {
   data: void;
   status: 404;
@@ -5027,7 +5470,9 @@ export type updateDecisionResponse404 = {
 export type updateDecisionResponseSuccess = updateDecisionResponse200 & {
   headers: Headers;
 };
-export type updateDecisionResponseError = updateDecisionResponse404 & {
+export type updateDecisionResponseError = (
+  updateDecisionResponse400 | updateDecisionResponse404
+) & {
   headers: Headers;
 };
 
@@ -5212,10 +5657,20 @@ export type createDelegationResponse201 = {
   status: 201;
 };
 
+export type createDelegationResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createDelegationResponseSuccess = createDelegationResponse201 & {
   headers: Headers;
 };
-export type createDelegationResponse = createDelegationResponseSuccess;
+export type createDelegationResponseError = createDelegationResponse400 & {
+  headers: Headers;
+};
+
+export type createDelegationResponse =
+  createDelegationResponseSuccess | createDelegationResponseError;
 
 export const getCreateDelegationUrl = () => {
   return `${getApiBaseUrl()}/delegations`;
@@ -5355,6 +5810,11 @@ export type updateDelegationResponse200 = {
   status: 200;
 };
 
+export type updateDelegationResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateDelegationResponse404 = {
   data: void;
   status: 404;
@@ -5363,7 +5823,9 @@ export type updateDelegationResponse404 = {
 export type updateDelegationResponseSuccess = updateDelegationResponse200 & {
   headers: Headers;
 };
-export type updateDelegationResponseError = updateDelegationResponse404 & {
+export type updateDelegationResponseError = (
+  updateDelegationResponse400 | updateDelegationResponse404
+) & {
   headers: Headers;
 };
 
@@ -5548,11 +6010,22 @@ export type createGeographicAreaResponse201 = {
   status: 201;
 };
 
+export type createGeographicAreaResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createGeographicAreaResponseSuccess =
   createGeographicAreaResponse201 & {
     headers: Headers;
   };
-export type createGeographicAreaResponse = createGeographicAreaResponseSuccess;
+export type createGeographicAreaResponseError =
+  createGeographicAreaResponse400 & {
+    headers: Headers;
+  };
+
+export type createGeographicAreaResponse =
+  createGeographicAreaResponseSuccess | createGeographicAreaResponseError;
 
 export const getCreateGeographicAreaUrl = () => {
   return `${getApiBaseUrl()}/geographic-areas`;
@@ -5697,6 +6170,11 @@ export type updateGeographicAreaResponse200 = {
   status: 200;
 };
 
+export type updateGeographicAreaResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateGeographicAreaResponse404 = {
   data: void;
   status: 404;
@@ -5706,10 +6184,11 @@ export type updateGeographicAreaResponseSuccess =
   updateGeographicAreaResponse200 & {
     headers: Headers;
   };
-export type updateGeographicAreaResponseError =
-  updateGeographicAreaResponse404 & {
-    headers: Headers;
-  };
+export type updateGeographicAreaResponseError = (
+  updateGeographicAreaResponse400 | updateGeographicAreaResponse404
+) & {
+  headers: Headers;
+};
 
 export type updateGeographicAreaResponse =
   updateGeographicAreaResponseSuccess | updateGeographicAreaResponseError;
@@ -5898,10 +6377,20 @@ export type createGroupResponse201 = {
   status: 201;
 };
 
+export type createGroupResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createGroupResponseSuccess = createGroupResponse201 & {
   headers: Headers;
 };
-export type createGroupResponse = createGroupResponseSuccess;
+export type createGroupResponseError = createGroupResponse400 & {
+  headers: Headers;
+};
+
+export type createGroupResponse =
+  createGroupResponseSuccess | createGroupResponseError;
 
 export const getCreateGroupUrl = () => {
   return `${getApiBaseUrl()}/groups`;
@@ -6036,6 +6525,11 @@ export type updateGroupResponse200 = {
   status: 200;
 };
 
+export type updateGroupResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateGroupResponse404 = {
   data: void;
   status: 404;
@@ -6044,7 +6538,9 @@ export type updateGroupResponse404 = {
 export type updateGroupResponseSuccess = updateGroupResponse200 & {
   headers: Headers;
 };
-export type updateGroupResponseError = updateGroupResponse404 & {
+export type updateGroupResponseError = (
+  updateGroupResponse400 | updateGroupResponse404
+) & {
   headers: Headers;
 };
 
@@ -6225,10 +6721,20 @@ export type createLabelResponse201 = {
   status: 201;
 };
 
+export type createLabelResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createLabelResponseSuccess = createLabelResponse201 & {
   headers: Headers;
 };
-export type createLabelResponse = createLabelResponseSuccess;
+export type createLabelResponseError = createLabelResponse400 & {
+  headers: Headers;
+};
+
+export type createLabelResponse =
+  createLabelResponseSuccess | createLabelResponseError;
 
 export const getCreateLabelUrl = () => {
   return `${getApiBaseUrl()}/labels`;
@@ -6363,6 +6869,11 @@ export type updateLabelResponse200 = {
   status: 200;
 };
 
+export type updateLabelResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateLabelResponse404 = {
   data: void;
   status: 404;
@@ -6371,7 +6882,9 @@ export type updateLabelResponse404 = {
 export type updateLabelResponseSuccess = updateLabelResponse200 & {
   headers: Headers;
 };
-export type updateLabelResponseError = updateLabelResponse404 & {
+export type updateLabelResponseError = (
+  updateLabelResponse400 | updateLabelResponse404
+) & {
   headers: Headers;
 };
 
@@ -6552,10 +7065,20 @@ export type createMemberResponse201 = {
   status: 201;
 };
 
+export type createMemberResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createMemberResponseSuccess = createMemberResponse201 & {
   headers: Headers;
 };
-export type createMemberResponse = createMemberResponseSuccess;
+export type createMemberResponseError = createMemberResponse400 & {
+  headers: Headers;
+};
+
+export type createMemberResponse =
+  createMemberResponseSuccess | createMemberResponseError;
 
 export const getCreateMemberUrl = () => {
   return `${getApiBaseUrl()}/members`;
@@ -6695,6 +7218,11 @@ export type updateMemberResponse200 = {
   status: 200;
 };
 
+export type updateMemberResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateMemberResponse404 = {
   data: void;
   status: 404;
@@ -6703,7 +7231,9 @@ export type updateMemberResponse404 = {
 export type updateMemberResponseSuccess = updateMemberResponse200 & {
   headers: Headers;
 };
-export type updateMemberResponseError = updateMemberResponse404 & {
+export type updateMemberResponseError = (
+  updateMemberResponse400 | updateMemberResponse404
+) & {
   headers: Headers;
 };
 
@@ -6888,10 +7418,20 @@ export type createObservationResponse201 = {
   status: 201;
 };
 
+export type createObservationResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createObservationResponseSuccess = createObservationResponse201 & {
   headers: Headers;
 };
-export type createObservationResponse = createObservationResponseSuccess;
+export type createObservationResponseError = createObservationResponse400 & {
+  headers: Headers;
+};
+
+export type createObservationResponse =
+  createObservationResponseSuccess | createObservationResponseError;
 
 export const getCreateObservationUrl = () => {
   return `${getApiBaseUrl()}/observations`;
@@ -7031,6 +7571,11 @@ export type updateObservationResponse200 = {
   status: 200;
 };
 
+export type updateObservationResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateObservationResponse404 = {
   data: void;
   status: 404;
@@ -7039,7 +7584,9 @@ export type updateObservationResponse404 = {
 export type updateObservationResponseSuccess = updateObservationResponse200 & {
   headers: Headers;
 };
-export type updateObservationResponseError = updateObservationResponse404 & {
+export type updateObservationResponseError = (
+  updateObservationResponse400 | updateObservationResponse404
+) & {
   headers: Headers;
 };
 
@@ -7225,11 +7772,21 @@ export type createOrganizationResponse201 = {
   status: 201;
 };
 
+export type createOrganizationResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createOrganizationResponseSuccess =
   createOrganizationResponse201 & {
     headers: Headers;
   };
-export type createOrganizationResponse = createOrganizationResponseSuccess;
+export type createOrganizationResponseError = createOrganizationResponse400 & {
+  headers: Headers;
+};
+
+export type createOrganizationResponse =
+  createOrganizationResponseSuccess | createOrganizationResponseError;
 
 export const getCreateOrganizationUrl = () => {
   return `${getApiBaseUrl()}/organizations`;
@@ -7369,6 +7926,11 @@ export type updateOrganizationResponse200 = {
   status: 200;
 };
 
+export type updateOrganizationResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateOrganizationResponse404 = {
   data: void;
   status: 404;
@@ -7378,7 +7940,9 @@ export type updateOrganizationResponseSuccess =
   updateOrganizationResponse200 & {
     headers: Headers;
   };
-export type updateOrganizationResponseError = updateOrganizationResponse404 & {
+export type updateOrganizationResponseError = (
+  updateOrganizationResponse400 | updateOrganizationResponse404
+) & {
   headers: Headers;
 };
 
@@ -7565,10 +8129,20 @@ export type createPermissionResponse201 = {
   status: 201;
 };
 
+export type createPermissionResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createPermissionResponseSuccess = createPermissionResponse201 & {
   headers: Headers;
 };
-export type createPermissionResponse = createPermissionResponseSuccess;
+export type createPermissionResponseError = createPermissionResponse400 & {
+  headers: Headers;
+};
+
+export type createPermissionResponse =
+  createPermissionResponseSuccess | createPermissionResponseError;
 
 export const getCreatePermissionUrl = () => {
   return `${getApiBaseUrl()}/permissions`;
@@ -7708,6 +8282,11 @@ export type updatePermissionResponse200 = {
   status: 200;
 };
 
+export type updatePermissionResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updatePermissionResponse404 = {
   data: void;
   status: 404;
@@ -7716,7 +8295,9 @@ export type updatePermissionResponse404 = {
 export type updatePermissionResponseSuccess = updatePermissionResponse200 & {
   headers: Headers;
 };
-export type updatePermissionResponseError = updatePermissionResponse404 & {
+export type updatePermissionResponseError = (
+  updatePermissionResponse400 | updatePermissionResponse404
+) & {
   headers: Headers;
 };
 
@@ -7901,10 +8482,20 @@ export type createPlaceResponse201 = {
   status: 201;
 };
 
+export type createPlaceResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createPlaceResponseSuccess = createPlaceResponse201 & {
   headers: Headers;
 };
-export type createPlaceResponse = createPlaceResponseSuccess;
+export type createPlaceResponseError = createPlaceResponse400 & {
+  headers: Headers;
+};
+
+export type createPlaceResponse =
+  createPlaceResponseSuccess | createPlaceResponseError;
 
 export const getCreatePlaceUrl = () => {
   return `${getApiBaseUrl()}/places`;
@@ -8039,6 +8630,11 @@ export type updatePlaceResponse200 = {
   status: 200;
 };
 
+export type updatePlaceResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updatePlaceResponse404 = {
   data: void;
   status: 404;
@@ -8047,7 +8643,9 @@ export type updatePlaceResponse404 = {
 export type updatePlaceResponseSuccess = updatePlaceResponse200 & {
   headers: Headers;
 };
-export type updatePlaceResponseError = updatePlaceResponse404 & {
+export type updatePlaceResponseError = (
+  updatePlaceResponse400 | updatePlaceResponse404
+) & {
   headers: Headers;
 };
 
@@ -8228,10 +8826,20 @@ export type createProtocolResponse201 = {
   status: 201;
 };
 
+export type createProtocolResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createProtocolResponseSuccess = createProtocolResponse201 & {
   headers: Headers;
 };
-export type createProtocolResponse = createProtocolResponseSuccess;
+export type createProtocolResponseError = createProtocolResponse400 & {
+  headers: Headers;
+};
+
+export type createProtocolResponse =
+  createProtocolResponseSuccess | createProtocolResponseError;
 
 export const getCreateProtocolUrl = () => {
   return `${getApiBaseUrl()}/protocols`;
@@ -8371,6 +8979,11 @@ export type updateProtocolResponse200 = {
   status: 200;
 };
 
+export type updateProtocolResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateProtocolResponse404 = {
   data: void;
   status: 404;
@@ -8379,7 +8992,9 @@ export type updateProtocolResponse404 = {
 export type updateProtocolResponseSuccess = updateProtocolResponse200 & {
   headers: Headers;
 };
-export type updateProtocolResponseError = updateProtocolResponse404 & {
+export type updateProtocolResponseError = (
+  updateProtocolResponse400 | updateProtocolResponse404
+) & {
   headers: Headers;
 };
 
@@ -8564,11 +9179,21 @@ export type createRelationshipResponse201 = {
   status: 201;
 };
 
+export type createRelationshipResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createRelationshipResponseSuccess =
   createRelationshipResponse201 & {
     headers: Headers;
   };
-export type createRelationshipResponse = createRelationshipResponseSuccess;
+export type createRelationshipResponseError = createRelationshipResponse400 & {
+  headers: Headers;
+};
+
+export type createRelationshipResponse =
+  createRelationshipResponseSuccess | createRelationshipResponseError;
 
 export const getCreateRelationshipUrl = () => {
   return `${getApiBaseUrl()}/relationships`;
@@ -8708,6 +9333,11 @@ export type updateRelationshipResponse200 = {
   status: 200;
 };
 
+export type updateRelationshipResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateRelationshipResponse404 = {
   data: void;
   status: 404;
@@ -8717,7 +9347,9 @@ export type updateRelationshipResponseSuccess =
   updateRelationshipResponse200 & {
     headers: Headers;
   };
-export type updateRelationshipResponseError = updateRelationshipResponse404 & {
+export type updateRelationshipResponseError = (
+  updateRelationshipResponse400 | updateRelationshipResponse404
+) & {
   headers: Headers;
 };
 
@@ -8904,12 +9536,22 @@ export type createRelationshipTypeResponse201 = {
   status: 201;
 };
 
+export type createRelationshipTypeResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createRelationshipTypeResponseSuccess =
   createRelationshipTypeResponse201 & {
     headers: Headers;
   };
+export type createRelationshipTypeResponseError =
+  createRelationshipTypeResponse400 & {
+    headers: Headers;
+  };
+
 export type createRelationshipTypeResponse =
-  createRelationshipTypeResponseSuccess;
+  createRelationshipTypeResponseSuccess | createRelationshipTypeResponseError;
 
 export const getCreateRelationshipTypeUrl = () => {
   return `${getApiBaseUrl()}/relationship-types`;
@@ -9059,6 +9701,11 @@ export type updateRelationshipTypeResponse200 = {
   status: 200;
 };
 
+export type updateRelationshipTypeResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateRelationshipTypeResponse404 = {
   data: void;
   status: 404;
@@ -9068,10 +9715,11 @@ export type updateRelationshipTypeResponseSuccess =
   updateRelationshipTypeResponse200 & {
     headers: Headers;
   };
-export type updateRelationshipTypeResponseError =
-  updateRelationshipTypeResponse404 & {
-    headers: Headers;
-  };
+export type updateRelationshipTypeResponseError = (
+  updateRelationshipTypeResponse400 | updateRelationshipTypeResponse404
+) & {
+  headers: Headers;
+};
 
 export type updateRelationshipTypeResponse =
   updateRelationshipTypeResponseSuccess | updateRelationshipTypeResponseError;
@@ -9260,11 +9908,22 @@ export type createReviewCommentResponse201 = {
   status: 201;
 };
 
+export type createReviewCommentResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createReviewCommentResponseSuccess =
   createReviewCommentResponse201 & {
     headers: Headers;
   };
-export type createReviewCommentResponse = createReviewCommentResponseSuccess;
+export type createReviewCommentResponseError =
+  createReviewCommentResponse400 & {
+    headers: Headers;
+  };
+
+export type createReviewCommentResponse =
+  createReviewCommentResponseSuccess | createReviewCommentResponseError;
 
 export const getCreateReviewCommentUrl = () => {
   return `${getApiBaseUrl()}/review-comments`;
@@ -9407,6 +10066,11 @@ export type updateReviewCommentResponse200 = {
   status: 200;
 };
 
+export type updateReviewCommentResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateReviewCommentResponse404 = {
   data: void;
   status: 404;
@@ -9416,10 +10080,11 @@ export type updateReviewCommentResponseSuccess =
   updateReviewCommentResponse200 & {
     headers: Headers;
   };
-export type updateReviewCommentResponseError =
-  updateReviewCommentResponse404 & {
-    headers: Headers;
-  };
+export type updateReviewCommentResponseError = (
+  updateReviewCommentResponse400 | updateReviewCommentResponse404
+) & {
+  headers: Headers;
+};
 
 export type updateReviewCommentResponse =
   updateReviewCommentResponseSuccess | updateReviewCommentResponseError;
@@ -9607,10 +10272,20 @@ export type createRoleResponse201 = {
   status: 201;
 };
 
+export type createRoleResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createRoleResponseSuccess = createRoleResponse201 & {
   headers: Headers;
 };
-export type createRoleResponse = createRoleResponseSuccess;
+export type createRoleResponseError = createRoleResponse400 & {
+  headers: Headers;
+};
+
+export type createRoleResponse =
+  createRoleResponseSuccess | createRoleResponseError;
 
 export const getCreateRoleUrl = () => {
   return `${getApiBaseUrl()}/roles`;
@@ -9745,6 +10420,11 @@ export type updateRoleResponse200 = {
   status: 200;
 };
 
+export type updateRoleResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateRoleResponse404 = {
   data: void;
   status: 404;
@@ -9753,7 +10433,9 @@ export type updateRoleResponse404 = {
 export type updateRoleResponseSuccess = updateRoleResponse200 & {
   headers: Headers;
 };
-export type updateRoleResponseError = updateRoleResponse404 & {
+export type updateRoleResponseError = (
+  updateRoleResponse400 | updateRoleResponse404
+) & {
   headers: Headers;
 };
 
@@ -9933,10 +10615,20 @@ export type createRuleResponse201 = {
   status: 201;
 };
 
+export type createRuleResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createRuleResponseSuccess = createRuleResponse201 & {
   headers: Headers;
 };
-export type createRuleResponse = createRuleResponseSuccess;
+export type createRuleResponseError = createRuleResponse400 & {
+  headers: Headers;
+};
+
+export type createRuleResponse =
+  createRuleResponseSuccess | createRuleResponseError;
 
 export const getCreateRuleUrl = () => {
   return `${getApiBaseUrl()}/rules`;
@@ -10071,6 +10763,11 @@ export type updateRuleResponse200 = {
   status: 200;
 };
 
+export type updateRuleResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateRuleResponse404 = {
   data: void;
   status: 404;
@@ -10079,7 +10776,9 @@ export type updateRuleResponse404 = {
 export type updateRuleResponseSuccess = updateRuleResponse200 & {
   headers: Headers;
 };
-export type updateRuleResponseError = updateRuleResponse404 & {
+export type updateRuleResponseError = (
+  updateRuleResponse400 | updateRuleResponse404
+) & {
   headers: Headers;
 };
 
@@ -10259,10 +10958,20 @@ export type createScopeResponse201 = {
   status: 201;
 };
 
+export type createScopeResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createScopeResponseSuccess = createScopeResponse201 & {
   headers: Headers;
 };
-export type createScopeResponse = createScopeResponseSuccess;
+export type createScopeResponseError = createScopeResponse400 & {
+  headers: Headers;
+};
+
+export type createScopeResponse =
+  createScopeResponseSuccess | createScopeResponseError;
 
 export const getCreateScopeUrl = () => {
   return `${getApiBaseUrl()}/scopes`;
@@ -10397,6 +11106,11 @@ export type updateScopeResponse200 = {
   status: 200;
 };
 
+export type updateScopeResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateScopeResponse404 = {
   data: void;
   status: 404;
@@ -10405,7 +11119,9 @@ export type updateScopeResponse404 = {
 export type updateScopeResponseSuccess = updateScopeResponse200 & {
   headers: Headers;
 };
-export type updateScopeResponseError = updateScopeResponse404 & {
+export type updateScopeResponseError = (
+  updateScopeResponse400 | updateScopeResponse404
+) & {
   headers: Headers;
 };
 
@@ -10586,10 +11302,20 @@ export type createVoteResponse201 = {
   status: 201;
 };
 
+export type createVoteResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type createVoteResponseSuccess = createVoteResponse201 & {
   headers: Headers;
 };
-export type createVoteResponse = createVoteResponseSuccess;
+export type createVoteResponseError = createVoteResponse400 & {
+  headers: Headers;
+};
+
+export type createVoteResponse =
+  createVoteResponseSuccess | createVoteResponseError;
 
 export const getCreateVoteUrl = () => {
   return `${getApiBaseUrl()}/votes`;
@@ -10724,6 +11450,11 @@ export type updateVoteResponse200 = {
   status: 200;
 };
 
+export type updateVoteResponse400 = {
+  data: void;
+  status: 400;
+};
+
 export type updateVoteResponse404 = {
   data: void;
   status: 404;
@@ -10732,7 +11463,9 @@ export type updateVoteResponse404 = {
 export type updateVoteResponseSuccess = updateVoteResponse200 & {
   headers: Headers;
 };
-export type updateVoteResponseError = updateVoteResponse404 & {
+export type updateVoteResponseError = (
+  updateVoteResponse400 | updateVoteResponse404
+) & {
   headers: Headers;
 };
 

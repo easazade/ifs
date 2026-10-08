@@ -59,7 +59,7 @@ If it does not exist, briefly restate what you understand about the entity from 
 
 1. Is this meaning correct? If not, what should change?
 2. What user-defined properties should this entity include? Reply with one property per line using `name: type - description`, or say `none`.
-3. Should this entity include all common properties, only some, or none? Common properties: `id`, `entityType`, `basedOn`, `entityDocumentationUrl`, `createdAt`, `updatedAt`. Reply `all`, `none`, or `some: <property names>`.
+3. Should this entity include all common properties, only some, or none? Common properties: `id`, `basedOn`, `entityDocumentationUrl`, `createdAt`, `updatedAt`. Reply `all`, `none`, or `some: <property names>`. The required, fixed `entityType` discriminator is always included independently.
 4. Which of the user-defined properties are required? List names, or say `infer` / `none`.
 5. Should I intelligently infer recommended IFS fields, required properties, and possible relations from the entity purpose? Reply `yes` or `no`.
 6. Should the schema be strict with `additionalProperties: false`, or flexible with `additionalProperties: true`? Reply `strict` or `flexible`.
@@ -89,7 +89,7 @@ Accepted property examples:
 After the user answers:
 
 1. Parse each user-defined property name, type, format/enum/items if present, and description.
-2. Parse the common properties answer. Add all common properties for `all`, no common properties for `none`, or only the listed common properties for `some: ...`. The `basedOn` common property is an optional string identifying the id of the object this object is derived from. The `entityDocumentationUrl` common property is a string URI for documentation about this entity.
+2. Parse the common properties answer. Add all common properties for `all`, no optional common properties for `none`, or only the listed common properties for `some: ...`. Always include required `entityType` with `const` equal to the exact schema title. The `basedOn` common property is an optional string identifying the id of the object this object is derived from. The `entityDocumentationUrl` common property is a string URI for documentation about this entity.
 3. For any `object`, `array<object>`, PascalCase type, or description suggesting another entity object, check `ifs-standards/src/entities/` for a matching `*.schema.json` file before writing files. Match both singular and plural names, e.g. `permissions` -> `permission`, `roles` -> `role`. Ignore `.mdx` files completely.
 4. IDs and references are the same string value: `EntityType/ID`. The local `ID` may be a number, a meaningful name, or another stable unique identifier; it is not limited to numbers. Prefer a meaningful name when appropriate, e.g. `Organization/Everly` for the organization Everly; otherwise use a numeric identifier such as `Organization/2` or `Member/1`. The full ID is always a string, and the entity-type prefix must match the schema's casing (currently PascalCase). Apply this to `id`, related IDs, `basedOn`, and heterogeneous pointers; arrays contain these strings.
 5. Name identifier fields with `Id` (singular) or `Ids` (plural), not `Ref`, `Reference`, or `Refs`. Do not add `ifsId`.
@@ -109,7 +109,7 @@ After the user answers:
 
 11. If the user answered `no` to inference:
 
-- Use only user-provided properties plus the selected common properties.
+- Use only user-provided properties plus the selected common properties and the mandatory fixed `entityType` discriminator.
 
 12. If the user approved immediate creation/update, create or update the schema file(s).
 13. If the user did not approve immediate creation/update, show the final property plan and ask for approval.
@@ -143,11 +143,11 @@ Only after approval:
   - Anchor with `^` and `$`; require a nonempty local ID without slashes or whitespace. JSON requires `\\` to represent a regex backslash.
   - For ID arrays, put both `pattern` and `"x-ifs-id": true` on `items`. Preserve allowed nulls with `"type": ["string", "null"]`; the pattern constrains only strings.
 - Do not use `format: "ifs-ref"` or bare `format: "uuid"` for IDs.
-- For new schemas, apply common properties according to the user's answer: `all`, `none`, or `some: <property names>`.
+- For new schemas, apply common properties according to the user's answer: `all`, `none`, or `some: <property names>`. This selection never excludes the mandatory fixed `entityType` discriminator.
 - For existing schemas, preserve existing common properties unless the user explicitly asks to change/remove them.
 - Common properties selected by the user should be included in both `properties` and `required`, except `basedOn`, which is optional and should be included only in `properties`.
 - `id` uses the entity's PascalCase type prefix. Do not add a separate `ifsId` or default ID values.
-- `entityType` is like resource type: it identifies the entity category/type used by IFS implementations. Keep it as a string type/category field by default; do not force it to a PascalCase entity-name `const` unless the user explicitly asks for that.
+- `entityType` is an immutable discriminator. Every entity schema must define it as `type: "string"` with `const` equal to the schema's exact `title` (case-sensitive, including spaces), and include it in `required`, regardless of the selected common properties. Example: a schema titled `Member` must use `"entityType": { "type": "string", "const": "Member" }`. Never allow an arbitrary string, another entity type, or a mutable discriminator. Apply this to new, existing, and basic related-entity schemas.
 - `basedOn` is an optional common string property describing the id of the object this object is derived from.
 - `entityDocumentationUrl` is a common string property with `format: "uri"` describing the documentation URL for this entity.
 - If an entity reference points to a missing entity type, create a basic schema file for that related entity before running derived generation. The basic schema must use draft 2020-12, the canonical `$id`, title, `type: "object"`, `additionalProperties: true`, and selected common properties/required fields.

@@ -13,7 +13,8 @@
     },
     "entityType": {
       "type": "string",
-      "description": "IFS entity category/type for this place."
+      "const": "Place",
+      "description": "Entity type discriminator. Always \"Place\" for Place entities."
     },
     "basedOn": {
       "type": "string",

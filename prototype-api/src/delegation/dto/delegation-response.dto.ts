@@ -9,9 +9,11 @@ export class DelegationResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'Entity category for this object, normally Delegation.',
+    description:
+      'Entity type discriminator. Always "Delegation" for Delegation entities.',
+    enum: ['Delegation'],
   })
-  entityType: string;
+  entityType: 'Delegation';
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',

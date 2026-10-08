@@ -39,6 +39,9 @@ export class LabelController {
   @ApiOperation({ operationId: 'createLabel', summary: 'Create a Label.' })
   @ApiBody({ type: CreateLabelDto })
   @ApiCreatedResponse({ type: LabelResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateLabelDto): Promise<LabelResponseDto> {
     return this.labelService.create(data);
   }
@@ -88,6 +91,9 @@ export class LabelController {
   @ApiParam({ name: 'id', type: String, description: 'Label ID.' })
   @ApiBody({ type: UpdateLabelDto })
   @ApiOkResponse({ type: LabelResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Label not found.' })
   update(
     @Param('id') id: string,

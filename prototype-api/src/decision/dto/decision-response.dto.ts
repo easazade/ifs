@@ -11,9 +11,11 @@ export class DecisionResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'Entity category for this object, normally Decision.',
+    description:
+      'Entity type discriminator. Always "Decision" for Decision entities.',
+    enum: ['Decision'],
   })
-  entityType: string;
+  entityType: 'Decision';
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',

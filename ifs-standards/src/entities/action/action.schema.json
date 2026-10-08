@@ -13,7 +13,8 @@
     },
     "entityType": {
       "type": "string",
-      "description": "Entity category for this object, normally Action."
+      "const": "Action",
+      "description": "Entity type discriminator. Always \"Action\" for Action entities."
     },
     "basedOn": {
       "type": "string",

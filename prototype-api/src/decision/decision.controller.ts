@@ -42,6 +42,9 @@ export class DecisionController {
   })
   @ApiBody({ type: CreateDecisionDto })
   @ApiCreatedResponse({ type: DecisionResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateDecisionDto): Promise<DecisionResponseDto> {
     return this.decisionService.create(data);
   }
@@ -100,6 +103,9 @@ export class DecisionController {
   @ApiParam({ name: 'id', type: String, description: 'Decision ID.' })
   @ApiBody({ type: UpdateDecisionDto })
   @ApiOkResponse({ type: DecisionResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Decision not found.' })
   update(
     @Param('id') id: string,

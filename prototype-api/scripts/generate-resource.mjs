@@ -215,12 +215,13 @@ function readEntityRelations(modelName, schema) {
   });
 }
 
-function renderService(entityName, modelName, relations) {
+function renderService(entityName, modelName, relations, entityType) {
   const table = entityName.replaceAll('-', '_');
   const edge = graphEdges[table];
   return `${generatedMarker}
 import { Injectable } from '@nestjs/common';
 import { SurrealService } from '../surreal/surreal.service.js';
+import { assertEntityType } from '../surreal/entity-type.js';
 import { RelationsQueryDto } from '../surreal/relations-query.dto.js';
 ${entityName === 'relationship' ? '' : "import { RelationshipResponseDto } from '../relationship/dto/relationship-response.dto.js';"}
 import { Create${modelName}Dto } from './dto/create-${entityName}.dto.js';
@@ -234,6 +235,7 @@ export class ${modelName}Service {
   constructor(private readonly database: SurrealService) {}
 
   create(data: Create${modelName}Dto): Promise<${modelName}ResponseDto> {
+    assertEntityType(data, ${JSON.stringify(entityType)});
     return this.database.${edge ? 'createEdge' : 'create'}('${table}', data, relations);
   }
 
@@ -250,6 +252,7 @@ export class ${modelName}Service {
   }
 
   update(id: string, data: Update${modelName}Dto): Promise<${modelName}ResponseDto> {
+    assertEntityType(data, ${JSON.stringify(entityType)}, true);
     return this.database.${edge ? 'updateEdge' : 'update'}('${table}', id, data, relations);
   }
 
@@ -304,6 +307,7 @@ export class ${modelName}Controller {
   @ApiOperation({ operationId: 'create${modelName}', summary: 'Create a ${modelName}.' })
   @ApiBody({ type: Create${modelName}Dto })
   @ApiCreatedResponse({ type: ${modelName}ResponseDto })
+  @ApiBadRequestResponse({ description: 'entityType must match the entity schema title.' })
   create(@Body() data: Create${modelName}Dto): Promise<${modelName}ResponseDto> {
     return this.${serviceName}Service.create(data);
   }
@@ -341,6 +345,7 @@ export class ${modelName}Controller {
   @ApiParam({ name: 'id', type: String, description: '${modelName} ID.' })
   @ApiBody({ type: Update${modelName}Dto })
   @ApiOkResponse({ type: ${modelName}ResponseDto })
+  @ApiBadRequestResponse({ description: 'entityType cannot change from the entity schema title.' })
   @ApiNotFoundResponse({ description: '${modelName} not found.' })
   update(
     @Param('id') id: string,
@@ -432,7 +437,7 @@ export function generateService(entityInput, options = {}) {
     {
       kind: 'service',
       path: join(serviceDirectory, `${entityName}.service.ts`),
-      source: renderService(entityName, modelName, relations),
+      source: renderService(entityName, modelName, relations, schema.title),
     },
     {
       kind: 'controller',

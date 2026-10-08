@@ -42,6 +42,9 @@ export class ProtocolController {
   })
   @ApiBody({ type: CreateProtocolDto })
   @ApiCreatedResponse({ type: ProtocolResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateProtocolDto): Promise<ProtocolResponseDto> {
     return this.protocolService.create(data);
   }
@@ -100,6 +103,9 @@ export class ProtocolController {
   @ApiParam({ name: 'id', type: String, description: 'Protocol ID.' })
   @ApiBody({ type: UpdateProtocolDto })
   @ApiOkResponse({ type: ProtocolResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Protocol not found.' })
   update(
     @Param('id') id: string,

@@ -13,7 +13,8 @@
     },
     "entityType": {
       "type": "string",
-      "description": "Entity category for this object, normally Rule."
+      "const": "Rule",
+      "description": "Entity type discriminator. Always \"Rule\" for Rule entities."
     },
     "basedOn": {
       "type": "string",

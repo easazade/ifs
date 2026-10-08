@@ -39,6 +39,9 @@ export class VoteController {
   @ApiOperation({ operationId: 'createVote', summary: 'Create a Vote.' })
   @ApiBody({ type: CreateVoteDto })
   @ApiCreatedResponse({ type: VoteResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateVoteDto): Promise<VoteResponseDto> {
     return this.voteService.create(data);
   }
@@ -88,6 +91,9 @@ export class VoteController {
   @ApiParam({ name: 'id', type: String, description: 'Vote ID.' })
   @ApiBody({ type: UpdateVoteDto })
   @ApiOkResponse({ type: VoteResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Vote not found.' })
   update(
     @Param('id') id: string,

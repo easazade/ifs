@@ -42,6 +42,9 @@ export class OrganizationController {
   })
   @ApiBody({ type: CreateOrganizationDto })
   @ApiCreatedResponse({ type: OrganizationResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(
     @Body() data: CreateOrganizationDto,
   ): Promise<OrganizationResponseDto> {
@@ -102,6 +105,9 @@ export class OrganizationController {
   @ApiParam({ name: 'id', type: String, description: 'Organization ID.' })
   @ApiBody({ type: UpdateOrganizationDto })
   @ApiOkResponse({ type: OrganizationResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Organization not found.' })
   update(
     @Param('id') id: string,

@@ -39,6 +39,9 @@ export class GroupController {
   @ApiOperation({ operationId: 'createGroup', summary: 'Create a Group.' })
   @ApiBody({ type: CreateGroupDto })
   @ApiCreatedResponse({ type: GroupResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateGroupDto): Promise<GroupResponseDto> {
     return this.groupService.create(data);
   }
@@ -88,6 +91,9 @@ export class GroupController {
   @ApiParam({ name: 'id', type: String, description: 'Group ID.' })
   @ApiBody({ type: UpdateGroupDto })
   @ApiOkResponse({ type: GroupResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Group not found.' })
   update(
     @Param('id') id: string,

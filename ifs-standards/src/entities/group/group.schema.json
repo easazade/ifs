@@ -13,7 +13,8 @@
     },
     "entityType": {
       "type": "string",
-      "description": "IFS entity category/type for this group."
+      "const": "Group",
+      "description": "Entity type discriminator. Always \"Group\" for Group entities."
     },
     "basedOn": {
       "type": "string",

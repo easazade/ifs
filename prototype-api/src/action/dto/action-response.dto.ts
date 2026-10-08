@@ -8,9 +8,11 @@ export class ActionResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'Entity category for this object, normally Action.',
+    description:
+      'Entity type discriminator. Always "Action" for Action entities.',
+    enum: ['Action'],
   })
-  entityType: string;
+  entityType: 'Action';
 
   @ApiPropertyOptional({
     description: 'Id of the object this object is derived from.',

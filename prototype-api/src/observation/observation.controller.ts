@@ -42,6 +42,9 @@ export class ObservationController {
   })
   @ApiBody({ type: CreateObservationDto })
   @ApiCreatedResponse({ type: ObservationResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateObservationDto): Promise<ObservationResponseDto> {
     return this.observationService.create(data);
   }
@@ -100,6 +103,9 @@ export class ObservationController {
   @ApiParam({ name: 'id', type: String, description: 'Observation ID.' })
   @ApiBody({ type: UpdateObservationDto })
   @ApiOkResponse({ type: ObservationResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Observation not found.' })
   update(
     @Param('id') id: string,

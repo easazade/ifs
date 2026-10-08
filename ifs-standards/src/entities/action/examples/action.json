@@ -1,14 +1,14 @@
 {
   "id": "Action/1001",
   "entityType": "Action",
+  "basedOn": "Action/1000",
   "entityDocumentationUrl": "https://ifs-standards.org/entities/Action",
-  "createdAt": "2007-02-14T01:23:46Z",
-  "updatedAt": "2008-03-02T10:35:47Z",
-  "name": "mOH",
-  "uniqueName": "lSCV9oUj",
-  "requiresPermission": true,
-  "description": "pjTJ",
-  "instructions": "dM",
-  "warnings": "SysP75Q4Z5",
-  "state": "drafted"
+  "createdAt": "2023-04-06T01:25:35Z",
+  "updatedAt": "2024-04-07T15:32:45Z",
+  "name": "SC",
+  "uniqueName": "9oUjuzpj",
+  "requiresPermission": false,
+  "description": "hqdM1o",
+  "warnings": "P75",
+  "state": "revoked"
 }

@@ -13,7 +13,8 @@
     },
     "entityType": {
       "type": "string",
-      "description": "Entity category for this object, normally Observation."
+      "const": "Observation",
+      "description": "Entity type discriminator. Always \"Observation\" for Observation entities."
     },
     "basedOn": {
       "type": "string",

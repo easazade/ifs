@@ -39,6 +39,9 @@ export class ScopeController {
   @ApiOperation({ operationId: 'createScope', summary: 'Create a Scope.' })
   @ApiBody({ type: CreateScopeDto })
   @ApiCreatedResponse({ type: ScopeResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType must match the entity schema title.',
+  })
   create(@Body() data: CreateScopeDto): Promise<ScopeResponseDto> {
     return this.scopeService.create(data);
   }
@@ -88,6 +91,9 @@ export class ScopeController {
   @ApiParam({ name: 'id', type: String, description: 'Scope ID.' })
   @ApiBody({ type: UpdateScopeDto })
   @ApiOkResponse({ type: ScopeResponseDto })
+  @ApiBadRequestResponse({
+    description: 'entityType cannot change from the entity schema title.',
+  })
   @ApiNotFoundResponse({ description: 'Scope not found.' })
   update(
     @Param('id') id: string,
