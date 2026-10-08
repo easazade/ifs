@@ -15,6 +15,8 @@ import { OrganizationModule } from './organization/organization.module.js';
 import { PermissionModule } from './permission/permission.module.js';
 import { PlaceModule } from './place/place.module.js';
 import { ProtocolModule } from './protocol/protocol.module.js';
+import { RelationshipModule } from './relationship/relationship.module.js';
+import { RelationshipTypeModule } from './relationship-type/relationship-type.module.js';
 import { ReviewCommentModule } from './review-comment/review-comment.module.js';
 import { RoleModule } from './role/role.module.js';
 import { RuleModule } from './rule/rule.module.js';
@@ -38,6 +40,8 @@ import { VoteModule } from './vote/vote.module.js';
     PermissionModule,
     PlaceModule,
     ProtocolModule,
+    RelationshipModule,
+    RelationshipTypeModule,
     ReviewCommentModule,
     RoleModule,
     RuleModule,

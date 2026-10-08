@@ -2409,6 +2409,324 @@
         ]
       }
     },
+    "/relationships": {
+      "post": {
+        "operationId": "createRelationship",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRelationshipDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Relationship.",
+        "tags": [
+          "relationships"
+        ]
+      },
+      "get": {
+        "operationId": "listRelationships",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Relationship records.",
+        "tags": [
+          "relationships"
+        ]
+      }
+    },
+    "/relationships/{id}": {
+      "get": {
+        "operationId": "getRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Relationship ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Relationship not found."
+          }
+        },
+        "summary": "Get a Relationship by ID.",
+        "tags": [
+          "relationships"
+        ]
+      },
+      "patch": {
+        "operationId": "updateRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Relationship ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRelationshipDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Relationship not found."
+          }
+        },
+        "summary": "Update a Relationship.",
+        "tags": [
+          "relationships"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Relationship ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Relationship deleted."
+          },
+          "404": {
+            "description": "Relationship not found."
+          }
+        },
+        "summary": "Delete a Relationship.",
+        "tags": [
+          "relationships"
+        ]
+      }
+    },
+    "/relationship-types": {
+      "post": {
+        "operationId": "createRelationshipType",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRelationshipTypeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipTypeResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a RelationshipType.",
+        "tags": [
+          "relationship-types"
+        ]
+      },
+      "get": {
+        "operationId": "listRelationshipTypes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipTypeResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List RelationshipType records.",
+        "tags": [
+          "relationship-types"
+        ]
+      }
+    },
+    "/relationship-types/{id}": {
+      "get": {
+        "operationId": "getRelationshipType",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "RelationshipType ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipTypeResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "RelationshipType not found."
+          }
+        },
+        "summary": "Get a RelationshipType by ID.",
+        "tags": [
+          "relationship-types"
+        ]
+      },
+      "patch": {
+        "operationId": "updateRelationshipType",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "RelationshipType ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRelationshipTypeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipTypeResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "RelationshipType not found."
+          }
+        },
+        "summary": "Update a RelationshipType.",
+        "tags": [
+          "relationship-types"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteRelationshipType",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "RelationshipType ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "RelationshipType deleted."
+          },
+          "404": {
+            "description": "RelationshipType not found."
+          }
+        },
+        "summary": "Delete a RelationshipType.",
+        "tags": [
+          "relationship-types"
+        ]
+      }
+    },
     "/review-comments": {
       "post": {
         "operationId": "createReviewComment",
@@ -7027,6 +7345,475 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "CreateRelationshipDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this relationship.",
+            "pattern": "^Relationship/[^/\\s]+$"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Relationship."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship record was last updated.",
+            "format": "date-time"
+          },
+          "relationshipTypeId": {
+            "type": "string",
+            "description": "ID of the RelationshipType defining this relationship's type, inverse type, and allowed source and target types.",
+            "pattern": "^RelationshipType/[^/\\s]+$"
+          },
+          "type": {
+            "type": "string",
+            "description": "Relationship name copied from the selected RelationshipType object's type field.",
+            "minLength": 1
+          },
+          "inverseType": {
+            "type": "string",
+            "description": "Inverse relationship name copied from the selected RelationshipType object's inverseType field.",
+            "minLength": 1
+          },
+          "sourceId": {
+            "type": "string",
+            "description": "ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "targetId": {
+            "type": "string",
+            "description": "ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "startedAt": {
+            "type": "string",
+            "description": "Calendar date when this relationship began.",
+            "format": "date"
+          },
+          "endedAt": {
+            "type": "string",
+            "description": "Optional calendar date when this relationship ended; must not precede startedAt.",
+            "format": "date"
+          }
+        },
+        "required": [
+          "id",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "relationshipTypeId",
+          "type",
+          "inverseType",
+          "sourceId",
+          "targetId",
+          "startedAt"
+        ]
+      },
+      "RelationshipResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this relationship.",
+            "pattern": "^Relationship/[^/\\s]+$"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Relationship."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship record was last updated.",
+            "format": "date-time"
+          },
+          "relationshipTypeId": {
+            "type": "string",
+            "description": "ID of the RelationshipType defining this relationship's type, inverse type, and allowed source and target types.",
+            "pattern": "^RelationshipType/[^/\\s]+$"
+          },
+          "type": {
+            "type": "string",
+            "description": "Relationship name copied from the selected RelationshipType object's type field.",
+            "minLength": 1
+          },
+          "inverseType": {
+            "type": "string",
+            "description": "Inverse relationship name copied from the selected RelationshipType object's inverseType field.",
+            "minLength": 1
+          },
+          "sourceId": {
+            "type": "string",
+            "description": "ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "targetId": {
+            "type": "string",
+            "description": "ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "startedAt": {
+            "type": "string",
+            "description": "Calendar date when this relationship began.",
+            "format": "date"
+          },
+          "endedAt": {
+            "type": "string",
+            "description": "Optional calendar date when this relationship ended; must not precede startedAt.",
+            "format": "date"
+          }
+        },
+        "required": [
+          "id",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "relationshipTypeId",
+          "type",
+          "inverseType",
+          "sourceId",
+          "targetId",
+          "startedAt"
+        ]
+      },
+      "UpdateRelationshipDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this relationship.",
+            "pattern": "^Relationship/[^/\\s]+$"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally Relationship."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship record was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship record was last updated.",
+            "format": "date-time"
+          },
+          "relationshipTypeId": {
+            "type": "string",
+            "description": "ID of the RelationshipType defining this relationship's type, inverse type, and allowed source and target types.",
+            "pattern": "^RelationshipType/[^/\\s]+$"
+          },
+          "type": {
+            "type": "string",
+            "description": "Relationship name copied from the selected RelationshipType object's type field.",
+            "minLength": 1
+          },
+          "inverseType": {
+            "type": "string",
+            "description": "Inverse relationship name copied from the selected RelationshipType object's inverseType field.",
+            "minLength": 1
+          },
+          "sourceId": {
+            "type": "string",
+            "description": "ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "targetId": {
+            "type": "string",
+            "description": "ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "startedAt": {
+            "type": "string",
+            "description": "Calendar date when this relationship began.",
+            "format": "date"
+          },
+          "endedAt": {
+            "type": "string",
+            "description": "Optional calendar date when this relationship ended; must not precede startedAt.",
+            "format": "date"
+          }
+        }
+      },
+      "CreateRelationshipTypeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this relationship type.",
+            "pattern": "^RelationshipType/[^/\\s]+$"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally RelationshipType."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship type was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship type was last updated.",
+            "format": "date-time"
+          },
+          "type": {
+            "type": "string",
+            "description": "Relationship name, such as partnered, governed by, or resides in.",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "Meaning and intended use of this relationship type."
+          },
+          "sourceTypes": {
+            "description": "Entity type names allowed as sources of relationships of this type.",
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "targetTypes": {
+            "description": "Entity type names allowed as targets of relationships of this type.",
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "symmetric": {
+            "type": "boolean",
+            "description": "Whether swapping source and target preserves the relationship meaning, such as partnered."
+          },
+          "inverseType": {
+            "type": "string",
+            "description": "ID of the relationship type used when source and target are swapped, such as governed by to governs.",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "type",
+          "description",
+          "sourceTypes",
+          "targetTypes",
+          "symmetric",
+          "inverseType"
+        ]
+      },
+      "RelationshipTypeResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this relationship type.",
+            "pattern": "^RelationshipType/[^/\\s]+$"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally RelationshipType."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship type was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship type was last updated.",
+            "format": "date-time"
+          },
+          "type": {
+            "type": "string",
+            "description": "Relationship name, such as partnered, governed by, or resides in.",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "Meaning and intended use of this relationship type."
+          },
+          "sourceTypes": {
+            "description": "Entity type names allowed as sources of relationships of this type.",
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "targetTypes": {
+            "description": "Entity type names allowed as targets of relationships of this type.",
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "symmetric": {
+            "type": "boolean",
+            "description": "Whether swapping source and target preserves the relationship meaning, such as partnered."
+          },
+          "inverseType": {
+            "type": "string",
+            "description": "ID of the relationship type used when source and target are swapped, such as governed by to governs.",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "updatedAt",
+          "type",
+          "description",
+          "sourceTypes",
+          "targetTypes",
+          "symmetric",
+          "inverseType"
+        ]
+      },
+      "UpdateRelationshipTypeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Globally unique identifier for this relationship type.",
+            "pattern": "^RelationshipType/[^/\\s]+$"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity category for this object, normally RelationshipType."
+          },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this entity.",
+            "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship type was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Timestamp when this relationship type was last updated.",
+            "format": "date-time"
+          },
+          "type": {
+            "type": "string",
+            "description": "Relationship name, such as partnered, governed by, or resides in.",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "Meaning and intended use of this relationship type."
+          },
+          "sourceTypes": {
+            "description": "Entity type names allowed as sources of relationships of this type.",
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "targetTypes": {
+            "description": "Entity type names allowed as targets of relationships of this type.",
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "symmetric": {
+            "type": "boolean",
+            "description": "Whether swapping source and target preserves the relationship meaning, such as partnered."
+          },
+          "inverseType": {
+            "type": "string",
+            "description": "ID of the relationship type used when source and target are swapped, such as governed by to governs.",
+            "minLength": 1
           }
         }
       },

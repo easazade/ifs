@@ -2351,6 +2351,291 @@ export interface UpdateProtocolDto {
   createdAt?: string;
 }
 
+export interface CreateRelationshipDto {
+  /**
+   * Globally unique identifier for this relationship.
+   * @pattern ^Relationship/[^/\s]+$
+   */
+  id: string;
+  /** Entity category for this object, normally Relationship. */
+  entityType: string;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this relationship record was created. */
+  createdAt: string;
+  /** Timestamp when this relationship record was last updated. */
+  updatedAt: string;
+  /**
+   * ID of the RelationshipType defining this relationship's type, inverse type, and allowed source and target types.
+   * @pattern ^RelationshipType/[^/\s]+$
+   */
+  relationshipTypeId: string;
+  /**
+   * Relationship name copied from the selected RelationshipType object's type field.
+   * @minLength 1
+   */
+  type: string;
+  /**
+   * Inverse relationship name copied from the selected RelationshipType object's inverseType field.
+   * @minLength 1
+   */
+  inverseType: string;
+  /**
+   * ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  sourceId: string;
+  /**
+   * ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  targetId: string;
+  /** Calendar date when this relationship began. */
+  startedAt: string;
+  /** Optional calendar date when this relationship ended; must not precede startedAt. */
+  endedAt?: string;
+}
+
+export interface RelationshipResponseDto {
+  /**
+   * Globally unique identifier for this relationship.
+   * @pattern ^Relationship/[^/\s]+$
+   */
+  id: string;
+  /** Entity category for this object, normally Relationship. */
+  entityType: string;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this relationship record was created. */
+  createdAt: string;
+  /** Timestamp when this relationship record was last updated. */
+  updatedAt: string;
+  /**
+   * ID of the RelationshipType defining this relationship's type, inverse type, and allowed source and target types.
+   * @pattern ^RelationshipType/[^/\s]+$
+   */
+  relationshipTypeId: string;
+  /**
+   * Relationship name copied from the selected RelationshipType object's type field.
+   * @minLength 1
+   */
+  type: string;
+  /**
+   * Inverse relationship name copied from the selected RelationshipType object's inverseType field.
+   * @minLength 1
+   */
+  inverseType: string;
+  /**
+   * ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  sourceId: string;
+  /**
+   * ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  targetId: string;
+  /** Calendar date when this relationship began. */
+  startedAt: string;
+  /** Optional calendar date when this relationship ended; must not precede startedAt. */
+  endedAt?: string;
+}
+
+export interface UpdateRelationshipDto {
+  /**
+   * Globally unique identifier for this relationship.
+   * @pattern ^Relationship/[^/\s]+$
+   */
+  id?: string;
+  /** Entity category for this object, normally Relationship. */
+  entityType?: string;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this relationship record was created. */
+  createdAt?: string;
+  /** Timestamp when this relationship record was last updated. */
+  updatedAt?: string;
+  /**
+   * ID of the RelationshipType defining this relationship's type, inverse type, and allowed source and target types.
+   * @pattern ^RelationshipType/[^/\s]+$
+   */
+  relationshipTypeId?: string;
+  /**
+   * Relationship name copied from the selected RelationshipType object's type field.
+   * @minLength 1
+   */
+  type?: string;
+  /**
+   * Inverse relationship name copied from the selected RelationshipType object's inverseType field.
+   * @minLength 1
+   */
+  inverseType?: string;
+  /**
+   * ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  sourceId?: string;
+  /**
+   * ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  targetId?: string;
+  /** Calendar date when this relationship began. */
+  startedAt?: string;
+  /** Optional calendar date when this relationship ended; must not precede startedAt. */
+  endedAt?: string;
+}
+
+export interface CreateRelationshipTypeDto {
+  /**
+   * Globally unique identifier for this relationship type.
+   * @pattern ^RelationshipType/[^/\s]+$
+   */
+  id: string;
+  /** Entity category for this object, normally RelationshipType. */
+  entityType: string;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this relationship type was created. */
+  createdAt: string;
+  /** Timestamp when this relationship type was last updated. */
+  updatedAt: string;
+  /**
+   * Relationship name, such as partnered, governed by, or resides in.
+   * @minLength 1
+   */
+  type: string;
+  /** Meaning and intended use of this relationship type. */
+  description: string;
+  /**
+   * Entity type names allowed as sources of relationships of this type.
+   * @minItems 1
+   */
+  sourceTypes: string[];
+  /**
+   * Entity type names allowed as targets of relationships of this type.
+   * @minItems 1
+   */
+  targetTypes: string[];
+  /** Whether swapping source and target preserves the relationship meaning, such as partnered. */
+  symmetric: boolean;
+  /**
+   * ID of the relationship type used when source and target are swapped, such as governed by to governs.
+   * @minLength 1
+   */
+  inverseType: string;
+}
+
+export interface RelationshipTypeResponseDto {
+  /**
+   * Globally unique identifier for this relationship type.
+   * @pattern ^RelationshipType/[^/\s]+$
+   */
+  id: string;
+  /** Entity category for this object, normally RelationshipType. */
+  entityType: string;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl: string;
+  /** Timestamp when this relationship type was created. */
+  createdAt: string;
+  /** Timestamp when this relationship type was last updated. */
+  updatedAt: string;
+  /**
+   * Relationship name, such as partnered, governed by, or resides in.
+   * @minLength 1
+   */
+  type: string;
+  /** Meaning and intended use of this relationship type. */
+  description: string;
+  /**
+   * Entity type names allowed as sources of relationships of this type.
+   * @minItems 1
+   */
+  sourceTypes: string[];
+  /**
+   * Entity type names allowed as targets of relationships of this type.
+   * @minItems 1
+   */
+  targetTypes: string[];
+  /** Whether swapping source and target preserves the relationship meaning, such as partnered. */
+  symmetric: boolean;
+  /**
+   * ID of the relationship type used when source and target are swapped, such as governed by to governs.
+   * @minLength 1
+   */
+  inverseType: string;
+}
+
+export interface UpdateRelationshipTypeDto {
+  /**
+   * Globally unique identifier for this relationship type.
+   * @pattern ^RelationshipType/[^/\s]+$
+   */
+  id?: string;
+  /** Entity category for this object, normally RelationshipType. */
+  entityType?: string;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity. */
+  entityDocumentationUrl?: string;
+  /** Timestamp when this relationship type was created. */
+  createdAt?: string;
+  /** Timestamp when this relationship type was last updated. */
+  updatedAt?: string;
+  /**
+   * Relationship name, such as partnered, governed by, or resides in.
+   * @minLength 1
+   */
+  type?: string;
+  /** Meaning and intended use of this relationship type. */
+  description?: string;
+  /**
+   * Entity type names allowed as sources of relationships of this type.
+   * @minItems 1
+   */
+  sourceTypes?: string[];
+  /**
+   * Entity type names allowed as targets of relationships of this type.
+   * @minItems 1
+   */
+  targetTypes?: string[];
+  /** Whether swapping source and target preserves the relationship meaning, such as partnered. */
+  symmetric?: boolean;
+  /**
+   * ID of the relationship type used when source and target are swapped, such as governed by to governs.
+   * @minLength 1
+   */
+  inverseType?: string;
+}
+
 /**
  * Entity type discriminator. Always "ReviewComment" for ReviewComment entities.
  */
@@ -6764,6 +7049,555 @@ export const deleteProtocol = async (
     status: res.status,
     headers: res.headers,
   } as deleteProtocolResponse;
+};
+
+export type createRelationshipResponse201 = {
+  data: RelationshipResponseDto;
+  status: 201;
+};
+
+export type createRelationshipResponseSuccess =
+  createRelationshipResponse201 & {
+    headers: Headers;
+  };
+export type createRelationshipResponse = createRelationshipResponseSuccess;
+
+export const getCreateRelationshipUrl = () => {
+  return `${getApiBaseUrl()}/relationships`;
+};
+
+/**
+ * @summary Create a Relationship.
+ */
+export const createRelationship = async (
+  createRelationshipDto: CreateRelationshipDto,
+  options?: RequestInit,
+): Promise<createRelationshipResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateRelationshipUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createRelationshipDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createRelationshipResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createRelationshipResponse;
+};
+
+export type listRelationshipsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listRelationshipsResponseSuccess = listRelationshipsResponse200 & {
+  headers: Headers;
+};
+export type listRelationshipsResponse = listRelationshipsResponseSuccess;
+
+export const getListRelationshipsUrl = () => {
+  return `${getApiBaseUrl()}/relationships`;
+};
+
+/**
+ * @summary List Relationship records.
+ */
+export const listRelationships = async (
+  options?: RequestInit,
+): Promise<listRelationshipsResponse> => {
+  const res = await fetch(getListRelationshipsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listRelationshipsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listRelationshipsResponse;
+};
+
+export type getRelationshipResponse200 = {
+  data: RelationshipResponseDto;
+  status: 200;
+};
+
+export type getRelationshipResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getRelationshipResponseSuccess = getRelationshipResponse200 & {
+  headers: Headers;
+};
+export type getRelationshipResponseError = getRelationshipResponse404 & {
+  headers: Headers;
+};
+
+export type getRelationshipResponse =
+  getRelationshipResponseSuccess | getRelationshipResponseError;
+
+export const getGetRelationshipUrl = (id: string) => {
+  return `${getApiBaseUrl()}/relationships/${id}`;
+};
+
+/**
+ * @summary Get a Relationship by ID.
+ */
+export const getRelationship = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getRelationshipResponse> => {
+  const res = await fetch(getGetRelationshipUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getRelationshipResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getRelationshipResponse;
+};
+
+export type updateRelationshipResponse200 = {
+  data: RelationshipResponseDto;
+  status: 200;
+};
+
+export type updateRelationshipResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateRelationshipResponseSuccess =
+  updateRelationshipResponse200 & {
+    headers: Headers;
+  };
+export type updateRelationshipResponseError = updateRelationshipResponse404 & {
+  headers: Headers;
+};
+
+export type updateRelationshipResponse =
+  updateRelationshipResponseSuccess | updateRelationshipResponseError;
+
+export const getUpdateRelationshipUrl = (id: string) => {
+  return `${getApiBaseUrl()}/relationships/${id}`;
+};
+
+/**
+ * @summary Update a Relationship.
+ */
+export const updateRelationship = async (
+  id: string,
+  updateRelationshipDto: UpdateRelationshipDto,
+  options?: RequestInit,
+): Promise<updateRelationshipResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateRelationshipUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateRelationshipDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateRelationshipResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateRelationshipResponse;
+};
+
+export type deleteRelationshipResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteRelationshipResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteRelationshipResponseSuccess =
+  deleteRelationshipResponse204 & {
+    headers: Headers;
+  };
+export type deleteRelationshipResponseError = deleteRelationshipResponse404 & {
+  headers: Headers;
+};
+
+export type deleteRelationshipResponse =
+  deleteRelationshipResponseSuccess | deleteRelationshipResponseError;
+
+export const getDeleteRelationshipUrl = (id: string) => {
+  return `${getApiBaseUrl()}/relationships/${id}`;
+};
+
+/**
+ * @summary Delete a Relationship.
+ */
+export const deleteRelationship = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteRelationshipResponse> => {
+  const res = await fetch(getDeleteRelationshipUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteRelationshipResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteRelationshipResponse;
+};
+
+export type createRelationshipTypeResponse201 = {
+  data: RelationshipTypeResponseDto;
+  status: 201;
+};
+
+export type createRelationshipTypeResponseSuccess =
+  createRelationshipTypeResponse201 & {
+    headers: Headers;
+  };
+export type createRelationshipTypeResponse =
+  createRelationshipTypeResponseSuccess;
+
+export const getCreateRelationshipTypeUrl = () => {
+  return `${getApiBaseUrl()}/relationship-types`;
+};
+
+/**
+ * @summary Create a RelationshipType.
+ */
+export const createRelationshipType = async (
+  createRelationshipTypeDto: CreateRelationshipTypeDto,
+  options?: RequestInit,
+): Promise<createRelationshipTypeResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateRelationshipTypeUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createRelationshipTypeDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createRelationshipTypeResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createRelationshipTypeResponse;
+};
+
+export type listRelationshipTypesResponse200 = {
+  data: RelationshipTypeResponseDto[];
+  status: 200;
+};
+
+export type listRelationshipTypesResponseSuccess =
+  listRelationshipTypesResponse200 & {
+    headers: Headers;
+  };
+export type listRelationshipTypesResponse =
+  listRelationshipTypesResponseSuccess;
+
+export const getListRelationshipTypesUrl = () => {
+  return `${getApiBaseUrl()}/relationship-types`;
+};
+
+/**
+ * @summary List RelationshipType records.
+ */
+export const listRelationshipTypes = async (
+  options?: RequestInit,
+): Promise<listRelationshipTypesResponse> => {
+  const res = await fetch(getListRelationshipTypesUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listRelationshipTypesResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listRelationshipTypesResponse;
+};
+
+export type getRelationshipTypeResponse200 = {
+  data: RelationshipTypeResponseDto;
+  status: 200;
+};
+
+export type getRelationshipTypeResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getRelationshipTypeResponseSuccess =
+  getRelationshipTypeResponse200 & {
+    headers: Headers;
+  };
+export type getRelationshipTypeResponseError =
+  getRelationshipTypeResponse404 & {
+    headers: Headers;
+  };
+
+export type getRelationshipTypeResponse =
+  getRelationshipTypeResponseSuccess | getRelationshipTypeResponseError;
+
+export const getGetRelationshipTypeUrl = (id: string) => {
+  return `${getApiBaseUrl()}/relationship-types/${id}`;
+};
+
+/**
+ * @summary Get a RelationshipType by ID.
+ */
+export const getRelationshipType = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getRelationshipTypeResponse> => {
+  const res = await fetch(getGetRelationshipTypeUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getRelationshipTypeResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getRelationshipTypeResponse;
+};
+
+export type updateRelationshipTypeResponse200 = {
+  data: RelationshipTypeResponseDto;
+  status: 200;
+};
+
+export type updateRelationshipTypeResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateRelationshipTypeResponseSuccess =
+  updateRelationshipTypeResponse200 & {
+    headers: Headers;
+  };
+export type updateRelationshipTypeResponseError =
+  updateRelationshipTypeResponse404 & {
+    headers: Headers;
+  };
+
+export type updateRelationshipTypeResponse =
+  updateRelationshipTypeResponseSuccess | updateRelationshipTypeResponseError;
+
+export const getUpdateRelationshipTypeUrl = (id: string) => {
+  return `${getApiBaseUrl()}/relationship-types/${id}`;
+};
+
+/**
+ * @summary Update a RelationshipType.
+ */
+export const updateRelationshipType = async (
+  id: string,
+  updateRelationshipTypeDto: UpdateRelationshipTypeDto,
+  options?: RequestInit,
+): Promise<updateRelationshipTypeResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateRelationshipTypeUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateRelationshipTypeDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateRelationshipTypeResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateRelationshipTypeResponse;
+};
+
+export type deleteRelationshipTypeResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteRelationshipTypeResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteRelationshipTypeResponseSuccess =
+  deleteRelationshipTypeResponse204 & {
+    headers: Headers;
+  };
+export type deleteRelationshipTypeResponseError =
+  deleteRelationshipTypeResponse404 & {
+    headers: Headers;
+  };
+
+export type deleteRelationshipTypeResponse =
+  deleteRelationshipTypeResponseSuccess | deleteRelationshipTypeResponseError;
+
+export const getDeleteRelationshipTypeUrl = (id: string) => {
+  return `${getApiBaseUrl()}/relationship-types/${id}`;
+};
+
+/**
+ * @summary Delete a RelationshipType.
+ */
+export const deleteRelationshipType = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteRelationshipTypeResponse> => {
+  const res = await fetch(getDeleteRelationshipTypeUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteRelationshipTypeResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteRelationshipTypeResponse;
 };
 
 export type createReviewCommentResponse201 = {

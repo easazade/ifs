@@ -121,6 +121,22 @@ import {
   type CreateProtocolDto,
   type UpdateProtocolDto,
   type ProtocolResponseDto,
+  createRelationship,
+  deleteRelationship,
+  getRelationship,
+  listRelationships,
+  updateRelationship,
+  type CreateRelationshipDto,
+  type UpdateRelationshipDto,
+  type RelationshipResponseDto,
+  createRelationshipType,
+  deleteRelationshipType,
+  getRelationshipType,
+  listRelationshipTypes,
+  updateRelationshipType,
+  type CreateRelationshipTypeDto,
+  type UpdateRelationshipTypeDto,
+  type RelationshipTypeResponseDto,
   createReviewComment,
   deleteReviewComment,
   getReviewComment,
@@ -535,6 +551,54 @@ export class Api {
 
   async deleteProtocol(id: string): Promise<void> {
     await deleteProtocol(id);
+  }
+
+  async createRelationship(input: CreateRelationshipDto): Promise<RelationshipResponseDto | void> {
+    const response = await createRelationship(input);
+    return response.data;
+  }
+
+  async listRelationships(): Promise<RelationshipResponseDto[]> {
+    const response = await listRelationships();
+    return response.data;
+  }
+
+  async getRelationship(id: string): Promise<RelationshipResponseDto | void> {
+    const response = await getRelationship(id);
+    return response.data;
+  }
+
+  async updateRelationship(id: string, input: UpdateRelationshipDto): Promise<RelationshipResponseDto | void> {
+    const response = await updateRelationship(id, input);
+    return response.data;
+  }
+
+  async deleteRelationship(id: string): Promise<void> {
+    await deleteRelationship(id);
+  }
+
+  async createRelationshipType(input: CreateRelationshipTypeDto): Promise<RelationshipTypeResponseDto | void> {
+    const response = await createRelationshipType(input);
+    return response.data;
+  }
+
+  async listRelationshipTypes(): Promise<RelationshipTypeResponseDto[]> {
+    const response = await listRelationshipTypes();
+    return response.data;
+  }
+
+  async getRelationshipType(id: string): Promise<RelationshipTypeResponseDto | void> {
+    const response = await getRelationshipType(id);
+    return response.data;
+  }
+
+  async updateRelationshipType(id: string, input: UpdateRelationshipTypeDto): Promise<RelationshipTypeResponseDto | void> {
+    const response = await updateRelationshipType(id, input);
+    return response.data;
+  }
+
+  async deleteRelationshipType(id: string): Promise<void> {
+    await deleteRelationshipType(id);
   }
 
   async createReviewComment(input: CreateReviewCommentDto): Promise<ReviewCommentResponseDto | void> {
