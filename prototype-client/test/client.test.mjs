@@ -3,6 +3,8 @@ import { once } from 'node:events';
 import { createServer } from 'node:http';
 import { after, before, test } from 'node:test';
 import {
+  createRelationship,
+  updateRelationship,
   getApiBaseUrl,
   getGetHelloUrl,
   getHello,
@@ -14,12 +16,22 @@ let baseUrl;
 let lastRequest;
 
 before(async () => {
-  server = createServer((request, response) => {
+  server = createServer(async (request, response) => {
     lastRequest = {
       url: request.url,
       method: request.method,
       headers: request.headers,
     };
+    if (request.url.startsWith('/relationships')) {
+      let body = '';
+      for await (const chunk of request) body += chunk;
+      lastRequest.body = JSON.parse(body);
+      response.writeHead(request.method === 'POST' ? 201 : 200, {
+        'content-type': 'application/json',
+      });
+      response.end(body);
+      return;
+    }
     response.writeHead(200, { 'content-type': 'text/plain' });
     response.end('Hello World!');
   });
@@ -50,6 +62,29 @@ test('imports as ESM and fetches plain text with runtime configuration', async (
   assert.equal(lastRequest.method, 'GET');
   assert.equal(lastRequest.url, '/');
   assert.equal(lastRequest.headers['x-client-test'], 'yes');
+});
+
+test('relationship client keeps public endpoints and encodes canonical IDs', async () => {
+  setApiBaseUrl(baseUrl);
+  const edge = {
+    id: 'Relationship/client',
+    sourceId: 'Organization/1',
+    targetId: 'Member/1',
+    relationshipTypeId: 'RelationshipType/1',
+    type: 'has member',
+    inverseType: 'member of',
+  };
+  const created = await createRelationship(edge);
+  assert.equal(created.status, 201);
+  assert.deepEqual(created.data, edge);
+  assert.deepEqual(lastRequest.body, edge);
+  assert.ok(!Object.hasOwn(lastRequest.body, 'in'));
+  assert.ok(!Object.hasOwn(lastRequest.body, 'out'));
+  const updated = await updateRelationship(edge.id, { endedAt: '2026-02-01' });
+  assert.equal(updated.status, 200);
+  assert.equal(lastRequest.method, 'PATCH');
+  assert.equal(lastRequest.url, '/relationships/Relationship%2Fclient');
+  assert.deepEqual(lastRequest.body, { endedAt: '2026-02-01' });
 });
 
 test('passes AbortSignal through to fetch', async () => {

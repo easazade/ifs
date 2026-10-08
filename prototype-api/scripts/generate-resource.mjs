@@ -12,6 +12,8 @@ import {
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { graphEdges } from '../src/surreal/entity-storage.ts';
+
 const apiRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(apiRoot, '..');
 const entitiesRoot = join(workspaceRoot, 'ifs-standards', 'src', 'entities');
@@ -215,6 +217,7 @@ function readEntityRelations(modelName, schema) {
 
 function renderService(entityName, modelName, relations) {
   const table = entityName.replaceAll('-', '_');
+  const edge = graphEdges[table];
   return `${generatedMarker}
 import { Injectable } from '@nestjs/common';
 import { SurrealService } from '../surreal/surreal.service.js';
@@ -229,7 +232,7 @@ export class ${modelName}Service {
   constructor(private readonly database: SurrealService) {}
 
   create(data: Create${modelName}Dto): Promise<${modelName}ResponseDto> {
-    return this.database.create('${table}', data, relations);
+    return this.database.${edge ? 'createEdge' : 'create'}('${table}', data, relations);
   }
 
   findAll(): Promise<${modelName}ResponseDto[]> {
@@ -241,7 +244,7 @@ export class ${modelName}Service {
   }
 
   update(id: string, data: Update${modelName}Dto): Promise<${modelName}ResponseDto> {
-    return this.database.update('${table}', id, data, relations);
+    return this.database.${edge ? 'updateEdge' : 'update'}('${table}', id, data, relations);
   }
 
   remove(id: string): Promise<${modelName}ResponseDto> {
@@ -442,6 +445,25 @@ export function generateService(entityInput, options = {}) {
     }
   }
 
+  // Generate the canonical entity-type allowlist used to resolve polymorphic endpoints.
+  const tables = Object.fromEntries(
+    readdirSync(entitiesRoot, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(({ name }) => {
+        const schema = JSON.parse(
+          readFileSync(join(entitiesRoot, name, `${name}.schema.json`), 'utf8'),
+        );
+        return [pascalCase(schema.title), name.replaceAll('-', '_')];
+      }),
+  );
+  const storageDirectory = join(apiRoot, 'src', 'surreal');
+  mkdirSync(storageDirectory, { recursive: true });
+  writeFileSync(
+    join(storageDirectory, 'entity-tables.generated.ts'),
+    `${generatedMarker}\nexport const entityTables: Record<string, string> = ${JSON.stringify(tables, null, 2)};\n`,
+  );
+
   mkdirSync(serviceDirectory, { recursive: true });
   for (const file of generatedFiles) writeFileSync(file.path, file.source);
   writeFileSync(
@@ -458,6 +480,7 @@ export function generateService(entityInput, options = {}) {
         '--write',
         ...generatedFiles.map((file) => file.path),
         generatedResourcesModulePath,
+        join(storageDirectory, 'entity-tables.generated.ts'),
       ],
       { cwd: apiRoot, stdio: 'inherit' },
     );
@@ -471,6 +494,7 @@ export function generateService(entityInput, options = {}) {
     generatedFiles: [
       ...generatedFiles.map((file) => file.path),
       generatedResourcesModulePath,
+      join(storageDirectory, 'entity-tables.generated.ts'),
     ],
     generatedDtos,
   };

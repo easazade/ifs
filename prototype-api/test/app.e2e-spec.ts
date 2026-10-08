@@ -26,7 +26,12 @@ describe('AppController (e2e)', () => {
 
     const database = moduleFixture.get(SurrealService);
     await database.onModuleInit();
-    await initializeDatabase(database.client, ['member']);
+    await initializeDatabase(database.client, [
+      'member',
+      'organization',
+      'relationship_type',
+      'relationship',
+    ]);
     await database.onModuleDestroy();
     app = moduleFixture.createNestApplication();
     setupSwagger(app);
@@ -90,6 +95,59 @@ describe('AppController (e2e)', () => {
       .expect(404);
     await request(app.getHttpServer())
       .delete('/members/member-e2e')
+      .expect(404);
+  });
+
+  it('exposes graph-edge CRUD without leaking SurrealDB endpoint fields', async () => {
+    const db = app.get(SurrealService);
+    await db.create('organization', { id: 'Organization/e2e' });
+    await db.create('member', { id: 'Member/e2e' });
+    await db.create('relationship_type', {
+      id: 'RelationshipType/e2e',
+      type: 'has member',
+      inverseType: 'member of',
+      sourceTypes: ['Organization'],
+      targetTypes: ['Member'],
+    });
+    const edge = {
+      id: 'Relationship/e2e',
+      sourceId: 'Organization/e2e',
+      targetId: 'Member/e2e',
+      relationshipTypeId: 'RelationshipType/e2e',
+      type: 'has member',
+      inverseType: 'member of',
+    };
+    const created = await request(app.getHttpServer())
+      .post('/relationships')
+      .send(edge)
+      .expect(201);
+    expect(created.body).toEqual(edge);
+    await request(app.getHttpServer())
+      .post('/relationships')
+      .send(edge)
+      .expect(409);
+    await request(app.getHttpServer())
+      .post('/relationships')
+      .send({ ...edge, id: 'Relationship/bad', targetId: 'Member/missing' })
+      .expect(400);
+    const url = `/relationships/${encodeURIComponent(edge.id)}`;
+    expect(
+      (await request(app.getHttpServer()).get(url).expect(200)).body,
+    ).toEqual(edge);
+    await request(app.getHttpServer())
+      .patch(url)
+      .send({ sourceId: edge.sourceId })
+      .expect(400);
+    const updated = await request(app.getHttpServer())
+      .patch(url)
+      .send({ endedAt: '2026-02-01' })
+      .expect(200);
+    expect(updated.body).toEqual({ ...edge, endedAt: '2026-02-01' });
+    await request(app.getHttpServer()).delete(url).expect(204);
+    await request(app.getHttpServer()).get(url).expect(404);
+    await request(app.getHttpServer())
+      .patch(url)
+      .send({ endedAt: '2026-02-01' })
       .expect(404);
   });
 

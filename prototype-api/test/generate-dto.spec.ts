@@ -28,7 +28,13 @@ function fixture() {
     join(apiRoot, 'scripts/generate-dto.mjs'),
     join(api, 'scripts/generate-dto.mjs'),
   );
+  mkdirSync(join(api, 'src/surreal'), { recursive: true });
+  cpSync(
+    join(apiRoot, 'src/surreal/entity-storage.ts'),
+    join(api, 'src/surreal/entity-storage.ts'),
+  );
   for (const entity of [
+    'relationship',
     'member',
     'role',
     'permission',
@@ -74,6 +80,19 @@ function source(api: string, entity: string, file: string) {
 }
 
 describe('DTO generator', () => {
+  it('keeps edge endpoints in create/response but omits them from update DTOs', () => {
+    const api = fixture();
+    run(api, 'relationship');
+    expect(source(api, 'relationship', 'create-relationship.dto.ts')).toContain(
+      'sourceId: string',
+    );
+    expect(
+      source(api, 'relationship', 'relationship-response.dto.ts'),
+    ).toContain('targetId: string');
+    expect(source(api, 'relationship', 'update-relationship.dto.ts')).toContain(
+      'OmitType(CreateRelationshipDto, ["sourceId","targetId"] as const)',
+    );
+  });
   it('emits nested polygon arrays', () => {
     const api = fixture();
     run(api, 'geographic-area');

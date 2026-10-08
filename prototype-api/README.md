@@ -25,14 +25,14 @@ The API listens on `http://localhost:3000`; `GET /` returns `Hello World!`. Swag
 
 `prototype-api/.env` is loaded by the application and database scripts. Existing environment variables take precedence.
 
-| Variable | Default | Meaning |
-| --- | --- | --- |
-| `SURREALDB_URL` | `http://127.0.0.1:8000/rpc` | HTTP(S) or WS(S) RPC endpoint |
-| `SURREALDB_NAMESPACE` | `ifs` | Database namespace |
-| `SURREALDB_DATABASE` | `prototype` | Database name |
-| `SURREALDB_USERNAME` | Required | Authentication username |
-| `SURREALDB_PASSWORD` | Required | Authentication password |
-| `PORT` | `3000` | API HTTP port |
+| Variable              | Default                     | Meaning                       |
+| --------------------- | --------------------------- | ----------------------------- |
+| `SURREALDB_URL`       | `http://127.0.0.1:8000/rpc` | HTTP(S) or WS(S) RPC endpoint |
+| `SURREALDB_NAMESPACE` | `ifs`                       | Database namespace            |
+| `SURREALDB_DATABASE`  | `prototype`                 | Database name                 |
+| `SURREALDB_USERNAME`  | Required                    | Authentication username       |
+| `SURREALDB_PASSWORD`  | Required                    | Authentication password       |
+| `PORT`                | `3000`                      | API HTTP port                 |
 
 The example's `root`/`root` credentials are **local development only**. Use separate least-privilege application credentials and TLS for deployment. Root credentials are needed to provision namespaces with `db:setup` and initialize a new local server. A server's existing root password is not changed by restarting it with different environment variables.
 
@@ -60,7 +60,15 @@ pnpm --filter prototype-api db:sql           # Interactive SurrealQL shell
 
 Generated CRUD services delegate to `SurrealService`. String entity IDs are stored as the string component of SurrealDB record IDs and returned without a table prefix. `$ref` properties are stored as record links, with immediate relations expanded on reads. Relation inputs refer to existing entities by `id`; read-only relations are not written. PATCH merges fields, empty arrays clear list relations, and nullable single links accept `null`. Missing records produce 404 for read/update/delete; duplicate IDs produce 409. Embedded objects and primitive arrays remain native document values.
 
-Tables are schemaless, not database-enforced copies of JSON Schema. Swagger DTOs are documentation/types, **not runtime validation**. This prototype does not add runtime JSON Schema validation or database-level foreign-key/delete constraints. Relation existence checks occur before writes; concurrent deletes can leave dangling links. Review/extend validation, transactions, relation ownership, and authorization before production use.
+### Relationship graph edges
+
+`Relationship` is a SurrealDB graph edge; `RelationshipType` remains a normal entity. `src/surreal/entity-storage.ts` defines the edge mapping and immutable endpoints. Resource generation also emits `src/surreal/entity-tables.generated.ts` from canonical schemas to resolve endpoint entity types safely.
+
+The `relationship` table uses `TYPE RELATION ENFORCED`. Creation uses `RELATE`, storing `sourceId` as `in` and `targetId` as `out`; reads expose only the public fields. Canonical IDs such as `Organization/1` retain their full string as the record key, matching existing CRUD. Endpoints and the selected relationship type must exist, allowed source/target types are checked, and copied relationship names must match that type. PATCH can update properties but cannot supply `sourceId`, `targetId`, `in`, or `out`; reconnect by deleting and recreating an edge. Edge DTOs, OpenAPI, and the Fetch client keep the database details internal.
+
+Setup refuses an existing non-relation `relationship` table rather than silently converting it. Back up and migrate existing relationship records, or **explicitly approve their deletion** before removing that table and rerunning `db:setup`. Regular tables and their data need not be reset. SurrealDB enforces edge endpoint existence and handles edge cleanup when an endpoint is deleted; this does not replace application authorization or transactional domain validation.
+
+Tables are schemaless, not database-enforced copies of JSON Schema. Swagger DTOs are documentation/types, **not runtime validation**. This prototype does not add runtime JSON Schema validation. Ordinary `$ref` record links do not have database-level foreign-key/delete constraints; their existence checks occur before writes, so concurrent deletes can leave dangling links. Graph edges have the special enforcement described above. Review/extend validation, transactions, relation ownership, and authorization before production use.
 
 ## Generation and OpenAPI
 

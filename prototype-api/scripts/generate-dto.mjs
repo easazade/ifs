@@ -5,6 +5,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { graphEdges } from '../src/surreal/entity-storage.ts';
+
 const apiRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const entitiesRoot = resolve(apiRoot, '../ifs-standards/src/entities');
 const pascalCase = (value) =>
@@ -248,9 +250,13 @@ export function generateDto(input, options = {}) {
   mkdirSync(dtoDir, { recursive: true });
   writeFileSync(join(dtoDir, `create-${entity}.dto.ts`), create);
   writeFileSync(join(dtoDir, `${entity}-response.dto.ts`), response);
+  const edge = graphEdges[entity.replaceAll('-', '_')];
+  const updateBase = edge
+    ? `OmitType(Create${modelName}Dto, ${JSON.stringify(edge.immutable)} as const)`
+    : `Create${modelName}Dto`;
   writeFileSync(
     join(dtoDir, `update-${entity}.dto.ts`),
-    `import { PartialType } from '@nestjs/swagger';\nimport { Create${modelName}Dto } from './create-${entity}.dto.js';\n\nexport class Update${modelName}Dto extends PartialType(Create${modelName}Dto) {}\n`,
+    `import { PartialType${edge ? ', OmitType' : ''} } from '@nestjs/swagger';\nimport { Create${modelName}Dto } from './create-${entity}.dto.js';\n\nexport class Update${modelName}Dto extends PartialType(${updateBase}) {}\n`,
   );
   if (!options.skipFormat)
     execFileSync('pnpm', ['exec', 'prettier', '--write', dtoDir], {

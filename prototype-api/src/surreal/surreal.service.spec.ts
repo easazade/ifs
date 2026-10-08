@@ -30,7 +30,14 @@ describe('SurrealService (real database)', () => {
     vi.stubEnv('SURREALDB_PASSWORD', 'test');
     service = new SurrealService();
     await service.onModuleInit();
-    await initializeDatabase(service.client, ['member', 'permission', 'role']);
+    await initializeDatabase(service.client, [
+      'member',
+      'permission',
+      'role',
+      'organization',
+      'relationship_type',
+      'relationship',
+    ]);
   }, 20_000);
   afterAll(async () => {
     try {
@@ -39,6 +46,124 @@ describe('SurrealService (real database)', () => {
       vi.unstubAllEnvs();
       await server?.stop();
     }
+  });
+
+  it('creates traversable graph edges, preserves public IDs and supports edge CRUD', async () => {
+    await service.create('organization', { id: 'Organization/source' });
+    await service.create('member', { id: 'Member/target' });
+    await service.create('relationship_type', {
+      id: 'RelationshipType/membership',
+      type: 'has member',
+      inverseType: 'member of',
+      sourceTypes: ['Organization'],
+      targetTypes: ['Member'],
+    });
+    const data = {
+      id: 'Relationship/edge',
+      sourceId: 'Organization/source',
+      targetId: 'Member/target',
+      relationshipTypeId: 'RelationshipType/membership',
+      type: 'has member',
+      inverseType: 'member of',
+      startedAt: '2026-01-01',
+      notes: { trace: 'test' },
+    };
+    expect(await service.createEdge('relationship', data)).toEqual(data);
+    const stored = await service.client.select<Record<string, unknown>>(
+      new RecordId('relationship', data.id),
+    );
+    expect(stored?.in).toEqual(new RecordId('organization', data.sourceId));
+    expect(stored?.out).toEqual(new RecordId('member', data.targetId));
+    expect(stored).not.toHaveProperty('sourceId');
+    const [traversed] = await service.client.query<[RecordId[]]>(
+      'RETURN $source->relationship->member;',
+      { source: new RecordId('organization', data.sourceId) },
+    );
+    expect(traversed).toEqual([new RecordId('member', data.targetId)]);
+    await expect(
+      service.createEdge('relationship', data),
+    ).rejects.toBeInstanceOf(ConflictException);
+    expect(await service.findAll('relationship')).toEqual([data]);
+    expect(
+      await service.updateEdge('relationship', data.id, {
+        endedAt: '2026-02-01',
+      }),
+    ).toEqual({ ...data, endedAt: '2026-02-01' });
+    for (const patch of [
+      { sourceId: data.sourceId },
+      { targetId: data.targetId },
+      { in: 'bad' },
+      { out: 'bad' },
+      { id: 'Relationship/other' },
+      { type: 'incorrect' },
+      { relationshipTypeId: 'RelationshipType/missing' },
+    ]) {
+      await expect(
+        service.updateEdge('relationship', data.id, patch),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    }
+    for (const patch of [
+      { sourceId: 'Organization/missing' },
+      { sourceId: 'Member/target' },
+      { targetId: 'Unknown/target' },
+      { targetId: 'invalid' },
+      { in: 'bad' },
+      { relationshipTypeId: 'Member/target' },
+    ]) {
+      await expect(
+        service.createEdge('relationship', {
+          ...data,
+          id: 'Relationship/invalid',
+          ...patch,
+        }),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    }
+    await expect(service.create('relationship', data)).rejects.toBeInstanceOf(
+      BadRequestException,
+    );
+    await expect(
+      service.client.query(
+        'RELATE organization:missing->relationship->member:missing;',
+      ),
+    ).rejects.toThrow();
+    expect(await service.remove('relationship', data.id)).toEqual({
+      ...data,
+      endedAt: '2026-02-01',
+    });
+    expect(await service.findOne('relationship', data.id)).toBeNull();
+    await expect(
+      service.updateEdge('relationship', data.id, {}),
+    ).rejects.toBeInstanceOf(NotFoundException);
+    await expect(
+      service.remove('relationship', data.id),
+    ).rejects.toBeInstanceOf(NotFoundException);
+    await service.createEdge('relationship', {
+      ...data,
+      id: 'Relationship/cascade',
+    });
+    await service.remove('member', data.targetId);
+    expect(
+      await service.findOne('relationship', 'Relationship/cascade'),
+    ).toBeNull();
+    const [afterDelete] = await service.client.query<[RecordId[]]>(
+      'RETURN $source->relationship->member;',
+      { source: new RecordId('organization', data.sourceId) },
+    );
+    expect(afterDelete).toEqual([]);
+    await service.remove('organization', data.sourceId);
+  });
+
+  it('sets up relation tables idempotently and refuses ordinary-table conversion without data loss', async () => {
+    await initializeDatabase(service.client, ['relationship']);
+    await service.client.query(
+      'REMOVE TABLE relationship; DEFINE TABLE relationship TYPE NORMAL SCHEMALESS; CREATE relationship:legacy SET notes = "keep";',
+    );
+    await expect(
+      initializeDatabase(service.client, ['relationship']),
+    ).rejects.toThrow('not a graph relation');
+    expect(await service.findOne('relationship', 'legacy')).not.toBeNull();
+    await service.client.query('REMOVE TABLE relationship;');
+    await initializeDatabase(service.client, ['relationship']);
   });
 
   it('round-trips IDs, embedded JSON and arrays, and patches without replacing fields', async () => {

@@ -10,12 +10,17 @@ async function main() {
   const puppeteer = new Puppeteer({ api: new Api(), baseUrl: 'http://localhost:3000' });
   const isGood = await puppeteer.bootstrap();
   if (!isGood) {
-    logger.error('could not bootstrap server')
+    logger.error('could not bootstrap server');
     exit(-1);
   }
 
   const narrator = new Narrator(puppeteer);
-  await narrator.run();
+  // await narrator.run();
+
+  const puppets = await puppeteer.getAllPuppets();
+  for (let puppet of puppets) {
+    console.log(puppet.name);
+  }
 }
 
 main();

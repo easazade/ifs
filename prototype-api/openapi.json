@@ -7559,16 +7559,6 @@
             "description": "Inverse relationship name copied from the selected RelationshipType object's inverseType field.",
             "minLength": 1
           },
-          "sourceId": {
-            "type": "string",
-            "description": "ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.",
-            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
-          },
-          "targetId": {
-            "type": "string",
-            "description": "ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.",
-            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
-          },
           "startedAt": {
             "type": "string",
             "description": "Calendar date when this relationship began.",

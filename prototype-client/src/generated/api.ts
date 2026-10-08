@@ -2485,16 +2485,6 @@ export interface UpdateRelationshipDto {
    * @minLength 1
    */
   inverseType?: string;
-  /**
-   * ID of the source entity, such as Organization/1; its type must be allowed by the selected RelationshipType's sourceTypes.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  sourceId?: string;
-  /**
-   * ID of the target entity, such as Member/1; its type must be allowed by the selected RelationshipType's targetTypes.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  targetId?: string;
   /** Calendar date when this relationship began. */
   startedAt?: string;
   /** Optional calendar date when this relationship ended; must not precede startedAt. */
@@ -3215,7 +3205,7 @@ export type getActionResponse =
   getActionResponseSuccess | getActionResponseError;
 
 export const getGetActionUrl = (id: string) => {
-  return `${getApiBaseUrl()}/actions/${id}`;
+  return `${getApiBaseUrl()}/actions/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -3261,7 +3251,7 @@ export type updateActionResponse =
   updateActionResponseSuccess | updateActionResponseError;
 
 export const getUpdateActionUrl = (id: string) => {
-  return `${getApiBaseUrl()}/actions/${id}`;
+  return `${getApiBaseUrl()}/actions/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -3334,7 +3324,7 @@ export type deleteActionResponse =
   deleteActionResponseSuccess | deleteActionResponseError;
 
 export const getDeleteActionUrl = (id: string) => {
-  return `${getApiBaseUrl()}/actions/${id}`;
+  return `${getApiBaseUrl()}/actions/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -3479,7 +3469,7 @@ export type getChangeResponse =
   getChangeResponseSuccess | getChangeResponseError;
 
 export const getGetChangeUrl = (id: string) => {
-  return `${getApiBaseUrl()}/changes/${id}`;
+  return `${getApiBaseUrl()}/changes/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -3525,7 +3515,7 @@ export type updateChangeResponse =
   updateChangeResponseSuccess | updateChangeResponseError;
 
 export const getUpdateChangeUrl = (id: string) => {
-  return `${getApiBaseUrl()}/changes/${id}`;
+  return `${getApiBaseUrl()}/changes/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -3598,7 +3588,7 @@ export type deleteChangeResponse =
   deleteChangeResponseSuccess | deleteChangeResponseError;
 
 export const getDeleteChangeUrl = (id: string) => {
-  return `${getApiBaseUrl()}/changes/${id}`;
+  return `${getApiBaseUrl()}/changes/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -3743,7 +3733,7 @@ export type getChangeItemResponse =
   getChangeItemResponseSuccess | getChangeItemResponseError;
 
 export const getGetChangeItemUrl = (id: string) => {
-  return `${getApiBaseUrl()}/change-items/${id}`;
+  return `${getApiBaseUrl()}/change-items/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -3789,7 +3779,7 @@ export type updateChangeItemResponse =
   updateChangeItemResponseSuccess | updateChangeItemResponseError;
 
 export const getUpdateChangeItemUrl = (id: string) => {
-  return `${getApiBaseUrl()}/change-items/${id}`;
+  return `${getApiBaseUrl()}/change-items/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -3862,7 +3852,7 @@ export type deleteChangeItemResponse =
   deleteChangeItemResponseSuccess | deleteChangeItemResponseError;
 
 export const getDeleteChangeItemUrl = (id: string) => {
-  return `${getApiBaseUrl()}/change-items/${id}`;
+  return `${getApiBaseUrl()}/change-items/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4007,7 +3997,7 @@ export type getCommentResponse =
   getCommentResponseSuccess | getCommentResponseError;
 
 export const getGetCommentUrl = (id: string) => {
-  return `${getApiBaseUrl()}/comments/${id}`;
+  return `${getApiBaseUrl()}/comments/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4053,7 +4043,7 @@ export type updateCommentResponse =
   updateCommentResponseSuccess | updateCommentResponseError;
 
 export const getUpdateCommentUrl = (id: string) => {
-  return `${getApiBaseUrl()}/comments/${id}`;
+  return `${getApiBaseUrl()}/comments/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4126,7 +4116,7 @@ export type deleteCommentResponse =
   deleteCommentResponseSuccess | deleteCommentResponseError;
 
 export const getDeleteCommentUrl = (id: string) => {
-  return `${getApiBaseUrl()}/comments/${id}`;
+  return `${getApiBaseUrl()}/comments/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4271,7 +4261,7 @@ export type getDecisionResponse =
   getDecisionResponseSuccess | getDecisionResponseError;
 
 export const getGetDecisionUrl = (id: string) => {
-  return `${getApiBaseUrl()}/decisions/${id}`;
+  return `${getApiBaseUrl()}/decisions/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4317,7 +4307,7 @@ export type updateDecisionResponse =
   updateDecisionResponseSuccess | updateDecisionResponseError;
 
 export const getUpdateDecisionUrl = (id: string) => {
-  return `${getApiBaseUrl()}/decisions/${id}`;
+  return `${getApiBaseUrl()}/decisions/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4390,7 +4380,7 @@ export type deleteDecisionResponse =
   deleteDecisionResponseSuccess | deleteDecisionResponseError;
 
 export const getDeleteDecisionUrl = (id: string) => {
-  return `${getApiBaseUrl()}/decisions/${id}`;
+  return `${getApiBaseUrl()}/decisions/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4535,7 +4525,7 @@ export type getDelegationResponse =
   getDelegationResponseSuccess | getDelegationResponseError;
 
 export const getGetDelegationUrl = (id: string) => {
-  return `${getApiBaseUrl()}/delegations/${id}`;
+  return `${getApiBaseUrl()}/delegations/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4581,7 +4571,7 @@ export type updateDelegationResponse =
   updateDelegationResponseSuccess | updateDelegationResponseError;
 
 export const getUpdateDelegationUrl = (id: string) => {
-  return `${getApiBaseUrl()}/delegations/${id}`;
+  return `${getApiBaseUrl()}/delegations/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4654,7 +4644,7 @@ export type deleteDelegationResponse =
   deleteDelegationResponseSuccess | deleteDelegationResponseError;
 
 export const getDeleteDelegationUrl = (id: string) => {
-  return `${getApiBaseUrl()}/delegations/${id}`;
+  return `${getApiBaseUrl()}/delegations/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4805,7 +4795,7 @@ export type getGeographicAreaResponse =
   getGeographicAreaResponseSuccess | getGeographicAreaResponseError;
 
 export const getGetGeographicAreaUrl = (id: string) => {
-  return `${getApiBaseUrl()}/geographic-areas/${id}`;
+  return `${getApiBaseUrl()}/geographic-areas/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4853,7 +4843,7 @@ export type updateGeographicAreaResponse =
   updateGeographicAreaResponseSuccess | updateGeographicAreaResponseError;
 
 export const getUpdateGeographicAreaUrl = (id: string) => {
-  return `${getApiBaseUrl()}/geographic-areas/${id}`;
+  return `${getApiBaseUrl()}/geographic-areas/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -4930,7 +4920,7 @@ export type deleteGeographicAreaResponse =
   deleteGeographicAreaResponseSuccess | deleteGeographicAreaResponseError;
 
 export const getDeleteGeographicAreaUrl = (id: string) => {
-  return `${getApiBaseUrl()}/geographic-areas/${id}`;
+  return `${getApiBaseUrl()}/geographic-areas/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5074,7 +5064,7 @@ export type getGroupResponseError = getGroupResponse404 & {
 export type getGroupResponse = getGroupResponseSuccess | getGroupResponseError;
 
 export const getGetGroupUrl = (id: string) => {
-  return `${getApiBaseUrl()}/groups/${id}`;
+  return `${getApiBaseUrl()}/groups/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5116,7 +5106,7 @@ export type updateGroupResponse =
   updateGroupResponseSuccess | updateGroupResponseError;
 
 export const getUpdateGroupUrl = (id: string) => {
-  return `${getApiBaseUrl()}/groups/${id}`;
+  return `${getApiBaseUrl()}/groups/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5189,7 +5179,7 @@ export type deleteGroupResponse =
   deleteGroupResponseSuccess | deleteGroupResponseError;
 
 export const getDeleteGroupUrl = (id: string) => {
-  return `${getApiBaseUrl()}/groups/${id}`;
+  return `${getApiBaseUrl()}/groups/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5331,7 +5321,7 @@ export type getLabelResponseError = getLabelResponse404 & {
 export type getLabelResponse = getLabelResponseSuccess | getLabelResponseError;
 
 export const getGetLabelUrl = (id: string) => {
-  return `${getApiBaseUrl()}/labels/${id}`;
+  return `${getApiBaseUrl()}/labels/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5373,7 +5363,7 @@ export type updateLabelResponse =
   updateLabelResponseSuccess | updateLabelResponseError;
 
 export const getUpdateLabelUrl = (id: string) => {
-  return `${getApiBaseUrl()}/labels/${id}`;
+  return `${getApiBaseUrl()}/labels/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5446,7 +5436,7 @@ export type deleteLabelResponse =
   deleteLabelResponseSuccess | deleteLabelResponseError;
 
 export const getDeleteLabelUrl = (id: string) => {
-  return `${getApiBaseUrl()}/labels/${id}`;
+  return `${getApiBaseUrl()}/labels/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5589,7 +5579,7 @@ export type getMemberResponse =
   getMemberResponseSuccess | getMemberResponseError;
 
 export const getGetMemberUrl = (id: string) => {
-  return `${getApiBaseUrl()}/members/${id}`;
+  return `${getApiBaseUrl()}/members/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5635,7 +5625,7 @@ export type updateMemberResponse =
   updateMemberResponseSuccess | updateMemberResponseError;
 
 export const getUpdateMemberUrl = (id: string) => {
-  return `${getApiBaseUrl()}/members/${id}`;
+  return `${getApiBaseUrl()}/members/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5708,7 +5698,7 @@ export type deleteMemberResponse =
   deleteMemberResponseSuccess | deleteMemberResponseError;
 
 export const getDeleteMemberUrl = (id: string) => {
-  return `${getApiBaseUrl()}/members/${id}`;
+  return `${getApiBaseUrl()}/members/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5853,7 +5843,7 @@ export type getObservationResponse =
   getObservationResponseSuccess | getObservationResponseError;
 
 export const getGetObservationUrl = (id: string) => {
-  return `${getApiBaseUrl()}/observations/${id}`;
+  return `${getApiBaseUrl()}/observations/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5899,7 +5889,7 @@ export type updateObservationResponse =
   updateObservationResponseSuccess | updateObservationResponseError;
 
 export const getUpdateObservationUrl = (id: string) => {
-  return `${getApiBaseUrl()}/observations/${id}`;
+  return `${getApiBaseUrl()}/observations/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -5972,7 +5962,7 @@ export type deleteObservationResponse =
   deleteObservationResponseSuccess | deleteObservationResponseError;
 
 export const getDeleteObservationUrl = (id: string) => {
-  return `${getApiBaseUrl()}/observations/${id}`;
+  return `${getApiBaseUrl()}/observations/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -6118,7 +6108,7 @@ export type getOrganizationResponse =
   getOrganizationResponseSuccess | getOrganizationResponseError;
 
 export const getGetOrganizationUrl = (id: string) => {
-  return `${getApiBaseUrl()}/organizations/${id}`;
+  return `${getApiBaseUrl()}/organizations/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -6165,7 +6155,7 @@ export type updateOrganizationResponse =
   updateOrganizationResponseSuccess | updateOrganizationResponseError;
 
 export const getUpdateOrganizationUrl = (id: string) => {
-  return `${getApiBaseUrl()}/organizations/${id}`;
+  return `${getApiBaseUrl()}/organizations/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -6239,7 +6229,7 @@ export type deleteOrganizationResponse =
   deleteOrganizationResponseSuccess | deleteOrganizationResponseError;
 
 export const getDeleteOrganizationUrl = (id: string) => {
-  return `${getApiBaseUrl()}/organizations/${id}`;
+  return `${getApiBaseUrl()}/organizations/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -6384,7 +6374,7 @@ export type getPermissionResponse =
   getPermissionResponseSuccess | getPermissionResponseError;
 
 export const getGetPermissionUrl = (id: string) => {
-  return `${getApiBaseUrl()}/permissions/${id}`;
+  return `${getApiBaseUrl()}/permissions/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -6430,7 +6420,7 @@ export type updatePermissionResponse =
   updatePermissionResponseSuccess | updatePermissionResponseError;
 
 export const getUpdatePermissionUrl = (id: string) => {
-  return `${getApiBaseUrl()}/permissions/${id}`;
+  return `${getApiBaseUrl()}/permissions/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -6503,7 +6493,7 @@ export type deletePermissionResponse =
   deletePermissionResponseSuccess | deletePermissionResponseError;
 
 export const getDeletePermissionUrl = (id: string) => {
-  return `${getApiBaseUrl()}/permissions/${id}`;
+  return `${getApiBaseUrl()}/permissions/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -6647,7 +6637,7 @@ export type getPlaceResponseError = getPlaceResponse404 & {
 export type getPlaceResponse = getPlaceResponseSuccess | getPlaceResponseError;
 
 export const getGetPlaceUrl = (id: string) => {
-  return `${getApiBaseUrl()}/places/${id}`;
+  return `${getApiBaseUrl()}/places/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -6689,7 +6679,7 @@ export type updatePlaceResponse =
   updatePlaceResponseSuccess | updatePlaceResponseError;
 
 export const getUpdatePlaceUrl = (id: string) => {
-  return `${getApiBaseUrl()}/places/${id}`;
+  return `${getApiBaseUrl()}/places/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -6762,7 +6752,7 @@ export type deletePlaceResponse =
   deletePlaceResponseSuccess | deletePlaceResponseError;
 
 export const getDeletePlaceUrl = (id: string) => {
-  return `${getApiBaseUrl()}/places/${id}`;
+  return `${getApiBaseUrl()}/places/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -6905,7 +6895,7 @@ export type getProtocolResponse =
   getProtocolResponseSuccess | getProtocolResponseError;
 
 export const getGetProtocolUrl = (id: string) => {
-  return `${getApiBaseUrl()}/protocols/${id}`;
+  return `${getApiBaseUrl()}/protocols/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -6951,7 +6941,7 @@ export type updateProtocolResponse =
   updateProtocolResponseSuccess | updateProtocolResponseError;
 
 export const getUpdateProtocolUrl = (id: string) => {
-  return `${getApiBaseUrl()}/protocols/${id}`;
+  return `${getApiBaseUrl()}/protocols/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -7024,7 +7014,7 @@ export type deleteProtocolResponse =
   deleteProtocolResponseSuccess | deleteProtocolResponseError;
 
 export const getDeleteProtocolUrl = (id: string) => {
-  return `${getApiBaseUrl()}/protocols/${id}`;
+  return `${getApiBaseUrl()}/protocols/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -7170,7 +7160,7 @@ export type getRelationshipResponse =
   getRelationshipResponseSuccess | getRelationshipResponseError;
 
 export const getGetRelationshipUrl = (id: string) => {
-  return `${getApiBaseUrl()}/relationships/${id}`;
+  return `${getApiBaseUrl()}/relationships/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -7217,7 +7207,7 @@ export type updateRelationshipResponse =
   updateRelationshipResponseSuccess | updateRelationshipResponseError;
 
 export const getUpdateRelationshipUrl = (id: string) => {
-  return `${getApiBaseUrl()}/relationships/${id}`;
+  return `${getApiBaseUrl()}/relationships/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -7291,7 +7281,7 @@ export type deleteRelationshipResponse =
   deleteRelationshipResponseSuccess | deleteRelationshipResponseError;
 
 export const getDeleteRelationshipUrl = (id: string) => {
-  return `${getApiBaseUrl()}/relationships/${id}`;
+  return `${getApiBaseUrl()}/relationships/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -7446,7 +7436,7 @@ export type getRelationshipTypeResponse =
   getRelationshipTypeResponseSuccess | getRelationshipTypeResponseError;
 
 export const getGetRelationshipTypeUrl = (id: string) => {
-  return `${getApiBaseUrl()}/relationship-types/${id}`;
+  return `${getApiBaseUrl()}/relationship-types/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -7496,7 +7486,7 @@ export type updateRelationshipTypeResponse =
   updateRelationshipTypeResponseSuccess | updateRelationshipTypeResponseError;
 
 export const getUpdateRelationshipTypeUrl = (id: string) => {
-  return `${getApiBaseUrl()}/relationship-types/${id}`;
+  return `${getApiBaseUrl()}/relationship-types/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -7573,7 +7563,7 @@ export type deleteRelationshipTypeResponse =
   deleteRelationshipTypeResponseSuccess | deleteRelationshipTypeResponseError;
 
 export const getDeleteRelationshipTypeUrl = (id: string) => {
-  return `${getApiBaseUrl()}/relationship-types/${id}`;
+  return `${getApiBaseUrl()}/relationship-types/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -7722,7 +7712,7 @@ export type getReviewCommentResponse =
   getReviewCommentResponseSuccess | getReviewCommentResponseError;
 
 export const getGetReviewCommentUrl = (id: string) => {
-  return `${getApiBaseUrl()}/review-comments/${id}`;
+  return `${getApiBaseUrl()}/review-comments/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -7770,7 +7760,7 @@ export type updateReviewCommentResponse =
   updateReviewCommentResponseSuccess | updateReviewCommentResponseError;
 
 export const getUpdateReviewCommentUrl = (id: string) => {
-  return `${getApiBaseUrl()}/review-comments/${id}`;
+  return `${getApiBaseUrl()}/review-comments/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -7847,7 +7837,7 @@ export type deleteReviewCommentResponse =
   deleteReviewCommentResponseSuccess | deleteReviewCommentResponseError;
 
 export const getDeleteReviewCommentUrl = (id: string) => {
-  return `${getApiBaseUrl()}/review-comments/${id}`;
+  return `${getApiBaseUrl()}/review-comments/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -7991,7 +7981,7 @@ export type getRoleResponseError = getRoleResponse404 & {
 export type getRoleResponse = getRoleResponseSuccess | getRoleResponseError;
 
 export const getGetRoleUrl = (id: string) => {
-  return `${getApiBaseUrl()}/roles/${id}`;
+  return `${getApiBaseUrl()}/roles/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -8033,7 +8023,7 @@ export type updateRoleResponse =
   updateRoleResponseSuccess | updateRoleResponseError;
 
 export const getUpdateRoleUrl = (id: string) => {
-  return `${getApiBaseUrl()}/roles/${id}`;
+  return `${getApiBaseUrl()}/roles/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -8106,7 +8096,7 @@ export type deleteRoleResponse =
   deleteRoleResponseSuccess | deleteRoleResponseError;
 
 export const getDeleteRoleUrl = (id: string) => {
-  return `${getApiBaseUrl()}/roles/${id}`;
+  return `${getApiBaseUrl()}/roles/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -8248,7 +8238,7 @@ export type getRuleResponseError = getRuleResponse404 & {
 export type getRuleResponse = getRuleResponseSuccess | getRuleResponseError;
 
 export const getGetRuleUrl = (id: string) => {
-  return `${getApiBaseUrl()}/rules/${id}`;
+  return `${getApiBaseUrl()}/rules/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -8290,7 +8280,7 @@ export type updateRuleResponse =
   updateRuleResponseSuccess | updateRuleResponseError;
 
 export const getUpdateRuleUrl = (id: string) => {
-  return `${getApiBaseUrl()}/rules/${id}`;
+  return `${getApiBaseUrl()}/rules/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -8363,7 +8353,7 @@ export type deleteRuleResponse =
   deleteRuleResponseSuccess | deleteRuleResponseError;
 
 export const getDeleteRuleUrl = (id: string) => {
-  return `${getApiBaseUrl()}/rules/${id}`;
+  return `${getApiBaseUrl()}/rules/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -8505,7 +8495,7 @@ export type getScopeResponseError = getScopeResponse404 & {
 export type getScopeResponse = getScopeResponseSuccess | getScopeResponseError;
 
 export const getGetScopeUrl = (id: string) => {
-  return `${getApiBaseUrl()}/scopes/${id}`;
+  return `${getApiBaseUrl()}/scopes/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -8547,7 +8537,7 @@ export type updateScopeResponse =
   updateScopeResponseSuccess | updateScopeResponseError;
 
 export const getUpdateScopeUrl = (id: string) => {
-  return `${getApiBaseUrl()}/scopes/${id}`;
+  return `${getApiBaseUrl()}/scopes/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -8620,7 +8610,7 @@ export type deleteScopeResponse =
   deleteScopeResponseSuccess | deleteScopeResponseError;
 
 export const getDeleteScopeUrl = (id: string) => {
-  return `${getApiBaseUrl()}/scopes/${id}`;
+  return `${getApiBaseUrl()}/scopes/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -8762,7 +8752,7 @@ export type getVoteResponseError = getVoteResponse404 & {
 export type getVoteResponse = getVoteResponseSuccess | getVoteResponseError;
 
 export const getGetVoteUrl = (id: string) => {
-  return `${getApiBaseUrl()}/votes/${id}`;
+  return `${getApiBaseUrl()}/votes/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -8804,7 +8794,7 @@ export type updateVoteResponse =
   updateVoteResponseSuccess | updateVoteResponseError;
 
 export const getUpdateVoteUrl = (id: string) => {
-  return `${getApiBaseUrl()}/votes/${id}`;
+  return `${getApiBaseUrl()}/votes/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -8877,7 +8867,7 @@ export type deleteVoteResponse =
   deleteVoteResponseSuccess | deleteVoteResponseError;
 
 export const getDeleteVoteUrl = (id: string) => {
-  return `${getApiBaseUrl()}/votes/${id}`;
+  return `${getApiBaseUrl()}/votes/${encodeURIComponent(String(id))}`;
 };
 
 /**

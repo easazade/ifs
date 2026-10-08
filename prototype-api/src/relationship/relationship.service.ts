@@ -12,7 +12,7 @@ export class RelationshipService {
   constructor(private readonly database: SurrealService) {}
 
   create(data: CreateRelationshipDto): Promise<RelationshipResponseDto> {
-    return this.database.create('relationship', data, relations);
+    return this.database.createEdge('relationship', data, relations);
   }
 
   findAll(): Promise<RelationshipResponseDto[]> {
@@ -27,7 +27,7 @@ export class RelationshipService {
     id: string,
     data: UpdateRelationshipDto,
   ): Promise<RelationshipResponseDto> {
-    return this.database.update('relationship', id, data, relations);
+    return this.database.updateEdge('relationship', id, data, relations);
   }
 
   remove(id: string): Promise<RelationshipResponseDto> {

@@ -60,6 +60,11 @@ function fixture(
     JSON.stringify({ Member: relations }),
   );
 
+  mkdirSync(join(temporaryApi, 'src/surreal'), { recursive: true });
+  cpSync(
+    join(apiRoot, 'src/surreal/entity-storage.ts'),
+    join(temporaryApi, 'src/surreal/entity-storage.ts'),
+  );
   if (withDtos) writeDtos(temporaryApi);
   writeFileSync(
     join(scriptsDirectory, 'generate-dtos.mjs'),
@@ -92,6 +97,60 @@ function run(temporaryApi: string, entity = 'member') {
 }
 
 describe('resource generator', () => {
+  it('generates edge persistence and the canonical endpoint table registry', () => {
+    const api = fixture();
+    const standards = join(api, '../ifs-standards');
+    for (const [entity, name] of [
+      ['relationship', 'Relationship'],
+      ['relationship-type', 'RelationshipType'],
+    ]) {
+      const dir = join(standards, 'src/entities', entity);
+      mkdirSync(dir, { recursive: true });
+      cpSync(
+        join(
+          workspaceRoot,
+          'ifs-standards/src/entities',
+          entity,
+          `${entity}.schema.json`,
+        ),
+        join(dir, `${entity}.schema.json`),
+      );
+      const dtoDir = join(api, 'src', entity, 'dto');
+      mkdirSync(dtoDir, { recursive: true });
+      for (const [file, className] of [
+        [`create-${entity}.dto.ts`, `Create${name}Dto`],
+        [`update-${entity}.dto.ts`, `Update${name}Dto`],
+        [`${entity}-response.dto.ts`, `${name}ResponseDto`],
+      ]) {
+        writeFileSync(join(dtoDir, file), `export class ${className} {}`);
+      }
+    }
+    writeFileSync(
+      join(standards, 'scripts/entity-relations.json'),
+      JSON.stringify({ Relationship: [], RelationshipType: [] }),
+    );
+    expect(run(api, 'relationship').status).toBe(0);
+    const edge = readFileSync(
+      join(api, 'src/relationship/relationship.service.ts'),
+      'utf8',
+    );
+    expect(edge).toContain(
+      "this.database.createEdge('relationship', data, relations)",
+    );
+    expect(edge).toContain(
+      "this.database.updateEdge('relationship', id, data, relations)",
+    );
+    expect(run(api, 'relationship-type').status).toBe(0);
+    expect(
+      readFileSync(
+        join(api, 'src/relationship-type/relationship-type.service.ts'),
+        'utf8',
+      ),
+    ).toContain("this.database.create('relationship_type', data, relations)");
+    expect(
+      readFileSync(join(api, 'src/surreal/entity-tables.generated.ts'), 'utf8'),
+    ).toContain('"RelationshipType": "relationship_type"');
+  });
   it('normalizes display titles to match DTO names and database tables', () => {
     const temporaryApi = fixture();
     const standardsRoot = join(temporaryApi, '..', 'ifs-standards');

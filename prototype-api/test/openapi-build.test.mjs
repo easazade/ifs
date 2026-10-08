@@ -54,6 +54,21 @@ test('compiled OpenAPI export is deterministic and does not connect to SurrealDB
       '#/components/schemas/MemberResponseDto',
     );
 
+    const schemas = JSON.parse(exported).components.schemas;
+    assert.ok(schemas.CreateRelationshipDto.required.includes('sourceId'));
+    assert.ok(schemas.CreateRelationshipDto.required.includes('targetId'));
+    assert.ok(schemas.RelationshipResponseDto.properties.sourceId);
+    assert.ok(
+      !Object.hasOwn(schemas.UpdateRelationshipDto.properties, 'sourceId'),
+    );
+    assert.ok(
+      !Object.hasOwn(schemas.UpdateRelationshipDto.properties, 'targetId'),
+    );
+    assert.ok(!Object.hasOwn(schemas.RelationshipResponseDto.properties, 'in'));
+    assert.ok(
+      !Object.hasOwn(schemas.RelationshipResponseDto.properties, 'out'),
+    );
+
     const getMember = JSON.parse(exported).paths['/members/{id}'].get;
     assert.equal(getMember.operationId, 'getMember');
     assert.equal(getMember.parameters[0].name, 'id');
