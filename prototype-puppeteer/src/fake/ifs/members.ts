@@ -107,9 +107,9 @@ export const fakeMembers: CreateMemberDto[] = fakeMemberNames.map((name, index) 
   const sequence = String(index + 1).padStart(12, '0');
   const timestamp = new Date(Date.UTC(2025, 0, index + 1, 9)).toISOString();
 
+  const id = index + 1;
   return {
-    id: (index + 1).toString(),
-    ifsId: `Member/${index + 1}`,
+    id: `Member/${id}`,
     entityType: 'Member',
     entityDocumentationUrl: 'https://individualfreedom.systems/entities/member',
     name,
