@@ -1,162 +1,97 @@
 # IFS Prototype API
 
-NestJS backend using **Prisma ORM 7 + SQLite**. Use the workspace's pinned pnpm version and Node.js 24 LTS (Prisma requires Node 20.19+, 22.12+, or 24+; the workspace uses Node 24).
+NestJS backend using **SurrealDB 3.x** and the **JavaScript SDK 2.x**. Use Node.js 24 and the workspace's pinned pnpm version.
 
 ## Local setup
 
-Run from the monorepo root:
+Install the [SurrealDB CLI](https://surrealdb.com/install) (tested with 3.3.0), then run from the repository root:
 
 ```bash
 pnpm install
-# Optional: copy prototype-api/.env.example to prototype-api/.env to customize settings.
+cp prototype-api/.env.example prototype-api/.env
+pnpm --filter prototype-api db:start
+```
+
+Keep that database process running. In another terminal:
+
+```bash
 pnpm --filter prototype-api db:setup
 pnpm --filter prototype-api dev
 ```
 
-The API listens on `http://localhost:3000` by default. `GET /` returns `Hello World!`.
+The API listens on `http://localhost:3000`; `GET /` returns `Hello World!`. Swagger is at `/docs`, with JSON at `/docs-json`.
 
-`db:setup` generates Prisma Client and applies committed migrations without resetting data. On first setup it creates `prototype-api/prisma/dev.db`. No external database server is needed. pnpm's workspace build allowlist permits the Prisma engine scripts and the `better-sqlite3` native build; if no prebuilt binary is available, a working native compiler/Python toolchain is required.
+## Configuration
 
-## Swagger and OpenAPI
+`prototype-api/.env` is loaded by the application and database scripts. Existing environment variables take precedence.
 
-After starting the API, visit:
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `SURREALDB_URL` | `http://127.0.0.1:8000/rpc` | HTTP(S) or WS(S) RPC endpoint |
+| `SURREALDB_NAMESPACE` | `ifs` | Database namespace |
+| `SURREALDB_DATABASE` | `prototype` | Database name |
+| `SURREALDB_USERNAME` | Required | Authentication username |
+| `SURREALDB_PASSWORD` | Required | Authentication password |
+| `PORT` | `3000` | API HTTP port |
 
-- `http://localhost:3000/docs`: Swagger UI.
-- `http://localhost:3000/docs-json`: live OpenAPI JSON.
+The example's `root`/`root` credentials are **local development only**. Use separate least-privilege application credentials and TLS for deployment. Root credentials are needed to provision namespaces with `db:setup` and initialize a new local server. A server's existing root password is not changed by restarting it with different environment variables.
 
-`src/openapi.ts` is shared by bootstrap and the standalone exporter so both use the same contract configuration. Run from the repository root:
+### Database scripts
 
 ```bash
-pnpm openapi:generate
-# Writes prototype-api/openapi.json after a Prisma generation + Nest build.
-
-pnpm client:generate
-# Exports a fresh contract, runs Orval, and builds prototype-client.
-
-pnpm --filter prototype-client generate
-# Client only, using the existing prototype-api/openapi.json.
+pnpm --filter prototype-api db:start         # Persistent local server
+pnpm --filter prototype-api db:start:memory  # Disposable server; data lost on exit
+pnpm --filter prototype-api db:setup         # Additive, idempotent table provisioning
+pnpm --filter prototype-api db:status        # Verify selected DB and report server version
+pnpm --filter prototype-api db:sql           # Interactive SurrealQL shell
 ```
 
-Export runs `dist/generate-openapi.js`, not the untransformed TypeScript source. It creates the Nest container but does not call `app.init()` or `app.listen()`, then closes it: no HTTP server, database connection, or migration is required. Constructors still run, so future providers must avoid network/database side effects in constructors. A configured `DATABASE_URL` must still be a syntactically valid SQLite URL.
+`db:start` binds only to the configured loopback endpoint and stores data under `prototype-api/.surreal/data` using RocksDB. These files are ignored by Git. Stop it with Ctrl+C. `db:start:memory` uses the same endpoint and cannot run alongside it on the same port.
 
-Commit `openapi.json` and `prototype-client/src/generated/api.ts` alongside API changes; never edit generated files manually. `prototype-client/dist/` is ignored build output. The client is a private workspace ESM package with JavaScript and TypeScript declarations, already listed as a dependency of `prototype`. See [client usage and runtime URL configuration](../prototype-client/README.md).
+`db:setup` creates the namespace/database and schemaless entity tables from `ifs-standards/scripts/generate-order.json`. It never drops, overwrites, or resets existing definitions/data. Setup identifiers accept letters, digits, underscores, and hyphens (not a leading digit). Review definition changes before applying them. There is no automatic migration/reset at startup and no destructive reset script. Before any database command, verify its endpoint, namespace, and database.
 
-Generated resources are wired into OpenAPI automatically. `resource:generate` creates a Swagger-decorated controller, Nest module, Prisma-backed service, and refreshes `src/generated-resources.module.ts`. `AppModule` imports that registry, so generated operations appear in `openapi.json` and Orval without hand-editing module metadata.
+## Persistence
 
-### What the compiler plugin does
+- `src/surreal/surreal.module.ts`: global Nest module exporting one shared client.
+- `src/surreal/surreal.service.ts`: connects on module initialization and closes on shutdown.
+- `src/surreal/database.config.ts`: shared runtime/CLI configuration.
+- `src/surreal/database.setup.ts`: explicit additive provisioning.
+- `scripts/database.mjs`: local server, provisioning, status, and SQL commands.
 
-The `@nestjs/swagger` plugin in `nest-cli.json` augments the compiled code with Swagger metadata: DTO property types, required/optional flags, inferred responses, and descriptions from comments. It **does not write OpenAPI JSON or generate a client**. `SwaggerModule.createDocument()` produces OpenAPI; the exporter writes JSON; Orval reads that JSON and generates a Fetch-based TypeScript client. `esmCompatible` is enabled for this ESM project.
+Generated CRUD services delegate to `SurrealService`. String entity IDs are stored as the string component of SurrealDB record IDs and returned without a table prefix. `$ref` properties are stored as record links, with immediate relations expanded on reads. Relation inputs refer to existing entities by `id`; read-only relations are not written. PATCH merges fields, empty arrays clear list relations, and nullable single links accept `null`. Missing records produce 404 for read/update/delete; duplicate IDs produce 409. Embedded objects and primitive arrays remain native document values.
 
-For future endpoints:
+Tables are schemaless, not database-enforced copies of JSON Schema. Swagger DTOs are documentation/types, **not runtime validation**. This prototype does not add runtime JSON Schema validation or database-level foreign-key/delete constraints. Relation existence checks occur before writes; concurrent deletes can leave dangling links. Review/extend validation, transactions, relation ownership, and authorization before production use.
 
-- Use concrete DTO classes in `*.dto.ts` / `*.entity.ts`, not erased interfaces or Prisma types, for request/response schemas.
-- Add explicit return types and unique `@ApiOperation({ operationId: '...' })` values for stable client names.
-- Import mapped DTO helpers such as `PartialType` from `@nestjs/swagger`, not `@nestjs/mapped-types`.
-- Use explicit Swagger decorators for unions, generic wrappers, errors, authentication, or anything the plugin cannot infer. Match actual content types; `GET /` is explicitly documented as `text/plain`, not JSON.
-- This is documentation/type generation, **not runtime validation**. No validation library is currently configured; `classValidatorShim` is disabled. Add validation separately if needed.
+## Generation and OpenAPI
 
-Swagger is currently exposed without authentication, matching this prototype's API. Protect or disable documentation separately if deploying a non-public API.
-
-### Current scope
-
-Database infrastructure and generated IFS models are configured. The API currently exposes the `GET /` greeting plus generated resources registered through `GeneratedResourcesModule`; inspect `openapi.json` for the current operation set.
-
-## Database configuration
-
-| Variable       | Default                | Meaning                    |
-| -------------- | ---------------------- | -------------------------- |
-| `DATABASE_URL` | `file:./prisma/dev.db` | Local SQLite database file |
-| `PORT`         | `3000`                 | HTTP port                  |
-
-`prototype-api/.env` is loaded by both the CLI and application. Already-set environment variables take precedence. SQLite relative paths resolve against **`prototype-api/`**, not `prisma/` or the shell's current directory. Absolute `file:/absolute/path/database.db` paths are also supported. Parent directories for custom database paths must already exist. URL query strings/fragments are unsupported; `file::memory:` is available for explicitly nonpersistent use, not migration-based setup.
-
-The CLI and compiled application share the same URL resolver in `src/prisma/database.config.ts`. `.env`, generated Prisma Client files, SQLite database files, and their journal/WAL sidecars are ignored by Git. Keep backups outside the source tree as appropriate; do not commit database contents.
-
-## Prisma layout
-
-- `prisma/schema.prisma`: SQLite datasource and Prisma model definitions.
-- `prisma.config.ts`: CLI schema/migration paths and resolved database URL.
-- `prisma/migrations/`: committed migration history; currently only the SQLite provider lock, since there are no domain models yet.
-- `src/generated/prisma/`: generated ESM TypeScript client; never edit manually.
-- `src/prisma/prisma.module.ts`: global module exporting one shared client per Nest application.
-- `src/prisma/prisma.service.ts`: injectable client; connects during initialization and disconnects during shutdown. Bootstrap enables shutdown hooks.
-
-Inject `PrismaService` into resource services, then use the generated model delegates after adding models. DTOs and runtime JSON Schema validation remain separate from Prisma types. Do not instantiate a client per request or pass unvalidated HTTP bodies straight into Prisma operations.
-
-## Generate DTOs and a Prisma model from an entity schema
-
-Run the generator with an entity name or JSON Schema path:
+Canonical entity schemas remain `ifs-standards/src/entities/**/*.schema.json`.
 
 ```bash
 pnpm --filter prototype-api dto:generate member
-pnpm --filter prototype-api dto:generate ../ifs-standards/src/entities/member/member.schema.json
-```
-
-It creates `create`, `update`, and `response` DTOs under `src/<entity>/dto/`, upserts an idempotent generated model block in `prisma/schema.prisma`, formats the Prisma schema, and regenerates Prisma Client. Use `--skip-prisma-generate` when only source generation is wanted.
-
-Generate dependencies first. Before writing anything, the generator verifies that every entity referenced by `$ref` already has a Prisma model and response DTO; otherwise it exits with a list of missing artifacts. `$ref` properties become typed DTO properties and named Prisma relations. Referenced arrays use list relations with generated inverse fields. Single references use a matching `<property>Id` string when compatible or a generated relation ID. Primitive arrays and embedded objects remain Prisma `Json`. Flexible schemas receive an optional `extensions Json` field. Review generated relation ownership and delete behavior before migration; the generator intentionally does not create or apply migrations.
-
-## Generate an OpenAPI resource
-
-After DTO/model generation, generate one resource or all resources in dependency order:
-
-```bash
+pnpm --filter prototype-api dto:generate:all
 pnpm --filter prototype-api resource:generate member
 pnpm --filter prototype-api resource:generate:all
+pnpm client:generate
 ```
 
-Each resource includes explicit stable `operationId` values, request body/parameter metadata, success/error responses, response DTO types, and tags required for reliable client generation. Generated controllers expose plural CRUD routes such as `/members`. Files carrying the generator marker are replaced idempotently; the script refuses to overwrite hand-written controllers, modules, or services.
+DTO generation emits create/update/response classes, including typed nested relations. Generate dependencies first; missing related response DTOs fail before writing. `--skip-format` skips formatting. Resource generation writes marked CRUD services/controllers/modules, refreshes `src/generated-resources.module.ts`, and refuses to overwrite hand-written files. It uses `ifs-standards/scripts/entity-relations.json` for relation metadata. Neither generator connects to a database.
 
-The generated Prisma service casts DTO relation shapes to Prisma inputs. Review and customize relation writes/includes before treating generated CRUD behavior as production-ready; the Swagger contract and API client generation remain deterministic.
+Generated controllers retain plural routes, concrete DTOs, stable unique Swagger `operationId` values, and explicit response metadata. After contract changes, run `pnpm client:generate` and commit `prototype-api/openapi.json` plus `prototype-client/src/generated/api.ts`; never hand-edit them.
 
-After endpoint changes, run `pnpm client:generate` and commit both generated contract/client files.
+`pnpm openapi:generate` builds Nest and runs `dist/generate-openapi.js`. The exporter creates the Nest container without initializing/listening, so it needs no running database, credentials, or port. Keep constructors free of database/network side effects. The Swagger compiler plugin augments metadata; it does not generate the JSON/client itself.
 
-## Schema changes and migrations
-
-After implementing an approved IFS model in `prisma/schema.prisma`, run from the root against your **local development database only**:
-
-```bash
-pnpm --filter prototype-api db:validate
-pnpm --filter prototype-api db:migrate --name add_entity --create-only
-# Inspect the generated SQL for destructive changes / SQLite table rebuilds.
-pnpm --filter prototype-api db:deploy
-pnpm --filter prototype-api db:generate
-```
-
-Commit schema changes and generated migration source files together. Prisma 7 migration commands do not automatically regenerate the client. Never accept reset prompts or use `migrate reset` / destructive `db push` flags unless intentionally discarding a confirmed disposable database. `migrate dev` uses a shadow database and may detect drift; stop and investigate instead of resetting valuable data.
-
-Additional commands:
-
-```bash
-pnpm --filter prototype-api db:status
-pnpm --filter prototype-api db:studio
-```
-
-All database commands target the configured `DATABASE_URL`. Verify it before migrating or editing data in Studio. No migrations run automatically at application startup.
-
-## Build and run
+## Build and verification
 
 ```bash
 pnpm --filter prototype-api build
 pnpm --filter prototype-api start:prod
-```
-
-Build, development, and test scripts generate Prisma Client explicitly, so they work on a fresh checkout without checking in generated code. The Nest build compiles the generated client into `dist/generated/prisma/`. Keep the package layout (`dist/`, `prisma/`, `package.json`, runtime dependencies) intact when running compiled output. Provide a persistent writable SQLite location for deployed instances; do not place the database on ephemeral storage or share a local file across replicas. Apply reviewed migrations separately with `db:deploy` using an installation that includes the Prisma CLI.
-
-## Verification
-
-```bash
-pnpm --filter prototype-api db:validate
 pnpm --filter prototype-api lint
-pnpm --filter prototype-api build
 pnpm --filter prototype-api test
 pnpm --filter prototype-api test:e2e
 pnpm --filter prototype-api test:openapi
 pnpm --filter prototype-client test
 ```
 
-Database tests use unique temporary SQLite files, never the development database. They verify real reads/writes, updates/deletes, persistence across connections, transaction rollback, Nest shutdown cleanup, and URL resolution. E2E tests run `prisma migrate deploy` against a disposable database and verify the application connects to that same file. With no domain models yet, this checks migration-command wiring, not domain migration behavior.
+Database unit/integration and E2E tests require the SurrealDB 3.x CLI on PATH, or `SURREALDB_BINARY=/absolute/path/to/surreal`. They launch their own authenticated in-memory servers on temporary ports, never using the development database. Tests cover CRUD, record links, string IDs, nulls, read-only writes, reconnection, missing records, Swagger, and generated HTTP routes. Generator/configuration/OpenAPI tests do not need a running database.
 
-Swagger E2E tests cover `/docs` and `/docs-json`. `test:openapi` exercises the real Nest compiler plugin and checks that standalone export is deterministic and does not open SQLite; ordinary Vitest source transforms do not run that plugin. Client tests cover package imports, plain-text responses, runtime base URLs, headers, and cancellation.
-
-The inherited Observe module still contains placeholder telemetry credentials; configure it separately if telemetry is needed.
+The inherited Observe module still contains placeholder telemetry credentials; configure it separately if needed.

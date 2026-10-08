@@ -3,14 +3,9 @@
 /node_modules
 /build
 
-# Generated Prisma Client and local SQLite databases (including sidecars)
-/src/generated/prisma/
-*.db
-*.db-*
-*.sqlite
-*.sqlite-*
-*.sqlite3
-*.sqlite3-*
+# Local SurrealDB storage, exports, and SQL shell history
+/.surreal/
+/history.txt
 
 # Logs
 logs

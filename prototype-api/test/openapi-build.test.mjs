@@ -7,7 +7,7 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 // Unlike Vitest's source transforms, this exercises the real Nest CLI plugin.
-test('compiled OpenAPI export is deterministic and does not open SQLite or a port', async () => {
+test('compiled OpenAPI export is deterministic and does not connect to SurrealDB or open a port', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'ifs-openapi-'));
   const specUrl = new URL('../openapi.json', import.meta.url);
   const expected = await readFile(specUrl, 'utf8');
@@ -19,8 +19,10 @@ test('compiled OpenAPI export is deterministic and does not open SQLite or a por
         cwd: directory,
         env: {
           ...process.env,
-          // Connecting would fail because the parent directory does not exist.
-          DATABASE_URL: `file:${join(directory, 'missing', 'test.db')}`,
+          // Even invalid database configuration must not affect offline export.
+          SURREALDB_URL: 'invalid-offline-url',
+          SURREALDB_USERNAME: '',
+          SURREALDB_PASSWORD: '',
           PORT: 'not-a-port',
         },
         timeout: 30_000,

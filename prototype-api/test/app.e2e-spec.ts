@@ -1,39 +1,33 @@
-import { execFileSync } from 'node:child_process';
-import { mkdtemp, realpath, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { AppModule } from './../src/app.module.js';
-import { PrismaService } from './../src/prisma/prisma.service.js';
+import { SurrealService } from './../src/surreal/surreal.service.js';
+import { startSurrealServer } from './support/surreal-server.js';
+import { initializeDatabase } from '../src/surreal/database.setup.js';
 import { setupSwagger } from './../src/openapi.js';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
-  let directory: string;
+  let server: Awaited<ReturnType<typeof startSurrealServer>>;
 
   beforeAll(async () => {
-    directory = await mkdtemp(join(tmpdir(), 'ifs-api-e2e-'));
-    vi.stubEnv('DATABASE_URL', `file:${join(directory, 'test.db')}`);
-    const projectRoot = fileURLToPath(new URL('../', import.meta.url));
-    // Use the actual migration command, always against this disposable database.
-    execFileSync(
-      process.execPath,
-      [
-        join(projectRoot, 'node_modules/prisma/build/index.js'),
-        'migrate',
-        'deploy',
-      ],
-      { cwd: projectRoot, env: process.env, stdio: 'pipe' },
-    );
+    server = await startSurrealServer();
+    vi.stubEnv('SURREALDB_URL', server.endpoint);
+    vi.stubEnv('SURREALDB_USERNAME', 'test');
+    vi.stubEnv('SURREALDB_PASSWORD', 'test');
+    vi.stubEnv('SURREALDB_NAMESPACE', 'e2e');
+    vi.stubEnv('SURREALDB_DATABASE', 'test');
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
+    const database = moduleFixture.get(SurrealService);
+    await database.onModuleInit();
+    await initializeDatabase(database.client, ['member']);
+    await database.onModuleDestroy();
     app = moduleFixture.createNestApplication();
     setupSwagger(app);
     await app.init();
@@ -65,14 +59,38 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  it('connects the application to the configured SQLite database', async () => {
-    const prisma = app.get(PrismaService);
-    const databases = await prisma.$queryRaw<{ name: string; file: string }[]>`
-      PRAGMA database_list
-    `;
-    expect(databases.find((database) => database.name === 'main')?.file).toBe(
-      await realpath(join(directory, 'test.db')),
-    );
+  it('connects to the configured SurrealDB database', async () => {
+    const database = app.get(SurrealService);
+    expect(database.client.namespace).toBe('e2e');
+    expect(database.client.database).toBe('test');
+    expect(await database.client.query('RETURN true;')).toEqual([true]);
+  });
+
+  it('supports generated CRUD routes and missing-record responses', async () => {
+    const data = { id: 'member-e2e', name: 'Alice', permissions: [] };
+    const created = await request(app.getHttpServer())
+      .post('/members')
+      .send(data)
+      .expect(201);
+    expect(created.body).toMatchObject(data);
+    expect(created.body.roles).toEqual([]);
+    await request(app.getHttpServer()).get('/members/member-e2e').expect(200);
+    const updated = await request(app.getHttpServer())
+      .patch('/members/member-e2e')
+      .send({ name: 'Bob' })
+      .expect(200);
+    expect(updated.body.name).toBe('Bob');
+    await request(app.getHttpServer())
+      .delete('/members/member-e2e')
+      .expect(204);
+    await request(app.getHttpServer()).get('/members/member-e2e').expect(404);
+    await request(app.getHttpServer())
+      .patch('/members/member-e2e')
+      .send({ name: 'Nobody' })
+      .expect(404);
+    await request(app.getHttpServer())
+      .delete('/members/member-e2e')
+      .expect(404);
   });
 
   afterAll(async () => {
@@ -80,7 +98,7 @@ describe('AppController (e2e)', () => {
       await app?.close();
     } finally {
       vi.unstubAllEnvs();
-      await rm(directory, { recursive: true, force: true });
+      await server?.stop();
     }
   });
 });

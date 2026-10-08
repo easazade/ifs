@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Generates a NestJS API resource and related Prisma/schema artifacts for one entity.
+// Generates a NestJS API resource backed by SurrealDB for one entity.
 
 import { execFileSync } from 'node:child_process';
 import {
@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 const apiRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(apiRoot, '..');
 const entitiesRoot = join(workspaceRoot, 'ifs-standards', 'src', 'entities');
-const prismaSchemaPath = join(apiRoot, 'prisma', 'schema.prisma');
+
 const entityRelationsPath = join(
   workspaceRoot,
   'ifs-standards',
@@ -156,18 +156,6 @@ function ensureDtos(entityName, modelName, skipGeneration) {
   return !skipGeneration;
 }
 
-function assertPrismaModel(modelName) {
-  if (!existsSync(prismaSchemaPath)) {
-    throw new Error(`Prisma schema not found: ${prismaSchemaPath}`);
-  }
-  const prismaSchema = readFileSync(prismaSchemaPath, 'utf8');
-  if (!new RegExp(`(^|\\n)model\\s+${modelName}\\s*\\{`).test(prismaSchema)) {
-    throw new Error(
-      `Prisma model ${modelName} is missing. Run the DTO generator before generating its service.`,
-    );
-  }
-}
-
 function readEntityRelations(modelName, schema) {
   let metadata;
   try {
@@ -197,14 +185,8 @@ function readEntityRelations(modelName, schema) {
     throw new Error(`Entity relations metadata for ${modelName} is invalid.`);
   }
 
-  const prismaSource = readFileSync(prismaSchemaPath, 'utf8');
-  const modelMatch = prismaSource.match(
-    new RegExp(`(?:^|\\n)model\\s+${modelName}\\s*\\{([\\s\\S]*?)\\n\\}`),
-  );
-  if (!modelMatch) throw new Error(`Prisma model ${modelName} is missing.`);
-
   const seen = new Set();
-  return relations.map(({ property, type }) => {
+  return relations.map(({ property }) => {
     if (seen.has(property)) {
       throw new Error(
         `Entity relations metadata for ${modelName} contains duplicate property ${property}.`,
@@ -219,124 +201,51 @@ function readEntityRelations(modelName, schema) {
       );
     }
 
-    const relationLine = modelMatch[1]
-      .split('\n')
-      .find((line) => new RegExp(`^\\s*${property}\\s`).test(line));
-    const foreignKey = relationLine?.match(
-      /@relation\([^\n]*fields:\s*\[\s*([A-Za-z_][A-Za-z0-9_]*)\s*\]/,
-    )?.[1];
-
+    const ref = propertySchema.$ref ?? propertySchema.items?.$ref;
+    if (!ref) throw new Error(`Relation ${property} has no entity reference.`);
+    const target = ref.split('/').pop().replace('.schema.json', '');
     return {
       property,
-      type,
+      table: target.replaceAll('-', '_'),
       isArray: propertySchema.type === 'array',
       readOnly: propertySchema.readOnly === true,
-      foreignKey,
     };
   });
 }
 
-function renderRelationInputMapper(modelName, relations) {
-  if (!relations.length) return '';
-
-  const renderOperations = (operation) =>
-    relations
-      .map(({ property, isArray, readOnly, foreignKey }) => {
-        if (readOnly) return `  delete prismaData.${property};`;
-
-        const nestedOperation = operation === 'create' ? 'connect' : 'set';
-        const foreignKeyDelete = foreignKey
-          ? `\n    delete prismaData.${foreignKey};`
-          : '';
-        const nestedValue = isArray
-          ? `{ ${nestedOperation}: data.${property}.map(({ id }) => ({ id })) }`
-          : `{ connect: { id: data.${property}.id } }`;
-
-        return `  if (data.${property} !== undefined) {${foreignKeyDelete}\n    prismaData.${property} = ${nestedValue};\n  }`;
-      })
-      .join('\n');
-
-  return `
-// API relations are expanded entities; Prisma requires nested relation operations.
-function to${modelName}CreateInput(
-  data: Create${modelName}Dto,
-): Prisma.${modelName}CreateInput {
-  const prismaData: Record<string, unknown> = { ...data };
-${renderOperations('create')}
-  return prismaData as unknown as Prisma.${modelName}CreateInput;
-}
-
-function to${modelName}UpdateInput(
-  data: Update${modelName}Dto,
-): Prisma.${modelName}UpdateInput {
-  const prismaData: Record<string, unknown> = { ...data };
-${renderOperations('update')}
-  return prismaData as unknown as Prisma.${modelName}UpdateInput;
-}
-`;
-}
-
 function renderService(entityName, modelName, relations) {
-  const delegateName = lowerCamelCase(modelName);
-  const relationProperties = relations.map(({ property }) => property);
-  const relationsName = `${delegateName}Relations`;
-  const relationsDeclaration = relations.length
-    ? `\nconst ${relationsName} = {\n${relationProperties.map((relation) => `  ${relation}: true,`).join('\n')}\n} as const;\n`
-    : '';
-  const relationInputMapper = renderRelationInputMapper(modelName, relations);
-  const createInput = relations.length
-    ? `to${modelName}CreateInput(data)`
-    : `data as unknown as Prisma.${modelName}CreateInput`;
-  const updateInput = relations.length
-    ? `to${modelName}UpdateInput(data)`
-    : `data as unknown as Prisma.${modelName}UpdateInput`;
-  const includeRelations = relations.length
-    ? `\n      include: ${relationsName},`
-    : '';
-  const findManyArguments = relations.length
-    ? `{${includeRelations}\n    }`
-    : '';
+  const table = entityName.replaceAll('-', '_');
   return `${generatedMarker}
 import { Injectable } from '@nestjs/common';
-import type { Prisma } from '../generated/prisma/client.js';
-import { PrismaService } from '../prisma/prisma.service.js';
+import { SurrealService } from '../surreal/surreal.service.js';
 import { Create${modelName}Dto } from './dto/create-${entityName}.dto.js';
 import { ${modelName}ResponseDto } from './dto/${entityName}-response.dto.js';
 import { Update${modelName}Dto } from './dto/update-${entityName}.dto.js';
-${relationsDeclaration}${relationInputMapper}
+
+const relations = ${JSON.stringify(relations, null, 2)} as const;
+
 @Injectable()
 export class ${modelName}Service {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly database: SurrealService) {}
 
   create(data: Create${modelName}Dto): Promise<${modelName}ResponseDto> {
-    return this.prisma.${delegateName}.create({
-      data: ${createInput},${includeRelations}
-    }) as unknown as Promise<${modelName}ResponseDto>;
+    return this.database.create('${table}', data, relations);
   }
 
   findAll(): Promise<${modelName}ResponseDto[]> {
-    return this.prisma.${delegateName}.findMany(${findManyArguments}) as unknown as Promise<
-      ${modelName}ResponseDto[]
-    >;
+    return this.database.findAll('${table}', relations);
   }
 
   findOne(id: string): Promise<${modelName}ResponseDto | null> {
-    return this.prisma.${delegateName}.findUnique({
-      where: { id },${includeRelations}
-    }) as unknown as Promise<${modelName}ResponseDto | null>;
+    return this.database.findOne('${table}', id, relations);
   }
 
   update(id: string, data: Update${modelName}Dto): Promise<${modelName}ResponseDto> {
-    return this.prisma.${delegateName}.update({
-      where: { id },
-      data: ${updateInput},${includeRelations}
-    }) as unknown as Promise<${modelName}ResponseDto>;
+    return this.database.update('${table}', id, data, relations);
   }
 
   remove(id: string): Promise<${modelName}ResponseDto> {
-    return this.prisma.${delegateName}.delete({
-      where: { id },${includeRelations}
-    }) as unknown as Promise<${modelName}ResponseDto>;
+    return this.database.remove('${table}', id, relations);
   }
 }
 `;
@@ -493,7 +402,6 @@ export function generateService(entityInput, options = {}) {
     modelName,
     options.skipDtoGeneration === true,
   );
-  assertPrismaModel(modelName);
   const relations = readEntityRelations(modelName, schema);
 
   const serviceDirectory = join(apiRoot, 'src', entityName);

@@ -1,235 +1,61 @@
 #!/usr/bin/env node
-// Generates Prisma and NestJS DTO artifacts from one IFS entity schema.
-
+// Generates NestJS DTOs from canonical IFS entity schemas; no database required.
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const apiRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const workspaceRoot = resolve(apiRoot, '..');
-const entitiesRoot = join(workspaceRoot, 'ifs-standards', 'src', 'entities');
-const prismaSchemaPath = join(apiRoot, 'prisma', 'schema.prisma');
-
-function usage(message) {
-  if (message) console.error(`Error: ${message}\n`);
-  console.error(
-    'Usage: pnpm --filter prototype-api dto:generate <entity-name|schema-path> [--skip-prisma-generate]',
-  );
-  process.exitCode = message ? 1 : 0;
-}
-
-function kebabCase(value) {
-  return value
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/[^A-Za-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-    .toLowerCase();
-}
-
-function pascalCase(value) {
-  return value
+const entitiesRoot = resolve(apiRoot, '../ifs-standards/src/entities');
+const pascalCase = (value) =>
+  value
     .split(/[^A-Za-z0-9]+/)
     .filter(Boolean)
     .map((part) => part[0].toUpperCase() + part.slice(1))
     .join('');
-}
+const types = (property) =>
+  Array.isArray(property.type)
+    ? property.type.filter((type) => type !== 'null')
+    : [property.type];
+const nullable = (property) =>
+  Array.isArray(property.type) && property.type.includes('null');
 
-function resolveSchemaPath(input) {
-  if (!input) throw new Error('Missing entity name or schema path.');
-
-  const looksLikePath =
-    input.includes('/') || input.includes('\\') || input.endsWith('.json');
-  if (looksLikePath) return resolve(process.cwd(), input);
-
-  if (!/^[A-Za-z][A-Za-z0-9-]*$/.test(input)) {
-    throw new Error(`Invalid entity name: ${input}`);
-  }
-
-  const name = kebabCase(input);
-  return join(entitiesRoot, name, `${name}.schema.json`);
-}
-
-function readSchema(schemaPath) {
-  if (!existsSync(schemaPath))
-    throw new Error(`Schema not found: ${schemaPath}`);
-
-  let schema;
-  try {
-    schema = JSON.parse(readFileSync(schemaPath, 'utf8'));
-  } catch (error) {
-    throw new Error(`Invalid JSON in ${schemaPath}: ${error.message}`);
-  }
-
+function readSchema(path) {
+  if (!existsSync(path)) throw new Error(`Schema not found: ${path}`);
+  const schema = JSON.parse(readFileSync(path, 'utf8'));
   if (schema.type !== 'object' || !schema.title || !schema.properties) {
     throw new Error('Schema must be an object with title and properties.');
   }
-
-  const invalidProperty = Object.keys(schema.properties).find(
-    (name) => !/^[A-Za-z_][A-Za-z0-9_]*$/.test(name),
-  );
-  if (invalidProperty) {
-    throw new Error(
-      `Property cannot be represented in TypeScript/Prisma: ${invalidProperty}`,
-    );
+  for (const name of Object.keys(schema.properties)) {
+    if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name))
+      throw new Error(`Invalid property: ${name}`);
   }
-
-  if (
-    !schema.properties.id ||
-    !scalarTypes(schema.properties.id).includes('string')
-  ) {
-    throw new Error(
-      'Schema must define a string id property for Prisma @id mapping.',
-    );
-  }
-
+  if (!types(schema.properties.id ?? {}).includes('string'))
+    throw new Error('Schema must define a string id property.');
   return schema;
 }
 
-function scalarTypes(property) {
-  const type = property.type;
-  return Array.isArray(type)
-    ? type.filter((item) => item !== 'null')
-    : type
-      ? [type]
-      : [];
-}
-
-function isNullable(property) {
-  return Array.isArray(property.type) && property.type.includes('null');
-}
-
-function propertyRef(property) {
-  return property.$ref ?? property.items?.$ref;
-}
-
-function referencedEntityName(ref) {
-  const schemaFile = basename(ref.split('#')[0]);
-  if (!schemaFile.endsWith('.schema.json')) {
-    throw new Error(`Unsupported non-entity $ref: ${ref}`);
-  }
-  return schemaFile.slice(0, -'.schema.json'.length);
-}
-
-function relationInfo(property) {
-  const ref = propertyRef(property);
+function relation(property) {
+  const ref = property.$ref ?? property.items?.$ref;
   if (!ref) return undefined;
-
-  const entityName = referencedEntityName(ref);
-  const schemaPath = join(
-    entitiesRoot,
-    entityName,
-    `${entityName}.schema.json`,
-  );
-  const schema = readSchema(schemaPath);
-  return {
-    ref,
-    entityName,
-    modelName: pascalCase(schema.title),
-    isArray: scalarTypes(property)[0] === 'array',
-  };
-}
-
-function collectRelations(schema) {
-  return Object.entries(schema.properties)
-    .filter(([, property]) => propertyRef(property))
-    .map(([propertyName, property]) => ({
-      propertyName,
-      property,
-      ...relationInfo(property),
-    }));
-}
-
-function modelExists(prismaSource, modelName) {
-  return new RegExp(`(^|\\n)model\\s+${modelName}\\s*\\{`).test(prismaSource);
-}
-
-function generatedModelExists(prismaSource, modelName) {
-  return prismaSource.includes(`// <generated:model ${modelName} source=`);
-}
-
-function assertDependencies(prismaSource, relations, modelName) {
-  const missingModels = [
-    ...new Set(
-      relations
-        .filter((relation) => relation.modelName !== modelName)
-        .filter((relation) => !modelExists(prismaSource, relation.modelName))
-        .map((relation) => relation.modelName),
-    ),
-  ];
-
-  if (missingModels.length) {
-    throw new Error(
-      `Cannot generate ${modelName}. Required related Prisma models do not exist: ${missingModels.join(', ')}. Generate those models first.`,
-    );
-  }
-
-  const incompatibleModels = [
-    ...new Set(
-      relations
-        .filter((relation) => relation.modelName !== modelName)
-        .filter((relation) => {
-          const model = findModel(prismaSource, relation.modelName);
-          return !model || !/^\s*id\s+String\s+[^\n]*@id/m.test(model.text);
-        })
-        .map((relation) => relation.modelName),
-    ),
-  ];
-  if (incompatibleModels.length) {
-    throw new Error(
-      `Cannot generate ${modelName}. Related Prisma models must expose id String @id: ${incompatibleModels.join(', ')}.`,
-    );
-  }
-
-  const missingDtos = [
-    ...new Set(
-      relations
-        .filter((relation) => relation.modelName !== modelName)
-        .filter(
-          (relation) =>
-            !existsSync(
-              join(
-                apiRoot,
-                'src',
-                relation.entityName,
-                'dto',
-                `${relation.entityName}-response.dto.ts`,
-              ),
-            ),
-        )
-        .map((relation) => `${relation.modelName}ResponseDto`),
-    ),
-  ];
-
-  if (missingDtos.length) {
-    throw new Error(
-      `Cannot generate ${modelName} DTOs. Required related response DTOs do not exist: ${missingDtos.join(', ')}. Generate those DTOs first.`,
-    );
-  }
-}
-
-function relationClass(property) {
-  const relation = relationInfo(property);
-  return relation ? `${relation.modelName}ResponseDto` : undefined;
+  const file = basename(ref.split('#')[0]);
+  if (!file.endsWith('.schema.json'))
+    throw new Error(`Unsupported non-entity $ref: ${ref}`);
+  const entity = file.slice(0, -'.schema.json'.length);
+  const schema = readSchema(join(entitiesRoot, entity, file));
+  return { entity, className: `${pascalCase(schema.title)}ResponseDto` };
 }
 
 function propertyType(property) {
-  const relationType = relationClass(property);
-  if (property.$ref) return relationType;
-
-  const [type] = scalarTypes(property);
-  if (type === 'array') {
-    const item = property.items ?? {};
-    return `Array<${relationType ?? propertyType(item)}>`;
-  }
+  const related = relation(property);
+  if (property.$ref) return related.className;
+  const [type] = types(property);
+  if (type === 'array')
+    return `Array<${related?.className ?? propertyType(property.items ?? {})}>`;
   if (type === 'string' && property.const !== undefined)
     return JSON.stringify(property.const);
-  if (type === 'string' && Array.isArray(property.enum)) {
-    return (
-      property.enum.map((value) => JSON.stringify(value)).join(' | ') ||
-      'string'
-    );
-  }
+  if (type === 'string' && property.enum?.length)
+    return property.enum.map((value) => JSON.stringify(value)).join(' | ');
   if (type === 'string') return 'string';
   if (type === 'integer' || type === 'number') return 'number';
   if (type === 'boolean') return 'boolean';
@@ -237,9 +63,9 @@ function propertyType(property) {
   return 'Record<string, unknown>';
 }
 
-function arrayItemSchema(property) {
-  const [type] = scalarTypes(property);
-  const schema = { type: type ?? 'object' };
+function itemSchema(property) {
+  const [type] = types(property);
+  const result = { type: type ?? 'object' };
   for (const key of [
     'description',
     'format',
@@ -255,432 +81,210 @@ function arrayItemSchema(property) {
     'required',
     'additionalProperties',
   ]) {
-    if (property[key] !== undefined) schema[key] = property[key];
+    if (property[key] !== undefined) result[key] = property[key];
   }
-  if (property.const !== undefined) schema.enum = [property.const];
-  if (isNullable(property)) schema.nullable = true;
-  if (type === 'array') schema.items = arrayItemSchema(property.items ?? {});
-  if (property.properties) {
-    schema.properties = Object.fromEntries(
+  if (property.const !== undefined) result.enum = [property.const];
+  if (nullable(property)) result.nullable = true;
+  if (type === 'array') result.items = itemSchema(property.items ?? {});
+  if (property.properties)
+    result.properties = Object.fromEntries(
       Object.entries(property.properties).map(([name, value]) => [
         name,
-        arrayItemSchema(value),
+        itemSchema(value),
       ]),
     );
-  }
-  return schema;
+  return result;
 }
 
-function decoratorFor(property, required) {
-  const decorator = required ? 'ApiProperty' : 'ApiPropertyOptional';
+function decorator(property, required) {
   const options = [];
-  if (property.description)
-    options.push(`description: ${JSON.stringify(property.description)}`);
-  if (property.format)
-    options.push(`format: ${JSON.stringify(property.format)}`);
+  for (const key of ['description', 'format']) {
+    if (property[key] !== undefined)
+      options.push(`${key}: ${JSON.stringify(property[key])}`);
+  }
   if (property.const !== undefined)
     options.push(`enum: [${JSON.stringify(property.const)}]`);
   else if (Array.isArray(property.enum))
     options.push(`enum: ${JSON.stringify(property.enum)}`);
-  if (property.readOnly) options.push('readOnly: true');
-  if (property.writeOnly) options.push('writeOnly: true');
-  if (isNullable(property)) options.push('nullable: true');
-  if (typeof property.minimum === 'number')
-    options.push(`minimum: ${property.minimum}`);
-  if (typeof property.maximum === 'number')
-    options.push(`maximum: ${property.maximum}`);
-  if (typeof property.minLength === 'number')
-    options.push(`minLength: ${property.minLength}`);
-  if (typeof property.maxLength === 'number')
-    options.push(`maxLength: ${property.maxLength}`);
-  if (property.pattern)
-    options.push(`pattern: ${JSON.stringify(property.pattern)}`);
-  if (property.default !== undefined)
-    options.push(`default: ${JSON.stringify(property.default)}`);
-  // OpenAPI 3.0 schemas accept one `example`; JSON Schema stores a list.
-  if (Array.isArray(property.examples) && property.examples.length)
+  for (const key of ['readOnly', 'writeOnly']) {
+    if (property[key] !== undefined)
+      options.push(`${key}: ${JSON.stringify(property[key])}`);
+  }
+  if (nullable(property)) options.push('nullable: true');
+  for (const key of [
+    'minimum',
+    'maximum',
+    'minLength',
+    'maxLength',
+    'pattern',
+    'default',
+    'minItems',
+    'maxItems',
+    'uniqueItems',
+    'deprecated',
+  ]) {
+    if (property[key] !== undefined)
+      options.push(`${key}: ${JSON.stringify(property[key])}`);
+  }
+  if (property.examples?.length)
     options.push(`example: ${JSON.stringify(property.examples[0])}`);
-  if (property.deprecated === true) options.push('deprecated: true');
-  if (typeof property.minItems === 'number')
-    options.push(`minItems: ${property.minItems}`);
-  if (typeof property.maxItems === 'number')
-    options.push(`maxItems: ${property.maxItems}`);
-  if (property.uniqueItems === true) options.push('uniqueItems: true');
-
-  const relatedClass = relationClass(property);
-  if (relatedClass) {
+  const related = relation(property);
+  if (related)
     options.push(
-      scalarTypes(property)[0] === 'array'
-        ? `type: () => [${relatedClass}]`
-        : `type: () => ${relatedClass}`,
+      `type: () => ${types(property)[0] === 'array' ? `[${related.className}]` : related.className}`,
     );
-  } else if (scalarTypes(property)[0] === 'array') {
+  else if (types(property)[0] === 'array') {
     const itemType = propertyType(property.items ?? {});
-    const swaggerType =
-      itemType === 'string'
-        ? 'String'
-        : itemType === 'number'
-          ? 'Number'
-          : itemType === 'boolean'
-            ? 'Boolean'
-            : undefined;
-    if (swaggerType) {
-      options.push(`type: [${swaggerType}]`);
-    } else {
+    const primitive = {
+      string: 'String',
+      number: 'Number',
+      boolean: 'Boolean',
+    }[itemType];
+    if (primitive) options.push(`type: [${primitive}]`);
+    else
       options.push(
         "type: 'array'",
-        `items: ${JSON.stringify(arrayItemSchema(property.items ?? {}))}`,
+        `items: ${JSON.stringify(itemSchema(property.items ?? {}))}`,
       );
-    }
-  } else if (scalarTypes(property)[0] === 'object' || !property.type) {
+  } else if (types(property)[0] === 'object' || !property.type)
     options.push("type: 'object'", 'additionalProperties: true');
-  }
-
-  return `@${decorator}({ ${options.join(', ')} })`;
+  return `@${required ? 'ApiProperty' : 'ApiPropertyOptional'}({ ${options.join(', ')} })`;
 }
 
-function dtoImports(properties, entityName, modelName, className) {
-  const imports = new Map();
-  for (const [, property] of properties) {
-    const relation = relationInfo(property);
-    if (!relation) continue;
-
-    const relatedClass = `${relation.modelName}ResponseDto`;
-    if (relatedClass === className) continue;
-
-    const importPath =
-      relation.modelName === modelName
-        ? `./${entityName}-response.dto.js`
-        : `../../${relation.entityName}/dto/${relation.entityName}-response.dto.js`;
-    imports.set(relatedClass, importPath);
-  }
-  return [...imports.entries()].sort(([left], [right]) =>
-    left.localeCompare(right),
-  );
-}
-
-function renderClass({
+function renderClass(
   className,
-  entityName,
-  modelName,
+  entity,
   properties,
   required,
   additionalProperties,
-}) {
-  const decorators = properties.some(([name]) => required.has(name))
-    ? [
-        'ApiProperty',
-        ...(properties.some(([name]) => !required.has(name))
-          ? ['ApiPropertyOptional']
-          : []),
-      ]
-    : ['ApiPropertyOptional'];
-  const imports = dtoImports(properties, entityName, modelName, className);
-  const lines = [
-    `import { ${decorators.join(', ')} } from '@nestjs/swagger';`,
-    ...imports.map(
-      ([importName, importPath]) =>
-        `import { ${importName} } from '${importPath}';`,
+) {
+  const decorators = [
+    ...new Set(
+      properties.map(([name]) =>
+        required.has(name) ? 'ApiProperty' : 'ApiPropertyOptional',
+      ),
     ),
+  ];
+  const imports = new Map();
+  for (const [, property] of properties) {
+    const related = relation(property);
+    if (!related || related.className === className) continue;
+    imports.set(
+      related.className,
+      related.entity === entity
+        ? `./${entity}-response.dto.js`
+        : `../../${related.entity}/dto/${related.entity}-response.dto.js`,
+    );
+  }
+  return [
+    `import { ${decorators.join(', ')} } from '@nestjs/swagger';`,
+    ...[...imports]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([name, path]) => `import { ${name} } from '${path}';`),
     '',
     `export class ${className} {`,
-  ];
-
-  for (const [name, property] of properties) {
-    const isRequired = required.has(name);
-    const optional = isRequired ? '' : '?';
-    const nullable = isNullable(property) ? ' | null' : '';
-    lines.push(`  ${decoratorFor(property, isRequired)}`);
-    lines.push(
-      `  ${name}${optional}: ${propertyType(property)}${nullable};`,
+    ...properties.flatMap(([name, property]) => [
+      `  ${decorator(property, required.has(name))}`,
+      `  ${name}${required.has(name) ? '' : '?'}: ${propertyType(property)}${nullable(property) ? ' | null' : ''};`,
       '',
-    );
-  }
-
-  if (additionalProperties) lines.push('  [key: string]: unknown;', '');
-  lines.push('}', '');
-  return lines.join('\n');
-}
-
-function prismaScalarType(property) {
-  const [type] = scalarTypes(property);
-  if (type === 'array' || type === 'object' || !type) return 'Json';
-  if (type === 'string') return 'String';
-  if (type === 'integer') return 'Int';
-  if (type === 'number') return 'Float';
-  if (type === 'boolean') return 'Boolean';
-  throw new Error(
-    `Unsupported JSON Schema type: ${JSON.stringify(property.type)}`,
-  );
-}
-
-function relationName(modelName, propertyName) {
-  return `${modelName}_${propertyName}`;
-}
-
-function extractInboundRelationBlocks(prismaSource, modelName) {
-  const model = findModel(prismaSource, modelName);
-  if (!model) return [];
-  return [
-    ...model.text.matchAll(
-      /  \/\/ <generated:inverse ([^>]+)>[\s\S]*?  \/\/ <\/generated:inverse \1>/g,
-    ),
-  ]
-    .filter((match) => !match[1].startsWith(`${modelName}_`))
-    .map((match) => match[0]);
-}
-
-function renderPrismaModel(
-  schema,
-  modelName,
-  sourcePath,
-  relations,
-  inboundBlocks,
-) {
-  const required = new Set(schema.required ?? []);
-  const relationByProperty = new Map(
-    relations.map((relation) => [relation.propertyName, relation]),
-  );
-  const fields = [];
-
-  for (const [name, property] of Object.entries(schema.properties)) {
-    const relation = relationByProperty.get(name);
-    if (!relation) {
-      const optional = required.has(name) && !isNullable(property) ? '' : '?';
-      const id = name === 'id' ? ' @id' : '';
-      fields.push(`  ${name} ${prismaScalarType(property)}${optional}${id}`);
-      continue;
-    }
-
-    const namedRelation = relationName(modelName, name);
-    if (relation.isArray) {
-      fields.push(
-        `  ${name} ${relation.modelName}[] @relation("${namedRelation}")`,
-      );
-      continue;
-    }
-
-    const candidateId = `${name}Id`;
-    const candidateProperty = schema.properties[candidateId];
-    const candidateMatches =
-      candidateProperty &&
-      !propertyRef(candidateProperty) &&
-      scalarTypes(candidateProperty)[0] === 'string';
-    const relationRequired = required.has(name) && !isNullable(property);
-    const candidateRequired =
-      candidateMatches &&
-      required.has(candidateId) &&
-      !isNullable(candidateProperty);
-    const foreignKey =
-      candidateMatches && candidateRequired === relationRequired
-        ? candidateId
-        : `${name}RelationId`;
-
-    if (foreignKey !== candidateId) {
-      fields.push(`  ${foreignKey} String${relationRequired ? '' : '?'}`);
-    }
-    fields.push(
-      `  ${name} ${relation.modelName}${relationRequired ? '' : '?'} @relation("${namedRelation}", fields: [${foreignKey}], references: [id])`,
-    );
-  }
-
-  if (schema.additionalProperties !== false && !schema.properties.extensions) {
-    fields.push('  extensions Json?');
-  }
-  if (inboundBlocks.length) fields.push('', ...inboundBlocks);
-
-  const source = relative(apiRoot, sourcePath).replaceAll('\\', '/');
-  return [
-    `// <generated:model ${modelName} source="${source}">`,
-    `model ${modelName} {`,
-    ...fields,
+    ]),
+    ...(additionalProperties ? ['  [key: string]: unknown;', ''] : []),
     '}',
-    `// </generated:model ${modelName}>`,
+    '',
   ].join('\n');
 }
 
-function upsertPrismaModel(prismaSource, modelName, model) {
-  const escaped = modelName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const block = new RegExp(
-    `// <generated:model ${escaped} source="[^"]+">[\\s\\S]*?// </generated:model ${escaped}>`,
-  );
-
-  // Replace in place so regeneration does not create noisy model-order diffs.
-  if (block.test(prismaSource)) return prismaSource.replace(block, model);
-  return `${prismaSource.trimEnd()}\n\n${model}\n`;
-}
-
-function findModel(prismaSource, modelName) {
-  const match = new RegExp(`(^|\\n)model\\s+${modelName}\\s*\\{`).exec(
-    prismaSource,
-  );
-  if (!match) return undefined;
-
-  const start = match.index + match[1].length;
-  const close = prismaSource.indexOf('\n}', start);
-  if (close < 0) throw new Error(`Could not parse Prisma model ${modelName}.`);
-  const end = close + 2;
-  return { start, end, text: prismaSource.slice(start, end) };
-}
-
-function removeOutgoingInverseBlocks(prismaSource, modelName) {
-  const escaped = modelName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return prismaSource.replace(
-    new RegExp(
-      `\\n?  // <generated:inverse ${escaped}_[^>]+>[\\s\\S]*?  // </generated:inverse ${escaped}_[^>]+>`,
-      'g',
-    ),
-    '',
-  );
-}
-
-function upsertInverseRelation(prismaSource, relation, sourceModelName) {
-  const namedRelation = relationName(sourceModelName, relation.propertyName);
-  const escapedRelation = namedRelation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  prismaSource = prismaSource.replace(
-    new RegExp(
-      `\\n?  // <generated:inverse ${escapedRelation}>[\\s\\S]*?  // </generated:inverse ${escapedRelation}>`,
-    ),
-    '',
-  );
-  const fieldName = `relationFrom${sourceModelName}${pascalCase(relation.propertyName)}`;
-  const block = [
-    `  // <generated:inverse ${namedRelation}>`,
-    `  ${fieldName} ${sourceModelName}[] @relation("${namedRelation}")`,
-    `  // </generated:inverse ${namedRelation}>`,
-  ].join('\n');
-
-  const target = findModel(prismaSource, relation.modelName);
-  if (!target) {
-    throw new Error(`Required Prisma model disappeared: ${relation.modelName}`);
-  }
-  const updatedTarget = `${target.text.slice(0, -2).trimEnd()}\n${block}\n}`;
-  return (
-    prismaSource.slice(0, target.start) +
-    updatedTarget +
-    prismaSource.slice(target.end)
-  );
-}
-
-export function generateDto(schemaPathInput, options = {}) {
-  const schemaPath = resolveSchemaPath(schemaPathInput);
+export function generateDto(input, options = {}) {
+  if (!input) throw new Error('Missing entity name or schema path.');
+  const isPath =
+    input.includes('/') || input.includes('\\') || input.endsWith('.json');
+  if (!isPath && !/^[A-Za-z][A-Za-z0-9-]*$/.test(input))
+    throw new Error(`Invalid entity name: ${input}`);
+  const name = input.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+  const schemaPath = isPath
+    ? resolve(process.cwd(), input)
+    : join(entitiesRoot, name, `${name}.schema.json`);
   const schema = readSchema(schemaPath);
-  const entityName = kebabCase(basename(schemaPath, '.schema.json'));
-  const modelName = pascalCase(schema.title || entityName);
-  const dtoDir = join(apiRoot, 'src', entityName, 'dto');
-  const required = new Set(schema.required ?? []);
-  const relations = collectRelations(schema);
-  let prismaSource = readFileSync(prismaSchemaPath, 'utf8');
-
-  assertDependencies(prismaSource, relations, modelName);
-  if (
-    modelExists(prismaSource, modelName) &&
-    !generatedModelExists(prismaSource, modelName)
-  ) {
-    throw new Error(
-      `Prisma model ${modelName} already exists but is not managed by this generator. Refusing to overwrite it.`,
+  const entity = basename(schemaPath, '.schema.json');
+  const modelName = pascalCase(schema.title);
+  const dtoDir = join(apiRoot, 'src', entity, 'dto');
+  // Verify dependencies before writing; generation order supplies related DTOs.
+  const missing = Object.values(schema.properties)
+    .map(relation)
+    .filter(
+      (related) =>
+        related &&
+        related.entity !== entity &&
+        !existsSync(
+          join(
+            apiRoot,
+            'src',
+            related.entity,
+            'dto',
+            `${related.entity}-response.dto.ts`,
+          ),
+        ),
     );
-  }
-
-  const createProperties = Object.entries(schema.properties).filter(
-    ([, property]) => !property.readOnly,
-  );
-  const responseProperties = Object.entries(schema.properties).filter(
-    ([, property]) => !property.writeOnly,
-  );
-  const classOptions = {
-    entityName,
-    modelName,
+  if (missing.length)
+    throw new Error(
+      `Required related response DTOs do not exist: ${[...new Set(missing.map((item) => item.className))].join(', ')}`,
+    );
+  const required = new Set(schema.required ?? []);
+  const properties = Object.entries(schema.properties);
+  const create = renderClass(
+    `Create${modelName}Dto`,
+    entity,
+    properties.filter(([, value]) => !value.readOnly),
     required,
-    additionalProperties: schema.additionalProperties !== false,
-  };
-
-  const createDto = renderClass({
-    ...classOptions,
-    className: `Create${modelName}Dto`,
-    properties: createProperties,
-  });
-  const responseDto = renderClass({
-    ...classOptions,
-    className: `${modelName}ResponseDto`,
-    properties: responseProperties,
-  });
-  const updateDto = [
-    `import { PartialType } from '@nestjs/swagger';`,
-    `import { Create${modelName}Dto } from './create-${entityName}.dto.js';`,
-    '',
-    `export class Update${modelName}Dto extends PartialType(Create${modelName}Dto) {}`,
-    '',
-  ].join('\n');
-
-  const inboundBlocks = extractInboundRelationBlocks(prismaSource, modelName);
-  prismaSource = removeOutgoingInverseBlocks(prismaSource, modelName);
-  const prismaModel = renderPrismaModel(
-    schema,
-    modelName,
-    schemaPath,
-    relations,
-    inboundBlocks,
+    schema.additionalProperties !== false,
   );
-  prismaSource = upsertPrismaModel(prismaSource, modelName, prismaModel);
-  for (const relation of relations) {
-    prismaSource = upsertInverseRelation(prismaSource, relation, modelName);
-  }
-
+  const response = renderClass(
+    `${modelName}ResponseDto`,
+    entity,
+    properties.filter(([, value]) => !value.writeOnly),
+    required,
+    schema.additionalProperties !== false,
+  );
   mkdirSync(dtoDir, { recursive: true });
-  writeFileSync(join(dtoDir, `create-${entityName}.dto.ts`), createDto);
-  writeFileSync(join(dtoDir, `update-${entityName}.dto.ts`), updateDto);
-  writeFileSync(join(dtoDir, `${entityName}-response.dto.ts`), responseDto);
-  writeFileSync(prismaSchemaPath, prismaSource);
-
-  if (!options.skipPrismaGenerate) {
+  writeFileSync(join(dtoDir, `create-${entity}.dto.ts`), create);
+  writeFileSync(join(dtoDir, `${entity}-response.dto.ts`), response);
+  writeFileSync(
+    join(dtoDir, `update-${entity}.dto.ts`),
+    `import { PartialType } from '@nestjs/swagger';\nimport { Create${modelName}Dto } from './create-${entity}.dto.js';\n\nexport class Update${modelName}Dto extends PartialType(Create${modelName}Dto) {}\n`,
+  );
+  if (!options.skipFormat)
     execFileSync('pnpm', ['exec', 'prettier', '--write', dtoDir], {
       cwd: apiRoot,
       stdio: 'inherit',
     });
-    execFileSync('pnpm', ['exec', 'prisma', 'format'], {
-      cwd: apiRoot,
-      stdio: 'inherit',
-    });
-    execFileSync('pnpm', ['exec', 'prisma', 'generate'], {
-      cwd: apiRoot,
-      stdio: 'inherit',
-    });
-  }
-
-  return { schemaPath, dtoDir, modelName, prismaSchemaPath };
-}
-
-function main() {
-  const args = process.argv.slice(2);
-  if (args.includes('--help') || args.includes('-h')) return usage();
-
-  const allowedFlags = new Set(['--skip-prisma-generate']);
-  const unknownFlag = args.find(
-    (arg) => arg.startsWith('-') && !allowedFlags.has(arg),
-  );
-  if (unknownFlag) return usage(`Unknown option: ${unknownFlag}`);
-
-  const skipPrismaGenerate = args.includes('--skip-prisma-generate');
-  const positional = args.filter((arg) => !arg.startsWith('--'));
-  if (positional.length !== 1)
-    return usage('Expected exactly one entity name or schema path.');
-
-  try {
-    const result = generateDto(positional[0], { skipPrismaGenerate });
-    console.log(
-      `Generated ${result.modelName} DTOs in ${relative(workspaceRoot, result.dtoDir)}`,
-    );
-    console.log(`Updated ${relative(workspaceRoot, result.prismaSchemaPath)}`);
-    if (skipPrismaGenerate)
-      console.log('Skipped Prisma format/client generation.');
-  } catch (error) {
-    usage(error instanceof Error ? error.message : String(error));
-  }
+  return { schemaPath, dtoDir, modelName };
 }
 
 if (
   process.argv[1] &&
   resolve(process.argv[1]) === fileURLToPath(import.meta.url)
-)
-  main();
+) {
+  const args = process.argv.slice(2);
+  const usage =
+    'Usage: pnpm --filter prototype-api dto:generate <entity-name|schema-path> [--skip-format]';
+  if (args.includes('--help') || args.includes('-h')) console.log(usage);
+  else {
+    try {
+      const positional = args.filter((arg) => !arg.startsWith('-'));
+      if (
+        positional.length !== 1 ||
+        args.some((arg) => arg.startsWith('-') && arg !== '--skip-format')
+      )
+        throw new Error(usage);
+      const result = generateDto(positional[0], {
+        skipFormat: args.includes('--skip-format'),
+      });
+      console.log(
+        `Generated ${result.modelName} DTOs in ${relative(apiRoot, result.dtoDir)}`,
+      );
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : String(error));
+      process.exitCode = 1;
+    }
+  }
+}

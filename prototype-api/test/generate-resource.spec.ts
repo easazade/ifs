@@ -40,7 +40,6 @@ function fixture(
   mkdirSync(scriptsDirectory, { recursive: true });
   mkdirSync(entityDirectory, { recursive: true });
   mkdirSync(join(standardsRoot, 'scripts'), { recursive: true });
-  mkdirSync(join(temporaryApi, 'prisma'), { recursive: true });
   cpSync(
     join(apiRoot, 'scripts', 'generate-resource.mjs'),
     join(scriptsDirectory, 'generate-resource.mjs'),
@@ -55,10 +54,6 @@ function fixture(
       'member.schema.json',
     ),
     join(entityDirectory, 'member.schema.json'),
-  );
-  writeFileSync(
-    join(temporaryApi, 'prisma', 'schema.prisma'),
-    'model Member {\n  id String @id\n  permissions Permission[]\n  roles Role[]\n}\n',
   );
   writeFileSync(
     join(standardsRoot, 'scripts', 'entity-relations.json'),
@@ -97,7 +92,7 @@ function run(temporaryApi: string, entity = 'member') {
 }
 
 describe('resource generator', () => {
-  it('normalizes display titles to match DTO and Prisma model names', () => {
+  it('normalizes display titles to match DTO names and database tables', () => {
     const temporaryApi = fixture();
     const standardsRoot = join(temporaryApi, '..', 'ifs-standards');
     const entityDirectory = join(
@@ -121,10 +116,6 @@ describe('resource generator', () => {
     writeFileSync(
       join(standardsRoot, 'scripts', 'entity-relations.json'),
       JSON.stringify({ 'Geographic Area': [] }),
-    );
-    writeFileSync(
-      join(temporaryApi, 'prisma', 'schema.prisma'),
-      'model GeographicArea {\n  id String @id\n}\n',
     );
     const dtoDirectory = join(temporaryApi, 'src', 'geographic-area', 'dto');
     mkdirSync(dtoDirectory, { recursive: true });
@@ -151,8 +142,10 @@ describe('resource generator', () => {
       ),
       'utf8',
     );
-    expect(serviceSource).toContain('Prisma.GeographicAreaCreateInput');
-    expect(serviceSource).toContain('this.prisma.geographicArea.findMany()');
+    expect(serviceSource).toContain('SurrealService');
+    expect(serviceSource).toContain(
+      "this.database.findAll('geographic_area', relations)",
+    );
     const controllerSource = readFileSync(
       join(
         temporaryApi,
@@ -174,7 +167,7 @@ describe('resource generator', () => {
     expect(result.stderr).toContain('is not defined in IFS standards');
   });
 
-  it('generates an idempotent Nest service backed by PrismaService', () => {
+  it('generates an idempotent Nest service backed by SurrealService', () => {
     const temporaryApi = fixture();
     const firstResult = run(temporaryApi, 'Member');
     const servicePath = join(
@@ -190,21 +183,18 @@ describe('resource generator', () => {
     expect(secondResult.status).toBe(0);
     expect(readFileSync(servicePath, 'utf8')).toBe(firstSource);
     expect(firstSource).toContain('@Injectable()');
-    expect(firstSource).toContain('private readonly prisma: PrismaService');
-    expect(firstSource).toContain('Prisma.MemberCreateInput');
-    expect(firstSource).toContain('const memberRelations = {');
-    expect(firstSource).toContain('permissions: true');
-    expect(firstSource).toContain('roles: true');
+    expect(firstSource).toContain('private readonly database: SurrealService');
+    expect(firstSource).toContain('const relations = [');
+    expect(firstSource).toContain('"property": "permissions"');
+    expect(firstSource).toContain('"table": "permission"');
+    expect(firstSource).toContain('"property": "roles"');
+    expect(firstSource).toContain('"readOnly": true');
     expect(firstSource).toContain(
-      'permissions = { connect: data.permissions.map(({ id }) => ({ id })) }',
+      "this.database.create('member', data, relations)",
     );
     expect(firstSource).toContain(
-      'permissions = { set: data.permissions.map(({ id }) => ({ id })) }',
+      "this.database.update('member', id, data, relations)",
     );
-    expect(firstSource).toContain('delete prismaData.roles');
-    expect(firstSource).toContain('data: toMemberCreateInput(data)');
-    expect(firstSource).toContain('data: toMemberUpdateInput(data)');
-    expect(firstSource.match(/include: memberRelations/g)).toHaveLength(5);
 
     const controllerSource = readFileSync(
       join(temporaryApi, 'src', 'member', 'member.controller.ts'),
@@ -233,7 +223,7 @@ describe('resource generator', () => {
     expect(resourcesSource).toContain('imports: [MemberModule]');
   });
 
-  it('maps singular DTO relations and removes their scalar foreign keys', () => {
+  it('describes singular DTO relations without changing scalar ID properties', () => {
     const temporaryApi = fixture(true, [
       { property: 'primaryPermission', type: 'Permission' },
     ]);
@@ -251,10 +241,6 @@ describe('resource generator', () => {
       $ref: 'https://ifs-standards.org/schemas/v1/entities/permission.schema.json',
     };
     writeFileSync(schemaPath, JSON.stringify(schema));
-    writeFileSync(
-      join(temporaryApi, 'prisma', 'schema.prisma'),
-      'model Member {\n  id String @id\n  primaryPermissionId String?\n  primaryPermission Permission? @relation("Member_primaryPermission", fields: [primaryPermissionId], references: [id])\n}\n',
-    );
 
     const result = run(temporaryApi);
     const source = readFileSync(
@@ -263,13 +249,12 @@ describe('resource generator', () => {
     );
 
     expect(result.status).toBe(0);
-    expect(source).toContain('delete prismaData.primaryPermissionId');
-    expect(source).toContain(
-      'primaryPermission = { connect: { id: data.primaryPermission.id } }',
-    );
+    expect(source).toContain('"property": "primaryPermission"');
+    expect(source).toContain('"table": "permission"');
+    expect(source).toContain('"isArray": false');
   });
 
-  it('omits Prisma include when the entity has no relations', () => {
+  it('emits empty relation metadata when the entity has no relations', () => {
     const temporaryApi = fixture(true, []);
     const result = run(temporaryApi);
     const source = readFileSync(
@@ -278,8 +263,8 @@ describe('resource generator', () => {
     );
 
     expect(result.status).toBe(0);
-    expect(source).toContain('this.prisma.member.findMany()');
-    expect(source).not.toContain('include:');
+    expect(source).toContain('const relations = [] as const;');
+    expect(source).toContain("this.database.findAll('member', relations)");
   });
 
   it('runs the all-DTO generator once before generating a resource', () => {
