@@ -3,7 +3,7 @@
   "$id": "https://ifs-standards.org/schemas/v1/entities/observation.schema.json",
   "title": "Observation",
   "type": "object",
-  "additionalProperties": false,
+  "additionalProperties": true,
   "properties": {
     "id": {
       "type": "string",

@@ -80,8 +80,7 @@ If it does not exist, briefly restate what you understand about the entity from 
 3. Should this entity include all common properties, only some, or none? Common properties: `id`, `basedOn`, `entityDocumentationUrl`, `createdAt`, `updatedAt`. Reply `all`, `none`, or `some: <property names>`. The required, fixed `entityType` discriminator is always included independently.
 4. Which of the user-defined properties are required? List names, or say `infer` / `none`.
 5. Should I intelligently infer recommended IFS fields, required properties, and possible relations from the entity purpose? Reply `yes` or `no`.
-6. Should the schema be strict with `additionalProperties: false`, or flexible with `additionalProperties: true`? Reply `strict` or `flexible`.
-7. Do you approve me to create the schema file(s) immediately after applying your answers and any requested inference? Reply `yes` or `no`.
+6. Do you approve me to create the schema file(s) immediately after applying your answers and any requested inference? Reply `yes` or `no`.
 
 If it exists, read the existing schema first, briefly summarize current fields, then ask this update questionnaire, append any specific `Relationship` recommendations and approval questions, and wait:
 
@@ -148,7 +147,7 @@ Only after approval:
 - Set `$id` to `https://ifs-standards.org/schemas/v1/entities/<kebab-case-entity-name>.schema.json`.
 - Use a human-readable `title` in PascalCase / title case.
 - Set `type` to `object`.
-- Include `additionalProperties` according to the entity need; default to `true` unless the user asks for a strict schema.
+- All IFS entity schemas must use `additionalProperties: true`; never close them with `additionalProperties: false` or `unevaluatedProperties: false`.
 - Convert collected properties into valid JSON Schema `properties`.
 - For entity-object references, prefer absolute `$ref` values matching schema `$id`, not relative file paths. Example: `"$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json"`.
 - For `array<EntityName>` or plural entity-object properties, put the `$ref` inside `items`. Example: `"permissions": { "type": "array", "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json" } }`.

@@ -88,4 +88,6 @@ export class ActionResponseDto {
     | 'suspended'
     | 'revoked'
     | 'deprecated';
+
+  [key: string]: unknown;
 }

@@ -60,4 +60,6 @@ export class ObservationResponseDto {
     type: () => MemberResponseDto,
   })
   observer: MemberResponseDto;
+
+  [key: string]: unknown;
 }

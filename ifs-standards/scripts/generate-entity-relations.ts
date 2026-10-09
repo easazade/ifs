@@ -4,6 +4,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { format } from 'prettier';
+import { isAbstractEntity } from './entity-metadata';
 
 const SCRIPTS_DIR = dirname(fileURLToPath(import.meta.url));
 const PROJECT_DIR = join(SCRIPTS_DIR, '..');
@@ -78,25 +79,27 @@ function indexEntities(entities: EntitySchema[]): Map<string, EntitySchema> {
 
 function buildRelations(entities: EntitySchema[], entityByReference: Map<string, EntitySchema>): EntityRelations {
   return Object.fromEntries(
-    entities.map((entity) => {
-      const relationsByPropertyAndType = new Map<string, EntityRelation>();
+    entities
+      .filter((entity) => !isAbstractEntity(entity.schema))
+      .map((entity) => {
+        const relationsByPropertyAndType = new Map<string, EntityRelation>();
 
-      for (const [property, propertySchema] of Object.entries(entity.schema.properties ?? {})) {
-        for (const reference of collectReferences(propertySchema)) {
-          const relatedEntity = resolveEntityReference(reference, entity, entityByReference);
-          if (!relatedEntity) continue;
+        for (const [property, propertySchema] of Object.entries(entity.schema.properties ?? {})) {
+          for (const reference of collectReferences(propertySchema)) {
+            const relatedEntity = resolveEntityReference(reference, entity, entityByReference);
+            if (!relatedEntity || isAbstractEntity(relatedEntity.schema)) continue;
 
-          const relation = { property, type: relatedEntity.name };
-          relationsByPropertyAndType.set(`${property}\0${relatedEntity.name}`, relation);
+            const relation = { property, type: relatedEntity.name };
+            relationsByPropertyAndType.set(`${property}\0${relatedEntity.name}`, relation);
+          }
         }
-      }
 
-      const entityRelations = [...relationsByPropertyAndType.values()].sort(
-        (left, right) => left.property.localeCompare(right.property) || left.type.localeCompare(right.type)
-      );
+        const entityRelations = [...relationsByPropertyAndType.values()].sort(
+          (left, right) => left.property.localeCompare(right.property) || left.type.localeCompare(right.type)
+        );
 
-      return [entity.name, entityRelations];
-    })
+        return [entity.name, entityRelations];
+      })
   );
 }
 

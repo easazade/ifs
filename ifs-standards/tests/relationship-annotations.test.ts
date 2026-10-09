@@ -75,6 +75,23 @@ describe('relationship annotation generation', () => {
     expect((await schema('Member'))['x-ifs-relationships']).toHaveLength(2);
   });
 
+  it('excludes abstract schemas without requiring a discriminator or modifying them', async () => {
+    const { entities, defaults, define } = await fixture();
+    const directory = join(entities, 'Entity');
+    await mkdir(directory);
+    const path = join(directory, 'Entity.schema.json');
+    const original = JSON.stringify({
+      type: 'object',
+      'x-ifs-abstract': true,
+      properties: { entityType: { type: 'string' } },
+    });
+    await writeFile(path, original);
+    expect(await generateRelationshipAnnotations(entities, defaults)).toBe(3);
+    expect(await readFile(path, 'utf8')).toBe(original);
+    await define('invalid-base-endpoint', ['Entity'], ['Member']);
+    await expect(generateRelationshipAnnotations(entities, defaults)).rejects.toThrow('Unknown entity type Entity');
+  });
+
   it('rejects unknown endpoint types before writing any schema', async () => {
     const { entities, defaults, define, schema } = await fixture();
     await define('a-valid', ['Member'], ['Group']);

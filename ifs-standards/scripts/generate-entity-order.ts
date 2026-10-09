@@ -3,6 +3,7 @@ import type { JSONSchema7 } from 'json-schema';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isAbstractEntity } from './entity-metadata';
 
 const SCRIPTS_DIR = dirname(fileURLToPath(import.meta.url));
 const PROJECT_DIR = join(SCRIPTS_DIR, '..');
@@ -15,6 +16,7 @@ interface EntityNode {
   schemaId?: string;
   filePath: string;
   references: Set<string>;
+  abstract: boolean;
 }
 
 const schemaFiles = await findSchemaFiles(ENTITIES_DIR);
@@ -32,9 +34,10 @@ for (const entity of entities) {
   }
 }
 
-const generateOrder = topologicalSort(entities);
+const abstractNames = new Set(entities.filter((entity) => entity.abstract).map((entity) => entity.name));
+const generateOrder = topologicalSort(entities).filter((name) => !abstractNames.has(name));
 await writeFile(OUTPUT_PATH, `${JSON.stringify(generateOrder, null, 2)}\n`);
-console.log(`Generated ${OUTPUT_PATH} from ${entities.length} entity schemas.`);
+console.log(`Generated ${OUTPUT_PATH} from ${generateOrder.length} concrete entity schemas.`);
 
 async function findSchemaFiles(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -60,6 +63,7 @@ async function readEntities(filePaths: string[]): Promise<EntityNode[]> {
         schemaId: schema.$id,
         filePath,
         references: new Set<string>(),
+        abstract: isAbstractEntity(schema),
       };
     })
   );

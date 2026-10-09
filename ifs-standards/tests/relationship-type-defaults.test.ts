@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import type { AnySchema } from 'ajv';
 import { describe, expect, it } from 'vitest';
 import { createAjv } from './utils/createAjv';
+import { isAbstractEntity } from '../scripts/entity-metadata';
 
 interface RelationshipType {
   id: string;
@@ -23,9 +24,9 @@ const definitions = readdirSync(defaultsDir)
 const entityDir = 'src/entities';
 const entityTypes = readdirSync(entityDir, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
-  .map((entry) => {
+  .flatMap((entry) => {
     const schema = JSON.parse(readFileSync(join(entityDir, entry.name, `${entry.name}.schema.json`), 'utf8'));
-    return schema.title as string;
+    return isAbstractEntity(schema) ? [] : [schema.title as string];
   });
 const ajv = createAjv();
 // IFS ID metadata is an annotation, not an additional validation constraint.

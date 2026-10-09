@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import type { JSONSchema7 } from 'json-schema';
 import { describe, expect, it } from 'vitest';
 import { createAjv } from './utils/createAjv';
+import { isAbstractEntity } from '../scripts/entity-metadata';
 
 const entitiesDir = 'src/entities';
 const entities = readdirSync(entitiesDir, { withFileTypes: true })
@@ -10,7 +11,8 @@ const entities = readdirSync(entitiesDir, { withFileTypes: true })
   .map(({ name }) => ({
     name,
     schema: JSON.parse(readFileSync(join(entitiesDir, name, `${name}.schema.json`), 'utf8')) as JSONSchema7,
-  }));
+  }))
+  .filter(({ schema }) => !isAbstractEntity(schema));
 
 describe('unified entity IDs', () => {
   for (const { name, schema } of entities) {

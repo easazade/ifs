@@ -2,6 +2,7 @@
 import type { JSONSchema7, JSONSchema7Definition } from 'json-schema';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
+import { isAbstractEntity } from './entity-metadata';
 
 // These types describe the schema metadata and graph used by the overview renderer.
 interface Entity {
@@ -41,12 +42,12 @@ const ENTITIES_DIR = 'src/entities';
 const OUTPUT_PATH = join(ENTITIES_DIR, 'overview.md');
 
 const schemaFiles = await findSchemaFiles(ENTITIES_DIR);
-const entities = await readEntities(schemaFiles);
+const entities = (await readEntities(schemaFiles)).filter((entity) => !isAbstractEntity(entity.schema));
 const entityByRef = indexEntitiesByRef(entities);
 const relations = collectRelations(entities, entityByRef);
 
 await writeFile(OUTPUT_PATH, renderOverview(entities, relations));
-console.log(`Generated ${OUTPUT_PATH} from ${schemaFiles.length} schemas.`);
+console.log(`Generated ${OUTPUT_PATH} from ${entities.length} concrete entity schemas.`);
 
 async function findSchemaFiles(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true });

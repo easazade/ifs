@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json",
+  "title": "Entity",
+  "description": "Abstract base schema for IFS entities. Concrete schemas define their own entityType and ID prefix.",
+  "type": "object",
+  "additionalProperties": true,
+  "x-ifs-abstract": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+      "description": "Globally unique entity identifier in EntityType/ID form."
+    },
+    "entityType": {
+      "type": "string",
+      "description": "Entity type discriminator, fixed by the concrete entity schema."
+    },
+    "basedOn": {
+      "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+      "description": "Id of the object this object is derived from."
+    },
+    "entityDocumentationUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL for documentation about this entity."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when this entity record was created."
+    }
+  },
+  "required": ["id", "entityType", "entityDocumentationUrl", "createdAt"]
+}

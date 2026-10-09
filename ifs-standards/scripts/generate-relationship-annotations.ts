@@ -3,6 +3,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { format, resolveConfig } from 'prettier';
+import { isAbstractEntity } from './entity-metadata';
 
 interface Annotation {
   relationshipTypeId: string;
@@ -28,15 +29,20 @@ async function findSchemas(directory: string): Promise<string[]> {
 }
 
 export async function generateRelationshipAnnotations(entitiesDir: string, defaultsDir: string): Promise<number> {
-  const entities = await Promise.all(
+  const schemas = await Promise.all(
     (await findSchemas(entitiesDir)).map(async (path) => {
       const original = await readFile(path, 'utf8');
       const schema = JSON.parse(original) as EntitySchema;
+      return { path, original, schema };
+    })
+  );
+  const entities = schemas
+    .filter(({ schema }) => !isAbstractEntity(schema))
+    .map(({ path, original, schema }) => {
       const type = schema.properties?.entityType?.const;
       if (!type) throw new Error(`Missing entityType.const in ${path}`);
       return { path, original, schema, type, annotations: [] as Annotation[] };
-    })
-  );
+    });
   const byType = new Map(entities.map((entity) => [entity.type, entity]));
   if (byType.size !== entities.length) throw new Error('Duplicate entityType.const values in entity schemas');
 
@@ -73,8 +79,7 @@ export async function generateRelationshipAnnotations(entitiesDir: string, defau
     entities.map(async (entity) => {
       entity.annotations.sort(
         (left, right) =>
-          left.relationshipTypeId.localeCompare(right.relationshipTypeId) ||
-          left.endpoint.localeCompare(right.endpoint)
+          left.relationshipTypeId.localeCompare(right.relationshipTypeId) || left.endpoint.localeCompare(right.endpoint)
       );
       entity.schema['x-ifs-relationships'] = entity.annotations;
       const config = await resolveConfig(entity.path);

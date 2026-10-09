@@ -88,4 +88,6 @@ export class CreateActionDto {
     | 'suspended'
     | 'revoked'
     | 'deprecated';
+
+  [key: string]: unknown;
 }
