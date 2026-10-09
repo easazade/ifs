@@ -28,7 +28,7 @@ pnpm openapi:generate # Nest build -> prototype-api/openapi.json
 pnpm client:generate  # Fresh OpenAPI export -> Orval -> prototype-client (JS + types)
 ```
 
-`client:generate` includes `openapi:generate`. Neither generation command needs a running API or database connection. Import the client from `prototype-client` in `prototype`; see [client usage](prototype-client/README.md) and [backend documentation](prototype-api/README.md#swagger-and-openapi).
+`client:generate` includes `openapi:generate`. Neither generation command needs a running API or database connection. Import the client from `prototype-client` in `prototype`; see [client usage](prototype-client/README.md) and [backend documentation](prototype-api/README.md#generation-and-openapi).
 
 ## Contribution Guide
 
@@ -43,9 +43,9 @@ type: description
 type(scope): description
 ```
 
-The type and description are required. Scope is optional, but when provided must be a workspace package name: `ifs-standards`, `prototype`, `prototype-api`, or `prototype-client`. Omit the scope for repository-wide changes. When adding or renaming a workspace package, update `scope-enum` in `commitlint.config.mjs` and this list.
+The type and description are required. Scope is optional, but when provided must be a workspace package name: `ifs-standards`, `prototype`, `prototype-api`, `prototype-client`, or `prototype-puppeteer`. Omit the scope for repository-wide changes. When adding or renaming a workspace package, update `scope-enum` in `commitlint.config.mjs` and this list.
 
-Allowed types: `feat` (feature), `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`, and `agent`.
+Allowed types: `feat` (feature), `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`, `agent`, and `repo` (repository-wide changes).
 
 Examples:
 

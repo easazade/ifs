@@ -12,7 +12,7 @@ Shared UI and design guidance for the IFS monorepo. Paths are relative to the mo
 
 | Token            | Value       |
 | :--------------- | :---------- |
-| **Background**   | `#f2f1ed`   |
+| **Background**   | `#f9f9f9`   |
 | **Surface (P)**  | `#ebeae5`   |
 | **Surface (S)**  | `#e6e5e0`   |
 | **Text (P)**     | `#26251e`   |
@@ -25,10 +25,12 @@ Shared UI and design guidance for the IFS monorepo. Paths are relative to the mo
 | **Border**       | `#26251e1a` |
 | **Border Focus** | `#26251e33` |
 
+The standards site's design tokens and font imports are maintained directly in `ifs-standards/src/index.css`; keep component/base styles in `ifs-standards/src/custom.css`. Update this guidance alongside token changes. Other workspaces have independent styling pipelines.
+
 ## 3. Typography
 
 - **Font Import:** `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap');`
-- **Font:** Poppins (Headings 600-700), Inter (Body 400-700).
+- **Font:** Poppins (Headings 500-600), Inter (Body 400-700).
 - **Sizes:** H1: 40px, H2: 28px, H3: 22px, Body: 16px, Small: 14px.
 - **Code:** monospace (for technical/code text).
 - **Rules:** Line-height 1.4–1.6. No extreme letter-spacing.

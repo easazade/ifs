@@ -11,7 +11,6 @@
     "preview": "vite preview",
     "format": "prettier --write src tests scripts *.ts tsconfig*.json",
     "clean": "rm -rf node_modules && rm package-lock.json",
-    "tokens:code": "tsx scripts/tokens-to-code.ts",
     "entities:order": "tsx scripts/generate-entity-order.ts",
     "entities:relations": "tsx scripts/generate-entity-relations.ts",
     "entities:relationships": "tsx scripts/generate-relationship-annotations.ts",

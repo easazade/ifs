@@ -22,7 +22,7 @@
 - **Null safety**: `strict` checks nullable route parameters and DOM lookups. `noUncheckedIndexedAccess` makes array/map access potentially `undefined`; check the value before using it instead of forcing a non-null assertion (`!` in both TypeScript and Dart).
 - **Typed refs**: `useRef<HTMLDivElement>(null)` restricts the element reference while allowing `null` before mounting, much like accessing a Flutter key's state only after its widget exists.
 - **Type-only imports**: `import type` imports a compile-time contract without adding a runtime dependency. Types are erased; JSON Schema/AJV still handle runtime validation.
-- **Build checks**: Vite transpiles without checking types. `npm run typecheck` runs `tsc -b`, and `npm run build` runs that check before bundling. Browser types belong to `tsconfig.app.json`; Node tooling/tests belong to `tsconfig.node.json`. Shared strict settings live in `tsconfig.base.json`.
+- **Build checks**: Vite transpiles without checking types. `pnpm --filter ifs-standards typecheck` runs `tsc -b`, and `pnpm --filter ifs-standards build` runs that check before bundling (from the repository root). Browser types belong to `tsconfig.app.json`; Node tooling/tests belong to `tsconfig.node.json`. Shared strict settings live in `tsconfig.base.json`.
 - **Tooling**: `tsx` executes TypeScript generators without emitting JavaScript files; it does not type-check them. ESLint uses `typescript-eslint` and loads `eslint.config.ts` through `jiti`.
 
 ---

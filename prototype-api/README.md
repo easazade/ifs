@@ -1,6 +1,6 @@
 # IFS Prototype API
 
-NestJS backend using **SurrealDB 3.x** and the **JavaScript SDK 2.x**. Use Node.js 24 and the workspace's pinned pnpm version.
+NestJS backend using **SurrealDB 3.x** and the **JavaScript SDK 2.x**. Use Node.js 24 and the pnpm version pinned in the root `package.json`.
 
 ## Local setup
 
@@ -93,7 +93,11 @@ pnpm --filter prototype-api resource:generate:all
 pnpm client:generate
 ```
 
-DTO generation emits create/update/response classes, including typed nested relations. Generate dependencies first; missing related response DTOs fail before writing. `--skip-format` skips formatting. Resource generation writes marked CRUD services/controllers/modules, refreshes `src/generated-resources.module.ts`, and refuses to overwrite hand-written files. It uses `ifs-standards/scripts/entity-relations.json` for relation metadata. Neither generator connects to a database.
+DTO generation resolves inherited schema fields with `ifs-standards/scripts/entity-schema.ts` and emits create/update/response classes, including typed nested relations. Create DTOs omit read-only fields; response DTOs omit write-only fields. Abstract `Entity` has no resource/table. Generate dependencies first; missing related response DTOs fail before writing. `--skip-format` skips formatting.
+
+Resource generation writes marked CRUD services/controllers/modules, refreshes `src/generated-resources.module.ts` and `src/surreal/entity-tables.generated.ts`, and refuses to overwrite hand-written resources. It uses `ifs-standards/scripts/entity-relations.json` for relation metadata. A single-resource command regenerates **all DTOs** first unless `--skip-dtos` is supplied; the all-resources command generates DTOs once before its resource loop. Neither generator connects to a database.
+
+After schema or default relationship metadata changes, run `pnpm --filter ifs-standards entities` first to refresh annotations, order, relations, and overview. Root `pnpm generate:all` then regenerates API DTOs/resources, OpenAPI, the client, and puppeteer's `src/game/api.ts`; it does not refresh standards metadata or fake personalities.
 
 Generated controllers retain plural routes, concrete DTOs, stable unique Swagger `operationId` values, and explicit response metadata. After contract changes, run `pnpm client:generate` and commit `prototype-api/openapi.json` plus `prototype-client/src/generated/api.ts`; never hand-edit them.
 

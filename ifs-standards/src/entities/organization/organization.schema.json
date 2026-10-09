@@ -29,6 +29,7 @@
     { "relationshipTypeId": "RelationshipType/ifs.employed-by", "endpoint": "target" },
     { "relationshipTypeId": "RelationshipType/ifs.manages", "endpoint": "source" },
     { "relationshipTypeId": "RelationshipType/ifs.manages", "endpoint": "target" },
+    { "relationshipTypeId": "RelationshipType/ifs.member-of", "endpoint": "source" },
     { "relationshipTypeId": "RelationshipType/ifs.member-of", "endpoint": "target" },
     { "relationshipTypeId": "RelationshipType/ifs.oversees", "endpoint": "source" },
     { "relationshipTypeId": "RelationshipType/ifs.oversees", "endpoint": "target" },

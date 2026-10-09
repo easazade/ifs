@@ -2,36 +2,42 @@
 
 ## Development
 
-Requires Node.js 22.12+ (Node.js 24 LTS recommended) and npm.
+Use Node.js 24 and the pnpm version pinned in the root `package.json`. Run from the repository root:
 
 ```sh
-npm ci
-npm run dev
+pnpm install
+pnpm --filter ifs-standards dev
 ```
+
+The commands below also run from the repository root.
 
 The application uses React, TypeScript, Vite, Tailwind CSS v4, and MDX.
 
-| Command                          | Purpose                                                                                   |
-| -------------------------------- | ----------------------------------------------------------------------------------------- |
-| `npm run typecheck`              | Strict TypeScript checks for the app, generated entity types, scripts, configs, and tests |
-| `npm run build`                  | Type-check, then create the production bundle in `dist/`                                  |
-| `npm run lint`                   | ESLint with TypeScript and React rules                                                    |
-| `npm test`                       | Run Vitest tests                                                                          |
-| `npm run test:watch`             | Watch tests                                                                               |
-| `npm run preview`                | Serve the production bundle locally                                                       |
-| `npm run format`                 | Format source, tests, scripts, and TypeScript configs                                     |
-| `npm run entities`               | Regenerate relationship annotations, entity order, direct relations, and overview         |
-| `npm run entities:relationships` | Update schema-level relationship annotations from default RelationshipType objects        |
-| `npm run entities:relations`     | Regenerate `scripts/entity-relations.json` from direct entity schema references           |
-| `npm run tokens:code`            | Regenerate CSS from the existing design token library                                     |
+| Command                                              | Purpose                                                                            |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `pnpm --filter ifs-standards typecheck`              | Strict TypeScript checks for the app, entity types, scripts, configs, and tests    |
+| `pnpm --filter ifs-standards build`                  | Type-check, then create the production bundle in `ifs-standards/dist/`             |
+| `pnpm --filter ifs-standards lint`                   | ESLint with TypeScript and React rules                                             |
+| `pnpm --filter ifs-standards test`                   | Run Vitest tests                                                                   |
+| `pnpm --filter ifs-standards test:watch`             | Watch tests                                                                        |
+| `pnpm --filter ifs-standards preview`                | Serve the production bundle locally                                                |
+| `pnpm --filter ifs-standards format`                 | Format source, tests, scripts, and TypeScript configs                              |
+| `pnpm --filter ifs-standards entities`               | Regenerate relationship annotations, entity order, direct relations, and overview  |
+| `pnpm --filter ifs-standards entities:relationships` | Update schema-level relationship annotations from default RelationshipType objects |
+| `pnpm --filter ifs-standards entities:order`         | Regenerate `scripts/generate-order.json` for concrete entities                     |
+| `pnpm --filter ifs-standards entities:relations`     | Regenerate `scripts/entity-relations.json` from direct entity schema references    |
+
+Design tokens and font imports are maintained directly in `src/index.css`; component/base styles live in `src/custom.css`. Keep them aligned with root `DESIGN.md`.
 
 Use `.tsx` for JSX components and `.ts` for other code. The app and Node tooling have separate TypeScript configs sharing `tsconfig.base.json`. See [NOTES.md](NOTES.md#typescript-workflow-and-null-safety) for TypeScript concepts and Flutter/Dart comparisons.
 
-Entity interfaces in `src/entities/` are generated; update their JSON schemas rather than editing them by hand. TypeScript does not replace runtime schema validation.
+Entity JSON schemas are canonical; derived entity interfaces/docs must not be edited by hand. The current `entities` command generates metadata and `src/entities/overview.md`, not TypeScript interfaces or per-entity docs. Never create or regenerate entity examples. TypeScript does not replace runtime schema validation.
+
+Concrete entities compose the abstract `Entity` schema. Resolve effective fields and requiredness with `scripts/entity-schema.ts`; inherited fields are not missing local definitions. `Entity` is not an instance, API resource, database table, or relationship endpoint. Create payloads omit read-only properties, even when those are required in the persisted schema.
 
 ### Relationship annotations
 
-Run `pnpm --filter ifs-standards entities:relationships` from the repository root (also included in `entities`). The script reads `src/defaults/relationship-type/*.json` and updates the root `x-ifs-relationships` annotation in every entity schema:
+Run `pnpm --filter ifs-standards entities:relationships` from the repository root (also included in `entities`). The script reads `src/defaults/relationship-type/*.json` and updates the root `x-ifs-relationships` annotation in every concrete entity schema:
 
 ```json
 "x-ifs-relationships": [
@@ -43,4 +49,4 @@ Run `pnpm --filter ifs-standards entities:relationships` from the repository roo
 
 These generated annotations describe known default types, not an exhaustive runtime allowlist. They do not add fields to entity instances or validate relationships. RelationshipType objects remain the source of truth for labels and endpoint constraints; do not manually edit the annotations. Strict JSON Schema validators must register `x-ifs-relationships` as an annotation keyword.
 
-**Known test issue:** The existing entity-schema suite fails during collection because `change.schema.json` requires `effected` without defining that property. This predates the TypeScript migration; schema semantics are unchanged.
+The schema test helper registers IFS annotation keywords and uses `strictRequired: false` for open/composed schemas. A required property need not be defined in the same subschema; the suite no longer fails collection on `Change.effected`. Schema validation still enforces required values.

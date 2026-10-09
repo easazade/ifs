@@ -1,4 +1,4 @@
-// Checks generated fixture modules for references that do not point to known fixture identities.
+// Checks fixture module exports for references that do not point to known canonical identities.
 import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -30,15 +30,12 @@ export function checkReferences(modules: FixtureModule[]): {
     }
 
     const object = value as Record<string, unknown>;
-    if (typeof object.ifsId === 'string' && referencePattern.test(object.ifsId)) {
-      identities.add(object.ifsId);
-    } else if (typeof object.entityType === 'string' && typeof object.id === 'string') {
-      const identity = `${object.entityType}/${object.id}`;
-      if (referencePattern.test(identity)) identities.add(identity);
-    }
+    const hasIdentity =
+      typeof object.entityType === 'string' && typeof object.id === 'string' && referencePattern.test(object.id);
+    if (hasIdentity) identities.add(object.id as string);
     for (const [key, item] of Object.entries(object)) {
-      // ifsId declares this object's identity; it is not a foreign reference.
-      if (key !== 'ifsId') visit(item, `${location}.${key}`, nextAncestors);
+      // A canonical entity id declares identity; id fields on other objects may be references.
+      if (key !== 'id' || !hasIdentity) visit(item, `${location}.${key}`, nextAncestors);
     }
   }
 

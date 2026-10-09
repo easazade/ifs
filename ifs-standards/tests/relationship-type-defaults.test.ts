@@ -111,12 +111,12 @@ describe('standard relationship type defaults', () => {
     expect(definition?.definition).toMatchObject(expected);
   });
 
-  it('defines direct member membership with an inverse label', () => {
+  it('defines direct member, group, and organization membership with an inverse label', () => {
     const memberOf = definitions.find(({ definition }) => definition.id === 'RelationshipType/ifs.member-of');
     expect(memberOf?.definition).toMatchObject({
       type: 'member of',
       inverseType: 'has member',
-      sourceTypes: ['Member'],
+      sourceTypes: ['Member', 'Group', 'Organization'],
       targetTypes: ['Group', 'Organization'],
       symmetric: false,
     });
