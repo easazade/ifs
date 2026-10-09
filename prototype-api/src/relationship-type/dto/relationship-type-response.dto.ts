@@ -76,7 +76,7 @@ export class RelationshipTypeResponseDto {
 
   @ApiProperty({
     description:
-      'ID of the relationship type used when source and target are swapped, such as governed by to governs.',
+      'Inverse relationship name used when source and target are swapped, such as `has-member` for `member-of`. This is a label, not a relationship type ID.',
     minLength: 1,
   })
   inverseType: string;

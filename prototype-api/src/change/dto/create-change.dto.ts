@@ -134,7 +134,6 @@ export class CreateChangeDto {
 
   @ApiPropertyOptional({
     description: 'Label assigned to this change.',
-    example: ['main-system:fix', 'ali:needs-urgent-attention'],
     type: [String],
   })
   labels?: Array<string>;
