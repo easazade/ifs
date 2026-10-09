@@ -1,6 +1,5 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import type { AnySchema } from 'ajv';
 import { describe, expect, it } from 'vitest';
 import { createAjv } from './utils/createAjv';
 import { isAbstractEntity } from '../scripts/entity-metadata';
@@ -29,11 +28,7 @@ const entityTypes = readdirSync(entityDir, { withFileTypes: true })
     return isAbstractEntity(schema) ? [] : [schema.title as string];
   });
 const ajv = createAjv();
-// IFS ID metadata is an annotation, not an additional validation constraint.
-ajv.addKeyword({ keyword: 'x-ifs-id', schemaType: 'boolean', valid: true });
-const validate = ajv.compile(
-  JSON.parse(readFileSync(join(entityDir, 'relationship-type/relationship-type.schema.json'), 'utf8')) as AnySchema
-);
+const validate = ajv.getSchema('https://ifs-standards.org/schemas/v1/entities/relationship-type.schema.json')!;
 
 describe('standard relationship type defaults', () => {
   it('contains unique standard IDs', () => {

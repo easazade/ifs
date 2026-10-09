@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 // Generates NestJS DTOs from canonical IFS entity schemas; no database required.
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { graphEdges } from '../src/surreal/entity-storage.ts';
+import { readEntitySchema } from '../../ifs-standards/scripts/entity-schema.ts';
+import { isAbstractEntity } from '../../ifs-standards/scripts/entity-metadata.ts';
 
 const apiRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const entitiesRoot = resolve(apiRoot, '../ifs-standards/src/entities');
@@ -24,7 +26,9 @@ const nullable = (property) =>
 
 function readSchema(path) {
   if (!existsSync(path)) throw new Error(`Schema not found: ${path}`);
-  const schema = JSON.parse(readFileSync(path, 'utf8'));
+  const schema = readEntitySchema(path, entitiesRoot);
+  if (isAbstractEntity(schema))
+    throw new Error('Cannot generate DTOs for an abstract entity schema.');
   if (schema.type !== 'object' || !schema.title || !schema.properties) {
     throw new Error('Schema must be an object with title and properties.');
   }
@@ -86,6 +90,7 @@ function itemSchema(property) {
     if (property[key] !== undefined) result[key] = property[key];
   }
   if (property.const !== undefined) result.enum = [property.const];
+  if (property.allOf) result.allOf = property.allOf.map(itemSchema);
   if (nullable(property)) result.nullable = true;
   if (type === 'array') result.items = itemSchema(property.items ?? {});
   if (property.properties)
@@ -128,6 +133,8 @@ function decorator(property, required) {
     if (property[key] !== undefined)
       options.push(`${key}: ${JSON.stringify(property[key])}`);
   }
+  if (property.allOf)
+    options.push(`allOf: ${JSON.stringify(property.allOf.map(itemSchema))}`);
   if (property.examples?.length)
     options.push(`example: ${JSON.stringify(property.examples[0])}`);
   const related = relation(property);

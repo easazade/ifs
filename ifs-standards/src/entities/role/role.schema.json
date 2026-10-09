@@ -4,6 +4,7 @@
   "title": "Role",
   "type": "object",
   "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -15,17 +16,6 @@
       "type": "string",
       "const": "Role",
       "description": "Entity type discriminator. Always \"Role\" for Role entities."
-    },
-    "basedOn": {
-      "type": "string",
-      "x-ifs-id": true,
-      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
-      "description": "Id of the object this object is derived from."
-    },
-    "entityDocumentationUrl": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL for documentation about this entity."
     },
     "name": { "type": "string", "description": "Human-readable name of the role." },
     "description": { "type": "string", "description": "Optional human-readable explanation of what this role is for." },
@@ -55,11 +45,6 @@
       "enum": ["drafted", "under-review", "active", "suspended", "revoked", "expired"],
       "description": "Lifecycle state of the role."
     },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Timestamp when this role record was created."
-    },
     "updatedAt": {
       "type": "string",
       "format": "date-time",
@@ -71,18 +56,6 @@
       "description": "Optional timestamp after which this role no longer applies."
     }
   },
-  "required": [
-    "id",
-    "entityType",
-    "entityDocumentationUrl",
-    "name",
-    "memberId",
-    "scopeId",
-    "scope",
-    "permissions",
-    "state",
-    "createdAt",
-    "updatedAt"
-  ],
+  "required": ["name", "memberId", "scopeId", "scope", "permissions", "state", "updatedAt"],
   "x-ifs-relationships": []
 }

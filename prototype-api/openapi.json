@@ -5121,9 +5121,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this action.",
-            "pattern": "^Action/[^/\\s]+$"
+            "pattern": "^Action/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this action.",
+                "pattern": "^Action/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -5144,7 +5155,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this action record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -5210,9 +5221,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this action.",
-            "pattern": "^Action/[^/\\s]+$"
+            "pattern": "^Action/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this action.",
+                "pattern": "^Action/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -5233,7 +5255,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this action record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -5299,9 +5321,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this relationship.",
-            "pattern": "^Relationship/[^/\\s]+$"
+            "pattern": "^Relationship/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this relationship.",
+                "pattern": "^Relationship/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -5322,7 +5355,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this relationship record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -5384,9 +5417,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this action.",
-            "pattern": "^Action/[^/\\s]+$"
+            "pattern": "^Action/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this action.",
+                "pattern": "^Action/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -5407,7 +5451,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this action record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -5461,9 +5505,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this change item.",
-            "pattern": "^ChangeItem/[^/\\s]+$"
+            "pattern": "^ChangeItem/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this change item.",
+                "pattern": "^ChangeItem/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -5481,6 +5536,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "resourceType": {
             "type": "string",
@@ -5518,11 +5578,6 @@
             "type": "string",
             "description": "Optional human-readable note explaining this specific item."
           },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this change item was created.",
-            "format": "date-time"
-          },
           "updatedAt": {
             "type": "string",
             "description": "Timestamp when this change item was last updated.",
@@ -5533,12 +5588,12 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "resourceType",
           "operation",
           "targetId",
           "baseId",
           "proposedId",
-          "createdAt",
           "updatedAt"
         ]
       },
@@ -5546,9 +5601,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this scope.",
-            "pattern": "^Scope/[^/\\s]+$"
+            "pattern": "^Scope/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this scope.",
+                "pattern": "^Scope/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -5566,6 +5632,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "name": {
             "type": "string",
@@ -5620,11 +5691,6 @@
             "additionalProperties": true,
             "description": "Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific."
           },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this scope record was created.",
-            "format": "date-time"
-          },
           "updatedAt": {
             "type": "string",
             "description": "Timestamp when this scope record was last updated.",
@@ -5635,8 +5701,8 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
-          "name",
           "createdAt",
+          "name",
           "updatedAt"
         ]
       },
@@ -5644,9 +5710,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this permission.",
-            "pattern": "^Permission/[^/\\s]+$"
+            "pattern": "^Permission/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this permission.",
+                "pattern": "^Permission/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -5664,6 +5741,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "actionIds": {
             "description": "ID list of actions that this permission allows",
@@ -5709,11 +5791,6 @@
             "type": "string",
             "description": "Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked."
           },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this permission record was created.",
-            "format": "date-time"
-          },
           "updatedAt": {
             "type": "string",
             "description": "Timestamp when this permission record was last updated.",
@@ -5729,10 +5806,10 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "actionIds",
           "scopeId",
           "state",
-          "createdAt",
           "expiresAt"
         ]
       },
@@ -5740,9 +5817,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this role.",
-            "pattern": "^Role/[^/\\s]+$"
+            "pattern": "^Role/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this role.",
+                "pattern": "^Role/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -5760,6 +5848,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "name": {
             "type": "string",
@@ -5806,11 +5899,6 @@
             "type": "string",
             "description": "Lifecycle state of the role."
           },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this role record was created.",
-            "format": "date-time"
-          },
           "updatedAt": {
             "type": "string",
             "description": "Timestamp when this role record was last updated.",
@@ -5826,13 +5914,13 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "name",
           "memberId",
           "scopeId",
           "scope",
           "permissions",
           "state",
-          "createdAt",
           "updatedAt"
         ]
       },
@@ -5840,9 +5928,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this member.",
-            "pattern": "^Member/[^/\\s]+$"
+            "pattern": "^Member/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this member.",
+                "pattern": "^Member/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -5851,10 +5950,20 @@
               "Member"
             ]
           },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
           "entityDocumentationUrl": {
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "name": {
             "type": "string",
@@ -5877,11 +5986,6 @@
             "type": "boolean",
             "description": "Whether this member is considered an owner of the system."
           },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this member record was created.",
-            "format": "date-time"
-          },
           "updatedAt": {
             "type": "string",
             "description": "Timestamp when this member record was last updated.",
@@ -5892,11 +5996,11 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "name",
           "roles",
           "permissions",
           "isOwner",
-          "createdAt",
           "updatedAt"
         ]
       },
@@ -5904,9 +6008,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this vote.",
-            "pattern": "^Vote/[^/\\s]+$"
+            "pattern": "^Vote/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this vote.",
+                "pattern": "^Vote/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -5927,7 +6042,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this vote record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -5970,9 +6085,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this rule.",
-            "pattern": "^Rule/[^/\\s]+$"
+            "pattern": "^Rule/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this rule.",
+                "pattern": "^Rule/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -5993,7 +6119,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this rule record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -6014,9 +6140,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this decision.",
-            "pattern": "^Decision/[^/\\s]+$"
+            "pattern": "^Decision/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this decision.",
+                "pattern": "^Decision/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -6034,6 +6171,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "subject": {
             "type": "string",
@@ -6141,11 +6283,6 @@
             "description": "Optional timestamp when this decision was rejected or produced a rejected outcome.",
             "format": "date-time"
           },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this decision record was created.",
-            "format": "date-time"
-          },
           "updatedAt": {
             "type": "string",
             "description": "Timestamp when this decision record was last updated.",
@@ -6161,6 +6298,7 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "subject",
           "state",
           "eligibleMembers",
@@ -6170,7 +6308,6 @@
           "affectedMemberCount",
           "voteCount",
           "openedAt",
-          "createdAt",
           "updatedAt"
         ]
       },
@@ -6178,9 +6315,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this comment.",
-            "pattern": "^Comment/[^/\\s]+$"
+            "pattern": "^Comment/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this comment.",
+                "pattern": "^Comment/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -6201,7 +6349,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this comment was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -6222,9 +6370,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this review comment.",
-            "pattern": "^ReviewComment/[^/\\s]+$"
+            "pattern": "^ReviewComment/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this review comment.",
+                "pattern": "^ReviewComment/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -6245,7 +6404,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this review comment was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -6266,9 +6425,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this change.",
-            "pattern": "^Change/[^/\\s]+$"
+            "pattern": "^Change/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this change.",
+                "pattern": "^Change/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -6286,6 +6456,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "title": {
             "type": "string",
@@ -6410,11 +6585,6 @@
               "type": "string"
             }
           },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this change was created.",
-            "format": "date-time"
-          },
           "updatedAt": {
             "type": "string",
             "description": "Timestamp when this change was last updated.",
@@ -6435,6 +6605,7 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "title",
           "description",
           "reason",
@@ -6446,7 +6617,6 @@
           "number",
           "merged",
           "hasConflict",
-          "createdAt",
           "updatedAt"
         ]
       },
@@ -6454,9 +6624,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this change.",
-            "pattern": "^Change/[^/\\s]+$"
+            "pattern": "^Change/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this change.",
+                "pattern": "^Change/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -6474,6 +6655,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "title": {
             "type": "string",
@@ -6597,11 +6783,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this change was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -6623,6 +6804,7 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "title",
           "description",
           "reason",
@@ -6634,7 +6816,6 @@
           "number",
           "merged",
           "hasConflict",
-          "createdAt",
           "updatedAt"
         ]
       },
@@ -6642,9 +6823,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this change.",
-            "pattern": "^Change/[^/\\s]+$"
+            "pattern": "^Change/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this change.",
+                "pattern": "^Change/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -6662,6 +6854,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "title": {
             "type": "string",
@@ -6785,11 +6982,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this change was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -6812,9 +7004,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this change item.",
-            "pattern": "^ChangeItem/[^/\\s]+$"
+            "pattern": "^ChangeItem/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this change item.",
+                "pattern": "^ChangeItem/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -6832,6 +7035,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "resourceType": {
             "type": "string",
@@ -6868,11 +7076,6 @@
           "description": {
             "type": "string",
             "description": "Optional human-readable note explaining this specific item."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this change item was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -6884,12 +7087,12 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "resourceType",
           "operation",
           "targetId",
           "baseId",
           "proposedId",
-          "createdAt",
           "updatedAt"
         ]
       },
@@ -6897,9 +7100,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this change item.",
-            "pattern": "^ChangeItem/[^/\\s]+$"
+            "pattern": "^ChangeItem/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this change item.",
+                "pattern": "^ChangeItem/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -6917,6 +7131,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "resourceType": {
             "type": "string",
@@ -6953,11 +7172,6 @@
           "description": {
             "type": "string",
             "description": "Optional human-readable note explaining this specific item."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this change item was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -6970,9 +7184,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this comment.",
-            "pattern": "^Comment/[^/\\s]+$"
+            "pattern": "^Comment/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this comment.",
+                "pattern": "^Comment/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -6993,7 +7218,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this comment was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -7014,9 +7239,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this comment.",
-            "pattern": "^Comment/[^/\\s]+$"
+            "pattern": "^Comment/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this comment.",
+                "pattern": "^Comment/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7037,7 +7273,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this comment was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -7051,9 +7287,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this decision.",
-            "pattern": "^Decision/[^/\\s]+$"
+            "pattern": "^Decision/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this decision.",
+                "pattern": "^Decision/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7071,6 +7318,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "subject": {
             "type": "string",
@@ -7176,11 +7428,6 @@
           "rejectedAt": {
             "type": "string",
             "description": "Optional timestamp when this decision was rejected or produced a rejected outcome.",
-            "format": "date-time"
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this decision record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -7198,6 +7445,7 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "subject",
           "state",
           "eligibleMembers",
@@ -7207,7 +7455,6 @@
           "affectedMemberCount",
           "voteCount",
           "openedAt",
-          "createdAt",
           "updatedAt"
         ]
       },
@@ -7215,9 +7462,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this decision.",
-            "pattern": "^Decision/[^/\\s]+$"
+            "pattern": "^Decision/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this decision.",
+                "pattern": "^Decision/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7235,6 +7493,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "subject": {
             "type": "string",
@@ -7340,11 +7603,6 @@
           "rejectedAt": {
             "type": "string",
             "description": "Optional timestamp when this decision was rejected or produced a rejected outcome.",
-            "format": "date-time"
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this decision record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -7363,9 +7621,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this delegation.",
-            "pattern": "^Delegation/[^/\\s]+$"
+            "pattern": "^Delegation/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this delegation.",
+                "pattern": "^Delegation/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7386,7 +7655,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this delegation record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -7452,9 +7721,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this delegation.",
-            "pattern": "^Delegation/[^/\\s]+$"
+            "pattern": "^Delegation/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this delegation.",
+                "pattern": "^Delegation/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7475,7 +7755,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this delegation record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -7541,9 +7821,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this delegation.",
-            "pattern": "^Delegation/[^/\\s]+$"
+            "pattern": "^Delegation/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this delegation.",
+                "pattern": "^Delegation/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7564,7 +7855,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this delegation record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -7620,9 +7911,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this geographic area.",
-            "pattern": "^GeographicArea/[^/\\s]+$"
+            "pattern": "^GeographicArea/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this geographic area.",
+                "pattern": "^GeographicArea/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7643,7 +7945,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this geographic area record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -7685,9 +7987,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this geographic area.",
-            "pattern": "^GeographicArea/[^/\\s]+$"
+            "pattern": "^GeographicArea/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this geographic area.",
+                "pattern": "^GeographicArea/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7708,7 +8021,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this geographic area record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -7750,9 +8063,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this geographic area.",
-            "pattern": "^GeographicArea/[^/\\s]+$"
+            "pattern": "^GeographicArea/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this geographic area.",
+                "pattern": "^GeographicArea/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7773,7 +8097,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this geographic area record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -7807,9 +8131,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this group.",
-            "pattern": "^Group/[^/\\s]+$"
+            "pattern": "^Group/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this group.",
+                "pattern": "^Group/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7828,6 +8163,11 @@
             "description": "URL for documentation about this entity.",
             "format": "uri"
           },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
+          },
           "name": {
             "type": "string",
             "description": "Human-readable name of this group.",
@@ -7836,11 +8176,6 @@
           "description": {
             "type": "string",
             "description": "Purpose and context of this group."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this group record was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -7852,8 +8187,8 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
-          "name",
           "createdAt",
+          "name",
           "updatedAt"
         ]
       },
@@ -7861,9 +8196,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this group.",
-            "pattern": "^Group/[^/\\s]+$"
+            "pattern": "^Group/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this group.",
+                "pattern": "^Group/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7882,6 +8228,11 @@
             "description": "URL for documentation about this entity.",
             "format": "uri"
           },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
+          },
           "name": {
             "type": "string",
             "description": "Human-readable name of this group.",
@@ -7890,11 +8241,6 @@
           "description": {
             "type": "string",
             "description": "Purpose and context of this group."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this group record was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -7906,8 +8252,8 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
-          "name",
           "createdAt",
+          "name",
           "updatedAt"
         ]
       },
@@ -7915,9 +8261,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this group.",
-            "pattern": "^Group/[^/\\s]+$"
+            "pattern": "^Group/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this group.",
+                "pattern": "^Group/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7936,6 +8293,11 @@
             "description": "URL for documentation about this entity.",
             "format": "uri"
           },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
+          },
           "name": {
             "type": "string",
             "description": "Human-readable name of this group.",
@@ -7944,11 +8306,6 @@
           "description": {
             "type": "string",
             "description": "Purpose and context of this group."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this group record was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -7961,9 +8318,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this label.",
-            "pattern": "^Label/[^/\\s]+$"
+            "pattern": "^Label/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this label.",
+                "pattern": "^Label/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -7984,7 +8352,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this label was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8005,9 +8373,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this label.",
-            "pattern": "^Label/[^/\\s]+$"
+            "pattern": "^Label/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this label.",
+                "pattern": "^Label/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8028,7 +8407,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this label was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8049,9 +8428,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this label.",
-            "pattern": "^Label/[^/\\s]+$"
+            "pattern": "^Label/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this label.",
+                "pattern": "^Label/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8072,7 +8462,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this label was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8086,9 +8476,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this member.",
-            "pattern": "^Member/[^/\\s]+$"
+            "pattern": "^Member/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this member.",
+                "pattern": "^Member/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8097,10 +8498,20 @@
               "Member"
             ]
           },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
           "entityDocumentationUrl": {
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "name": {
             "type": "string",
@@ -8115,11 +8526,6 @@
           "isOwner": {
             "type": "boolean",
             "description": "Whether this member is considered an owner of the system."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this member record was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -8131,10 +8537,10 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "name",
           "permissions",
           "isOwner",
-          "createdAt",
           "updatedAt"
         ]
       },
@@ -8142,9 +8548,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this member.",
-            "pattern": "^Member/[^/\\s]+$"
+            "pattern": "^Member/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this member.",
+                "pattern": "^Member/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8153,10 +8570,20 @@
               "Member"
             ]
           },
+          "basedOn": {
+            "type": "string",
+            "description": "Id of the object this object is derived from.",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+          },
           "entityDocumentationUrl": {
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "name": {
             "type": "string",
@@ -8171,11 +8598,6 @@
           "isOwner": {
             "type": "boolean",
             "description": "Whether this member is considered an owner of the system."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this member record was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -8188,9 +8610,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this observation.",
-            "pattern": "^Observation/[^/\\s]+$"
+            "pattern": "^Observation/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this observation.",
+                "pattern": "^Observation/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8211,7 +8644,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this observation record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8260,9 +8693,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this observation.",
-            "pattern": "^Observation/[^/\\s]+$"
+            "pattern": "^Observation/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this observation.",
+                "pattern": "^Observation/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8283,7 +8727,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this observation record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8332,9 +8776,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this observation.",
-            "pattern": "^Observation/[^/\\s]+$"
+            "pattern": "^Observation/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this observation.",
+                "pattern": "^Observation/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8355,7 +8810,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this observation record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8393,9 +8848,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this organization.",
-            "pattern": "^Organization/[^/\\s]+$"
+            "pattern": "^Organization/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this organization.",
+                "pattern": "^Organization/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8416,7 +8882,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this organization record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8437,9 +8903,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this organization.",
-            "pattern": "^Organization/[^/\\s]+$"
+            "pattern": "^Organization/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this organization.",
+                "pattern": "^Organization/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8460,7 +8937,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this organization record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8481,9 +8958,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this organization.",
-            "pattern": "^Organization/[^/\\s]+$"
+            "pattern": "^Organization/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this organization.",
+                "pattern": "^Organization/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8504,7 +8992,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this organization record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8518,9 +9006,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this permission.",
-            "pattern": "^Permission/[^/\\s]+$"
+            "pattern": "^Permission/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this permission.",
+                "pattern": "^Permission/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8538,6 +9037,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "actionIds": {
             "description": "ID list of actions that this permission allows",
@@ -8582,11 +9086,6 @@
             ],
             "type": "string",
             "description": "Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this permission record was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -8603,10 +9102,10 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "actionIds",
           "scopeId",
           "state",
-          "createdAt",
           "expiresAt"
         ]
       },
@@ -8614,9 +9113,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this permission.",
-            "pattern": "^Permission/[^/\\s]+$"
+            "pattern": "^Permission/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this permission.",
+                "pattern": "^Permission/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8634,6 +9144,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "actionIds": {
             "description": "ID list of actions that this permission allows",
@@ -8678,11 +9193,6 @@
             ],
             "type": "string",
             "description": "Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this permission record was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -8700,9 +9210,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this place.",
-            "pattern": "^Place/[^/\\s]+$"
+            "pattern": "^Place/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this place.",
+                "pattern": "^Place/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8723,7 +9244,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this place record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8769,9 +9290,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this place.",
-            "pattern": "^Place/[^/\\s]+$"
+            "pattern": "^Place/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this place.",
+                "pattern": "^Place/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8792,7 +9324,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this place record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8838,9 +9370,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this place.",
-            "pattern": "^Place/[^/\\s]+$"
+            "pattern": "^Place/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this place.",
+                "pattern": "^Place/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8861,7 +9404,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this place record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -8898,9 +9441,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "identifier protocol.",
-            "pattern": "^Protocol/[^/\\s]+$"
+            "pattern": "^Protocol/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "identifier protocol.",
+                "pattern": "^Protocol/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8921,6 +9475,7 @@
           },
           "createdAt": {
             "type": "string",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           }
         },
@@ -8935,9 +9490,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "identifier protocol.",
-            "pattern": "^Protocol/[^/\\s]+$"
+            "pattern": "^Protocol/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "identifier protocol.",
+                "pattern": "^Protocol/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8958,6 +9524,7 @@
           },
           "createdAt": {
             "type": "string",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           }
         },
@@ -8972,9 +9539,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "identifier protocol.",
-            "pattern": "^Protocol/[^/\\s]+$"
+            "pattern": "^Protocol/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "identifier protocol.",
+                "pattern": "^Protocol/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -8995,6 +9573,7 @@
           },
           "createdAt": {
             "type": "string",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           }
         }
@@ -9003,9 +9582,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this relationship.",
-            "pattern": "^Relationship/[^/\\s]+$"
+            "pattern": "^Relationship/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this relationship.",
+                "pattern": "^Relationship/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9026,7 +9616,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this relationship record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -9088,9 +9678,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this relationship.",
-            "pattern": "^Relationship/[^/\\s]+$"
+            "pattern": "^Relationship/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this relationship.",
+                "pattern": "^Relationship/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9111,7 +9712,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this relationship record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -9150,9 +9751,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this relationship type.",
-            "pattern": "^RelationshipType/[^/\\s]+$"
+            "pattern": "^RelationshipType/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this relationship type.",
+                "pattern": "^RelationshipType/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9173,7 +9785,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this relationship type was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -9236,9 +9848,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this relationship type.",
-            "pattern": "^RelationshipType/[^/\\s]+$"
+            "pattern": "^RelationshipType/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this relationship type.",
+                "pattern": "^RelationshipType/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9259,7 +9882,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this relationship type was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -9322,9 +9945,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this relationship type.",
-            "pattern": "^RelationshipType/[^/\\s]+$"
+            "pattern": "^RelationshipType/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this relationship type.",
+                "pattern": "^RelationshipType/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9345,7 +9979,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this relationship type was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -9395,9 +10029,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this review comment.",
-            "pattern": "^ReviewComment/[^/\\s]+$"
+            "pattern": "^ReviewComment/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this review comment.",
+                "pattern": "^ReviewComment/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9418,7 +10063,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this review comment was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -9439,9 +10084,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this review comment.",
-            "pattern": "^ReviewComment/[^/\\s]+$"
+            "pattern": "^ReviewComment/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this review comment.",
+                "pattern": "^ReviewComment/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9462,7 +10118,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this review comment was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -9476,9 +10132,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this role.",
-            "pattern": "^Role/[^/\\s]+$"
+            "pattern": "^Role/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this role.",
+                "pattern": "^Role/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9496,6 +10163,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "name": {
             "type": "string",
@@ -9541,11 +10213,6 @@
             ],
             "type": "string",
             "description": "Lifecycle state of the role."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this role record was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -9562,13 +10229,13 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
+          "createdAt",
           "name",
           "memberId",
           "scopeId",
           "scope",
           "permissions",
           "state",
-          "createdAt",
           "updatedAt"
         ]
       },
@@ -9576,9 +10243,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this role.",
-            "pattern": "^Role/[^/\\s]+$"
+            "pattern": "^Role/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this role.",
+                "pattern": "^Role/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9596,6 +10274,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "name": {
             "type": "string",
@@ -9641,11 +10324,6 @@
             ],
             "type": "string",
             "description": "Lifecycle state of the role."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this role record was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -9663,9 +10341,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this rule.",
-            "pattern": "^Rule/[^/\\s]+$"
+            "pattern": "^Rule/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this rule.",
+                "pattern": "^Rule/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9686,7 +10375,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this rule record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -9707,9 +10396,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this rule.",
-            "pattern": "^Rule/[^/\\s]+$"
+            "pattern": "^Rule/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this rule.",
+                "pattern": "^Rule/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9730,7 +10430,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this rule record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -9744,9 +10444,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this scope.",
-            "pattern": "^Scope/[^/\\s]+$"
+            "pattern": "^Scope/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this scope.",
+                "pattern": "^Scope/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9764,6 +10475,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "name": {
             "type": "string",
@@ -9817,11 +10533,6 @@
             "type": "object",
             "additionalProperties": true,
             "description": "Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this scope record was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -9833,8 +10544,8 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
-          "name",
           "createdAt",
+          "name",
           "updatedAt"
         ]
       },
@@ -9842,9 +10553,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this scope.",
-            "pattern": "^Scope/[^/\\s]+$"
+            "pattern": "^Scope/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this scope.",
+                "pattern": "^Scope/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9862,6 +10584,11 @@
             "type": "string",
             "description": "URL for documentation about this entity.",
             "format": "uri"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when this entity record was created.",
+            "format": "date-time"
           },
           "name": {
             "type": "string",
@@ -9915,11 +10642,6 @@
             "type": "object",
             "additionalProperties": true,
             "description": "Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Timestamp when this scope record was created.",
-            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
@@ -9932,9 +10654,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this vote.",
-            "pattern": "^Vote/[^/\\s]+$"
+            "pattern": "^Vote/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this vote.",
+                "pattern": "^Vote/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -9955,7 +10688,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this vote record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {
@@ -9998,9 +10731,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
             "description": "Globally unique identifier for this vote.",
-            "pattern": "^Vote/[^/\\s]+$"
+            "pattern": "^Vote/[^/\\s]+$",
+            "allOf": [
+              {
+                "type": "string",
+                "description": "Globally unique entity identifier in EntityType/ID form.",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"
+              },
+              {
+                "type": "string",
+                "description": "Globally unique identifier for this vote.",
+                "pattern": "^Vote/[^/\\s]+$"
+              }
+            ]
           },
           "entityType": {
             "type": "string",
@@ -10021,7 +10765,7 @@
           },
           "createdAt": {
             "type": "string",
-            "description": "Timestamp when this vote record was created.",
+            "description": "Timestamp when this entity record was created.",
             "format": "date-time"
           },
           "updatedAt": {

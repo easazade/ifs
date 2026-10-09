@@ -18,6 +18,7 @@ Review only these three areas. Do not expand into a general code audit, dependen
 
 - Read repository guidance and any nearer `AGENTS.md`. Preserve existing user changes; inspect git status before editing.
 - Use canonical `ifs-standards/src/entities/**/*.schema.json` and current maintained implementation/configuration as sources of truth. Recent changes and supplied context help locate missed updates, but do not replace checking current contracts.
+- Resolve inherited fields/requiredness with `ifs-standards/scripts/entity-schema.ts`; absence from local `properties`/`required` is not drift. Abstract `Entity` is not an instance type or relationship endpoint.
 - First take a targeted look at every workspace's `scripts/` folder where present, its `package.json` commands, and generation configuration outside those folders. Identify generator inputs, outputs, prerequisites, and side effects. Reconfirm these mappings rather than assuming the following examples remain exhaustive:
   - Standards scripts generate entity ordering, relation metadata, entity overview, and CSS from schemas/design tokens.
   - API scripts generate DTOs, resources, resource registration, and entity table mappings; OpenAPI export is also generated.

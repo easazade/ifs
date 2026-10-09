@@ -65,7 +65,7 @@ export interface CreateActionDto {
    * Globally unique identifier for this action.
    * @pattern ^Action/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Action" for Action entities. */
   entityType: CreateActionDtoEntityType;
   /**
@@ -75,7 +75,7 @@ export interface CreateActionDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this action record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this action record was last updated. */
   updatedAt: string;
@@ -127,7 +127,7 @@ export interface ActionResponseDto {
    * Globally unique identifier for this action.
    * @pattern ^Action/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Action" for Action entities. */
   entityType: ActionResponseDtoEntityType;
   /**
@@ -137,7 +137,7 @@ export interface ActionResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this action record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this action record was last updated. */
   updatedAt: string;
@@ -174,7 +174,7 @@ export interface RelationshipResponseDto {
    * Globally unique identifier for this relationship.
    * @pattern ^Relationship/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Relationship" for Relationship entities. */
   entityType: RelationshipResponseDtoEntityType;
   /**
@@ -184,7 +184,7 @@ export interface RelationshipResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this relationship record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this relationship record was last updated. */
   updatedAt: string;
@@ -249,7 +249,7 @@ export interface UpdateActionDto {
    * Globally unique identifier for this action.
    * @pattern ^Action/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Action" for Action entities. */
   entityType?: UpdateActionDtoEntityType;
   /**
@@ -259,7 +259,7 @@ export interface UpdateActionDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this action record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this action record was last updated. */
   updatedAt?: string;
@@ -309,7 +309,7 @@ export interface ChangeItemResponseDto {
    * Globally unique identifier for this change item.
    * @pattern ^ChangeItem/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
   entityType: ChangeItemResponseDtoEntityType;
   /**
@@ -319,6 +319,8 @@ export interface ChangeItemResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
   resourceType: string;
   /** Type of operation this item proposes for the target object. */
@@ -343,8 +345,6 @@ export interface ChangeItemResponseDto {
   proposedId: string | null;
   /** Optional human-readable note explaining this specific item. */
   description?: string;
-  /** Timestamp when this change item was created. */
-  createdAt: string;
   /** Timestamp when this change item was last updated. */
   updatedAt: string;
 }
@@ -369,7 +369,7 @@ export interface ScopeResponseDto {
    * Globally unique identifier for this scope.
    * @pattern ^Scope/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Scope" for Scope entities. */
   entityType: ScopeResponseDtoEntityType;
   /**
@@ -379,6 +379,8 @@ export interface ScopeResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** Human-readable name of the scope. */
   name: string;
   /** Optional human-readable explanation of what this scope includes and excludes. */
@@ -400,8 +402,6 @@ export interface ScopeResponseDto {
   childScopeIds?: string[];
   /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
   boundaryRules?: ScopeResponseDtoBoundaryRules;
-  /** Timestamp when this scope record was created. */
-  createdAt: string;
   /** Timestamp when this scope record was last updated. */
   updatedAt: string;
 }
@@ -439,7 +439,7 @@ export interface PermissionResponseDto {
    * Globally unique identifier for this permission.
    * @pattern ^Permission/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Permission" for Permission entities. */
   entityType: PermissionResponseDtoEntityType;
   /**
@@ -449,6 +449,8 @@ export interface PermissionResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** ID list of actions that this permission allows */
   actionIds: string[];
   /** List of actions that this permission allows */
@@ -472,8 +474,6 @@ export interface PermissionResponseDto {
   scope?: PermissionResponseDtoScope;
   /** Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked. */
   state: PermissionResponseDtoState;
-  /** Timestamp when this permission record was created. */
-  createdAt: string;
   /** Timestamp when this permission record was last updated. */
   updatedAt?: string;
   /** Optional timestamp after which this permission no longer applies. */
@@ -510,7 +510,7 @@ export interface RoleResponseDto {
    * Globally unique identifier for this role.
    * @pattern ^Role/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Role" for Role entities. */
   entityType: RoleResponseDtoEntityType;
   /**
@@ -520,6 +520,8 @@ export interface RoleResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** Human-readable name of the role. */
   name: string;
   /** Optional human-readable explanation of what this role is for. */
@@ -540,8 +542,6 @@ export interface RoleResponseDto {
   permissions: PermissionResponseDto[];
   /** Lifecycle state of the role. */
   state: RoleResponseDtoState;
-  /** Timestamp when this role record was created. */
-  createdAt: string;
   /** Timestamp when this role record was last updated. */
   updatedAt: string;
   /** Optional timestamp after which this role no longer applies. */
@@ -563,19 +563,24 @@ export interface MemberResponseDto {
    * Globally unique identifier for this member.
    * @pattern ^Member/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Member" for Member entities. */
   entityType: MemberResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** Human-readable name of the member. */
   name: string;
   readonly roles: readonly RoleResponseDto[];
   permissions: PermissionResponseDto[];
   /** Whether this member is considered an owner of the system. */
   isOwner: boolean;
-  /** Timestamp when this member record was created. */
-  createdAt: string;
   /** Timestamp when this member record was last updated. */
   updatedAt: string;
 }
@@ -595,7 +600,7 @@ export interface VoteResponseDto {
    * Globally unique identifier for this vote.
    * @pattern ^Vote/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Vote" for Vote entities. */
   entityType: VoteResponseDtoEntityType;
   /**
@@ -605,7 +610,7 @@ export interface VoteResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this vote record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this vote record was last updated. */
   updatedAt: string;
@@ -643,7 +648,7 @@ export interface RuleResponseDto {
    * Globally unique identifier for this rule.
    * @pattern ^Rule/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Rule" for Rule entities. */
   entityType: RuleResponseDtoEntityType;
   /**
@@ -653,7 +658,7 @@ export interface RuleResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this rule record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this rule record was last updated. */
   updatedAt: string;
@@ -687,7 +692,7 @@ export interface DecisionResponseDto {
    * Globally unique identifier for this decision.
    * @pattern ^Decision/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Decision" for Decision entities. */
   entityType: DecisionResponseDtoEntityType;
   /**
@@ -697,6 +702,8 @@ export interface DecisionResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /**
    * ID of the object, proposal, rule, resource, or question being decided.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -751,8 +758,6 @@ export interface DecisionResponseDto {
   approvedAt?: string;
   /** Optional timestamp when this decision was rejected or produced a rejected outcome. */
   rejectedAt?: string;
-  /** Timestamp when this decision record was created. */
-  createdAt: string;
   /** Timestamp when this decision record was last updated. */
   updatedAt: string;
   /** Timestamp when this decision record was decided. */
@@ -774,7 +779,7 @@ export interface CommentResponseDto {
    * Globally unique identifier for this comment.
    * @pattern ^Comment/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Comment" for Comment entities. */
   entityType: CommentResponseDtoEntityType;
   /**
@@ -784,7 +789,7 @@ export interface CommentResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this comment was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this comment was last updated. */
   updatedAt: string;
@@ -805,7 +810,7 @@ export interface ReviewCommentResponseDto {
    * Globally unique identifier for this review comment.
    * @pattern ^ReviewComment/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
   entityType: ReviewCommentResponseDtoEntityType;
   /**
@@ -815,7 +820,7 @@ export interface ReviewCommentResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this review comment was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this review comment was last updated. */
   updatedAt: string;
@@ -851,7 +856,7 @@ export interface CreateChangeDto {
    * Globally unique identifier for this change.
    * @pattern ^Change/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Change" for Change entities. */
   entityType: CreateChangeDtoEntityType;
   /**
@@ -861,6 +866,8 @@ export interface CreateChangeDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** Human-readable title summarizing the proposed change. */
   title: string;
   /** Detailed explanation of what this change proposes and why it is needed. */
@@ -907,8 +914,6 @@ export interface CreateChangeDto {
   hasConflict: boolean;
   /** Any links related to this change. */
   links?: string[];
-  /** Timestamp when this change was created. */
-  createdAt: string;
   /** Timestamp when this change was last updated. */
   updatedAt: string;
   /** Optional timestamp when this change was merged. */
@@ -947,7 +952,7 @@ export interface ChangeResponseDto {
    * Globally unique identifier for this change.
    * @pattern ^Change/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Change" for Change entities. */
   entityType: ChangeResponseDtoEntityType;
   /**
@@ -957,6 +962,8 @@ export interface ChangeResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** Human-readable title summarizing the proposed change. */
   title: string;
   /** Detailed explanation of what this change proposes and why it is needed. */
@@ -1003,8 +1010,6 @@ export interface ChangeResponseDto {
   hasConflict: boolean;
   /** Any links related to this change. */
   links?: string[];
-  /** Timestamp when this change was created. */
-  createdAt: string;
   /** Timestamp when this change was last updated. */
   updatedAt: string;
   /** Optional timestamp when this change was merged. */
@@ -1043,7 +1048,7 @@ export interface UpdateChangeDto {
    * Globally unique identifier for this change.
    * @pattern ^Change/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Change" for Change entities. */
   entityType?: UpdateChangeDtoEntityType;
   /**
@@ -1053,6 +1058,8 @@ export interface UpdateChangeDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
   /** Human-readable title summarizing the proposed change. */
   title?: string;
   /** Detailed explanation of what this change proposes and why it is needed. */
@@ -1099,8 +1106,6 @@ export interface UpdateChangeDto {
   hasConflict?: boolean;
   /** Any links related to this change. */
   links?: string[];
-  /** Timestamp when this change was created. */
-  createdAt?: string;
   /** Timestamp when this change was last updated. */
   updatedAt?: string;
   /** Optional timestamp when this change was merged. */
@@ -1137,7 +1142,7 @@ export interface CreateChangeItemDto {
    * Globally unique identifier for this change item.
    * @pattern ^ChangeItem/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
   entityType: CreateChangeItemDtoEntityType;
   /**
@@ -1147,6 +1152,8 @@ export interface CreateChangeItemDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
   resourceType: string;
   /** Type of operation this item proposes for the target object. */
@@ -1171,8 +1178,6 @@ export interface CreateChangeItemDto {
   proposedId: string | null;
   /** Optional human-readable note explaining this specific item. */
   description?: string;
-  /** Timestamp when this change item was created. */
-  createdAt: string;
   /** Timestamp when this change item was last updated. */
   updatedAt: string;
 }
@@ -1205,7 +1210,7 @@ export interface UpdateChangeItemDto {
    * Globally unique identifier for this change item.
    * @pattern ^ChangeItem/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
   entityType?: UpdateChangeItemDtoEntityType;
   /**
@@ -1215,6 +1220,8 @@ export interface UpdateChangeItemDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
   /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
   resourceType?: string;
   /** Type of operation this item proposes for the target object. */
@@ -1239,8 +1246,6 @@ export interface UpdateChangeItemDto {
   proposedId?: string | null;
   /** Optional human-readable note explaining this specific item. */
   description?: string;
-  /** Timestamp when this change item was created. */
-  createdAt?: string;
   /** Timestamp when this change item was last updated. */
   updatedAt?: string;
 }
@@ -1260,7 +1265,7 @@ export interface CreateCommentDto {
    * Globally unique identifier for this comment.
    * @pattern ^Comment/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Comment" for Comment entities. */
   entityType: CreateCommentDtoEntityType;
   /**
@@ -1270,7 +1275,7 @@ export interface CreateCommentDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this comment was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this comment was last updated. */
   updatedAt: string;
@@ -1291,7 +1296,7 @@ export interface UpdateCommentDto {
    * Globally unique identifier for this comment.
    * @pattern ^Comment/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Comment" for Comment entities. */
   entityType?: UpdateCommentDtoEntityType;
   /**
@@ -1301,7 +1306,7 @@ export interface UpdateCommentDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this comment was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this comment was last updated. */
   updatedAt?: string;
@@ -1335,7 +1340,7 @@ export interface CreateDecisionDto {
    * Globally unique identifier for this decision.
    * @pattern ^Decision/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Decision" for Decision entities. */
   entityType: CreateDecisionDtoEntityType;
   /**
@@ -1345,6 +1350,8 @@ export interface CreateDecisionDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /**
    * ID of the object, proposal, rule, resource, or question being decided.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1399,8 +1406,6 @@ export interface CreateDecisionDto {
   approvedAt?: string;
   /** Optional timestamp when this decision was rejected or produced a rejected outcome. */
   rejectedAt?: string;
-  /** Timestamp when this decision record was created. */
-  createdAt: string;
   /** Timestamp when this decision record was last updated. */
   updatedAt: string;
   /** Timestamp when this decision record was decided. */
@@ -1435,7 +1440,7 @@ export interface UpdateDecisionDto {
    * Globally unique identifier for this decision.
    * @pattern ^Decision/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Decision" for Decision entities. */
   entityType?: UpdateDecisionDtoEntityType;
   /**
@@ -1445,6 +1450,8 @@ export interface UpdateDecisionDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
   /**
    * ID of the object, proposal, rule, resource, or question being decided.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1499,8 +1506,6 @@ export interface UpdateDecisionDto {
   approvedAt?: string;
   /** Optional timestamp when this decision was rejected or produced a rejected outcome. */
   rejectedAt?: string;
-  /** Timestamp when this decision record was created. */
-  createdAt?: string;
   /** Timestamp when this decision record was last updated. */
   updatedAt?: string;
   /** Timestamp when this decision record was decided. */
@@ -1534,7 +1539,7 @@ export interface CreateDelegationDto {
    * Globally unique identifier for this delegation.
    * @pattern ^Delegation/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Delegation" for Delegation entities. */
   entityType: CreateDelegationDtoEntityType;
   /**
@@ -1544,7 +1549,7 @@ export interface CreateDelegationDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this delegation record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this delegation record was last updated. */
   updatedAt?: string;
@@ -1600,7 +1605,7 @@ export interface DelegationResponseDto {
    * Globally unique identifier for this delegation.
    * @pattern ^Delegation/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Delegation" for Delegation entities. */
   entityType: DelegationResponseDtoEntityType;
   /**
@@ -1610,7 +1615,7 @@ export interface DelegationResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this delegation record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this delegation record was last updated. */
   updatedAt?: string;
@@ -1666,7 +1671,7 @@ export interface UpdateDelegationDto {
    * Globally unique identifier for this delegation.
    * @pattern ^Delegation/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Delegation" for Delegation entities. */
   entityType?: UpdateDelegationDtoEntityType;
   /**
@@ -1676,7 +1681,7 @@ export interface UpdateDelegationDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this delegation record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this delegation record was last updated. */
   updatedAt?: string;
@@ -1720,7 +1725,7 @@ export interface CreateGeographicAreaDto {
    * Globally unique identifier for this geographic area.
    * @pattern ^GeographicArea/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Geographic Area" for Geographic Area entities. */
   entityType: CreateGeographicAreaDtoEntityType;
   /**
@@ -1730,7 +1735,7 @@ export interface CreateGeographicAreaDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this geographic area record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this geographic area record was last updated. */
   updatedAt: string;
@@ -1758,7 +1763,7 @@ export interface GeographicAreaResponseDto {
    * Globally unique identifier for this geographic area.
    * @pattern ^GeographicArea/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Geographic Area" for Geographic Area entities. */
   entityType: GeographicAreaResponseDtoEntityType;
   /**
@@ -1768,7 +1773,7 @@ export interface GeographicAreaResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this geographic area record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this geographic area record was last updated. */
   updatedAt: string;
@@ -1796,7 +1801,7 @@ export interface UpdateGeographicAreaDto {
    * Globally unique identifier for this geographic area.
    * @pattern ^GeographicArea/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Geographic Area" for Geographic Area entities. */
   entityType?: UpdateGeographicAreaDtoEntityType;
   /**
@@ -1806,7 +1811,7 @@ export interface UpdateGeographicAreaDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this geographic area record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this geographic area record was last updated. */
   updatedAt?: string;
@@ -1834,7 +1839,7 @@ export interface CreateGroupDto {
    * Globally unique identifier for this group.
    * @pattern ^Group/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Group" for Group entities. */
   entityType: CreateGroupDtoEntityType;
   /**
@@ -1844,6 +1849,8 @@ export interface CreateGroupDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /**
    * Human-readable name of this group.
    * @minLength 1
@@ -1851,8 +1858,6 @@ export interface CreateGroupDto {
   name: string;
   /** Purpose and context of this group. */
   description?: string;
-  /** Timestamp when this group record was created. */
-  createdAt: string;
   /** Timestamp when this group record was last updated. */
   updatedAt: string;
 }
@@ -1872,7 +1877,7 @@ export interface GroupResponseDto {
    * Globally unique identifier for this group.
    * @pattern ^Group/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Group" for Group entities. */
   entityType: GroupResponseDtoEntityType;
   /**
@@ -1882,6 +1887,8 @@ export interface GroupResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /**
    * Human-readable name of this group.
    * @minLength 1
@@ -1889,8 +1896,6 @@ export interface GroupResponseDto {
   name: string;
   /** Purpose and context of this group. */
   description?: string;
-  /** Timestamp when this group record was created. */
-  createdAt: string;
   /** Timestamp when this group record was last updated. */
   updatedAt: string;
 }
@@ -1910,7 +1915,7 @@ export interface UpdateGroupDto {
    * Globally unique identifier for this group.
    * @pattern ^Group/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Group" for Group entities. */
   entityType?: UpdateGroupDtoEntityType;
   /**
@@ -1920,6 +1925,8 @@ export interface UpdateGroupDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
   /**
    * Human-readable name of this group.
    * @minLength 1
@@ -1927,8 +1934,6 @@ export interface UpdateGroupDto {
   name?: string;
   /** Purpose and context of this group. */
   description?: string;
-  /** Timestamp when this group record was created. */
-  createdAt?: string;
   /** Timestamp when this group record was last updated. */
   updatedAt?: string;
 }
@@ -1948,7 +1953,7 @@ export interface CreateLabelDto {
    * Globally unique identifier for this label.
    * @pattern ^Label/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Label" for Label entities. */
   entityType: CreateLabelDtoEntityType;
   /**
@@ -1958,7 +1963,7 @@ export interface CreateLabelDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this label was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this label was last updated. */
   updatedAt: string;
@@ -1979,7 +1984,7 @@ export interface LabelResponseDto {
    * Globally unique identifier for this label.
    * @pattern ^Label/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Label" for Label entities. */
   entityType: LabelResponseDtoEntityType;
   /**
@@ -1989,7 +1994,7 @@ export interface LabelResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this label was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this label was last updated. */
   updatedAt: string;
@@ -2010,7 +2015,7 @@ export interface UpdateLabelDto {
    * Globally unique identifier for this label.
    * @pattern ^Label/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Label" for Label entities. */
   entityType?: UpdateLabelDtoEntityType;
   /**
@@ -2020,7 +2025,7 @@ export interface UpdateLabelDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this label was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this label was last updated. */
   updatedAt?: string;
@@ -2041,18 +2046,23 @@ export interface CreateMemberDto {
    * Globally unique identifier for this member.
    * @pattern ^Member/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Member" for Member entities. */
   entityType: CreateMemberDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** Human-readable name of the member. */
   name: string;
   permissions: PermissionResponseDto[];
   /** Whether this member is considered an owner of the system. */
   isOwner: boolean;
-  /** Timestamp when this member record was created. */
-  createdAt: string;
   /** Timestamp when this member record was last updated. */
   updatedAt: string;
 }
@@ -2072,18 +2082,23 @@ export interface UpdateMemberDto {
    * Globally unique identifier for this member.
    * @pattern ^Member/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Member" for Member entities. */
   entityType?: UpdateMemberDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
   /** Human-readable name of the member. */
   name?: string;
   permissions?: PermissionResponseDto[];
   /** Whether this member is considered an owner of the system. */
   isOwner?: boolean;
-  /** Timestamp when this member record was created. */
-  createdAt?: string;
   /** Timestamp when this member record was last updated. */
   updatedAt?: string;
 }
@@ -2103,7 +2118,7 @@ export interface CreateObservationDto {
    * Globally unique identifier for this observation.
    * @pattern ^Observation/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Observation" for Observation entities. */
   entityType: CreateObservationDtoEntityType;
   /**
@@ -2113,7 +2128,7 @@ export interface CreateObservationDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this observation record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this observation record was last updated. */
   updatedAt: string;
@@ -2142,7 +2157,7 @@ export interface ObservationResponseDto {
    * Globally unique identifier for this observation.
    * @pattern ^Observation/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Observation" for Observation entities. */
   entityType: ObservationResponseDtoEntityType;
   /**
@@ -2152,7 +2167,7 @@ export interface ObservationResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this observation record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this observation record was last updated. */
   updatedAt: string;
@@ -2181,7 +2196,7 @@ export interface UpdateObservationDto {
    * Globally unique identifier for this observation.
    * @pattern ^Observation/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Observation" for Observation entities. */
   entityType?: UpdateObservationDtoEntityType;
   /**
@@ -2191,7 +2206,7 @@ export interface UpdateObservationDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this observation record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this observation record was last updated. */
   updatedAt?: string;
@@ -2220,7 +2235,7 @@ export interface CreateOrganizationDto {
    * Globally unique identifier for this organization.
    * @pattern ^Organization/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Organization" for Organization entities. */
   entityType: CreateOrganizationDtoEntityType;
   /**
@@ -2230,7 +2245,7 @@ export interface CreateOrganizationDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this organization record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this organization record was last updated. */
   updatedAt: string;
@@ -2251,7 +2266,7 @@ export interface OrganizationResponseDto {
    * Globally unique identifier for this organization.
    * @pattern ^Organization/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Organization" for Organization entities. */
   entityType: OrganizationResponseDtoEntityType;
   /**
@@ -2261,7 +2276,7 @@ export interface OrganizationResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this organization record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this organization record was last updated. */
   updatedAt: string;
@@ -2282,7 +2297,7 @@ export interface UpdateOrganizationDto {
    * Globally unique identifier for this organization.
    * @pattern ^Organization/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Organization" for Organization entities. */
   entityType?: UpdateOrganizationDtoEntityType;
   /**
@@ -2292,7 +2307,7 @@ export interface UpdateOrganizationDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this organization record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this organization record was last updated. */
   updatedAt?: string;
@@ -2331,7 +2346,7 @@ export interface CreatePermissionDto {
    * Globally unique identifier for this permission.
    * @pattern ^Permission/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Permission" for Permission entities. */
   entityType: CreatePermissionDtoEntityType;
   /**
@@ -2341,6 +2356,8 @@ export interface CreatePermissionDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** ID list of actions that this permission allows */
   actionIds: string[];
   /** List of actions that this permission allows */
@@ -2364,8 +2381,6 @@ export interface CreatePermissionDto {
   scope?: CreatePermissionDtoScope;
   /** Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked. */
   state: CreatePermissionDtoState;
-  /** Timestamp when this permission record was created. */
-  createdAt: string;
   /** Timestamp when this permission record was last updated. */
   updatedAt?: string;
   /** Optional timestamp after which this permission no longer applies. */
@@ -2405,7 +2420,7 @@ export interface UpdatePermissionDto {
    * Globally unique identifier for this permission.
    * @pattern ^Permission/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Permission" for Permission entities. */
   entityType?: UpdatePermissionDtoEntityType;
   /**
@@ -2415,6 +2430,8 @@ export interface UpdatePermissionDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
   /** ID list of actions that this permission allows */
   actionIds?: string[];
   /** List of actions that this permission allows */
@@ -2438,8 +2455,6 @@ export interface UpdatePermissionDto {
   scope?: UpdatePermissionDtoScope;
   /** Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked. */
   state?: UpdatePermissionDtoState;
-  /** Timestamp when this permission record was created. */
-  createdAt?: string;
   /** Timestamp when this permission record was last updated. */
   updatedAt?: string;
   /** Optional timestamp after which this permission no longer applies. */
@@ -2461,7 +2476,7 @@ export interface CreatePlaceDto {
    * Globally unique identifier for this place.
    * @pattern ^Place/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Place" for Place entities. */
   entityType: CreatePlaceDtoEntityType;
   /**
@@ -2471,7 +2486,7 @@ export interface CreatePlaceDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this place record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this place record was last updated. */
   updatedAt: string;
@@ -2500,7 +2515,7 @@ export interface PlaceResponseDto {
    * Globally unique identifier for this place.
    * @pattern ^Place/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Place" for Place entities. */
   entityType: PlaceResponseDtoEntityType;
   /**
@@ -2510,7 +2525,7 @@ export interface PlaceResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this place record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this place record was last updated. */
   updatedAt: string;
@@ -2539,7 +2554,7 @@ export interface UpdatePlaceDto {
    * Globally unique identifier for this place.
    * @pattern ^Place/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Place" for Place entities. */
   entityType?: UpdatePlaceDtoEntityType;
   /**
@@ -2549,7 +2564,7 @@ export interface UpdatePlaceDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this place record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this place record was last updated. */
   updatedAt?: string;
@@ -2578,7 +2593,7 @@ export interface CreateProtocolDto {
    * identifier protocol.
    * @pattern ^Protocol/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Protocol" for Protocol entities. */
   entityType: CreateProtocolDtoEntityType;
   /**
@@ -2588,6 +2603,7 @@ export interface CreateProtocolDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
   createdAt: string;
 }
 
@@ -2606,7 +2622,7 @@ export interface ProtocolResponseDto {
    * identifier protocol.
    * @pattern ^Protocol/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Protocol" for Protocol entities. */
   entityType: ProtocolResponseDtoEntityType;
   /**
@@ -2616,6 +2632,7 @@ export interface ProtocolResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
   createdAt: string;
 }
 
@@ -2634,7 +2651,7 @@ export interface UpdateProtocolDto {
    * identifier protocol.
    * @pattern ^Protocol/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Protocol" for Protocol entities. */
   entityType?: UpdateProtocolDtoEntityType;
   /**
@@ -2644,6 +2661,7 @@ export interface UpdateProtocolDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
 }
 
@@ -2662,7 +2680,7 @@ export interface CreateRelationshipDto {
    * Globally unique identifier for this relationship.
    * @pattern ^Relationship/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Relationship" for Relationship entities. */
   entityType: CreateRelationshipDtoEntityType;
   /**
@@ -2672,7 +2690,7 @@ export interface CreateRelationshipDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this relationship record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this relationship record was last updated. */
   updatedAt: string;
@@ -2722,7 +2740,7 @@ export interface UpdateRelationshipDto {
    * Globally unique identifier for this relationship.
    * @pattern ^Relationship/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Relationship" for Relationship entities. */
   entityType?: UpdateRelationshipDtoEntityType;
   /**
@@ -2732,7 +2750,7 @@ export interface UpdateRelationshipDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this relationship record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this relationship record was last updated. */
   updatedAt?: string;
@@ -2772,7 +2790,7 @@ export interface CreateRelationshipTypeDto {
    * Globally unique identifier for this relationship type.
    * @pattern ^RelationshipType/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "RelationshipType" for RelationshipType entities. */
   entityType: CreateRelationshipTypeDtoEntityType;
   /**
@@ -2782,7 +2800,7 @@ export interface CreateRelationshipTypeDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this relationship type was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this relationship type was last updated. */
   updatedAt: string;
@@ -2827,7 +2845,7 @@ export interface RelationshipTypeResponseDto {
    * Globally unique identifier for this relationship type.
    * @pattern ^RelationshipType/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "RelationshipType" for RelationshipType entities. */
   entityType: RelationshipTypeResponseDtoEntityType;
   /**
@@ -2837,7 +2855,7 @@ export interface RelationshipTypeResponseDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this relationship type was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this relationship type was last updated. */
   updatedAt: string;
@@ -2882,7 +2900,7 @@ export interface UpdateRelationshipTypeDto {
    * Globally unique identifier for this relationship type.
    * @pattern ^RelationshipType/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "RelationshipType" for RelationshipType entities. */
   entityType?: UpdateRelationshipTypeDtoEntityType;
   /**
@@ -2892,7 +2910,7 @@ export interface UpdateRelationshipTypeDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this relationship type was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this relationship type was last updated. */
   updatedAt?: string;
@@ -2937,7 +2955,7 @@ export interface CreateReviewCommentDto {
    * Globally unique identifier for this review comment.
    * @pattern ^ReviewComment/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
   entityType: CreateReviewCommentDtoEntityType;
   /**
@@ -2947,7 +2965,7 @@ export interface CreateReviewCommentDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this review comment was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this review comment was last updated. */
   updatedAt: string;
@@ -2968,7 +2986,7 @@ export interface UpdateReviewCommentDto {
    * Globally unique identifier for this review comment.
    * @pattern ^ReviewComment/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
   entityType?: UpdateReviewCommentDtoEntityType;
   /**
@@ -2978,7 +2996,7 @@ export interface UpdateReviewCommentDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this review comment was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this review comment was last updated. */
   updatedAt?: string;
@@ -3014,7 +3032,7 @@ export interface CreateRoleDto {
    * Globally unique identifier for this role.
    * @pattern ^Role/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Role" for Role entities. */
   entityType: CreateRoleDtoEntityType;
   /**
@@ -3024,6 +3042,8 @@ export interface CreateRoleDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** Human-readable name of the role. */
   name: string;
   /** Optional human-readable explanation of what this role is for. */
@@ -3044,8 +3064,6 @@ export interface CreateRoleDto {
   permissions: PermissionResponseDto[];
   /** Lifecycle state of the role. */
   state: CreateRoleDtoState;
-  /** Timestamp when this role record was created. */
-  createdAt: string;
   /** Timestamp when this role record was last updated. */
   updatedAt: string;
   /** Optional timestamp after which this role no longer applies. */
@@ -3082,7 +3100,7 @@ export interface UpdateRoleDto {
    * Globally unique identifier for this role.
    * @pattern ^Role/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Role" for Role entities. */
   entityType?: UpdateRoleDtoEntityType;
   /**
@@ -3092,6 +3110,8 @@ export interface UpdateRoleDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
   /** Human-readable name of the role. */
   name?: string;
   /** Optional human-readable explanation of what this role is for. */
@@ -3112,8 +3132,6 @@ export interface UpdateRoleDto {
   permissions?: PermissionResponseDto[];
   /** Lifecycle state of the role. */
   state?: UpdateRoleDtoState;
-  /** Timestamp when this role record was created. */
-  createdAt?: string;
   /** Timestamp when this role record was last updated. */
   updatedAt?: string;
   /** Optional timestamp after which this role no longer applies. */
@@ -3135,7 +3153,7 @@ export interface CreateRuleDto {
    * Globally unique identifier for this rule.
    * @pattern ^Rule/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Rule" for Rule entities. */
   entityType: CreateRuleDtoEntityType;
   /**
@@ -3145,7 +3163,7 @@ export interface CreateRuleDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this rule record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this rule record was last updated. */
   updatedAt: string;
@@ -3166,7 +3184,7 @@ export interface UpdateRuleDto {
    * Globally unique identifier for this rule.
    * @pattern ^Rule/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Rule" for Rule entities. */
   entityType?: UpdateRuleDtoEntityType;
   /**
@@ -3176,7 +3194,7 @@ export interface UpdateRuleDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this rule record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this rule record was last updated. */
   updatedAt?: string;
@@ -3202,7 +3220,7 @@ export interface CreateScopeDto {
    * Globally unique identifier for this scope.
    * @pattern ^Scope/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Scope" for Scope entities. */
   entityType: CreateScopeDtoEntityType;
   /**
@@ -3212,6 +3230,8 @@ export interface CreateScopeDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
   /** Human-readable name of the scope. */
   name: string;
   /** Optional human-readable explanation of what this scope includes and excludes. */
@@ -3233,8 +3253,6 @@ export interface CreateScopeDto {
   childScopeIds?: string[];
   /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
   boundaryRules?: CreateScopeDtoBoundaryRules;
-  /** Timestamp when this scope record was created. */
-  createdAt: string;
   /** Timestamp when this scope record was last updated. */
   updatedAt: string;
 }
@@ -3259,7 +3277,7 @@ export interface UpdateScopeDto {
    * Globally unique identifier for this scope.
    * @pattern ^Scope/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Scope" for Scope entities. */
   entityType?: UpdateScopeDtoEntityType;
   /**
@@ -3269,6 +3287,8 @@ export interface UpdateScopeDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
   /** Human-readable name of the scope. */
   name?: string;
   /** Optional human-readable explanation of what this scope includes and excludes. */
@@ -3290,8 +3310,6 @@ export interface UpdateScopeDto {
   childScopeIds?: string[];
   /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
   boundaryRules?: UpdateScopeDtoBoundaryRules;
-  /** Timestamp when this scope record was created. */
-  createdAt?: string;
   /** Timestamp when this scope record was last updated. */
   updatedAt?: string;
 }
@@ -3311,7 +3329,7 @@ export interface CreateVoteDto {
    * Globally unique identifier for this vote.
    * @pattern ^Vote/[^/\s]+$
    */
-  id: string;
+  id: string & string;
   /** Entity type discriminator. Always "Vote" for Vote entities. */
   entityType: CreateVoteDtoEntityType;
   /**
@@ -3321,7 +3339,7 @@ export interface CreateVoteDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl: string;
-  /** Timestamp when this vote record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this vote record was last updated. */
   updatedAt: string;
@@ -3359,7 +3377,7 @@ export interface UpdateVoteDto {
    * Globally unique identifier for this vote.
    * @pattern ^Vote/[^/\s]+$
    */
-  id?: string;
+  id?: string & string;
   /** Entity type discriminator. Always "Vote" for Vote entities. */
   entityType?: UpdateVoteDtoEntityType;
   /**
@@ -3369,7 +3387,7 @@ export interface UpdateVoteDto {
   basedOn?: string;
   /** URL for documentation about this entity. */
   entityDocumentationUrl?: string;
-  /** Timestamp when this vote record was created. */
+  /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this vote record was last updated. */
   updatedAt?: string;

@@ -77,7 +77,7 @@ If it does not exist, briefly restate what you understand about the entity from 
 
 1. Is this meaning correct? If not, what should change?
 2. What user-defined properties should this entity include? Reply with one property per line using `name: type - description`, or say `none`.
-3. Should this entity include all common properties, only some, or none? Common properties: `id`, `basedOn`, `entityDocumentationUrl`, `createdAt`, `updatedAt`. Reply `all`, `none`, or `some: <property names>`. The required, fixed `entityType` discriminator is always included independently.
+3. Should this entity include `updatedAt`? Reply `required`, `optional`, or `omit`. Shared `Entity` fields are inherited automatically.
 4. Which of the user-defined properties are required? List names, or say `infer` / `none`.
 5. Should I intelligently infer recommended IFS fields, required properties, and possible relations from the entity purpose? Reply `yes` or `no`.
 6. Do you approve me to create the schema file(s) immediately after applying your answers and any requested inference? Reply `yes` or `no`.
@@ -106,12 +106,12 @@ Accepted property examples:
 After the user answers:
 
 1. Parse each user-defined property name, type, format/enum/items if present, and description.
-2. Parse the common properties answer. Add all common properties for `all`, no optional common properties for `none`, or only the listed common properties for `some: ...`. Always include required `entityType` with `const` equal to the exact schema title. The `basedOn` common property is an optional string identifying the id of the object this object is derived from. The `entityDocumentationUrl` common property is a string URI for documentation about this entity.
+2. For concrete entities, compose the shared `Entity` schema and refine `id`/`entityType`. Apply the creation `updatedAt` answer locally; on updates, preserve it unless a change is requested. Base required fields remain inherited.
 3. For any `object`, `array<object>`, PascalCase type, or description suggesting another entity object, check `ifs-standards/src/entities/` for a matching `*.schema.json` file before writing files. Match both singular and plural names, e.g. `permissions` -> `permission`, `roles` -> `role`. Ignore `.mdx` files completely.
 4. IDs and references are the same string value: `EntityType/ID`. The local `ID` may be a number, a meaningful name, or another stable unique identifier; it is not limited to numbers. Prefer a meaningful name when appropriate, e.g. `Organization/Everly` for the organization Everly; otherwise use a numeric identifier such as `Organization/2` or `Member/1`. The full ID is always a string, and the entity-type prefix must match the schema's casing (currently PascalCase). Apply this to `id`, related IDs, `basedOn`, and heterogeneous pointers; arrays contain these strings.
 5. Name identifier fields with `Id` (singular) or `Ids` (plural), not `Ref`, `Reference`, or `Refs`. Do not add `ifsId`.
-6. Treat each entity schema as one database object type. If a property represents a relation to another database object/entity type, reference that entity type with `$ref`; do not embed the related object's shape inside the current entity schema.
-7. If the referenced entity exists, use a JSON Schema `$ref` to that entity schema `$id`. If the referenced entity does not exist, create a basic schema for it under `ifs-standards/src/entities/<kebab-case-related-entity>/<kebab-case-related-entity>.schema.json` and then `$ref` it. The basic related-entity schema must include only the selected common properties unless the user supplied more details.
+6. Treat each concrete entity schema as one database object type; abstract `Entity` is not a database object type. If a property represents a relation to another database object/entity type, reference that entity type with `$ref`; do not embed the related object's shape inside the current entity schema.
+7. If the referenced entity exists, use a JSON Schema `$ref` to that entity schema `$id`. If the referenced entity does not exist, create a basic schema for it under `ifs-standards/src/entities/<kebab-case-related-entity>/<kebab-case-related-entity>.schema.json` and then `$ref` it. The basic related-entity schema must compose `Entity` and add concrete refinements; add other fields only when supplied or approved.
 8. If a property is arbitrary embedded value/config data and not a database object/entity relationship, keep it as `type: object` with appropriate `additionalProperties` and document why it is not a `$ref`.
 9. If entity-object relation vs ID-string intent is ambiguous, ask a concise follow-up before writing files.
 10. If the user answered `yes` to inference:
@@ -126,7 +126,7 @@ After the user answers:
 
 11. If the user answered `no` to inference:
 
-- Use only user-provided properties plus the selected common properties and the mandatory fixed `entityType` discriminator.
+- Use only inherited base fields, concrete `id`/`entityType` refinements, and explicitly selected properties.
 
 12. If the user approved immediate creation/update and explicitly approved every proposed `Relationship` modeling choice, create or update the schema file(s). If a proposed `Relationship` choice is still pending, ask for that approval and wait before writing files.
 13. If the user did not approve immediate creation/update, show the final property plan and ask for approval.
@@ -148,28 +148,27 @@ Only after approval:
 - Use a human-readable `title` in PascalCase / title case.
 - Set `type` to `object`.
 - All IFS entity schemas must use `additionalProperties: true`; never close them with `additionalProperties: false` or `unevaluatedProperties: false`.
+- Every concrete schema, including basic related entities, must include `{"$ref":"https://ifs-standards.org/schemas/v1/entities/entity.schema.json"}` in `allOf`. Preserve existing conditional branches; keep payloads flat.
+- `Entity` is abstract (`x-ifs-abstract: true`), with a generic ID pattern and no fixed discriminator; never generate a resource/table for it or edit it unless requested.
 - Convert collected properties into valid JSON Schema `properties`.
 - For entity-object references, prefer absolute `$ref` values matching schema `$id`, not relative file paths. Example: `"$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json"`.
 - For `array<EntityName>` or plural entity-object properties, put the `$ref` inside `items`. Example: `"permissions": { "type": "array", "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json" } }`.
 - For single entity-object properties, use direct `$ref`. Example: `"owner": { "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json" }`.
-- Mark every ID string schema with `"x-ifs-id": true`, including `id`, related ID fields, `basedOn`, and heterogeneous pointers. For ID arrays, put the marker on the string schema in `items`, not on the array.
+- Mark locally defined ID string schemas with `"x-ifs-id": true`; inherited `basedOn` already carries this metadata. For ID arrays, put the marker on the string schema in `items`, not on the array.
 - Define every ID's standard JSON Schema `pattern` using the JSON-escaped examples below:
   - Known entity type: `"pattern": "^Member/[^/\\s]+$"`. Replace `Member` with the owning type for `id`, or the target type for related IDs.
   - Several allowed types: `"pattern": "^(Member|Role)/[^/\\s]+$"`.
-  - Any entity type: `"pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"` for heterogeneous IDs such as `basedOn`.
+  - Any entity type: `"pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$"` for locally defined heterogeneous IDs; `basedOn` inherits this pattern.
   - Anchor with `^` and `$`; require a nonempty local ID without slashes or whitespace. JSON requires `\\` to represent a regex backslash.
   - For ID arrays, put both `pattern` and `"x-ifs-id": true` on `items`. Preserve allowed nulls with `"type": ["string", "null"]`; the pattern constrains only strings.
 - Do not use `format: "ifs-ref"` or bare `format: "uuid"` for IDs.
-- For new schemas, apply common properties according to the user's answer: `all`, `none`, or `some: <property names>`. This selection never excludes the mandatory fixed `entityType` discriminator.
-- For existing schemas, preserve existing common properties unless the user explicitly asks to change/remove them.
-- Common properties selected by the user should be included in both `properties` and `required`, except `basedOn`, which is optional and should be included only in `properties`.
+- Inherit `id`, `entityType`, `basedOn`, `entityDocumentationUrl`, and `createdAt` from `Entity`; only `basedOn` is optional. Do not duplicate `basedOn`, `entityDocumentationUrl`, or `createdAt` definitions, or repeat base fields in local `required`. `updatedAt` is not inherited.
+- Use `ifs-standards/scripts/entity-schema.ts` to inspect effective fields and requiredness; inherited fields are not missing fields.
 - `id` uses the entity's PascalCase type prefix. Do not add a separate `ifsId` or default ID values.
-- `entityType` is an immutable discriminator. Every entity schema must define it as `type: "string"` with `const` equal to the schema's exact `title` (case-sensitive, including spaces), and include it in `required`, regardless of the selected common properties. Example: a schema titled `Member` must use `"entityType": { "type": "string", "const": "Member" }`. Never allow an arbitrary string, another entity type, or a mutable discriminator. Apply this to new, existing, and basic related-entity schemas.
-- `basedOn` is an optional common string property describing the id of the object this object is derived from.
-- `entityDocumentationUrl` is a common string property with `format: "uri"` describing the documentation URL for this entity.
-- If an entity reference points to a missing entity type, create a basic schema file for that related entity before running derived generation. The basic schema must use draft 2020-12, the canonical `$id`, title, `type: "object"`, `additionalProperties: true`, and selected common properties/required fields.
+- Concrete schemas locally refine `id` with their typed prefix pattern and `entityType` with `type: "string"` and `const` equal to the exact title. Requiredness comes from `Entity`. `allOf` intersects constraints; refinements never replace or weaken the base.
+- If a referenced concrete entity is missing, create its basic schema before generation using the same base composition and concrete refinements.
 - If keeping an embedded object instead of an entity reference, include `type: "object"` and document why it is not a `$ref`.
-- Include a `required` array based on user instructions and approved inferred required fields.
+- Local `required` lists only additional required fields, based on user instructions and approved inference.
 - Keep property descriptions short and consistent with the unified ID format.
 
 ## Derived artifact rules
@@ -189,8 +188,8 @@ pnpm --filter ifs-standards entities
 After writing schema files, regenerating derived artifacts, and finally regenerating `generate-order.json`, report:
 
 - Created or updated files, including any basic related-entity schemas
-- Final properties
-- Required fields
+- Final properties, including inherited fields
+- Required fields, including inherited requirements
 - Any inferred fields or relations
 - Any missing related entities created as basic schemas
 - `pnpm --filter ifs-standards entities` result

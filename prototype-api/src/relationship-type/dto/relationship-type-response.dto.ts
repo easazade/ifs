@@ -4,6 +4,18 @@ export class RelationshipTypeResponseDto {
   @ApiProperty({
     description: 'Globally unique identifier for this relationship type.',
     pattern: '^RelationshipType/[^/\\s]+$',
+    allOf: [
+      {
+        type: 'string',
+        description: 'Globally unique entity identifier in EntityType/ID form.',
+        pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
+      },
+      {
+        type: 'string',
+        description: 'Globally unique identifier for this relationship type.',
+        pattern: '^RelationshipType/[^/\\s]+$',
+      },
+    ],
   })
   id: string;
 
@@ -27,7 +39,7 @@ export class RelationshipTypeResponseDto {
   entityDocumentationUrl: string;
 
   @ApiProperty({
-    description: 'Timestamp when this relationship type was created.',
+    description: 'Timestamp when this entity record was created.',
     format: 'date-time',
   })
   createdAt: string;

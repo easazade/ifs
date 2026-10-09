@@ -8,6 +8,18 @@ export class CreateDecisionDto {
   @ApiProperty({
     description: 'Globally unique identifier for this decision.',
     pattern: '^Decision/[^/\\s]+$',
+    allOf: [
+      {
+        type: 'string',
+        description: 'Globally unique entity identifier in EntityType/ID form.',
+        pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
+      },
+      {
+        type: 'string',
+        description: 'Globally unique identifier for this decision.',
+        pattern: '^Decision/[^/\\s]+$',
+      },
+    ],
   })
   id: string;
 
@@ -29,6 +41,12 @@ export class CreateDecisionDto {
     format: 'uri',
   })
   entityDocumentationUrl: string;
+
+  @ApiProperty({
+    description: 'Timestamp when this entity record was created.',
+    format: 'date-time',
+  })
+  createdAt: string;
 
   @ApiProperty({
     description:
@@ -148,12 +166,6 @@ export class CreateDecisionDto {
     format: 'date-time',
   })
   rejectedAt?: string;
-
-  @ApiProperty({
-    description: 'Timestamp when this decision record was created.',
-    format: 'date-time',
-  })
-  createdAt: string;
 
   @ApiProperty({
     description: 'Timestamp when this decision record was last updated.',

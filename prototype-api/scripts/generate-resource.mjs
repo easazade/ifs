@@ -13,6 +13,8 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { graphEdges } from '../src/surreal/entity-storage.ts';
+import { readEntitySchema } from '../../ifs-standards/scripts/entity-schema.ts';
+import { isAbstractEntity } from '../../ifs-standards/scripts/entity-metadata.ts';
 
 const apiRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(apiRoot, '..');
@@ -87,10 +89,16 @@ function readEntity(entityInput) {
 
   let schema;
   try {
-    schema = JSON.parse(readFileSync(schemaPath, 'utf8'));
+    schema = readEntitySchema(schemaPath, entitiesRoot);
   } catch (error) {
     throw new Error(
       `Could not read entity schema ${schemaPath}: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+
+  if (isAbstractEntity(schema)) {
+    throw new Error(
+      'Cannot generate an API resource for an abstract entity schema.',
     );
   }
 
@@ -475,11 +483,14 @@ export function generateService(entityInput, options = {}) {
     readdirSync(entitiesRoot, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .sort((a, b) => a.name.localeCompare(b.name))
-      .map(({ name }) => {
-        const schema = JSON.parse(
-          readFileSync(join(entitiesRoot, name, `${name}.schema.json`), 'utf8'),
+      .flatMap(({ name }) => {
+        const schema = readEntitySchema(
+          join(entitiesRoot, name, `${name}.schema.json`),
+          entitiesRoot,
         );
-        return [pascalCase(schema.title), name.replaceAll('-', '_')];
+        return isAbstractEntity(schema)
+          ? []
+          : [[pascalCase(schema.title), name.replaceAll('-', '_')]];
       }),
   );
   const storageDirectory = join(apiRoot, 'src', 'surreal');

@@ -4,6 +4,7 @@
   "title": "Change",
   "type": "object",
   "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -15,17 +16,6 @@
       "type": "string",
       "const": "Change",
       "description": "Entity type discriminator. Always \"Change\" for Change entities."
-    },
-    "basedOn": {
-      "type": "string",
-      "x-ifs-id": true,
-      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
-      "description": "Id of the object this object is derived from."
-    },
-    "entityDocumentationUrl": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL for documentation about this entity."
     },
     "title": { "type": "string", "description": "Human-readable title summarizing the proposed change." },
     "description": {
@@ -112,7 +102,6 @@
       "items": { "type": "string", "format": "uri" },
       "description": "Any links related to this change."
     },
-    "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when this change was created." },
     "updatedAt": {
       "type": "string",
       "format": "date-time",
@@ -130,9 +119,6 @@
     }
   },
   "required": [
-    "id",
-    "entityType",
-    "entityDocumentationUrl",
     "title",
     "description",
     "reason",
@@ -145,7 +131,6 @@
     "effected",
     "merged",
     "hasConflict",
-    "createdAt",
     "updatedAt"
   ],
   "x-ifs-relationships": []

@@ -5,6 +5,7 @@
   "description": "Records a directed relationship between two IFS entity objects.",
   "type": "object",
   "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -16,22 +17,6 @@
       "type": "string",
       "const": "Relationship",
       "description": "Entity type discriminator. Always \"Relationship\" for Relationship entities."
-    },
-    "basedOn": {
-      "type": "string",
-      "x-ifs-id": true,
-      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
-      "description": "Id of the object this object is derived from."
-    },
-    "entityDocumentationUrl": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL for documentation about this entity."
-    },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Timestamp when this relationship record was created."
     },
     "updatedAt": {
       "type": "string",
@@ -73,18 +58,6 @@
       "description": "Optional calendar date when this relationship ended; must not precede startedAt."
     }
   },
-  "required": [
-    "id",
-    "entityType",
-    "entityDocumentationUrl",
-    "createdAt",
-    "updatedAt",
-    "relationshipTypeId",
-    "type",
-    "inverseType",
-    "sourceId",
-    "targetId",
-    "startedAt"
-  ],
+  "required": ["updatedAt", "relationshipTypeId", "type", "inverseType", "sourceId", "targetId", "startedAt"],
   "x-ifs-relationships": []
 }

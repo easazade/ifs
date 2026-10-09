@@ -4,6 +4,7 @@
   "title": "Label",
   "type": "object",
   "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -16,24 +17,12 @@
       "const": "Label",
       "description": "Entity type discriminator. Always \"Label\" for Label entities."
     },
-    "basedOn": {
-      "type": "string",
-      "x-ifs-id": true,
-      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
-      "description": "Id of the object this object is derived from."
-    },
-    "entityDocumentationUrl": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL for documentation about this entity."
-    },
-    "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when this label was created." },
     "updatedAt": {
       "type": "string",
       "format": "date-time",
       "description": "Timestamp when this label was last updated."
     }
   },
-  "required": ["id", "entityType", "entityDocumentationUrl", "createdAt", "updatedAt"],
+  "required": ["updatedAt"],
   "x-ifs-relationships": []
 }

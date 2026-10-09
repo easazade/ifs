@@ -27,6 +27,7 @@ erDiagram
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
     title string "required"
     description string "required"
     summary string "optional"
@@ -47,7 +48,6 @@ erDiagram
     merged boolean "required"
     hasConflict boolean "required"
     links array "optional"
-    createdAt string "required, date-time"
     updatedAt string "required, date-time"
     mergedAt string "date-time"
     closedAt string "date-time"
@@ -57,13 +57,13 @@ erDiagram
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
     resourceType string "required"
     operation string "required"
     targetId string_or_null "required"
     baseId string_or_null "required"
     proposedId string_or_null "required"
     description string "optional"
-    createdAt string "required, date-time"
     updatedAt string "required, date-time"
   }
   COMMENT {
@@ -79,6 +79,7 @@ erDiagram
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
     subject string "required"
     state string "required"
     previousRevisionId string FK "optional"
@@ -97,7 +98,6 @@ erDiagram
     verifiedAt string "date-time"
     approvedAt string "date-time"
     rejectedAt string "date-time"
-    createdAt string "required, date-time"
     updatedAt string "required, date-time"
     decidedAt string "date-time"
   }
@@ -130,9 +130,9 @@ erDiagram
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
     name string "required"
     description string "optional"
-    createdAt string "required, date-time"
     updatedAt string "required, date-time"
   }
   LABEL {
@@ -146,12 +146,13 @@ erDiagram
   MEMBER {
     id string PK "required"
     entityType string "required"
+    basedOn string "optional"
     entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
     name string "required"
     roles array FK "required, Role[]"
     permissions array FK "required, Permission[]"
     isOwner boolean "required"
-    createdAt string "required, date-time"
     updatedAt string "required, date-time"
   }
   OBSERVATION {
@@ -179,6 +180,7 @@ erDiagram
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
     actionIds array FK "required"
     actions array FK "Action[]"
     memberId string FK "optional"
@@ -186,7 +188,6 @@ erDiagram
     scopeId string FK "required"
     scope object "optional"
     state string "required"
-    createdAt string "required, date-time"
     updatedAt string "date-time"
     expiresAt string "required, date-time"
   }
@@ -251,6 +252,7 @@ erDiagram
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
     name string "required"
     description string "optional"
     memberId string FK "required"
@@ -258,7 +260,6 @@ erDiagram
     scope object FK "required, Scope"
     permissions array FK "required, Permission[]"
     state string "required"
-    createdAt string "required, date-time"
     updatedAt string "required, date-time"
     expiresAt string "date-time"
   }
@@ -275,6 +276,7 @@ erDiagram
     entityType string "required"
     basedOn string "optional"
     entityDocumentationUrl string "required, uri"
+    createdAt string "required, date-time"
     name string "required"
     description string "optional"
     locations array "optional"
@@ -284,7 +286,6 @@ erDiagram
     parentScopeId string FK "optional"
     childScopeIds array FK "optional"
     boundaryRules object "optional"
-    createdAt string "required, date-time"
     updatedAt string "required, date-time"
   }
   VOTE {

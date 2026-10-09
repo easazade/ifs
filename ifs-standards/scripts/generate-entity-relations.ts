@@ -5,6 +5,7 @@ import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { format } from 'prettier';
 import { isAbstractEntity } from './entity-metadata';
+import { readEntitySchemas, resolveEntitySchema } from './entity-schema';
 
 const SCRIPTS_DIR = dirname(fileURLToPath(import.meta.url));
 const PROJECT_DIR = join(SCRIPTS_DIR, '..');
@@ -26,6 +27,7 @@ interface EntityRelation {
 
 type EntityRelations = Record<string, EntityRelation[]>;
 
+const schemas = readEntitySchemas(ENTITIES_DIR);
 const schemaFiles = await findSchemaFiles(ENTITIES_DIR);
 const entities = await readEntities(schemaFiles);
 const entityByReference = indexEntities(entities);
@@ -52,7 +54,7 @@ async function findSchemaFiles(directory: string): Promise<string[]> {
 async function readEntities(filePaths: string[]): Promise<EntitySchema[]> {
   const entities = await Promise.all(
     filePaths.map(async (filePath) => {
-      const schema = JSON.parse(await readFile(filePath, 'utf8')) as JSONSchema7;
+      const schema = resolveEntitySchema(JSON.parse(await readFile(filePath, 'utf8')), schemas);
 
       return {
         name: schema.title || basename(filePath, '.schema.json'),

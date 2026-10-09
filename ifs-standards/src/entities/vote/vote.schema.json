@@ -4,6 +4,7 @@
   "title": "Vote",
   "type": "object",
   "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -15,22 +16,6 @@
       "type": "string",
       "const": "Vote",
       "description": "Entity type discriminator. Always \"Vote\" for Vote entities."
-    },
-    "basedOn": {
-      "type": "string",
-      "x-ifs-id": true,
-      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
-      "description": "Id of the object this object is derived from."
-    },
-    "entityDocumentationUrl": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL for documentation about this entity."
-    },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Timestamp when this vote record was created."
     },
     "updatedAt": {
       "type": "string",
@@ -60,15 +45,6 @@
       "description": "Identifier of the previous revision of this vote, if this vote amends an earlier vote."
     }
   },
-  "required": [
-    "id",
-    "entityType",
-    "entityDocumentationUrl",
-    "createdAt",
-    "updatedAt",
-    "decisionId",
-    "memberId",
-    "value"
-  ],
+  "required": ["updatedAt", "decisionId", "memberId", "value"],
   "x-ifs-relationships": []
 }

@@ -4,6 +4,18 @@ export class CreateChangeItemDto {
   @ApiProperty({
     description: 'Globally unique identifier for this change item.',
     pattern: '^ChangeItem/[^/\\s]+$',
+    allOf: [
+      {
+        type: 'string',
+        description: 'Globally unique entity identifier in EntityType/ID form.',
+        pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
+      },
+      {
+        type: 'string',
+        description: 'Globally unique identifier for this change item.',
+        pattern: '^ChangeItem/[^/\\s]+$',
+      },
+    ],
   })
   id: string;
 
@@ -25,6 +37,12 @@ export class CreateChangeItemDto {
     format: 'uri',
   })
   entityDocumentationUrl: string;
+
+  @ApiProperty({
+    description: 'Timestamp when this entity record was created.',
+    format: 'date-time',
+  })
+  createdAt: string;
 
   @ApiProperty({
     description:
@@ -66,12 +84,6 @@ export class CreateChangeItemDto {
     description: 'Optional human-readable note explaining this specific item.',
   })
   description?: string;
-
-  @ApiProperty({
-    description: 'Timestamp when this change item was created.',
-    format: 'date-time',
-  })
-  createdAt: string;
 
   @ApiProperty({
     description: 'Timestamp when this change item was last updated.',

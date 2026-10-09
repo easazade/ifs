@@ -4,6 +4,18 @@ export class LabelResponseDto {
   @ApiProperty({
     description: 'Globally unique identifier for this label.',
     pattern: '^Label/[^/\\s]+$',
+    allOf: [
+      {
+        type: 'string',
+        description: 'Globally unique entity identifier in EntityType/ID form.',
+        pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
+      },
+      {
+        type: 'string',
+        description: 'Globally unique identifier for this label.',
+        pattern: '^Label/[^/\\s]+$',
+      },
+    ],
   })
   id: string;
 
@@ -27,7 +39,7 @@ export class LabelResponseDto {
   entityDocumentationUrl: string;
 
   @ApiProperty({
-    description: 'Timestamp when this label was created.',
+    description: 'Timestamp when this entity record was created.',
     format: 'date-time',
   })
   createdAt: string;

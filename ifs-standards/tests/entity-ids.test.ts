@@ -1,16 +1,17 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { JSONSchema7 } from 'json-schema';
 import { describe, expect, it } from 'vitest';
 import { createAjv } from './utils/createAjv';
 import { isAbstractEntity } from '../scripts/entity-metadata';
+import { readEntitySchema } from '../scripts/entity-schema';
 
 const entitiesDir = 'src/entities';
 const entities = readdirSync(entitiesDir, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map(({ name }) => ({
     name,
-    schema: JSON.parse(readFileSync(join(entitiesDir, name, `${name}.schema.json`), 'utf8')) as JSONSchema7,
+    schema: readEntitySchema(join(entitiesDir, name, `${name}.schema.json`)),
   }))
   .filter(({ schema }) => !isAbstractEntity(schema));
 
@@ -62,7 +63,7 @@ describe('unified entity IDs', () => {
   }
 
   const changeItem = entities.find(({ name }) => name === 'change-item')!.schema;
-  const validateChangeItem = createAjv().compile(changeItem);
+  const validateChangeItem = createAjv().getSchema(changeItem.$id!)!;
   it.each(['create', 'delete', 'update', 'replace'])('preserves ChangeItem nullability for %s', (operation) => {
     const example = {
       id: 'ChangeItem/1',

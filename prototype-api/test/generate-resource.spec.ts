@@ -40,6 +40,18 @@ function fixture(
   mkdirSync(scriptsDirectory, { recursive: true });
   mkdirSync(entityDirectory, { recursive: true });
   mkdirSync(join(standardsRoot, 'scripts'), { recursive: true });
+  for (const name of ['entity-schema.ts', 'entity-metadata.ts']) {
+    cpSync(
+      join(workspaceRoot, 'ifs-standards/scripts', name),
+      join(standardsRoot, 'scripts', name),
+    );
+  }
+  const baseDirectory = join(standardsRoot, 'src/entities/entity');
+  mkdirSync(baseDirectory, { recursive: true });
+  cpSync(
+    join(workspaceRoot, 'ifs-standards/src/entities/entity/entity.schema.json'),
+    join(baseDirectory, 'entity.schema.json'),
+  );
   cpSync(
     join(apiRoot, 'scripts', 'generate-resource.mjs'),
     join(scriptsDirectory, 'generate-resource.mjs'),
@@ -150,6 +162,25 @@ describe('resource generator', () => {
     expect(
       readFileSync(join(api, 'src/surreal/entity-tables.generated.ts'), 'utf8'),
     ).toContain('"RelationshipType": "relationship_type"');
+  });
+  it('excludes the abstract base from resources and the database table registry', () => {
+    const api = fixture();
+    const rejected = run(api, 'entity');
+    expect(rejected.status).toBe(1);
+    expect(rejected.stderr).toContain('abstract entity schema');
+    expect(existsSync(join(api, 'src/entity'))).toBe(false);
+    expect(existsSync(join(api, 'generator-ran'))).toBe(false);
+    const generated = run(api);
+    expect(generated.status, generated.stderr).toBe(0);
+    const registry = readFileSync(
+      join(api, 'src/surreal/entity-tables.generated.ts'),
+      'utf8',
+    );
+    expect(registry).toContain('"Member": "member"');
+    expect(registry).not.toContain('"Entity"');
+    expect(
+      readFileSync(join(api, 'src/generated-resources.module.ts'), 'utf8'),
+    ).not.toContain('EntityModule');
   });
   it('normalizes display titles to match DTO names and database tables', () => {
     const temporaryApi = fixture();

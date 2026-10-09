@@ -5,6 +5,18 @@ export class CreatePermissionDto {
   @ApiProperty({
     description: 'Globally unique identifier for this permission.',
     pattern: '^Permission/[^/\\s]+$',
+    allOf: [
+      {
+        type: 'string',
+        description: 'Globally unique entity identifier in EntityType/ID form.',
+        pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
+      },
+      {
+        type: 'string',
+        description: 'Globally unique identifier for this permission.',
+        pattern: '^Permission/[^/\\s]+$',
+      },
+    ],
   })
   id: string;
 
@@ -26,6 +38,12 @@ export class CreatePermissionDto {
     format: 'uri',
   })
   entityDocumentationUrl: string;
+
+  @ApiProperty({
+    description: 'Timestamp when this entity record was created.',
+    format: 'date-time',
+  })
+  createdAt: string;
 
   @ApiProperty({
     description: 'ID list of actions that this permission allows',
@@ -72,12 +90,6 @@ export class CreatePermissionDto {
     enum: ['granted', 'under-review', 'revoked', 'drafted'],
   })
   state: 'granted' | 'under-review' | 'revoked' | 'drafted';
-
-  @ApiProperty({
-    description: 'Timestamp when this permission record was created.',
-    format: 'date-time',
-  })
-  createdAt: string;
 
   @ApiPropertyOptional({
     description: 'Timestamp when this permission record was last updated.',

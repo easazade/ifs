@@ -3,6 +3,7 @@ import type { JSONSchema7, JSONSchema7Definition } from 'json-schema';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 import { isAbstractEntity } from './entity-metadata';
+import { readEntitySchemas, resolveEntitySchema } from './entity-schema';
 
 // These types describe the schema metadata and graph used by the overview renderer.
 interface Entity {
@@ -41,6 +42,7 @@ type SchemaProperties = NonNullable<JSONSchema7['properties']>;
 const ENTITIES_DIR = 'src/entities';
 const OUTPUT_PATH = join(ENTITIES_DIR, 'overview.md');
 
+const schemas = readEntitySchemas(ENTITIES_DIR);
 const schemaFiles = await findSchemaFiles(ENTITIES_DIR);
 const entities = (await readEntities(schemaFiles)).filter((entity) => !isAbstractEntity(entity.schema));
 const entityByRef = indexEntitiesByRef(entities);
@@ -69,7 +71,7 @@ async function findSchemaFiles(dir: string): Promise<string[]> {
 async function readEntities(files: string[]): Promise<Entity[]> {
   const entities = await Promise.all(
     files.map(async (filePath) => {
-      const schema = JSON.parse(await readFile(filePath, 'utf8')) as JSONSchema7;
+      const schema = resolveEntitySchema(JSON.parse(await readFile(filePath, 'utf8')), schemas);
       const fallbackName = basename(filePath, '.schema.json');
       const title = schema.title || toTitleCase(fallbackName);
 

@@ -1,15 +1,10 @@
 import { readFileSync } from 'node:fs';
-import type { AnySchema } from 'ajv';
 import { describe, expect, it } from 'vitest';
 import { isAbstractEntity } from '../scripts/entity-metadata';
 import { createAjv } from './utils/createAjv';
 
 const schema = JSON.parse(readFileSync('src/entities/entity/entity.schema.json', 'utf8'));
 const ajv = createAjv();
-// These keywords carry schema metadata; standard keywords enforce instance constraints.
-ajv.addKeyword({ keyword: 'x-ifs-id', schemaType: 'boolean', valid: true });
-ajv.addKeyword({ keyword: 'x-ifs-abstract', schemaType: 'boolean', valid: true });
-ajv.addSchema(schema as AnySchema);
 const validate = ajv.getSchema(schema.$id)!;
 const record = {
   id: 'Action/1',

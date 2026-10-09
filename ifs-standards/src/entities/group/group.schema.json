@@ -5,6 +5,7 @@
   "description": "A named grouping of members, organizations, or subgroups. Direct membership and subgroup inclusion are recorded as Relationship objects, not embedded collections. Each relationship connects the included entity to this group using a RelationshipType that allows those endpoint types, with startedAt and optional endedAt recording its duration. Membership and containment alone do not grant delegated authority or imply transitive membership.",
   "type": "object",
   "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -17,31 +18,15 @@
       "const": "Group",
       "description": "Entity type discriminator. Always \"Group\" for Group entities."
     },
-    "basedOn": {
-      "type": "string",
-      "x-ifs-id": true,
-      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
-      "description": "Id of the object this object is derived from."
-    },
-    "entityDocumentationUrl": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL for documentation about this entity."
-    },
     "name": { "type": "string", "minLength": 1, "description": "Human-readable name of this group." },
     "description": { "type": "string", "description": "Purpose and context of this group." },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Timestamp when this group record was created."
-    },
     "updatedAt": {
       "type": "string",
       "format": "date-time",
       "description": "Timestamp when this group record was last updated."
     }
   },
-  "required": ["id", "entityType", "entityDocumentationUrl", "name", "createdAt", "updatedAt"],
+  "required": ["name", "updatedAt"],
   "x-ifs-relationships": [
     { "relationshipTypeId": "RelationshipType/ifs.employed-by", "endpoint": "target" },
     { "relationshipTypeId": "RelationshipType/ifs.manages", "endpoint": "source" },

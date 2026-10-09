@@ -4,6 +4,7 @@
   "title": "Action",
   "type": "object",
   "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -15,22 +16,6 @@
       "type": "string",
       "const": "Action",
       "description": "Entity type discriminator. Always \"Action\" for Action entities."
-    },
-    "basedOn": {
-      "type": "string",
-      "x-ifs-id": true,
-      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
-      "description": "Id of the object this object is derived from."
-    },
-    "entityDocumentationUrl": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL for documentation about this entity."
-    },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Timestamp when this action record was created."
     },
     "updatedAt": {
       "type": "string",
@@ -59,17 +44,6 @@
       "description": "Lifecycle state of the action."
     }
   },
-  "required": [
-    "id",
-    "entityType",
-    "entityDocumentationUrl",
-    "createdAt",
-    "updatedAt",
-    "name",
-    "uniqueName",
-    "requiresPermission",
-    "description",
-    "state"
-  ],
+  "required": ["updatedAt", "name", "uniqueName", "requiresPermission", "description", "state"],
   "x-ifs-relationships": []
 }

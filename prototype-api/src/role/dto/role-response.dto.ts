@@ -6,6 +6,18 @@ export class RoleResponseDto {
   @ApiProperty({
     description: 'Globally unique identifier for this role.',
     pattern: '^Role/[^/\\s]+$',
+    allOf: [
+      {
+        type: 'string',
+        description: 'Globally unique entity identifier in EntityType/ID form.',
+        pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
+      },
+      {
+        type: 'string',
+        description: 'Globally unique identifier for this role.',
+        pattern: '^Role/[^/\\s]+$',
+      },
+    ],
   })
   id: string;
 
@@ -26,6 +38,12 @@ export class RoleResponseDto {
     format: 'uri',
   })
   entityDocumentationUrl: string;
+
+  @ApiProperty({
+    description: 'Timestamp when this entity record was created.',
+    format: 'date-time',
+  })
+  createdAt: string;
 
   @ApiProperty({ description: 'Human-readable name of the role.' })
   name: string;
@@ -73,12 +91,6 @@ export class RoleResponseDto {
   })
   state:
     'drafted' | 'under-review' | 'active' | 'suspended' | 'revoked' | 'expired';
-
-  @ApiProperty({
-    description: 'Timestamp when this role record was created.',
-    format: 'date-time',
-  })
-  createdAt: string;
 
   @ApiProperty({
     description: 'Timestamp when this role record was last updated.',

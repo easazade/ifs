@@ -9,6 +9,18 @@ export class ChangeResponseDto {
   @ApiProperty({
     description: 'Globally unique identifier for this change.',
     pattern: '^Change/[^/\\s]+$',
+    allOf: [
+      {
+        type: 'string',
+        description: 'Globally unique entity identifier in EntityType/ID form.',
+        pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
+      },
+      {
+        type: 'string',
+        description: 'Globally unique identifier for this change.',
+        pattern: '^Change/[^/\\s]+$',
+      },
+    ],
   })
   id: string;
 
@@ -30,6 +42,12 @@ export class ChangeResponseDto {
     format: 'uri',
   })
   entityDocumentationUrl: string;
+
+  @ApiProperty({
+    description: 'Timestamp when this entity record was created.',
+    format: 'date-time',
+  })
+  createdAt: string;
 
   @ApiProperty({
     description: 'Human-readable title summarizing the proposed change.',
@@ -157,12 +175,6 @@ export class ChangeResponseDto {
     type: [String],
   })
   links?: Array<string>;
-
-  @ApiProperty({
-    description: 'Timestamp when this change was created.',
-    format: 'date-time',
-  })
-  createdAt: string;
 
   @ApiProperty({
     description: 'Timestamp when this change was last updated.',

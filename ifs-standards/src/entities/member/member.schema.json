@@ -4,6 +4,7 @@
   "title": "Member",
   "type": "object",
   "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -16,11 +17,6 @@
       "const": "Member",
       "description": "Entity type discriminator. Always \"Member\" for Member entities."
     },
-    "entityDocumentationUrl": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL for documentation about this entity."
-    },
     "name": { "type": "string", "description": "Human-readable name of the member." },
     "roles": {
       "type": "array",
@@ -32,28 +28,13 @@
       "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json" }
     },
     "isOwner": { "type": "boolean", "description": "Whether this member is considered an owner of the system." },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Timestamp when this member record was created."
-    },
     "updatedAt": {
       "type": "string",
       "format": "date-time",
       "description": "Timestamp when this member record was last updated."
     }
   },
-  "required": [
-    "id",
-    "entityType",
-    "entityDocumentationUrl",
-    "name",
-    "roles",
-    "permissions",
-    "isOwner",
-    "createdAt",
-    "updatedAt"
-  ],
+  "required": ["name", "roles", "permissions", "isOwner", "updatedAt"],
   "x-ifs-relationships": [
     { "relationshipTypeId": "RelationshipType/ifs.employed-by", "endpoint": "source" },
     { "relationshipTypeId": "RelationshipType/ifs.employed-by", "endpoint": "target" },

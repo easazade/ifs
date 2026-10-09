@@ -33,7 +33,16 @@ function fixture() {
     join(apiRoot, 'src/surreal/entity-storage.ts'),
     join(api, 'src/surreal/entity-storage.ts'),
   );
+  const standardsScripts = join(root, 'ifs-standards/scripts');
+  mkdirSync(standardsScripts, { recursive: true });
+  for (const name of ['entity-schema.ts', 'entity-metadata.ts']) {
+    cpSync(
+      join(apiRoot, '../ifs-standards/scripts', name),
+      join(standardsScripts, name),
+    );
+  }
   for (const entity of [
+    'entity',
     'relationship',
     'member',
     'role',
@@ -127,6 +136,37 @@ describe('DTO generator', () => {
     run(api);
     expect(source(api, 'member', 'member-response.dto.ts')).toBe(response);
     expect(source(api, 'member', 'create-member.dto.ts')).toBe(create);
+  });
+  it('retains inherited fields, requiredness, and intersected ID constraints', () => {
+    const api = fixture();
+    dependencies(api);
+    run(api);
+    for (const file of ['create-member.dto.ts', 'member-response.dto.ts']) {
+      const dto = source(api, 'member', file);
+      expect(dto).toContain('id: string;');
+      expect(dto).toContain('entityType: "Member";');
+      expect(dto).toContain('entityDocumentationUrl: string;');
+      expect(dto).toContain('createdAt: string;');
+      expect(dto).toContain('basedOn?: string;');
+      expect(dto).toContain('allOf:');
+      expect(dto).toContain('^Member/');
+      expect(dto).toContain('^[A-Z][A-Za-z0-9]*/');
+      expect(dto).toContain('[key: string]: unknown;');
+    }
+  });
+  it('rejects the abstract base before writing DTOs', () => {
+    const api = fixture();
+    const result = spawnSync(
+      process.execPath,
+      ['scripts/generate-dto.mjs', 'entity', '--skip-format'],
+      {
+        cwd: api,
+        encoding: 'utf8',
+      },
+    );
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('abstract entity schema');
+    expect(existsSync(join(api, 'src/entity'))).toBe(false);
   });
   it('converts JSON Schema examples to an OpenAPI example', () => {
     const api = fixture();

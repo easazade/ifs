@@ -4,7 +4,6 @@ import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { AnySchema } from 'ajv';
 import { createAjv } from './utils/createAjv';
-import { isAbstractEntity } from '../scripts/entity-metadata';
 
 const ENTITIES_DIR = 'src/entities';
 const entries = await readdir(ENTITIES_DIR, { withFileTypes: true });
@@ -19,11 +18,8 @@ describe('entity schemas', () => {
       expect(schema).toHaveProperty('additionalProperties', true);
     });
 
-    // Abstract base validation is covered by base-entity.test.ts, including its metadata.
-    if (typeof schema === 'object' && isAbstractEntity(schema)) continue;
-
     it(`${entityName} schema compiles`, () => {
-      const validate = createAjv().compile(schema);
+      const validate = createAjv().getSchema((schema as { $id: string }).$id);
 
       expect(validate).toBeInstanceOf(Function);
       expect(typeof validate).toBe('function');

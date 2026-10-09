@@ -96,6 +96,7 @@ test('compiled OpenAPI export is deterministic and does not connect to SurrealDB
           'utf8',
         ),
       );
+      if (entity['x-ifs-abstract'] === true) continue;
       const modelName = entity.title.replace(/[^A-Za-z0-9]+/g, '');
       for (const dto of [
         `Create${modelName}Dto`,
@@ -108,13 +109,29 @@ test('compiled OpenAPI export is deterministic and does not connect to SurrealDB
           `${dto} must have a fixed entityType`,
         );
       }
-      assert.ok(
-        schemas[`Create${modelName}Dto`].required.includes('entityType'),
-      );
+      for (const dto of [`Create${modelName}Dto`, `${modelName}ResponseDto`]) {
+        for (const field of [
+          'id',
+          'entityType',
+          'entityDocumentationUrl',
+          'createdAt',
+        ]) {
+          assert.ok(schemas[dto].properties[field], `${dto} missing ${field}`);
+          assert.ok(
+            schemas[dto].required.includes(field),
+            `${dto} must require ${field}`,
+          );
+        }
+        assert.ok(schemas[dto].properties.basedOn);
+        assert.ok(!schemas[dto].required.includes('basedOn'));
+      }
       assert.ok(
         !schemas[`Update${modelName}Dto`].required?.includes('entityType'),
       );
     }
+    assert.ok(!spec.paths['/entities']);
+    assert.ok(!schemas.CreateEntityDto);
+    assert.ok(!schemas.EntityResponseDto);
     assert.ok(schemas.CreateRelationshipDto.required.includes('sourceId'));
     assert.ok(schemas.CreateRelationshipDto.required.includes('targetId'));
     assert.ok(schemas.RelationshipResponseDto.properties.sourceId);

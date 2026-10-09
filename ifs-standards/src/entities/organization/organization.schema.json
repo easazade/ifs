@@ -5,6 +5,7 @@
   "description": "An organization that may belong to a group. This basic schema defines only common entity properties.",
   "type": "object",
   "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -17,29 +18,13 @@
       "const": "Organization",
       "description": "Entity type discriminator. Always \"Organization\" for Organization entities."
     },
-    "basedOn": {
-      "type": "string",
-      "x-ifs-id": true,
-      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
-      "description": "Id of the object this object is derived from."
-    },
-    "entityDocumentationUrl": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL for documentation about this entity."
-    },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Timestamp when this organization record was created."
-    },
     "updatedAt": {
       "type": "string",
       "format": "date-time",
       "description": "Timestamp when this organization record was last updated."
     }
   },
-  "required": ["id", "entityType", "entityDocumentationUrl", "createdAt", "updatedAt"],
+  "required": ["updatedAt"],
   "x-ifs-relationships": [
     { "relationshipTypeId": "RelationshipType/ifs.employed-by", "endpoint": "target" },
     { "relationshipTypeId": "RelationshipType/ifs.manages", "endpoint": "source" },

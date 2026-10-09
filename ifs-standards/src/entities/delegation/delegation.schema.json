@@ -4,6 +4,7 @@
   "title": "Delegation",
   "type": "object",
   "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -15,22 +16,6 @@
       "type": "string",
       "const": "Delegation",
       "description": "Entity type discriminator. Always \"Delegation\" for Delegation entities."
-    },
-    "basedOn": {
-      "type": "string",
-      "x-ifs-id": true,
-      "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
-      "description": "Id of the object this object is derived from."
-    },
-    "entityDocumentationUrl": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL for documentation about this entity."
-    },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Timestamp when this delegation record was created."
     },
     "updatedAt": {
       "type": "string",
@@ -75,15 +60,6 @@
       "description": "Optional timestamp after which this delegation no longer applies."
     }
   },
-  "required": [
-    "id",
-    "entityType",
-    "entityDocumentationUrl",
-    "createdAt",
-    "permissionId",
-    "delegatorId",
-    "delegateId",
-    "state"
-  ],
+  "required": ["permissionId", "delegatorId", "delegateId", "state"],
   "x-ifs-relationships": []
 }

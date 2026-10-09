@@ -4,6 +4,18 @@ export class GroupResponseDto {
   @ApiProperty({
     description: 'Globally unique identifier for this group.',
     pattern: '^Group/[^/\\s]+$',
+    allOf: [
+      {
+        type: 'string',
+        description: 'Globally unique entity identifier in EntityType/ID form.',
+        pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
+      },
+      {
+        type: 'string',
+        description: 'Globally unique identifier for this group.',
+        pattern: '^Group/[^/\\s]+$',
+      },
+    ],
   })
   id: string;
 
@@ -27,6 +39,12 @@ export class GroupResponseDto {
   entityDocumentationUrl: string;
 
   @ApiProperty({
+    description: 'Timestamp when this entity record was created.',
+    format: 'date-time',
+  })
+  createdAt: string;
+
+  @ApiProperty({
     description: 'Human-readable name of this group.',
     minLength: 1,
   })
@@ -34,12 +52,6 @@ export class GroupResponseDto {
 
   @ApiPropertyOptional({ description: 'Purpose and context of this group.' })
   description?: string;
-
-  @ApiProperty({
-    description: 'Timestamp when this group record was created.',
-    format: 'date-time',
-  })
-  createdAt: string;
 
   @ApiProperty({
     description: 'Timestamp when this group record was last updated.',
