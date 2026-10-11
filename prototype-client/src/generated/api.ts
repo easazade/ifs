@@ -73,8 +73,10 @@ export interface CreateActionDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this action record was last updated. */
@@ -135,8 +137,10 @@ export interface ActionResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this action record was last updated. */
@@ -182,8 +186,10 @@ export interface RelationshipResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this relationship record was last updated. */
@@ -257,8 +263,10 @@ export interface UpdateActionDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this action record was last updated. */
@@ -317,8 +325,10 @@ export interface ChangeItemResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
@@ -377,8 +387,10 @@ export interface ScopeResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Human-readable name of the scope. */
@@ -447,8 +459,10 @@ export interface PermissionResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** ID list of actions that this permission allows */
@@ -518,8 +532,10 @@ export interface RoleResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Human-readable name of the role. */
@@ -571,8 +587,10 @@ export interface MemberResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Human-readable name of the member. */
@@ -608,8 +626,10 @@ export interface VoteResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this vote record was last updated. */
@@ -656,8 +676,10 @@ export interface RuleResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this rule record was last updated. */
@@ -700,8 +722,10 @@ export interface DecisionResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /**
@@ -787,8 +811,10 @@ export interface CommentResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this comment was last updated. */
@@ -818,8 +844,10 @@ export interface ReviewCommentResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this review comment was last updated. */
@@ -864,8 +892,10 @@ export interface CreateChangeDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Human-readable title summarizing the proposed change. */
@@ -960,8 +990,10 @@ export interface ChangeResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Human-readable title summarizing the proposed change. */
@@ -1056,8 +1088,10 @@ export interface UpdateChangeDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Human-readable title summarizing the proposed change. */
@@ -1150,8 +1184,10 @@ export interface CreateChangeItemDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
@@ -1218,8 +1254,10 @@ export interface UpdateChangeItemDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
@@ -1273,8 +1311,10 @@ export interface CreateCommentDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this comment was last updated. */
@@ -1304,8 +1344,10 @@ export interface UpdateCommentDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this comment was last updated. */
@@ -1348,8 +1390,10 @@ export interface CreateDecisionDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /**
@@ -1448,8 +1492,10 @@ export interface UpdateDecisionDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /**
@@ -1547,8 +1593,10 @@ export interface CreateDelegationDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this delegation record was last updated. */
@@ -1613,8 +1661,10 @@ export interface DelegationResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this delegation record was last updated. */
@@ -1679,8 +1729,10 @@ export interface UpdateDelegationDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this delegation record was last updated. */
@@ -1733,8 +1785,10 @@ export interface CreateGeographicAreaDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this geographic area record was last updated. */
@@ -1771,8 +1825,10 @@ export interface GeographicAreaResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this geographic area record was last updated. */
@@ -1809,8 +1865,10 @@ export interface UpdateGeographicAreaDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this geographic area record was last updated. */
@@ -1847,8 +1905,10 @@ export interface CreateGroupDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /**
@@ -1885,8 +1945,10 @@ export interface GroupResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /**
@@ -1923,8 +1985,10 @@ export interface UpdateGroupDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /**
@@ -1961,8 +2025,10 @@ export interface CreateLabelDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this label was last updated. */
@@ -1992,8 +2058,10 @@ export interface LabelResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this label was last updated. */
@@ -2023,8 +2091,10 @@ export interface UpdateLabelDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this label was last updated. */
@@ -2054,8 +2124,10 @@ export interface CreateMemberDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Human-readable name of the member. */
@@ -2090,8 +2162,10 @@ export interface UpdateMemberDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Human-readable name of the member. */
@@ -2126,8 +2200,10 @@ export interface CreateObservationDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this observation record was last updated. */
@@ -2165,8 +2241,10 @@ export interface ObservationResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this observation record was last updated. */
@@ -2204,8 +2282,10 @@ export interface UpdateObservationDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this observation record was last updated. */
@@ -2243,8 +2323,10 @@ export interface CreateOrganizationDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this organization record was last updated. */
@@ -2274,8 +2356,10 @@ export interface OrganizationResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this organization record was last updated. */
@@ -2305,8 +2389,10 @@ export interface UpdateOrganizationDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this organization record was last updated. */
@@ -2354,8 +2440,10 @@ export interface CreatePermissionDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** ID list of actions that this permission allows */
@@ -2428,8 +2516,10 @@ export interface UpdatePermissionDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** ID list of actions that this permission allows */
@@ -2484,8 +2574,10 @@ export interface CreatePlaceDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this place record was last updated. */
@@ -2523,8 +2615,10 @@ export interface PlaceResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this place record was last updated. */
@@ -2562,8 +2656,10 @@ export interface UpdatePlaceDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this place record was last updated. */
@@ -2601,8 +2697,10 @@ export interface CreateProtocolDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
 }
@@ -2630,8 +2728,10 @@ export interface ProtocolResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
 }
@@ -2659,8 +2759,10 @@ export interface UpdateProtocolDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
 }
@@ -2688,8 +2790,10 @@ export interface CreateRelationshipDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this relationship record was last updated. */
@@ -2748,8 +2852,10 @@ export interface UpdateRelationshipDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this relationship record was last updated. */
@@ -2798,8 +2904,10 @@ export interface CreateRelationshipTypeDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this relationship type was last updated. */
@@ -2853,8 +2961,10 @@ export interface RelationshipTypeResponseDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this relationship type was last updated. */
@@ -2908,8 +3018,10 @@ export interface UpdateRelationshipTypeDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this relationship type was last updated. */
@@ -2963,8 +3075,10 @@ export interface CreateReviewCommentDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this review comment was last updated. */
@@ -2994,8 +3108,10 @@ export interface UpdateReviewCommentDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this review comment was last updated. */
@@ -3040,8 +3156,10 @@ export interface CreateRoleDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Human-readable name of the role. */
@@ -3108,8 +3226,10 @@ export interface UpdateRoleDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Human-readable name of the role. */
@@ -3161,8 +3281,10 @@ export interface CreateRuleDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this rule record was last updated. */
@@ -3192,8 +3314,10 @@ export interface UpdateRuleDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this rule record was last updated. */
@@ -3228,8 +3352,10 @@ export interface CreateScopeDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Human-readable name of the scope. */
@@ -3285,8 +3411,10 @@ export interface UpdateScopeDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Human-readable name of the scope. */
@@ -3337,8 +3465,10 @@ export interface CreateVoteDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Timestamp when this vote record was last updated. */
@@ -3385,8 +3515,10 @@ export interface UpdateVoteDto {
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
-  /** URL for documentation about this entity. */
+  /** URL for documentation about this entity type. */
   entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
   /** Timestamp when this vote record was last updated. */

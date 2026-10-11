@@ -33,10 +33,16 @@ export class ScopeResponseDto {
   basedOn?: string;
 
   @ApiProperty({
-    description: 'URL for documentation about this entity.',
+    description: 'URL for documentation about this entity type.',
     format: 'uri',
   })
   entityDocumentationUrl: string;
+
+  @ApiPropertyOptional({
+    description: 'URL for documentation about this object instance',
+    format: 'uri',
+  })
+  documentationUrl?: string;
 
   @ApiProperty({
     description: 'Timestamp when this entity record was created.',

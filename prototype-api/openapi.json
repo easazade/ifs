@@ -5150,7 +5150,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -5250,7 +5255,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -5350,7 +5360,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -5446,7 +5461,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -5534,7 +5554,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -5630,7 +5655,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -5739,7 +5769,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -5846,7 +5881,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -5957,7 +5997,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -6037,7 +6082,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -6114,7 +6164,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -6169,7 +6224,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -6344,7 +6404,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -6399,7 +6464,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -6454,7 +6524,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -6653,7 +6728,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -6852,7 +6932,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -7033,7 +7118,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -7129,7 +7219,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -7213,7 +7308,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -7268,7 +7368,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -7316,7 +7421,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -7491,7 +7601,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -7650,7 +7765,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -7750,7 +7870,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -7850,7 +7975,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -7940,7 +8070,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8016,7 +8151,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8092,7 +8232,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8160,7 +8305,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8225,7 +8375,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8290,7 +8445,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8347,7 +8507,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8402,7 +8567,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8457,7 +8627,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8505,7 +8680,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8577,7 +8757,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8639,7 +8824,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8722,7 +8912,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8805,7 +9000,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8877,7 +9077,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8932,7 +9137,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -8987,7 +9197,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9035,7 +9250,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9142,7 +9362,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9239,7 +9464,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9319,7 +9549,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9399,7 +9634,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9470,7 +9710,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9519,7 +9764,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9568,7 +9818,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9611,7 +9866,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9707,7 +9967,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9780,7 +10045,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9877,7 +10147,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -9974,7 +10249,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -10058,7 +10338,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -10113,7 +10398,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -10161,7 +10451,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -10272,7 +10567,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -10370,7 +10670,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -10425,7 +10730,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -10473,7 +10783,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -10582,7 +10897,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -10683,7 +11003,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
@@ -10760,7 +11085,12 @@
           },
           "entityDocumentationUrl": {
             "type": "string",
-            "description": "URL for documentation about this entity.",
+            "description": "URL for documentation about this entity type.",
+            "format": "uri"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "description": "URL for documentation about this object instance",
             "format": "uri"
           },
           "createdAt": {
