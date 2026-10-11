@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ifs-standards.org/schemas/v1/entities/organization.schema.json",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/organization.schema.json",
   "title": "Organization",
   "description": "An organization that may belong to a group. This basic schema defines only common entity properties.",
   "type": "object",
   "additionalProperties": true,
-  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
+  "allOf": [{ "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",

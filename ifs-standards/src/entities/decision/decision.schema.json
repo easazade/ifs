@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ifs-standards.org/schemas/v1/entities/decision.schema.json",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/decision.schema.json",
   "title": "Decision",
   "type": "object",
   "additionalProperties": true,
-  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
+  "allOf": [{ "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -35,27 +35,27 @@
       "description": "Id of previous revision of this decision, If this decision is a modified version of another decision."
     },
     "previousRevision": {
-      "$ref": "https://ifs-standards.org/schemas/v1/entities/decision.schema.json",
+      "$ref": "https://ifs-standards.org/v0.1/schemas/entities/decision.schema.json",
       "description": "Current outcome of the decision, if the decision has produced an outcome at least once."
     },
     "eligibleMembers": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/member.schema.json" },
       "description": "Member entities eligible to participate in this decision."
     },
     "affectedMembers": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/member.schema.json" },
       "description": "Member entities affected by this decision under the IFS scope rule."
     },
     "votes": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/vote.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/vote.schema.json" },
       "description": "Vote entities cast directly by members or by delegates acting on their behalf."
     },
     "rules": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/rule.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/rule.schema.json" },
       "description": "Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision."
     },
     "eligibleMemberCount": {

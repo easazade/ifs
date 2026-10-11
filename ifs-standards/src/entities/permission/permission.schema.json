@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/permission.schema.json",
   "title": "Permission",
   "type": "object",
   "additionalProperties": true,
-  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
+  "allOf": [{ "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -24,7 +24,7 @@
     },
     "actions": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/action.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/action.schema.json" },
       "description": "List of actions that this permission allows"
     },
     "memberId": {

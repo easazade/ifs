@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ifs-standards.org/schemas/v1/entities/group.schema.json",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/group.schema.json",
   "title": "Group",
   "description": "A named grouping of members, organizations, or subgroups. Direct membership and subgroup inclusion are recorded as Relationship objects, not embedded collections. Each relationship connects the included entity to this group using a RelationshipType that allows those endpoint types, with startedAt and optional endedAt recording its duration. Membership and containment alone do not grant delegated authority or imply transitive membership.",
   "type": "object",
   "additionalProperties": true,
-  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
+  "allOf": [{ "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",

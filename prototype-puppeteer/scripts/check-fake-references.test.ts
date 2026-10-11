@@ -70,7 +70,15 @@ test('does not accept obsolete local ids or ifsId as canonical identity declarat
 test('ignores non-reference strings and primitives without claiming schema validity', () => {
   const result = checkReferences([
     fixture({
-      values: [null, 1, true, 'https://ifs-standards.org/entities/member', 'Member/', 'Member/a b', 'Member/a/b'],
+      values: [
+        null,
+        1,
+        true,
+        'https://ifs-standards.org/v0.1/schemas/entities/member',
+        'Member/',
+        'Member/a b',
+        'Member/a/b',
+      ],
     }),
   ]);
   assert.deepEqual(result.references, []);

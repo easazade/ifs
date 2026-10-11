@@ -343,7 +343,7 @@ describe('resource generator', () => {
     );
     const schema = JSON.parse(readFileSync(schemaPath, 'utf8'));
     schema.properties.primaryPermission = {
-      $ref: 'https://ifs-standards.org/schemas/v1/entities/permission.schema.json',
+      $ref: 'https://ifs-standards.org/v0.1/schemas/entities/permission.schema.json',
     };
     writeFileSync(schemaPath, JSON.stringify(schema));
 

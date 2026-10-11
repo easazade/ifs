@@ -1,11 +1,13 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { createAjv } from './utils/createAjv';
 import { isAbstractEntity } from '../scripts/entity-metadata';
+import { createAjv } from './utils/createAjv';
 
 interface RelationshipType {
   id: string;
+  entityDocumentationUrl: string;
+  documentationUrl: string;
   type: string;
   inverseType: string;
   sourceTypes: string[];
@@ -28,7 +30,7 @@ const entityTypes = readdirSync(entityDir, { withFileTypes: true })
     return isAbstractEntity(schema) ? [] : [schema.title as string];
   });
 const ajv = createAjv();
-const validate = ajv.getSchema('https://ifs-standards.org/schemas/v1/entities/relationship-type.schema.json')!;
+const validate = ajv.getSchema('https://ifs-standards.org/v0.1/schemas/entities/relationship-type.schema.json')!;
 
 describe('standard relationship type defaults', () => {
   it('contains unique standard IDs', () => {
@@ -41,6 +43,13 @@ describe('standard relationship type defaults', () => {
   for (const { name, definition } of definitions) {
     it(`${name} conforms to the canonical schema`, () => {
       expect(validate(definition), JSON.stringify(validate.errors)).toBe(true);
+    });
+
+    it(`${name} links to its own documentation rather than entity-type documentation`, () => {
+      expect(definition.documentationUrl).toBe(
+        `https://ifs-standards.org/v0.1/defaults/entitiesRelationshipType/${name.replace(/\.json$/, '')}`
+      );
+      expect(definition.documentationUrl).not.toBe(definition.entityDocumentationUrl);
     });
 
     it(`${name} allows only known entity types`, () => {

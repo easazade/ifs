@@ -2,6 +2,7 @@
 description: Fix stale predefined defaults, fake IFS objects, and maintained documentation
 argument-hint: "[instructions or change context]"
 ---
+
 Find and fix missed updates caused by changes elsewhere in this repository.
 
 Additional user instructions/context: ${ARGUMENTS:-No additional context; review all areas listed below against current sources of truth.}
@@ -27,6 +28,18 @@ Review only these three areas. Do not expand into a general code audit, dependen
 - **Do not manually audit or hand-edit generated output.** Skip generated interfaces, DTOs/resources, OpenAPI/client source, relation/order metadata, overview/example output, generated CSS, and build output. A file being documentation does not make it manually maintained.
 - Use generator ownership, not just filenames or comments, to determine exclusions. Avoid loading large generated files; establish ownership from scripts/configuration and targeted metadata.
 - If an in-scope fix needs generated dependencies refreshed, use the relevant existing generation command after inspecting its effects. Do not regenerate unrelated artifacts or overwrite user edits. If generation is unsafe or blocked, report the required command instead. Do not broaden the task into repairing generators or unrelated implementation.
+
+## Canonical IFS URL routes
+
+Check maintained URLs against these prefixes from root `AGENTS.md`:
+
+- `baseUrl`: `https://ifs-standards.org/v0.1/`
+- `entitySchemaRoute`: `https://ifs-standards.org/v0.1/schemas/entities/`
+- `defaulObjectsRoute`: `https://ifs-standards.org/v0.1/defaults/`
+
+Entity schema `$id` values use `entitySchemaRoute` plus `<kebab-case-entity-name>.schema.json`; entity `$ref` values match the referenced schema's `$id`. Entity-type documentation URLs (`entityDocumentationUrl`) use `entitySchemaRoute`; predefined-object documentation URLs (`documentationUrl`) use `defaulObjectsRoute`. Keep type and instance documentation distinct, and preserve the trailing slash when joining prefixes and suffixes. Do not invent documentation URLs for arbitrary fake objects.
+
+Public URL routes are not repository paths. Keep schema lookups under `ifs-standards/src/entities/` and default-object lookups under `ifs-standards/src/defaults/` (currently `relationship-type/`); do not rewrite filesystem paths or generator input directories to mirror URL routes. Report out-of-scope schema/generator drift rather than changing it under this prompt.
 
 ## 1. Default predefined objects
 
@@ -63,6 +76,7 @@ Review only these three areas. Do not expand into a general code audit, dependen
 ## Final report
 
 Keep the report concise:
+
 - **Fixed:** file paths and the stale assumptions corrected.
 - **Verified:** checks run and their results, plus any verification gaps or skipped areas.
 - **User action required:** every unresolved issue, with its file location, why it could not be fixed, and the specific correction or decision needed. Never silently omit an unfixable issue.

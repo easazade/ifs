@@ -4,13 +4,13 @@ import { readEntitySchemas, resolveEntitySchema, type EntitySchema } from '../sc
 import { createAjv } from './utils/createAjv';
 
 const schemas = readEntitySchemas('src/entities');
-const baseId = 'https://ifs-standards.org/schemas/v1/entities/entity.schema.json';
+const baseId = 'https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json';
 const commonRequired = ['id', 'entityType', 'entityDocumentationUrl', 'createdAt'];
 const ajv = createAjv();
 const action = {
   id: 'Action/approve',
   entityType: 'Action',
-  entityDocumentationUrl: 'https://ifs-standards.org/entities/Action',
+  entityDocumentationUrl: 'https://ifs-standards.org/v0.1/schemas/entities/Action',
   createdAt: '2025-01-01T00:00:00Z',
   updatedAt: '2025-01-01T00:00:00Z',
   name: 'Approve',
@@ -41,7 +41,7 @@ describe('concrete entity composition', () => {
     });
   }
 
-  const validateAction = ajv.getSchema('https://ifs-standards.org/schemas/v1/entities/action.schema.json')!;
+  const validateAction = ajv.getSchema('https://ifs-standards.org/v0.1/schemas/entities/action.schema.json')!;
   it('validates flat records and permits extra fields', () => {
     expect(validateAction(action), JSON.stringify(validateAction.errors)).toBe(true);
     expect(validateAction({ ...action, basedOn: 'Rule/original', extra: { enabled: true } })).toBe(true);
@@ -64,7 +64,7 @@ describe('concrete entity composition', () => {
     expect(validateAction({ ...action, ...changes })).toBe(false);
   });
   it('gives Member an optional typed basedOn', () => {
-    const validate = ajv.getSchema('https://ifs-standards.org/schemas/v1/entities/member.schema.json')!;
+    const validate = ajv.getSchema('https://ifs-standards.org/v0.1/schemas/entities/member.schema.json')!;
     const member = {
       id: 'Member/1',
       entityType: 'Member',
@@ -96,7 +96,7 @@ describe('scoped composition resolver', () => {
     expect(effective.allOf).toEqual(schema.allOf);
   });
   it('keeps conditional composition branches untouched', () => {
-    const schema = schemas.get('https://ifs-standards.org/schemas/v1/entities/change-item.schema.json')!;
+    const schema = schemas.get('https://ifs-standards.org/v0.1/schemas/entities/change-item.schema.json')!;
     expect(resolveEntitySchema(schema, schemas).allOf).toEqual(schema.allOf);
     expect(schema.allOf).toHaveLength(4);
   });

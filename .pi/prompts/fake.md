@@ -2,6 +2,11 @@
 
 Create or edit fake IFS entity objects in `prototype-puppeteer/src/fake/ifs/`. These objects are seed data that may be reinserted after the database is erased, so follow these rules:
 
+- Read and follow root `AGENTS.md`, including its canonical URL conventions:
+  - `baseUrl`: `https://ifs-standards.org/v0.1/`
+  - `entitySchemaRoute`: `https://ifs-standards.org/v0.1/schemas/entities/`
+  - `defaulObjectsRoute`: `https://ifs-standards.org/v0.1/defaults/`
+- Use `entitySchemaRoute` for entity-type documentation URLs (`entityDocumentationUrl`). Use `defaulObjectsRoute` for documentation about predefined objects, not as a documentation route for arbitrary fake objects. Keep `documentationUrl` (object instance) distinct from `entityDocumentationUrl` (entity type); do not invent an instance documentation URL. Preserve the trailing slash when joining prefixes and suffixes. Public routes do not change repository paths: schemas remain under `ifs-standards/src/entities/` and predefined objects under `ifs-standards/src/defaults/`.
 - Use the generated prototype-client **create DTO** types for every object; these are database-create payloads, not persisted/read models.
 - Every object's `entityType` must equal its canonical JSON schema's exact `title` and `properties.entityType.const` (case-sensitive, including spaces). It is immutable: never substitute another type or change it on update. For example, Member objects must use `entityType: 'Member'`; Geographic Area objects must use `entityType: 'Geographic Area'`. The API rejects mismatched values.
 - Every ID must be unique and follow the schema’s IFS ID format: `<entity-type>/<id>`. The local `<id>` may be a number, a meaningful name, or another stable unique identifier; it is not limited to numbers. Prefer a meaningful name when appropriate, e.g. `Organization/Everly` for the organization Everly; otherwise use a numeric identifier such as `Organization/1`. The full ID is always a string. Use the concrete schema's `id.pattern` prefix, which may differ from the display title or discriminator (e.g. `GeographicArea/rasht` has `entityType: 'Geographic Area'`), and use a nonempty local ID without slashes or whitespace. IDs are references too, so use consistent IDs wherever an object is referenced.

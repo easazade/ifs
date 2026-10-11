@@ -1,6 +1,6 @@
 ---
 description: Create or update an IFS entity schema source file
-argument-hint: '<entity-name> [entity specification]'
+argument-hint: "<entity-name> [entity specification]"
 ---
 
 Create a new IFS entity named `$1`, or update it if it already exists.
@@ -140,20 +140,30 @@ Only after approval:
 3. Create any basic related-entity schema files needed for referenced entity types that do not already exist.
 4. Do not create or manually update `.mdx` documentation; derived docs are generated from schemas.
 
+## Canonical IFS URL routes
+
+Follow the canonical URL conventions in root `AGENTS.md`:
+
+- `baseUrl`: `https://ifs-standards.org/v0.1/`
+- `entitySchemaRoute`: `https://ifs-standards.org/v0.1/schemas/entities/`
+- `defaulObjectsRoute`: `https://ifs-standards.org/v0.1/defaults/`
+
+Build entity schema `$id` values from `entitySchemaRoute` plus `<kebab-case-entity-name>.schema.json`; entity `$ref` values must match the referenced schema's `$id`. Entity-type documentation URLs use `entitySchemaRoute`; predefined-object documentation URLs use `defaulObjectsRoute`. Preserve the trailing slash when joining prefixes and suffixes. These public routes do not change repository paths: schemas remain under `ifs-standards/src/entities/` and predefined objects under `ifs-standards/src/defaults/`. This route guidance does not authorize editing instance data.
+
 ## JSON Schema rules
 
 - Use JSON Schema draft 2020-12.
 - Set `$schema` to `https://json-schema.org/draft/2020-12/schema`.
-- Set `$id` to `https://ifs-standards.org/schemas/v1/entities/<kebab-case-entity-name>.schema.json`.
+- Set `$id` to `https://ifs-standards.org/v0.1/schemas/entities/<kebab-case-entity-name>.schema.json`.
 - Use a human-readable `title` in PascalCase / title case.
 - Set `type` to `object`.
 - All IFS entity schemas must use `additionalProperties: true`; never close them with `additionalProperties: false` or `unevaluatedProperties: false`.
-- Every concrete schema, including basic related entities, must include `{"$ref":"https://ifs-standards.org/schemas/v1/entities/entity.schema.json"}` in `allOf`. Preserve existing conditional branches; keep payloads flat.
+- Every concrete schema, including basic related entities, must include `{"$ref":"https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json"}` in `allOf`. Preserve existing conditional branches; keep payloads flat.
 - `Entity` is abstract (`x-ifs-abstract: true`), with a generic ID pattern and no fixed discriminator; never generate a resource/table for it or edit it unless requested.
 - Convert collected properties into valid JSON Schema `properties`.
-- For entity-object references, prefer absolute `$ref` values matching schema `$id`, not relative file paths. Example: `"$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json"`.
-- For `array<EntityName>` or plural entity-object properties, put the `$ref` inside `items`. Example: `"permissions": { "type": "array", "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json" } }`.
-- For single entity-object properties, use direct `$ref`. Example: `"owner": { "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json" }`.
+- For entity-object references, prefer absolute `$ref` values matching schema `$id`, not relative file paths. Example: `"$ref": "https://ifs-standards.org/v0.1/schemas/entities/permission.schema.json"`.
+- For `array<EntityName>` or plural entity-object properties, put the `$ref` inside `items`. Example: `"permissions": { "type": "array", "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/permission.schema.json" } }`.
+- For single entity-object properties, use direct `$ref`. Example: `"owner": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/member.schema.json" }`.
 - Mark locally defined ID string schemas with `"x-ifs-id": true`; inherited `basedOn` already carries this metadata. For ID arrays, put the marker on the string schema in `items`, not on the array.
 - Define every ID's standard JSON Schema `pattern` using the JSON-escaped examples below:
   - Known entity type: `"pattern": "^Member/[^/\\s]+$"`. Replace `Member` with the owning type for `id`, or the target type for related IDs.

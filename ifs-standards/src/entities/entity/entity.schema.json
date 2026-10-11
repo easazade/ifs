@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json",
   "title": "Entity",
   "description": "Abstract base schema for IFS entities. Concrete schemas define their own entityType and ID prefix.",
   "type": "object",

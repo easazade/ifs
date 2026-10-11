@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ifs-standards.org/schemas/v1/entities/role.schema.json",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/role.schema.json",
   "title": "Role",
   "type": "object",
   "additionalProperties": true,
-  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
+  "allOf": [{ "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -32,12 +32,12 @@
       "description": "Identifier of the scope where this role has authority."
     },
     "scope": {
-      "$ref": "https://ifs-standards.org/schemas/v1/entities/scope.schema.json",
+      "$ref": "https://ifs-standards.org/v0.1/schemas/entities/scope.schema.json",
       "description": "Scope entity describing where this role applies."
     },
     "permissions": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/permission.schema.json" },
       "description": "Permission entities bundled into this role."
     },
     "state": {

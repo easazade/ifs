@@ -1,10 +1,10 @@
+import type { JSONSchema7 } from 'json-schema';
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import type { JSONSchema7 } from 'json-schema';
 import { describe, expect, it } from 'vitest';
-import { createAjv } from './utils/createAjv';
 import { isAbstractEntity } from '../scripts/entity-metadata';
 import { readEntitySchema } from '../scripts/entity-schema';
+import { createAjv } from './utils/createAjv';
 
 const entitiesDir = 'src/entities';
 const entities = readdirSync(entitiesDir, { withFileTypes: true })
@@ -68,7 +68,7 @@ describe('unified entity IDs', () => {
     const example = {
       id: 'ChangeItem/1',
       entityType: 'ChangeItem',
-      entityDocumentationUrl: 'https://ifs-standards.org/entities/ChangeItem',
+      entityDocumentationUrl: 'https://ifs-standards.org/v0.1/schemas/entities/ChangeItem',
       createdAt: '2025-01-01T00:00:00Z',
       updatedAt: '2025-01-01T00:00:00Z',
       resourceType: 'rule',

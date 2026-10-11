@@ -9,7 +9,7 @@ const validate = ajv.getSchema(schema.$id)!;
 const record = {
   id: 'Action/1',
   entityType: 'Action',
-  entityDocumentationUrl: 'https://ifs-standards.org/entities/Action',
+  entityDocumentationUrl: 'https://ifs-standards.org/v0.1/schemas/entities/Action',
   createdAt: '2025-01-01T00:00:00Z',
 };
 
@@ -36,6 +36,7 @@ describe('abstract Entity base schema', () => {
       'entityType',
       'basedOn',
       'entityDocumentationUrl',
+      'documentationUrl',
       'createdAt',
     ]);
     expect(schema.required).toEqual(['id', 'entityType', 'entityDocumentationUrl', 'createdAt']);

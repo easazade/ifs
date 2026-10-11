@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ifs-standards.org/schemas/v1/entities/place.schema.json",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/place.schema.json",
   "title": "Place",
   "description": "A real-world place. Ownership is recorded as Relationship objects from each owning entity to this place, using an ownership RelationshipType that allows those endpoint types, with startedAt and optional endedAt recording its duration. Ownership relationships alone do not grant permissions; authority is defined through roles, permissions, and delegations.",
   "type": "object",
   "additionalProperties": true,
-  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
+  "allOf": [{ "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -29,12 +29,12 @@
       "description": "Optional latitude, longitude, and altitude location, represented as a comma-separated string."
     },
     "geographicArea": {
-      "$ref": "https://ifs-standards.org/schemas/v1/entities/geographic-area.schema.json",
+      "$ref": "https://ifs-standards.org/v0.1/schemas/entities/geographic-area.schema.json",
       "description": "Geographic area occupied by this place, including disconnected areas when applicable."
     },
     "roles": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/role.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/role.schema.json" },
       "description": "Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc."
     }
   },

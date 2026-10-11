@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ifs-standards.org/schemas/v1/entities/change-item.schema.json",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/change-item.schema.json",
   "title": "ChangeItem",
   "type": "object",
   "additionalProperties": true,
@@ -52,7 +52,7 @@
   },
   "required": ["resourceType", "operation", "targetId", "baseId", "proposedId", "updatedAt"],
   "allOf": [
-    { "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" },
+    { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" },
     {
       "if": { "properties": { "operation": { "const": "create" } }, "required": ["operation"] },
       "then": {

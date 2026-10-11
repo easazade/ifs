@@ -8,13 +8,13 @@ IFS (Individual Freedom System) explores governance built around revocable deleg
 
 This is a pnpm/Turborepo monorepo:
 
-| Workspace | Purpose | Main stack |
-| --- | --- | --- |
-| `ifs-standards` | Standards site and canonical IFS entity schemas | React, Vite, Tailwind CSS v4, MDX, Vitest |
-| `prototype` | Browser prototype | React, Vite |
-| `prototype-api` | HTTP API and persistence | NestJS, SurrealDB, Vitest |
-| `prototype-client` | Generated API client | Orval, TypeScript, native Fetch |
-| `prototype-puppeteer` | Simulation runner using the generated client | TypeScript, Node.js |
+| Workspace             | Purpose                                         | Main stack                                |
+| --------------------- | ----------------------------------------------- | ----------------------------------------- |
+| `ifs-standards`       | Standards site and canonical IFS entity schemas | React, Vite, Tailwind CSS v4, MDX, Vitest |
+| `prototype`           | Browser prototype                               | React, Vite                               |
+| `prototype-api`       | HTTP API and persistence                        | NestJS, SurrealDB, Vitest                 |
+| `prototype-client`    | Generated API client                            | Orval, TypeScript, native Fetch           |
+| `prototype-puppeteer` | Simulation runner using the generated client    | TypeScript, Node.js                       |
 
 Use Node.js 24 and the `pnpm` version pinned in root `package.json`. Do not use workspace-local npm lockfiles as the monorepo package-manager source of truth.
 
@@ -39,6 +39,18 @@ Generation ownership and effects:
 - Puppeteer `generate-api`: canonical concrete schema titles -> `src/game/api.ts`, importing generated client DTOs. `personalities:generate <count>` separately overwrites `src/fake/personalities.ts` using maintained generation pools.
 
 `Entity` is abstract, not an instance type, resource/table, or relationship endpoint. Use `ifs-standards/scripts/entity-schema.ts` to resolve inherited fields and requiredness; keep instance payloads flat. Create DTOs omit read-only fields even when the persisted schema requires them.
+
+## Canonical IFS URL routes
+
+Use these public URL prefixes for schemas, references, and maintained object documentation:
+
+- `baseUrl`: `https://ifs-standards.org/v0.1/`
+- `entitySchemaRoute`: `https://ifs-standards.org/v0.1/schemas/entities/`
+- `defaulObjectsRoute`: `https://ifs-standards.org/v0.1/defaults/`
+
+Entity schema `$id` values use `entitySchemaRoute` plus `<kebab-case-entity-name>.schema.json`; entity `$ref` values must match the referenced schema's `$id`. Entity-type documentation URLs use `entitySchemaRoute`; predefined-object documentation URLs use `defaulObjectsRoute`. Keep `entityDocumentationUrl` (entity type) distinct from `documentationUrl` (object instance). Preserve the trailing slash when joining prefixes and suffixes; do not invent a different version or route.
+
+Public URL routes are not repository paths. Schema files remain under `ifs-standards/src/entities/`, and predefined objects remain under `ifs-standards/src/defaults/` (currently `relationship-type/`). Changing a URL must not change filesystem paths or generator input directories.
 
 ## Common commands
 

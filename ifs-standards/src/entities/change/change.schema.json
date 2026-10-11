@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ifs-standards.org/schemas/v1/entities/change.schema.json",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/change.schema.json",
   "title": "Change",
   "type": "object",
   "additionalProperties": true,
-  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
+  "allOf": [{ "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -29,16 +29,16 @@
     "reason": { "type": "string", "description": "explanation of why this change is being proposed." },
     "changes": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/change-item.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/change-item.schema.json" },
       "description": "ChangeItem entities describing each proposed object-level operation in this change."
     },
     "decision": {
-      "$ref": "https://ifs-standards.org/schemas/v1/entities/decision.schema.json",
+      "$ref": "https://ifs-standards.org/v0.1/schemas/entities/decision.schema.json",
       "description": "Current decision about this change"
     },
     "comments": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/comment.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/comment.schema.json" },
       "description": "Recent Comment entities for this change, such as the first page of comments."
     },
     "commentsUrl": {
@@ -48,12 +48,12 @@
     },
     "reviewComments": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/review-comment.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/review-comment.schema.json" },
       "description": "ReviewComment entities tied to changed objects, fields, records, or diff entries."
     },
     "authors": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/member.schema.json" },
       "description": "Member entities that authored or co-authored this change."
     },
     "mainAuthorId": {
@@ -63,12 +63,12 @@
       "description": "Identifier of the primary member responsible for this change."
     },
     "mainAuthor": {
-      "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json",
+      "$ref": "https://ifs-standards.org/v0.1/schemas/entities/member.schema.json",
       "description": "Primary member responsible for this change."
     },
     "reviewers": {
       "type": "array",
-      "items": { "$ref": "https://ifs-standards.org/schemas/v1/entities/member.schema.json" },
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/member.schema.json" },
       "description": "Member entities requested or assigned to review this change."
     },
     "status": {

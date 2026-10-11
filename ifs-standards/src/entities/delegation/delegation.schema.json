@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ifs-standards.org/schemas/v1/entities/delegation.schema.json",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/delegation.schema.json",
   "title": "Delegation",
   "type": "object",
   "additionalProperties": true,
-  "allOf": [{ "$ref": "https://ifs-standards.org/schemas/v1/entities/entity.schema.json" }],
+  "allOf": [{ "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" }],
   "properties": {
     "id": {
       "type": "string",
@@ -29,7 +29,7 @@
       "description": "Identifier of the permission delegated from the delegator to the delegate."
     },
     "permission": {
-      "$ref": "https://ifs-standards.org/schemas/v1/entities/permission.schema.json",
+      "$ref": "https://ifs-standards.org/v0.1/schemas/entities/permission.schema.json",
       "description": "Permission entity represented by permissionId when expanded by an implementation."
     },
     "delegatorId": {

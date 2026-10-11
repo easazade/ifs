@@ -1,7 +1,8 @@
 {
   "id": "RelationshipType/ifs.partnered-with",
   "entityType": "RelationshipType",
-  "entityDocumentationUrl": "https://ifs-standards.org/entities/RelationshipType",
+  "entityDocumentationUrl": "https://ifs-standards.org/v0.1/schemas/entities/RelationshipType",
+  "documentationUrl": "https://ifs-standards.org/v0.1/defaults/entitiesRelationshipType/partnered-with",
   "createdAt": "2026-10-08T21:31:01Z",
   "updatedAt": "2026-10-08T21:31:01Z",
   "type": "partnered with",
