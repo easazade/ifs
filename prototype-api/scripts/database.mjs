@@ -58,11 +58,27 @@ try {
     });
     for (const signal of ['SIGINT', 'SIGTERM'])
       process.on(signal, () => child.kill(signal));
-  } else if (['setup', 'status'].includes(command)) {
+  } else if (['setup', 'status', 'clear'].includes(command)) {
+    if (command === 'clear') {
+      if (
+        !['localhost', '127.0.0.1', '[::1]'].includes(
+          new URL(endpoint).hostname,
+        )
+      )
+        throw new Error('db:clear only supports a loopback SURREALDB_URL.');
+      if (
+        ![options.namespace, options.database].every((name) =>
+          /^[A-Za-z_][A-Za-z0-9_-]*$/.test(name),
+        )
+      )
+        throw new Error(
+          'db:clear requires simple namespace and database identifiers.',
+        );
+    }
     const db = new Surreal();
     try {
       await db.connect(endpoint, options);
-      if (command === 'setup') {
+      if (command === 'setup' || command === 'clear') {
         const entities = JSON.parse(
           readFileSync(
             new URL(
@@ -75,7 +91,13 @@ try {
         const tables = entities.map((entity) => entity.replaceAll('-', '_'));
         if (tables.some((table) => !/^[a-z][a-z0-9_]*$/.test(table)))
           throw new Error('Invalid entity table name.');
-        // Idempotent and additive: never reset, drop, or replace existing data.
+        if (command === 'clear') {
+          console.log(
+            `Clearing ${endpoint} (${options.namespace}/${options.database}).`,
+          );
+          await db.query(`REMOVE DATABASE IF EXISTS \`${options.database}\`;`);
+        }
+        // Setup is additive; clear explicitly removes the selected database first.
         await initializeDatabase(db, tables);
         console.log(
           `Configured ${tables.length} tables in ${options.namespace}/${options.database}.`,
@@ -90,7 +112,10 @@ try {
     } finally {
       await db.close();
     }
-  } else throw new Error('Usage: database.mjs <start|memory|setup|status|sql>');
+  } else
+    throw new Error(
+      'Usage: database.mjs <start|memory|setup|status|sql|clear>',
+    );
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error));
   process.exitCode = 1;

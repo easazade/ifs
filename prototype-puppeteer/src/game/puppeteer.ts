@@ -24,9 +24,11 @@ export class Puppeteer {
         return false;
       }
       const members = await this.api.listMembers();
-      if (members.length == 0) {
+      if (members.length !== fakeMembers.length) {
         logger.info('No members found. Trying to register All fake members into the server');
         await this.registerAllMembers();
+      } else {
+        logger.info(`Puppeteer found ${fakeMembers.length} members in the database`);
       }
 
       logger.info('Puppeteer successfully bootstrapped');
@@ -45,6 +47,11 @@ export class Puppeteer {
   }
 
   private async registerAllMembers(): Promise<void> {
-    await Promise.all(fakeMembers.map((member) => this.api.createMember(member)));
+    await Promise.all(
+      fakeMembers.map((member, index) => {
+        logger.info(`Registering member number ${index + 1} [${member.name}] to the database`);
+        return this.api.createMember(member);
+      })
+    );
   }
 }

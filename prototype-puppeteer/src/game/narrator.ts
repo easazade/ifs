@@ -2,7 +2,7 @@ import { logger } from '../utils/logger.js';
 import type { Agent } from './agent.js';
 import type { Puppeteer } from './puppeteer.js';
 
-const days = 60;
+const days = 1;
 
 export class Narrator {
   constructor(

@@ -42,13 +42,14 @@ The example's `root`/`root` credentials are **local development only**. Use sepa
 pnpm --filter prototype-api db:start         # Persistent local server
 pnpm --filter prototype-api db:start:memory  # Disposable server; data lost on exit
 pnpm --filter prototype-api db:setup         # Additive, idempotent table provisioning
+pnpm --filter prototype-api db:clear         # Delete and recreate the selected local DB
 pnpm --filter prototype-api db:status        # Verify selected DB and report server version
 pnpm --filter prototype-api db:sql           # Interactive SurrealQL shell
 ```
 
 `db:start` binds only to the configured loopback endpoint and stores data under `prototype-api/.surreal/data` using RocksDB. These files are ignored by Git. Stop it with Ctrl+C. `db:start:memory` uses the same endpoint and cannot run alongside it on the same port.
 
-`db:setup` creates the namespace/database and schemaless entity tables from `ifs-standards/scripts/generate-order.json`. It never drops, overwrites, or resets existing definitions/data. Setup identifiers accept letters, digits, underscores, and hyphens (not a leading digit). Review definition changes before applying them. There is no automatic migration/reset at startup and no destructive reset script. Before any database command, verify its endpoint, namespace, and database.
+`db:setup` creates the namespace/database and schemaless entity tables from `ifs-standards/scripts/generate-order.json`. It never drops, overwrites, or resets existing definitions/data. Setup identifiers accept letters, digits, underscores, and hyphens (not a leading digit). Review definition changes before applying them. There is no automatic migration/reset at startup. `db:clear` destructively removes the selected database and recreates its entity tables on the running server; it refuses non-loopback endpoints and leaves other databases untouched. Stop the API and simulation writers first. Before any database command, verify its endpoint, namespace, and database.
 
 ## Persistence
 

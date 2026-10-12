@@ -5,7 +5,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "pnpm --filter prototype-client build && tsx src/index.ts",
+    "dev": "pnpm build && node dist/index.js",
     "build": "pnpm --filter prototype-client build && tsc",
     "format": "prettier --write src scripts *.ts tsconfig*.json",
     "personalities:generate": "tsx scripts/generate-personalities.ts",

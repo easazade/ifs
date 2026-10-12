@@ -26,6 +26,7 @@
     "db:start": "node scripts/database.mjs start",
     "db:start:memory": "node scripts/database.mjs memory",
     "db:setup": "node scripts/database.mjs setup",
+    "db:clear": "node scripts/database.mjs clear",
     "db:status": "node scripts/database.mjs status",
     "db:sql": "node scripts/database.mjs sql",
     "dto:generate": "node scripts/generate-dto.mjs",
