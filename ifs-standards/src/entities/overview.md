@@ -150,6 +150,10 @@ erDiagram
     entityDocumentationUrl string "required, uri"
     documentationUrl string "uri"
     createdAt string "required, date-time"
+    name string "required"
+    description string "required"
+    color string "optional"
+    code string "optional"
     updatedAt string "required, date-time"
   }
   MEMBER {

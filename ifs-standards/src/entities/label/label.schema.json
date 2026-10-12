@@ -17,12 +17,16 @@
       "const": "Label",
       "description": "Entity type discriminator. Always \"Label\" for Label entities."
     },
+    "name": { "type": "string", "description": "Name of this label." },
+    "description": { "type": "string", "description": "Descriptive text for this label." },
+    "color": { "type": "string", "description": "Display color for this label." },
+    "code": { "type": "string", "description": "Code for this label." },
     "updatedAt": {
       "type": "string",
       "format": "date-time",
       "description": "Timestamp when this label was last updated."
     }
   },
-  "required": ["updatedAt"],
+  "required": ["updatedAt", "name", "description"],
   "x-ifs-relationships": []
 }
