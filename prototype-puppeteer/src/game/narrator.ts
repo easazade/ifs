@@ -1,10 +1,14 @@
 import { logger } from '../utils/logger.js';
+import type { Agent } from './agent.js';
 import type { Puppeteer } from './puppeteer.js';
 
 const days = 60;
 
 export class Narrator {
-  constructor(private puppeteer: Puppeteer) {}
+  constructor(
+    private puppeteer: Puppeteer,
+    private agent: Agent
+  ) {}
 
   async run(): Promise<void> {
     for (let i = 1; i <= days; i++) {

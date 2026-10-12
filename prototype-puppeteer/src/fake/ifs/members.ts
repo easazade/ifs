@@ -1,6 +1,9 @@
 import type { CreateMemberDto } from 'prototype-client';
+import { fixedMemberNames } from '../fixed-personalities.js';
 
+// 110 members
 const fakeMemberNames = [
+  ...fixedMemberNames,
   'Ali Rezaei',
   'Sara Ahmadi',
   'Mohammad Mohammadi',

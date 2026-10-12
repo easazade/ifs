@@ -1,4 +1,5 @@
 import { fakeMembers } from '../fake/ifs/members.js';
+import { personalities } from '../fake/personalities.js';
 import { logger } from '../utils/logger.js';
 import type { Api } from './api.js';
 import { Puppet } from './puppet.js';
@@ -38,7 +39,9 @@ export class Puppeteer {
   }
 
   async getAllPuppets(): Promise<Puppet[]> {
-    return await this.api.listMembers().then((members) => members.map((member) => new Puppet(member)));
+    return await this.api
+      .listMembers()
+      .then((members) => members.map((member, index) => new Puppet(member, personalities[index]!)));
   }
 
   private async registerAllMembers(): Promise<void> {

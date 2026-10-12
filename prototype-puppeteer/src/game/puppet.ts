@@ -1,13 +1,11 @@
 import type { MemberResponseDto } from 'prototype-client';
-import { personalities } from '../fake/personalities.js';
 import type { Personality } from './personality.js';
 
 export class Puppet {
-  personality: Personality;
-
-  constructor(public member: MemberResponseDto) {
-    this.personality = personalities[Number(member.id)]!;
-  }
+  constructor(
+    public member: MemberResponseDto,
+    public personality: Personality
+  ) {}
 
   get name(): string {
     return this.member.name;
