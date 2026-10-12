@@ -1,5 +1,6 @@
 import { logger } from '../utils/logger.js';
 import type { Agent } from './agent.js';
+import { Stage } from './models/stage.js';
 import type { Puppeteer } from './puppeteer.js';
 
 const days = 1;
@@ -32,3 +33,12 @@ export class Narrator {
     }
   }
 }
+
+const stages: Stage[] = [
+  new Stage({
+    name: 'Gates of Freedom',
+    description: `People have just ended the reign of a tyrannical regime. 
+      They have accepted IFS as the new form of government where their freedom is not taken away and they do not have to fight back and pay with blood to take it back`,
+    days: 150,
+  }),
+];

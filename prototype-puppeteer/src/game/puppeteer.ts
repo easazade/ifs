@@ -2,7 +2,7 @@ import { fakeMembers } from '../fake/ifs/members.js';
 import { personalities } from '../fake/personalities.js';
 import { logger } from '../utils/logger.js';
 import type { Api } from './api.js';
-import { Puppet } from './puppet.js';
+import { Puppet } from './models/puppet.js';
 
 export type PuppeteerParams = {
   baseUrl: string;
