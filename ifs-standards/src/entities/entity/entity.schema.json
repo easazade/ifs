@@ -17,6 +17,7 @@
       "type": "string",
       "description": "Entity type discriminator, fixed by the concrete entity schema."
     },
+
     "basedOn": {
       "type": "string",
       "x-ifs-id": true,
@@ -37,6 +38,13 @@
       "type": "string",
       "format": "date-time",
       "description": "Timestamp when this entity record was created."
+    },
+    "labelCodes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Label codes associated with this entity."
     }
   },
   "required": ["id", "entityType", "entityDocumentationUrl", "createdAt"]

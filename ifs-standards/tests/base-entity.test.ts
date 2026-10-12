@@ -34,6 +34,7 @@ describe('abstract Entity base schema', () => {
     expect(Object.keys(schema.properties)).toEqual([
       'id',
       'entityType',
+      'labelCodes',
       'basedOn',
       'entityDocumentationUrl',
       'documentationUrl',
@@ -53,6 +54,18 @@ describe('abstract Entity base schema', () => {
     const incomplete: Record<string, unknown> = { ...record };
     delete incomplete[field];
     expect(validate(incomplete)).toBe(false);
+  });
+
+  it('keeps labelCodes optional and validates string arrays through inheritance', () => {
+    expect(validate(record)).toBe(true);
+    for (const labelCodes of [[], ['governance', 'freedom']]) {
+      expect(validate({ ...record, labelCodes })).toBe(true);
+      expect(validateAction({ ...record, name: 'Approve', labelCodes })).toBe(true);
+    }
+    for (const labelCodes of ['governance', null, [1], ['governance', null]]) {
+      expect(validate({ ...record, labelCodes })).toBe(false);
+      expect(validateAction({ ...record, name: 'Approve', labelCodes })).toBe(false);
+    }
   });
 
   it('keeps basedOn optional and validates typed IDs', () => {
