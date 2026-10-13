@@ -73,6 +73,14 @@ import {
   type CreateLabelDto,
   type UpdateLabelDto,
   type LabelResponseDto,
+  createMeasurementMethod,
+  deleteMeasurementMethod,
+  getMeasurementMethod,
+  listMeasurementMethods,
+  updateMeasurementMethod,
+  type CreateMeasurementMethodDto,
+  type UpdateMeasurementMethodDto,
+  type MeasurementMethodResponseDto,
   createMember,
   deleteMember,
   getMember,
@@ -81,6 +89,14 @@ import {
   type CreateMemberDto,
   type UpdateMemberDto,
   type MemberResponseDto,
+  createMetric,
+  deleteMetric,
+  getMetric,
+  listMetrics,
+  updateMetric,
+  type CreateMetricDto,
+  type UpdateMetricDto,
+  type MetricResponseDto,
   createObservation,
   deleteObservation,
   getObservation,
@@ -89,6 +105,14 @@ import {
   type CreateObservationDto,
   type UpdateObservationDto,
   type ObservationResponseDto,
+  createOccurrence,
+  deleteOccurrence,
+  getOccurrence,
+  listOccurrences,
+  updateOccurrence,
+  type CreateOccurrenceDto,
+  type UpdateOccurrenceDto,
+  type OccurrenceResponseDto,
   createOrganization,
   deleteOrganization,
   getOrganization,
@@ -121,6 +145,14 @@ import {
   type CreateProtocolDto,
   type UpdateProtocolDto,
   type ProtocolResponseDto,
+  createRecurrence,
+  deleteRecurrence,
+  getRecurrence,
+  listRecurrences,
+  updateRecurrence,
+  type CreateRecurrenceDto,
+  type UpdateRecurrenceDto,
+  type RecurrenceResponseDto,
   createRelationship,
   deleteRelationship,
   getRelationship,
@@ -177,6 +209,14 @@ import {
   type CreateVoteDto,
   type UpdateVoteDto,
   type VoteResponseDto,
+  createWhen,
+  deleteWhen,
+  getWhen,
+  listWhens,
+  updateWhen,
+  type CreateWhenDto,
+  type UpdateWhenDto,
+  type WhenResponseDto,
 } from "prototype-client";
 
 export class Api {
@@ -409,6 +449,30 @@ export class Api {
     await deleteLabel(id);
   }
 
+  async createMeasurementMethod(input: CreateMeasurementMethodDto): Promise<MeasurementMethodResponseDto | void> {
+    const response = await createMeasurementMethod(input);
+    return response.data;
+  }
+
+  async listMeasurementMethods(): Promise<MeasurementMethodResponseDto[]> {
+    const response = await listMeasurementMethods();
+    return response.data;
+  }
+
+  async getMeasurementMethod(id: string): Promise<MeasurementMethodResponseDto | void> {
+    const response = await getMeasurementMethod(id);
+    return response.data;
+  }
+
+  async updateMeasurementMethod(id: string, input: UpdateMeasurementMethodDto): Promise<MeasurementMethodResponseDto | void> {
+    const response = await updateMeasurementMethod(id, input);
+    return response.data;
+  }
+
+  async deleteMeasurementMethod(id: string): Promise<void> {
+    await deleteMeasurementMethod(id);
+  }
+
   async createMember(input: CreateMemberDto): Promise<MemberResponseDto | void> {
     const response = await createMember(input);
     return response.data;
@@ -433,6 +497,30 @@ export class Api {
     await deleteMember(id);
   }
 
+  async createMetric(input: CreateMetricDto): Promise<MetricResponseDto | void> {
+    const response = await createMetric(input);
+    return response.data;
+  }
+
+  async listMetrics(): Promise<MetricResponseDto[]> {
+    const response = await listMetrics();
+    return response.data;
+  }
+
+  async getMetric(id: string): Promise<MetricResponseDto | void> {
+    const response = await getMetric(id);
+    return response.data;
+  }
+
+  async updateMetric(id: string, input: UpdateMetricDto): Promise<MetricResponseDto | void> {
+    const response = await updateMetric(id, input);
+    return response.data;
+  }
+
+  async deleteMetric(id: string): Promise<void> {
+    await deleteMetric(id);
+  }
+
   async createObservation(input: CreateObservationDto): Promise<ObservationResponseDto | void> {
     const response = await createObservation(input);
     return response.data;
@@ -455,6 +543,30 @@ export class Api {
 
   async deleteObservation(id: string): Promise<void> {
     await deleteObservation(id);
+  }
+
+  async createOccurrence(input: CreateOccurrenceDto): Promise<OccurrenceResponseDto | void> {
+    const response = await createOccurrence(input);
+    return response.data;
+  }
+
+  async listOccurrences(): Promise<OccurrenceResponseDto[]> {
+    const response = await listOccurrences();
+    return response.data;
+  }
+
+  async getOccurrence(id: string): Promise<OccurrenceResponseDto | void> {
+    const response = await getOccurrence(id);
+    return response.data;
+  }
+
+  async updateOccurrence(id: string, input: UpdateOccurrenceDto): Promise<OccurrenceResponseDto | void> {
+    const response = await updateOccurrence(id, input);
+    return response.data;
+  }
+
+  async deleteOccurrence(id: string): Promise<void> {
+    await deleteOccurrence(id);
   }
 
   async createOrganization(input: CreateOrganizationDto): Promise<OrganizationResponseDto | void> {
@@ -551,6 +663,30 @@ export class Api {
 
   async deleteProtocol(id: string): Promise<void> {
     await deleteProtocol(id);
+  }
+
+  async createRecurrence(input: CreateRecurrenceDto): Promise<RecurrenceResponseDto | void> {
+    const response = await createRecurrence(input);
+    return response.data;
+  }
+
+  async listRecurrences(): Promise<RecurrenceResponseDto[]> {
+    const response = await listRecurrences();
+    return response.data;
+  }
+
+  async getRecurrence(id: string): Promise<RecurrenceResponseDto | void> {
+    const response = await getRecurrence(id);
+    return response.data;
+  }
+
+  async updateRecurrence(id: string, input: UpdateRecurrenceDto): Promise<RecurrenceResponseDto | void> {
+    const response = await updateRecurrence(id, input);
+    return response.data;
+  }
+
+  async deleteRecurrence(id: string): Promise<void> {
+    await deleteRecurrence(id);
   }
 
   async createRelationship(input: CreateRelationshipDto): Promise<RelationshipResponseDto | void> {
@@ -719,5 +855,29 @@ export class Api {
 
   async deleteVote(id: string): Promise<void> {
     await deleteVote(id);
+  }
+
+  async createWhen(input: CreateWhenDto): Promise<WhenResponseDto | void> {
+    const response = await createWhen(input);
+    return response.data;
+  }
+
+  async listWhens(): Promise<WhenResponseDto[]> {
+    const response = await listWhens();
+    return response.data;
+  }
+
+  async getWhen(id: string): Promise<WhenResponseDto | void> {
+    const response = await getWhen(id);
+    return response.data;
+  }
+
+  async updateWhen(id: string, input: UpdateWhenDto): Promise<WhenResponseDto | void> {
+    const response = await updateWhen(id, input);
+    return response.data;
+  }
+
+  async deleteWhen(id: string): Promise<void> {
+    await deleteWhen(id);
   }
 }

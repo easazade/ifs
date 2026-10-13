@@ -294,7 +294,7 @@ erDiagram
     frequency string "required"
     interval int "optional"
     daysOfWeek array "optional"
-    duration object "optional"
+    duration string "optional"
   }
   RELATIONSHIP {
     id string PK "required"

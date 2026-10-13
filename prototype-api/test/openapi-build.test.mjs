@@ -129,6 +129,22 @@ test('compiled OpenAPI export is deterministic and does not connect to SurrealDB
         !schemas[`Update${modelName}Dto`].required?.includes('entityType'),
       );
     }
+    assert.equal(
+      schemas.CreateWhenDto.properties.occurrences.items.$ref,
+      '#/components/schemas/NestedOccurrenceDto',
+    );
+    assert.equal(
+      schemas.WhenResponseDto.properties.occurrences.items.anyOf[0].$ref,
+      '#/components/schemas/OccurrenceResponseDto',
+    );
+    assert.equal(schemas.NestedOccurrenceDto.properties.id.type, 'string');
+    assert.equal(schemas.NestedOccurrenceDto.properties.id.nullable, true);
+    assert.ok(!schemas.NestedOccurrenceDto.required?.length);
+    assert.equal(
+      schemas.NestedMetricDto.properties.compositionItems.items.$ref,
+      '#/components/schemas/NestedMetricDto',
+    );
+    assert.ok(!schemas.OccurrenceResponseDto.properties.id.nullable);
     assert.ok(!spec.paths['/entities']);
     assert.ok(!schemas.CreateEntityDto);
     assert.ok(!schemas.EntityResponseDto);

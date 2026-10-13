@@ -4,8 +4,90 @@ import type { JSONSchema7, JSONSchema7Definition } from 'json-schema';
 import { isAbstractEntity } from './entity-metadata.ts';
 
 // Tooling gets an effective field view; validators retain the original allOf constraints.
-export type EntitySchema = JSONSchema7 & { 'x-ifs-abstract'?: boolean };
+export type EntitySchema = JSONSchema7 & {
+  'x-ifs-abstract'?: boolean;
+  $defs?: Record<string, JSONSchema7Definition>;
+};
 export type EntitySchemas = ReadonlyMap<string, EntitySchema>;
+
+// Tooling may inline local definitions, but validators must keep the original document.
+// Walk schema keywords only: defaults/examples can contain arbitrary JSON, including $refs.
+export function resolveLocalRefs<T>(property: T, document: unknown, ancestors = new Set<string>()): T {
+  if (!property || typeof property !== 'object') return property;
+  const schema = property as Record<string, unknown>;
+  if (typeof schema.$ref === 'string' && schema.$ref.startsWith('#/')) {
+    const ref = schema.$ref;
+    if (ancestors.has(ref)) throw new Error(`Circular local schema reference: ${ref}`);
+    const target = decodeURIComponent(ref.slice(1))
+      .slice(1)
+      .split('/')
+      .map((part) => part.replaceAll('~1', '/').replaceAll('~0', '~'))
+      .reduce<unknown>((value, key) => {
+        if (!value || typeof value !== 'object' || !Object.hasOwn(value, key)) return undefined;
+        return (value as Record<string, unknown>)[key];
+      }, document);
+    if (
+      target === undefined ||
+      target === null ||
+      Array.isArray(target) ||
+      (typeof target !== 'object' && typeof target !== 'boolean')
+    )
+      throw new Error(`Unknown or unsupported local schema reference: ${ref}`);
+    const next = new Set(ancestors).add(ref);
+    const base = resolveLocalRefs(target, document, next);
+    const siblings = { ...schema };
+    delete siblings.$ref;
+    const own = resolveLocalRefs(siblings, document, next);
+    if (typeof base === 'boolean') return { ...own, allOf: [base, ...((own.allOf as unknown[]) ?? [])] } as T;
+    const annotations = new Set(['description', 'title', 'default', 'examples', 'readOnly', 'writeOnly', 'deprecated']);
+    const definition = base as Record<string, unknown>;
+    const conflict = Object.keys(definition).some(
+      (key) => !annotations.has(key) && key in own && JSON.stringify(definition[key]) !== JSON.stringify(own[key])
+    );
+    return (conflict ? { ...definition, ...own, allOf: [definition, own] } : { ...definition, ...own }) as T;
+  }
+  const result = { ...schema };
+  for (const key of ['allOf', 'anyOf', 'oneOf', 'prefixItems']) {
+    if (Array.isArray(result[key]))
+      result[key] = result[key].map((branch) => resolveLocalRefs(branch, document, ancestors));
+  }
+  for (const key of ['items', 'additionalProperties', 'not', 'if', 'then', 'else', 'contains']) {
+    if (result[key] !== undefined) result[key] = resolveLocalRefs(result[key], document, ancestors);
+  }
+  for (const key of ['properties', 'patternProperties', 'dependentSchemas']) {
+    if (result[key])
+      result[key] = Object.fromEntries(
+        Object.entries(result[key] as Record<string, unknown>).map(([name, value]) => [
+          name,
+          resolveLocalRefs(value, document, ancestors),
+        ])
+      );
+  }
+  return result as T;
+}
+
+// Flatten only abstract inheritance; preserve inherited and own object-level constraints.
+export function entityContract(schema: EntitySchema, schemas: EntitySchemas): EntitySchema {
+  const effective = resolveEntitySchema(schema, schemas);
+  const constraints = (schema.allOf ?? []).flatMap((branch) => {
+    if (typeof branch !== 'object' || !branch.$ref) return [branch];
+    const base = schemas.get(branch.$ref);
+    if (!base || !isAbstractEntity(base)) throw new Error(`Unknown abstract base: ${branch.$ref}`);
+    const inherited = entityContract(base, schemas);
+    const rules = { ...inherited };
+    for (const key of ['properties', 'required', '$id', '$schema', '$defs', 'title', 'description'])
+      delete (rules as Record<string, unknown>)[key];
+    // Effective fields already carry inherited types/requiredness; retain only additional rules.
+    if (rules.type === effective.type) delete rules.type;
+    if (rules.additionalProperties === true) delete rules.additionalProperties;
+    for (const key of Object.keys(rules)) if (key.startsWith('x-ifs-')) delete (rules as Record<string, unknown>)[key];
+    return Object.keys(rules).length ? [rules] : [];
+  });
+  const result = { ...effective };
+  if (constraints.length) result.allOf = constraints;
+  else delete result.allOf;
+  return resolveLocalRefs(result, schema);
+}
 
 export function readEntitySchemas(root: string): Map<string, EntitySchema> {
   const schemas = new Map<string, EntitySchema>();
@@ -66,7 +148,8 @@ export function resolveEntitySchema(
     }
     const inherited = resolveEntitySchema(base, schemas, next);
     for (const [name, definition] of Object.entries(inherited.properties ?? {})) {
-      properties[name] = name in properties ? refineProperty(properties[name]!, definition) : definition;
+      const resolved = resolveLocalRefs(definition, base);
+      properties[name] = name in properties ? refineProperty(properties[name]!, resolved) : resolved;
     }
     for (const name of inherited.required ?? []) required.add(name);
   }

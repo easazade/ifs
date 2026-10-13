@@ -53,6 +53,12 @@ export class PlaceResponseDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description: 'Timestamp when this place record was last updated.',
     format: 'date-time',
   })
@@ -72,14 +78,14 @@ export class PlaceResponseDto {
       'Geographic area occupied by this place, including disconnected areas when applicable.',
     type: () => GeographicAreaResponseDto,
   })
-  geographicArea?: GeographicAreaResponseDto;
+  geographicArea?: GeographicAreaResponseDto | { id: string };
 
   @ApiPropertyOptional({
     description:
       'Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc.',
     type: () => [RoleResponseDto],
   })
-  roles?: Array<RoleResponseDto>;
+  roles?: Array<RoleResponseDto | { id: string }>;
 
   [key: string]: unknown;
 }

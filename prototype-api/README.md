@@ -23,7 +23,7 @@ The API listens on `http://localhost:3000`; `GET /` returns `Hello World!`. Swag
 
 ## Configuration
 
-`prototype-api/.env` is loaded by the application and database scripts. Existing environment variables take precedence.
+`prototype-api/.env` is loaded by the application and database scripts. Existing environment variables take precedence. The API uses WebSocket RPC for interactive validation transactions: configured HTTP(S) endpoints are converted to WS(S) using the same host and path. Proxies must allow WebSocket upgrades; CLI database scripts still support HTTP RPC.
 
 | Variable              | Default                     | Meaning                       |
 | --------------------- | --------------------------- | ----------------------------- |
@@ -59,7 +59,28 @@ pnpm --filter prototype-api db:sql           # Interactive SurrealQL shell
 - `src/surreal/database.setup.ts`: explicit additive provisioning.
 - `scripts/database.mjs`: local server, provisioning, status, and SQL commands.
 
-Generated CRUD services delegate to `SurrealService`. String entity IDs are stored as the string component of SurrealDB record IDs and returned without a table prefix. `$ref` properties are stored as record links, with immediate relations expanded on reads. Relation inputs refer to existing entities by `id`; read-only relations are not written. PATCH merges fields, empty arrays clear list relations, and nullable single links accept `null`. Missing records produce 404 for read/update/delete; duplicate IDs produce 409. Embedded objects and primitive arrays remain native document values.
+Generated CRUD services delegate to `SurrealService`. String entity IDs are stored as the string component of SurrealDB record IDs and returned without a table prefix. `$ref` properties are stored as record links and expanded recursively on reads; read-only relations are not written. PATCH merges fields, empty arrays clear list relations, and nullable single links accept `null`. Missing root records produce 404 for read/update/delete; duplicate root IDs produce 409. Embedded objects and primitive arrays remain native document values.
+
+### Nested entity writes
+
+Writable entity relations accept nested write objects on both POST and PATCH:
+
+- An omitted, `null`, or empty-string nested `id` generates a new canonical `EntityType/UUID` ID and attaches the new entity. The nested object must supply fields beyond its ID. The root still requires its own ID.
+- A nonempty nested ID plus fields creates the child if missing, or merges supplied fields if it exists. Omitted fields are preserved; the entity type is inferred from the relation, and an explicitly conflicting type is rejected.
+- A nonempty ID alone links an existing entity. It can also reference an entity defined elsewhere in the same request. A missing ID-only reference returns 400.
+- A supplied relation array replaces that collection. Removing a child from the collection unlinks it, never deletes it. Updating a shared child changes it for every parent referencing its ID.
+
+`src/surreal/nested-write.ts` collects recursive writes and executes children, root, and reference checks in one bound SurrealDB transaction. A failed write rolls everything back, including child updates. Conflicting definitions for the same ID are rejected; ID-only cycles are supported. Graph-edge entities cannot be nested writes. Requests are limited to 32 nested levels and 1,000 entity objects; read expansion emits ID-only references at cycles or its depth limit.
+
+The response contains generated IDs and expanded children. Write DTOs use separate `Nested<Entity>Dto` classes with optional fields and nullable IDs; persisted and response IDs remain strings. Optional write fields permit partial updates, not incomplete new entities: every new child must satisfy all canonical required fields after its ID/type are assigned. Response relation types explicitly allow full entities or ID-only references at cycles/depth limits. There is no request idempotency-key implementation yet; retrying a successful request containing blank nested IDs can create additional children.
+
+### Canonical validation
+
+Generated HTTP services call `createEntity`/`updateEntity`. These execute writes in an interactive transaction, then validate the complete resulting root, all changed children, and their actual stored references with Ajv 2020-12 before commit. PATCH uses SurrealDB's merged state, not an independent partial-body validator. Any invalid entity cancels the whole transaction and returns 400 with its ID, schema keyword, instance path, and error details. Validation does not coerce types, strip unknown fields, or insert schema defaults.
+
+Validation uses generated offline copies of the original canonical schemas, retaining inheritance, `$defs`, `allOf`, `anyOf`, conditional rules, required fields, formats, and patterns. Record links are checked as typed identities and each referenced record is validated separately, avoiding infinite recursive JSON for cyclic graphs. Missing read-only collections use the same server-derived empty-array view as reads; clients cannot write those collections. Validation traversals are bounded to 1,000 distinct entities.
+
+`create`/`update` and edge equivalents remain low-level, unvalidated storage adapters for internal provisioning/persistence tests; do not use them for user-facing writes. Existing invalid records are not migrated automatically and may reject subsequent PATCH operations. Canonical validation does not implement prose-only rules such as timestamp ordering or IANA timezone membership; authorization and those semantic checks remain separate concerns.
 
 ### Relationship graph edges
 
@@ -69,7 +90,7 @@ The `relationship` table uses `TYPE RELATION ENFORCED`. Creation uses `RELATE`, 
 
 Setup refuses an existing non-relation `relationship` table rather than silently converting it. Back up and migrate existing relationship records, or **explicitly approve their deletion** before removing that table and rerunning `db:setup`. Regular tables and their data need not be reset. SurrealDB enforces edge endpoint existence and handles edge cleanup when an endpoint is deleted; this does not replace application authorization or transactional domain validation.
 
-Tables are schemaless, not database-enforced copies of JSON Schema. Swagger DTOs are documentation/types, **not runtime validation**. This prototype does not add runtime JSON Schema validation. Ordinary `$ref` record links do not have database-level foreign-key/delete constraints; their existence checks occur before writes, so concurrent deletes can leave dangling links. Graph edges have the special enforcement described above. Review/extend validation, transactions, relation ownership, and authorization before production use.
+Tables are schemaless, not database-enforced copies of JSON Schema. Swagger DTOs remain documentation/types, **not runtime validation**; canonical validation is performed by the shared transaction layer described above. Ordinary `$ref` record links do not have database-level foreign-key/delete constraints. Nested-write transactions check their existence before commit, but later deletes can still leave dangling links. Graph edges have the special enforcement described above. Review/extend validation, transactions, relation ownership, and authorization before production use.
 
 ### Query associated relationships
 
@@ -94,15 +115,15 @@ pnpm --filter prototype-api resource:generate:all
 pnpm client:generate
 ```
 
-DTO generation resolves inherited schema fields with `ifs-standards/scripts/entity-schema.ts` and emits create/update/response classes, including typed nested relations. Create DTOs omit read-only fields; response DTOs omit write-only fields. Abstract `Entity` has no resource/table. Generate dependencies first; missing related response DTOs fail before writing. `--skip-format` skips formatting.
+DTO generation resolves inherited schema fields with `ifs-standards/scripts/entity-schema.ts` and emits create/update/response and nested-write classes, including typed nested relations. Create DTOs omit read-only fields; response DTOs omit write-only fields. Abstract `Entity` has no resource/table. Generate dependencies first; missing related response DTOs fail before writing. `--skip-format` skips formatting.
 
-Resource generation writes marked CRUD services/controllers/modules, refreshes `src/generated-resources.module.ts` and `src/surreal/entity-tables.generated.ts`, and refuses to overwrite hand-written resources. It uses `ifs-standards/scripts/entity-relations.json` for relation metadata. A single-resource command regenerates **all DTOs** first unless `--skip-dtos` is supplied; the all-resources command generates DTOs once before its resource loop. Neither generator connects to a database.
+Resource generation writes marked CRUD services/controllers/modules, refreshes `src/generated-resources.module.ts`, `src/surreal/entity-tables.generated.ts` (including recursive relation metadata), and `src/surreal/entity-schemas.generated.ts` (original schemas and effective contracts), and refuses to overwrite hand-written resources. It uses `ifs-standards/scripts/entity-relations.json` for relation metadata. A single-resource command regenerates **all DTOs** first unless `--skip-dtos` is supplied; the all-resources command generates DTOs once before its resource loop. Neither generator connects to a database.
 
 After schema or default relationship metadata changes, run `pnpm --filter ifs-standards entities` first to refresh annotations, order, relations, and overview. Root `pnpm generate:all` then regenerates API DTOs/resources, OpenAPI, the client, and puppeteer's `src/game/api.ts`; it does not refresh standards metadata or fake personalities.
 
 Generated controllers retain plural routes, concrete DTOs, stable unique Swagger `operationId` values, and explicit response metadata. After contract changes, run `pnpm client:generate` and commit `prototype-api/openapi.json` plus `prototype-client/src/generated/api.ts`; never hand-edit them.
 
-`pnpm openapi:generate` builds Nest and runs `dist/generate-openapi.js`. The exporter creates the Nest container without initializing/listening, so it needs no running database, credentials, or port. Keep constructors free of database/network side effects. The Swagger compiler plugin augments metadata; it does not generate the JSON/client itself.
+`pnpm openapi:generate` builds Nest and runs `dist/generate-openapi.js`. The exporter creates the Nest container without initializing/listening, so it needs no running database, credentials, or port. Keep constructors free of database/network side effects. The Swagger compiler plugin augments metadata; it does not generate the JSON/client itself. `src/schema-openapi.ts` then projects canonical contracts into OpenAPI 3.0: local definitions are resolved, integer types and object-level alternatives are retained, and `if`/`then`/`else` become equivalent `anyOf`/`not` compositions. Create/response schemas enforce complete-object rules; nested/PATCH schemas intentionally describe partial writes whose merged results are validated at runtime. Unsupported validation keywords fail export instead of being silently dropped.
 
 ## Build and verification
 

@@ -7,6 +7,7 @@ import { SurrealService } from './../src/surreal/surreal.service.js';
 import { startSurrealServer } from './support/surreal-server.js';
 import { initializeDatabase } from '../src/surreal/database.setup.js';
 import { setupSwagger } from './../src/openapi.js';
+import { baseEntity } from './support/entity-data.js';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
@@ -31,6 +32,9 @@ describe('AppController (e2e)', () => {
       'organization',
       'relationship_type',
       'relationship',
+      'when',
+      'occurrence',
+      'recurrence',
     ]);
     await database.onModuleDestroy();
     app = moduleFixture.createNestApplication();
@@ -73,11 +77,13 @@ describe('AppController (e2e)', () => {
 
   it('supports generated CRUD routes and missing-record responses', async () => {
     const data = {
-      id: 'member-e2e',
-      entityType: 'Member',
+      ...baseEntity('Member', 'member-e2e'),
       name: 'Alice',
       permissions: [],
+      isOwner: false,
+      updatedAt: '2026-07-01T00:00:00Z',
     };
+    const url = `/members/${encodeURIComponent(data.id)}`;
     for (const entityType of ['Organization', 'member', null, 123]) {
       await request(app.getHttpServer())
         .post('/members')
@@ -96,31 +102,125 @@ describe('AppController (e2e)', () => {
     expect(created.body.roles).toEqual([]);
     for (const entityType of ['Organization', 'member', null, 123]) {
       await request(app.getHttpServer())
-        .patch('/members/member-e2e')
+        .patch(url)
         .send({ entityType, name: 'Should not be saved' })
         .expect(400);
     }
-    const unchanged = await request(app.getHttpServer())
-      .get('/members/member-e2e')
-      .expect(200);
+    const unchanged = await request(app.getHttpServer()).get(url).expect(200);
     expect(unchanged.body).toMatchObject(data);
-    await request(app.getHttpServer()).get('/members/member-e2e').expect(200);
     const updated = await request(app.getHttpServer())
-      .patch('/members/member-e2e')
+      .patch(url)
       .send({ name: 'Bob' })
       .expect(200);
     expect(updated.body.name).toBe('Bob');
+    await request(app.getHttpServer()).delete(url).expect(204);
+    await request(app.getHttpServer()).get(url).expect(404);
     await request(app.getHttpServer())
-      .delete('/members/member-e2e')
-      .expect(204);
-    await request(app.getHttpServer()).get('/members/member-e2e').expect(404);
-    await request(app.getHttpServer())
-      .patch('/members/member-e2e')
+      .patch(url)
       .send({ name: 'Nobody' })
       .expect(404);
+    await request(app.getHttpServer()).delete(url).expect(404);
+  });
+
+  it('creates and updates nested schedule children through one HTTP request', async () => {
+    const rootId = 'When/nested-e2e';
+    const created = await request(app.getHttpServer())
+      .post('/whens')
+      .send({
+        ...baseEntity('When', 'nested-e2e'),
+        updatedAt: '2026-07-01T00:00:00Z',
+        timezone: 'UTC',
+        duration: 'PT1H',
+        occurrences: [
+          {
+            ...baseEntity('Occurrence', 'unused'),
+            id: null,
+            startsAt: '2026-07-01T10:00:00Z',
+            duration: 'PT1H',
+          },
+        ],
+        recurrences: [
+          {
+            ...baseEntity('Recurrence', 'unused'),
+            id: '',
+            startsAt: '2026-07-01T00:00:00Z',
+            frequency: 'weekly',
+            interval: 1,
+          },
+        ],
+      })
+      .expect(201);
+    const child = created.body.occurrences[0];
+    expect(child.id).toMatch(/^Occurrence\//);
+    expect(created.body.recurrences[0].id).toMatch(/^Recurrence\//);
+    const url = `/whens/${encodeURIComponent(rootId)}`;
+    const patched = await request(app.getHttpServer())
+      .patch(url)
+      .send({ occurrences: [{ id: child.id, duration: 'PT2H' }] })
+      .expect(200);
+    expect(patched.body.occurrences[0]).toMatchObject({
+      ...child,
+      duration: 'PT2H',
+    });
     await request(app.getHttpServer())
-      .delete('/members/member-e2e')
-      .expect(404);
+      .patch(url)
+      .send({
+        occurrences: [
+          { id: child.id, duration: 'PT99H' },
+          { id: 'Occurrence/missing-e2e' },
+        ],
+      })
+      .expect(400);
+    const unchanged = await request(app.getHttpServer()).get(url).expect(200);
+    expect(unchanged.body).toEqual(patched.body);
+  });
+
+  it('rejects canonical recurrence restrictions and validates merged HTTP patches', async () => {
+    const data = {
+      ...baseEntity('Recurrence', 'validation-e2e'),
+      startsAt: '2026-07-01T00:00:00Z',
+      frequency: 'weekly',
+      interval: 1,
+    };
+    for (const patch of [
+      { interval: undefined },
+      { interval: 1.5 },
+      { frequency: 'daily', daysOfWeek: ['monday'] },
+      { duration: 'invalid' },
+      { startsAt: '2026-07-01T00:00:00+02:00' },
+    ]) {
+      const rejected = await request(app.getHttpServer())
+        .post('/recurrences')
+        .send({ ...data, ...patch })
+        .expect(400);
+      expect(rejected.body.errors.length).toBeGreaterThan(0);
+    }
+    await request(app.getHttpServer())
+      .post('/recurrences')
+      .send({ ...data, daysOfWeek: ['monday'] })
+      .expect(201);
+    const url = `/recurrences/${encodeURIComponent(data.id)}`;
+    await request(app.getHttpServer())
+      .patch(url)
+      .send({ frequency: 'daily' })
+      .expect(400);
+    const updated = await request(app.getHttpServer())
+      .patch(url)
+      .send({ duration: 'PT2H' })
+      .expect(200);
+    expect(updated.body.frequency).toBe('weekly');
+    expect(updated.body.duration).toBe('PT2H');
+    await request(app.getHttpServer())
+      .post('/whens')
+      .send({
+        ...baseEntity('When', 'empty-e2e'),
+        updatedAt: '2026-07-01T00:00:00Z',
+        timezone: 'UTC',
+        duration: 'PT1H',
+        occurrences: [],
+        recurrences: [],
+      })
+      .expect(400);
   });
 
   it('exposes graph-edge CRUD without leaking SurrealDB endpoint fields', async () => {
@@ -135,8 +235,9 @@ describe('AppController (e2e)', () => {
       targetTypes: ['Member'],
     });
     const edge = {
-      id: 'Relationship/e2e',
-      entityType: 'Relationship',
+      ...baseEntity('Relationship', 'e2e'),
+      updatedAt: '2026-07-01T00:00:00Z',
+      startedAt: '2026-01-01',
       sourceId: 'Organization/e2e',
       targetId: 'Member/e2e',
       relationshipTypeId: 'RelationshipType/e2e',

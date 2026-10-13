@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { PermissionResponseDto } from '../../permission/dto/permission-response.dto.js';
+import { NestedPermissionDto } from '../../permission/dto/nested-permission.dto.js';
 
 export class CreateDelegationDto {
   @ApiProperty({
@@ -51,6 +51,12 @@ export class CreateDelegationDto {
   })
   createdAt: string;
 
+  @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
   @ApiPropertyOptional({
     description: 'Timestamp when this delegation record was last updated.',
     format: 'date-time',
@@ -67,9 +73,9 @@ export class CreateDelegationDto {
   @ApiPropertyOptional({
     description:
       'Permission entity represented by permissionId when expanded by an implementation.',
-    type: () => PermissionResponseDto,
+    type: () => NestedPermissionDto,
   })
-  permission?: PermissionResponseDto;
+  permission?: NestedPermissionDto;
 
   @ApiProperty({
     description: 'ID of the role or member delegating the permission.',

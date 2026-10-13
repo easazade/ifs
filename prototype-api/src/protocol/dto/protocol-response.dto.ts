@@ -50,5 +50,11 @@ export class ProtocolResponseDto {
   })
   createdAt: string;
 
+  @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
   [key: string]: unknown;
 }

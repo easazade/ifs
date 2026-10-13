@@ -16,7 +16,7 @@ export class VoteService {
 
   create(data: CreateVoteDto): Promise<VoteResponseDto> {
     assertEntityType(data, 'Vote');
-    return this.database.create('vote', data, relations);
+    return this.database.createEntity('vote', data, relations);
   }
 
   findAll(): Promise<VoteResponseDto[]> {
@@ -36,7 +36,7 @@ export class VoteService {
 
   update(id: string, data: UpdateVoteDto): Promise<VoteResponseDto> {
     assertEntityType(data, 'Vote', true);
-    return this.database.update('vote', id, data, relations);
+    return this.database.updateEntity('vote', id, data, relations);
   }
 
   remove(id: string): Promise<VoteResponseDto> {

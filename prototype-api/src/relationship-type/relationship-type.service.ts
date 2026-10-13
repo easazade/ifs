@@ -18,7 +18,7 @@ export class RelationshipTypeService {
     data: CreateRelationshipTypeDto,
   ): Promise<RelationshipTypeResponseDto> {
     assertEntityType(data, 'RelationshipType');
-    return this.database.create('relationship_type', data, relations);
+    return this.database.createEntity('relationship_type', data, relations);
   }
 
   findAll(): Promise<RelationshipTypeResponseDto[]> {
@@ -41,7 +41,7 @@ export class RelationshipTypeService {
     data: UpdateRelationshipTypeDto,
   ): Promise<RelationshipTypeResponseDto> {
     assertEntityType(data, 'RelationshipType', true);
-    return this.database.update('relationship_type', id, data, relations);
+    return this.database.updateEntity('relationship_type', id, data, relations);
   }
 
   remove(id: string): Promise<RelationshipTypeResponseDto> {

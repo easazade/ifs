@@ -37,6 +37,11 @@ describe('SurrealService (real database)', () => {
       'organization',
       'relationship_type',
       'relationship',
+      'when',
+      'occurrence',
+      'recurrence',
+      'metric',
+      'measurement_method',
     ]);
   }, 20_000);
   afterAll(async () => {
@@ -332,7 +337,7 @@ describe('SurrealService (real database)', () => {
   });
 
   it('stores real record links, expands relations, omits read-only writes, and clears arrays', async () => {
-    const permission = { id: 'p1', name: 'Read' };
+    const permission = { id: 'p1', entityType: 'Permission', name: 'Read' };
     await service.create('permission', permission);
     const member = await service.create(
       'member',
@@ -377,7 +382,7 @@ describe('SurrealService (real database)', () => {
       ),
     ).toEqual({
       id: 'r1',
-      permission: { id: 'p1', name: 'Read' },
+      permission: { id: 'p1', entityType: 'Permission', name: 'Read' },
       permissionId: 'p1',
     });
     expect(

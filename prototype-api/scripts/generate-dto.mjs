@@ -6,7 +6,10 @@ import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { graphEdges } from '../src/surreal/entity-storage.ts';
-import { readEntitySchema } from '../../ifs-standards/scripts/entity-schema.ts';
+import {
+  readEntitySchema,
+  resolveLocalRefs,
+} from '../../ifs-standards/scripts/entity-schema.ts';
 import { isAbstractEntity } from '../../ifs-standards/scripts/entity-metadata.ts';
 
 const apiRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -38,7 +41,15 @@ function readSchema(path) {
   }
   if (!types(schema.properties.id ?? {}).includes('string'))
     throw new Error('Schema must define a string id property.');
-  return schema;
+  return {
+    ...schema,
+    properties: Object.fromEntries(
+      Object.entries(schema.properties).map(([name, property]) => [
+        name,
+        resolveLocalRefs(property, schema),
+      ]),
+    ),
+  };
 }
 
 function relation(property) {
@@ -49,15 +60,22 @@ function relation(property) {
     throw new Error(`Unsupported non-entity $ref: ${ref}`);
   const entity = file.slice(0, -'.schema.json'.length);
   const schema = readSchema(join(entitiesRoot, entity, file));
-  return { entity, className: `${pascalCase(schema.title)}ResponseDto` };
+  return {
+    entity,
+    className: `${pascalCase(schema.title)}ResponseDto`,
+    writeClassName: `Nested${pascalCase(schema.title)}Dto`,
+  };
 }
 
-function propertyType(property) {
+function propertyType(property, write = false) {
   const related = relation(property);
-  if (property.$ref) return related.className;
+  const relatedClass =
+    related &&
+    (write ? related.writeClassName : `${related.className} | { id: string }`);
+  if (property.$ref) return relatedClass;
   const [type] = types(property);
   if (type === 'array')
-    return `Array<${related?.className ?? propertyType(property.items ?? {})}>`;
+    return `Array<${relatedClass ?? propertyType(property.items ?? {}, write)}>`;
   if (type === 'string' && property.const !== undefined)
     return JSON.stringify(property.const);
   if (type === 'string' && property.enum?.length)
@@ -71,7 +89,7 @@ function propertyType(property) {
 
 function itemSchema(property) {
   const [type] = types(property);
-  const result = { type: type ?? 'object' };
+  const result = type ? { type } : {};
   for (const key of [
     'description',
     'format',
@@ -90,7 +108,9 @@ function itemSchema(property) {
     if (property[key] !== undefined) result[key] = property[key];
   }
   if (property.const !== undefined) result.enum = [property.const];
-  if (property.allOf) result.allOf = property.allOf.map(itemSchema);
+  for (const key of ['allOf', 'anyOf', 'oneOf']) {
+    if (property[key]) result[key] = property[key].map(itemSchema);
+  }
   if (nullable(property)) result.nullable = true;
   if (type === 'array') result.items = itemSchema(property.items ?? {});
   if (property.properties)
@@ -103,7 +123,7 @@ function itemSchema(property) {
   return result;
 }
 
-function decorator(property, required) {
+function decorator(property, required, write = false) {
   const options = [];
   for (const key of ['description', 'format']) {
     if (property[key] !== undefined)
@@ -133,16 +153,19 @@ function decorator(property, required) {
     if (property[key] !== undefined)
       options.push(`${key}: ${JSON.stringify(property[key])}`);
   }
-  if (property.allOf)
-    options.push(`allOf: ${JSON.stringify(property.allOf.map(itemSchema))}`);
+  for (const key of ['allOf', 'anyOf', 'oneOf']) {
+    if (property[key])
+      options.push(`${key}: ${JSON.stringify(property[key].map(itemSchema))}`);
+  }
   if (property.examples?.length)
     options.push(`example: ${JSON.stringify(property.examples[0])}`);
   const related = relation(property);
-  if (related)
+  if (related) {
+    const relatedClass = write ? related.writeClassName : related.className;
     options.push(
-      `type: () => ${types(property)[0] === 'array' ? `[${related.className}]` : related.className}`,
+      `type: () => ${types(property)[0] === 'array' ? `[${relatedClass}]` : relatedClass}`,
     );
-  else if (types(property)[0] === 'array') {
+  } else if (types(property)[0] === 'array') {
     const itemType = propertyType(property.items ?? {});
     const primitive = {
       string: 'String',
@@ -166,6 +189,7 @@ function renderClass(
   properties,
   required,
   additionalProperties,
+  write = false,
 ) {
   const decorators = [
     ...new Set(
@@ -177,12 +201,17 @@ function renderClass(
   const imports = new Map();
   for (const [, property] of properties) {
     const related = relation(property);
-    if (!related || related.className === className) continue;
+    if (!related) continue;
+    const relatedClass = write ? related.writeClassName : related.className;
+    if (relatedClass === className) continue;
+    const file = write
+      ? `nested-${related.entity}.dto.js`
+      : `${related.entity}-response.dto.js`;
     imports.set(
-      related.className,
+      relatedClass,
       related.entity === entity
-        ? `./${entity}-response.dto.js`
-        : `../../${related.entity}/dto/${related.entity}-response.dto.js`,
+        ? `./${file}`
+        : `../../${related.entity}/dto/${file}`,
     );
   }
   return [
@@ -193,8 +222,8 @@ function renderClass(
     '',
     `export class ${className} {`,
     ...properties.flatMap(([name, property]) => [
-      `  ${decorator(property, required.has(name))}`,
-      `  ${name}${required.has(name) ? '' : '?'}: ${propertyType(property)}${nullable(property) ? ' | null' : ''};`,
+      `  ${decorator(property, required.has(name), write)}`,
+      `  ${name}${required.has(name) ? '' : '?'}: ${propertyType(property, write)}${nullable(property) ? ' | null' : ''};`,
       '',
     ]),
     ...(additionalProperties ? ['  [key: string]: unknown;', ''] : []),
@@ -246,6 +275,26 @@ export function generateDto(input, options = {}) {
     properties.filter(([, value]) => !value.readOnly),
     required,
     schema.additionalProperties !== false,
+    true,
+  );
+  const nested = renderClass(
+    `Nested${modelName}Dto`,
+    entity,
+    properties
+      .filter(([, value]) => !value.readOnly)
+      .map(([name, value]) => [
+        name,
+        name === 'id'
+          ? {
+              type: ['string', 'null'],
+              description:
+                'Existing entity ID, or omit/use null or an empty string to create a new entity. An ID-only object links an existing entity; other supplied fields are merged or created.',
+            }
+          : value,
+      ]),
+    new Set(),
+    schema.additionalProperties !== false,
+    true,
   );
   const response = renderClass(
     `${modelName}ResponseDto`,
@@ -256,6 +305,7 @@ export function generateDto(input, options = {}) {
   );
   mkdirSync(dtoDir, { recursive: true });
   writeFileSync(join(dtoDir, `create-${entity}.dto.ts`), create);
+  writeFileSync(join(dtoDir, `nested-${entity}.dto.ts`), nested);
   writeFileSync(join(dtoDir, `${entity}-response.dto.ts`), response);
   const edge = graphEdges[entity.replaceAll('-', '_')];
   const updateBase = edge

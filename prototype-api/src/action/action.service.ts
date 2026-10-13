@@ -16,7 +16,7 @@ export class ActionService {
 
   create(data: CreateActionDto): Promise<ActionResponseDto> {
     assertEntityType(data, 'Action');
-    return this.database.create('action', data, relations);
+    return this.database.createEntity('action', data, relations);
   }
 
   findAll(): Promise<ActionResponseDto[]> {
@@ -36,7 +36,7 @@ export class ActionService {
 
   update(id: string, data: UpdateActionDto): Promise<ActionResponseDto> {
     assertEntityType(data, 'Action', true);
-    return this.database.update('action', id, data, relations);
+    return this.database.updateEntity('action', id, data, relations);
   }
 
   remove(id: string): Promise<ActionResponseDto> {

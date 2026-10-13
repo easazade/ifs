@@ -51,6 +51,12 @@ export class CreateChangeItemDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description:
       'Resource category for this change item, such as rule, scope, protocol, record, or resource.',
   })

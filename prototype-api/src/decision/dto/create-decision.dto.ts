@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { DecisionResponseDto } from './decision-response.dto.js';
-import { MemberResponseDto } from '../../member/dto/member-response.dto.js';
-import { RuleResponseDto } from '../../rule/dto/rule-response.dto.js';
-import { VoteResponseDto } from '../../vote/dto/vote-response.dto.js';
+import { NestedDecisionDto } from './nested-decision.dto.js';
+import { NestedMemberDto } from '../../member/dto/nested-member.dto.js';
+import { NestedRuleDto } from '../../rule/dto/nested-rule.dto.js';
+import { NestedVoteDto } from '../../vote/dto/nested-vote.dto.js';
 
 export class CreateDecisionDto {
   @ApiProperty({
@@ -55,6 +55,12 @@ export class CreateDecisionDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description:
       'ID of the object, proposal, rule, resource, or question being decided.',
     pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
@@ -77,36 +83,36 @@ export class CreateDecisionDto {
   @ApiPropertyOptional({
     description:
       'Current outcome of the decision, if the decision has produced an outcome at least once.',
-    type: () => DecisionResponseDto,
+    type: () => NestedDecisionDto,
   })
-  previousRevision?: DecisionResponseDto;
+  previousRevision?: NestedDecisionDto;
 
   @ApiProperty({
     description: 'Member entities eligible to participate in this decision.',
-    type: () => [MemberResponseDto],
+    type: () => [NestedMemberDto],
   })
-  eligibleMembers: Array<MemberResponseDto>;
+  eligibleMembers: Array<NestedMemberDto>;
 
   @ApiProperty({
     description:
       'Member entities affected by this decision under the IFS scope rule.',
-    type: () => [MemberResponseDto],
+    type: () => [NestedMemberDto],
   })
-  affectedMembers: Array<MemberResponseDto>;
+  affectedMembers: Array<NestedMemberDto>;
 
   @ApiProperty({
     description:
       'Vote entities cast directly by members or by delegates acting on their behalf.',
-    type: () => [VoteResponseDto],
+    type: () => [NestedVoteDto],
   })
-  votes: Array<VoteResponseDto>;
+  votes: Array<NestedVoteDto>;
 
   @ApiPropertyOptional({
     description:
       'Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision.',
-    type: () => [RuleResponseDto],
+    type: () => [NestedRuleDto],
   })
-  rules?: Array<RuleResponseDto>;
+  rules?: Array<NestedRuleDto>;
 
   @ApiProperty({
     description: 'Snapshot count of members eligible to participate.',

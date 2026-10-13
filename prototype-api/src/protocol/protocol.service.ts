@@ -16,7 +16,7 @@ export class ProtocolService {
 
   create(data: CreateProtocolDto): Promise<ProtocolResponseDto> {
     assertEntityType(data, 'Protocol');
-    return this.database.create('protocol', data, relations);
+    return this.database.createEntity('protocol', data, relations);
   }
 
   findAll(): Promise<ProtocolResponseDto[]> {
@@ -36,7 +36,7 @@ export class ProtocolService {
 
   update(id: string, data: UpdateProtocolDto): Promise<ProtocolResponseDto> {
     assertEntityType(data, 'Protocol', true);
-    return this.database.update('protocol', id, data, relations);
+    return this.database.updateEntity('protocol', id, data, relations);
   }
 
   remove(id: string): Promise<ProtocolResponseDto> {

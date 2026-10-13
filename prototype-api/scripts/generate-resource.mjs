@@ -12,8 +12,11 @@ import {
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { graphEdges } from '../src/surreal/entity-storage.ts';
-import { readEntitySchema } from '../../ifs-standards/scripts/entity-schema.ts';
+import {
+  readEntitySchema,
+  readEntitySchemas,
+  entityContract,
+} from '../../ifs-standards/scripts/entity-schema.ts';
 import { isAbstractEntity } from '../../ifs-standards/scripts/entity-metadata.ts';
 
 const apiRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -225,7 +228,6 @@ function readEntityRelations(modelName, schema) {
 
 function renderService(entityName, modelName, relations, entityType) {
   const table = entityName.replaceAll('-', '_');
-  const edge = graphEdges[table];
   return `${generatedMarker}
 import { Injectable } from '@nestjs/common';
 import { SurrealService } from '../surreal/surreal.service.js';
@@ -244,7 +246,7 @@ export class ${modelName}Service {
 
   create(data: Create${modelName}Dto): Promise<${modelName}ResponseDto> {
     assertEntityType(data, ${JSON.stringify(entityType)});
-    return this.database.${edge ? 'createEdge' : 'create'}('${table}', data, relations);
+    return this.database.createEntity('${table}', data, relations);
   }
 
   findAll(): Promise<${modelName}ResponseDto[]> {
@@ -261,7 +263,7 @@ export class ${modelName}Service {
 
   update(id: string, data: Update${modelName}Dto): Promise<${modelName}ResponseDto> {
     assertEntityType(data, ${JSON.stringify(entityType)}, true);
-    return this.database.${edge ? 'updateEdge' : 'update'}('${table}', id, data, relations);
+    return this.database.updateEntity('${table}', id, data, relations);
   }
 
   remove(id: string): Promise<${modelName}ResponseDto> {
@@ -479,6 +481,9 @@ export function generateService(entityInput, options = {}) {
   }
 
   // Generate the canonical entity-type allowlist used to resolve polymorphic endpoints.
+  const canonicalSchemas = readEntitySchemas(entitiesRoot);
+  const contracts = {};
+  const nestedRelations = {};
   const tables = Object.fromEntries(
     readdirSync(entitiesRoot, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
@@ -488,16 +493,40 @@ export function generateService(entityInput, options = {}) {
           join(entitiesRoot, name, `${name}.schema.json`),
           entitiesRoot,
         );
-        return isAbstractEntity(schema)
-          ? []
-          : [[pascalCase(schema.title), name.replaceAll('-', '_')]];
+        if (isAbstractEntity(schema)) return [];
+        const table = name.replaceAll('-', '_');
+        contracts[table] = entityContract(
+          canonicalSchemas.get(schema.$id),
+          canonicalSchemas,
+        );
+        nestedRelations[table] = Object.entries(
+          schema.properties ?? {},
+        ).flatMap(([property, definition]) => {
+          const ref = definition.$ref ?? definition.items?.$ref;
+          if (!ref || ref.startsWith('#')) return [];
+          const target = ref.split('/').pop().replace('.schema.json', '');
+          return [
+            {
+              property,
+              table: target.replaceAll('-', '_'),
+              isArray: definition.type === 'array',
+              readOnly: definition.readOnly === true,
+            },
+          ];
+        });
+        return [[pascalCase(schema.title), table]];
       }),
   );
   const storageDirectory = join(apiRoot, 'src', 'surreal');
   mkdirSync(storageDirectory, { recursive: true });
   writeFileSync(
     join(storageDirectory, 'entity-tables.generated.ts'),
-    `${generatedMarker}\nexport const entityTables: Record<string, string> = ${JSON.stringify(tables, null, 2)};\n`,
+    `${generatedMarker}\nexport const entityTables: Record<string, string> = ${JSON.stringify(tables, null, 2)};\n\nexport const entityRelations: Record<string, readonly { property: string; table: string; isArray: boolean; readOnly: boolean }[]> = ${JSON.stringify(nestedRelations, null, 2)};\n`,
+  );
+
+  writeFileSync(
+    join(storageDirectory, 'entity-schemas.generated.ts'),
+    `${generatedMarker}\n/* oxlint-disable unicorn/no-thenable -- JSON Schema uses then as a conditional keyword. */\nexport const entitySchemas: Record<string, Record<string, unknown>> = ${JSON.stringify(Object.fromEntries([...canonicalSchemas].sort(([a], [b]) => a.localeCompare(b))), null, 2)};\n\nexport const entityContracts: Record<string, Record<string, unknown>> = ${JSON.stringify(contracts, null, 2)};\n`,
   );
 
   mkdirSync(serviceDirectory, { recursive: true });
@@ -517,6 +546,7 @@ export function generateService(entityInput, options = {}) {
         ...generatedFiles.map((file) => file.path),
         generatedResourcesModulePath,
         join(storageDirectory, 'entity-tables.generated.ts'),
+        join(storageDirectory, 'entity-schemas.generated.ts'),
       ],
       { cwd: apiRoot, stdio: 'inherit' },
     );

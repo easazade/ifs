@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { MemberResponseDto } from '../../member/dto/member-response.dto.js';
+import { NestedMemberDto } from '../../member/dto/nested-member.dto.js';
 
 export class CreateObservationDto {
   @ApiProperty({
@@ -52,6 +52,12 @@ export class CreateObservationDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description: 'Timestamp when this observation record was last updated.',
     format: 'date-time',
   })
@@ -75,9 +81,9 @@ export class CreateObservationDto {
 
   @ApiProperty({
     description: 'Member who made the report about what they observed.',
-    type: () => MemberResponseDto,
+    type: () => NestedMemberDto,
   })
-  observer: MemberResponseDto;
+  observer: NestedMemberDto;
 
   [key: string]: unknown;
 }

@@ -7,34 +7,6 @@
  */
 import { getApiBaseUrl } from '../config.js';
 
-// https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
-type IfEquals<X, Y, A = X, B = never> =
-  (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? A : B;
-
-type WritableKeys<T> = {
-  [P in keyof T]-?: IfEquals<
-    { [Q in P]: T[P] },
-    { -readonly [Q in P]: T[P] },
-    P
-  >;
-}[keyof T];
-
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I,
-) => void
-  ? I
-  : never;
-type DistributeReadOnlyOverUnions<T> = T extends any ? NonReadonly<T> : never;
-
-type Writable<T> = Pick<T, WritableKeys<T>>;
-type NonReadonly<T> = [T] extends [UnionToIntersection<T>]
-  ? {
-      [P in keyof Writable<T>]: T[P] extends object
-        ? NonReadonly<NonNullable<T[P]>>
-        : T[P];
-    }
-  : DistributeReadOnlyOverUnions<T>;
-
 /**
  * Entity type discriminator. Always "Action" for Action entities.
  */
@@ -65,7 +37,7 @@ export interface CreateActionDto {
    * Globally unique identifier for this action.
    * @pattern ^Action/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Action" for Action entities. */
   entityType: CreateActionDtoEntityType;
   /**
@@ -79,6 +51,8 @@ export interface CreateActionDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this action record was last updated. */
   updatedAt: string;
   /** Human-readable name of the action. */
@@ -97,6 +71,7 @@ export interface CreateActionDto {
   warnings?: string;
   /** Lifecycle state of the action. */
   state: CreateActionDtoState;
+  [key: string]: unknown;
 }
 
 /**
@@ -129,7 +104,7 @@ export interface ActionResponseDto {
    * Globally unique identifier for this action.
    * @pattern ^Action/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Action" for Action entities. */
   entityType: ActionResponseDtoEntityType;
   /**
@@ -143,6 +118,8 @@ export interface ActionResponseDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this action record was last updated. */
   updatedAt: string;
   /** Human-readable name of the action. */
@@ -161,6 +138,7 @@ export interface ActionResponseDto {
   warnings?: string;
   /** Lifecycle state of the action. */
   state: ActionResponseDtoState;
+  [key: string]: unknown;
 }
 
 /**
@@ -173,12 +151,15 @@ export const RelationshipResponseDtoEntityType = {
   Relationship: 'Relationship',
 } as const;
 
+/**
+ * Records a directed relationship between two IFS entity objects.
+ */
 export interface RelationshipResponseDto {
   /**
    * Globally unique identifier for this relationship.
    * @pattern ^Relationship/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Relationship" for Relationship entities. */
   entityType: RelationshipResponseDtoEntityType;
   /**
@@ -192,6 +173,8 @@ export interface RelationshipResponseDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this relationship record was last updated. */
   updatedAt: string;
   /**
@@ -223,6 +206,7 @@ export interface RelationshipResponseDto {
   startedAt: string;
   /** Optional calendar date when this relationship ended; must not precede startedAt. */
   endedAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -250,12 +234,15 @@ export const UpdateActionDtoState = {
   deprecated: 'deprecated',
 } as const;
 
+/**
+ * Action. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateActionDto {
   /**
    * Globally unique identifier for this action.
    * @pattern ^Action/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Action" for Action entities. */
   entityType?: UpdateActionDtoEntityType;
   /**
@@ -269,6 +256,8 @@ export interface UpdateActionDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Timestamp when this action record was last updated. */
   updatedAt?: string;
   /** Human-readable name of the action. */
@@ -287,802 +276,43 @@ export interface UpdateActionDto {
   warnings?: string;
   /** Lifecycle state of the action. */
   state?: UpdateActionDtoState;
+  [key: string]: unknown;
 }
 
 /**
  * Entity type discriminator. Always "ChangeItem" for ChangeItem entities.
  */
-export type ChangeItemResponseDtoEntityType =
-  (typeof ChangeItemResponseDtoEntityType)[keyof typeof ChangeItemResponseDtoEntityType];
+export type NestedChangeItemDtoEntityType =
+  (typeof NestedChangeItemDtoEntityType)[keyof typeof NestedChangeItemDtoEntityType];
 
-export const ChangeItemResponseDtoEntityType = {
+export const NestedChangeItemDtoEntityType = {
   ChangeItem: 'ChangeItem',
 } as const;
 
 /**
  * Type of operation this item proposes for the target object.
  */
-export type ChangeItemResponseDtoOperation =
-  (typeof ChangeItemResponseDtoOperation)[keyof typeof ChangeItemResponseDtoOperation];
+export type NestedChangeItemDtoOperation =
+  (typeof NestedChangeItemDtoOperation)[keyof typeof NestedChangeItemDtoOperation];
 
-export const ChangeItemResponseDtoOperation = {
+export const NestedChangeItemDtoOperation = {
   update: 'update',
   create: 'create',
   delete: 'delete',
   replace: 'replace',
 } as const;
 
-export interface ChangeItemResponseDto {
+/**
+ * ChangeItem. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedChangeItemDto {
   /**
-   * Globally unique identifier for this change item.
-   * @pattern ^ChangeItem/[^/\s]+$
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
    */
-  id: string & string;
+  id?: string | null;
   /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
-  entityType: ChangeItemResponseDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
-  resourceType: string;
-  /** Type of operation this item proposes for the target object. */
-  operation: ChangeItemResponseDtoOperation;
-  /**
-   * ID of the logical object being changed. Null for create operations.
-   * @nullable
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  targetId: string | null;
-  /**
-   * ID of the active version observed when authored, for conflict detection. Null for create operations.
-   * @nullable
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  baseId: string | null;
-  /**
-   * ID of the proposed object or version. Null for delete operations.
-   * @nullable
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  proposedId: string | null;
-  /** Optional human-readable note explaining this specific item. */
-  description?: string;
-  /** Timestamp when this change item was last updated. */
-  updatedAt: string;
-}
-
-/**
- * Entity type discriminator. Always "Scope" for Scope entities.
- */
-export type ScopeResponseDtoEntityType =
-  (typeof ScopeResponseDtoEntityType)[keyof typeof ScopeResponseDtoEntityType];
-
-export const ScopeResponseDtoEntityType = {
-  Scope: 'Scope',
-} as const;
-
-/**
- * Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific.
- */
-export type ScopeResponseDtoBoundaryRules = { [key: string]: unknown };
-
-export interface ScopeResponseDto {
-  /**
-   * Globally unique identifier for this scope.
-   * @pattern ^Scope/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "Scope" for Scope entities. */
-  entityType: ScopeResponseDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Human-readable name of the scope. */
-  name: string;
-  /** Optional human-readable explanation of what this scope includes and excludes. */
-  description?: string;
-  /** Location identifiers or names included in this scope. Kept as strings for now. */
-  locations?: string[];
-  /** Group identifiers or names included in this scope. Kept as strings for now. */
-  groups?: string[];
-  /** Object identifiers or names included in this scope. Kept as strings for now. */
-  objects?: string[];
-  /** Entity identifiers or names included in this scope. Kept as strings for now. */
-  entities?: string[];
-  /**
-   * Identifier of a broader parent scope, when this scope is nested inside another scope.
-   * @pattern ^Scope/[^/\s]+$
-   */
-  parentScopeId?: string;
-  /** Identifiers of narrower child scopes contained by this scope. */
-  childScopeIds?: string[];
-  /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
-  boundaryRules?: ScopeResponseDtoBoundaryRules;
-  /** Timestamp when this scope record was last updated. */
-  updatedAt: string;
-}
-
-/**
- * Entity type discriminator. Always "Permission" for Permission entities.
- */
-export type PermissionResponseDtoEntityType =
-  (typeof PermissionResponseDtoEntityType)[keyof typeof PermissionResponseDtoEntityType];
-
-export const PermissionResponseDtoEntityType = {
-  Permission: 'Permission',
-} as const;
-
-/**
- * Scope object describing the system, project, process, area, or other bounded context where this permission applies.
- */
-export type PermissionResponseDtoScope = { [key: string]: unknown };
-
-/**
- * Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked.
- */
-export type PermissionResponseDtoState =
-  (typeof PermissionResponseDtoState)[keyof typeof PermissionResponseDtoState];
-
-export const PermissionResponseDtoState = {
-  granted: 'granted',
-  'under-review': 'under-review',
-  revoked: 'revoked',
-  drafted: 'drafted',
-} as const;
-
-export interface PermissionResponseDto {
-  /**
-   * Globally unique identifier for this permission.
-   * @pattern ^Permission/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "Permission" for Permission entities. */
-  entityType: PermissionResponseDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** ID list of actions that this permission allows */
-  actionIds: string[];
-  /** List of actions that this permission allows */
-  actions?: ActionResponseDto[];
-  /**
-   * Identifier of the member receiving this permission.
-   * @pattern ^Member/[^/\s]+$
-   */
-  memberId?: string;
-  /**
-   * Identifier of the role receiving this permission.
-   * @pattern ^Role/[^/\s]+$
-   */
-  roleId?: string;
-  /**
-   * Identifier of the scope object where this permission applies.
-   * @pattern ^Scope/[^/\s]+$
-   */
-  scopeId: string;
-  /** Scope object describing the system, project, process, area, or other bounded context where this permission applies. */
-  scope?: PermissionResponseDtoScope;
-  /** Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked. */
-  state: PermissionResponseDtoState;
-  /** Timestamp when this permission record was last updated. */
-  updatedAt?: string;
-  /** Optional timestamp after which this permission no longer applies. */
-  expiresAt: string;
-}
-
-/**
- * Entity type discriminator. Always "Role" for Role entities.
- */
-export type RoleResponseDtoEntityType =
-  (typeof RoleResponseDtoEntityType)[keyof typeof RoleResponseDtoEntityType];
-
-export const RoleResponseDtoEntityType = {
-  Role: 'Role',
-} as const;
-
-/**
- * Lifecycle state of the role.
- */
-export type RoleResponseDtoState =
-  (typeof RoleResponseDtoState)[keyof typeof RoleResponseDtoState];
-
-export const RoleResponseDtoState = {
-  drafted: 'drafted',
-  'under-review': 'under-review',
-  active: 'active',
-  suspended: 'suspended',
-  revoked: 'revoked',
-  expired: 'expired',
-} as const;
-
-export interface RoleResponseDto {
-  /**
-   * Globally unique identifier for this role.
-   * @pattern ^Role/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "Role" for Role entities. */
-  entityType: RoleResponseDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Human-readable name of the role. */
-  name: string;
-  /** Optional human-readable explanation of what this role is for. */
-  description?: string;
-  /**
-   * Identifier of the member acting through this role.
-   * @pattern ^Member/[^/\s]+$
-   */
-  memberId: string;
-  /**
-   * Identifier of the scope where this role has authority.
-   * @pattern ^Scope/[^/\s]+$
-   */
-  scopeId: string;
-  /** Scope entity describing where this role applies. */
-  scope: ScopeResponseDto;
-  /** Permission entities bundled into this role. */
-  permissions: PermissionResponseDto[];
-  /** Lifecycle state of the role. */
-  state: RoleResponseDtoState;
-  /** Timestamp when this role record was last updated. */
-  updatedAt: string;
-  /** Optional timestamp after which this role no longer applies. */
-  expiresAt?: string;
-}
-
-/**
- * Entity type discriminator. Always "Member" for Member entities.
- */
-export type MemberResponseDtoEntityType =
-  (typeof MemberResponseDtoEntityType)[keyof typeof MemberResponseDtoEntityType];
-
-export const MemberResponseDtoEntityType = {
-  Member: 'Member',
-} as const;
-
-export interface MemberResponseDto {
-  /**
-   * Globally unique identifier for this member.
-   * @pattern ^Member/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "Member" for Member entities. */
-  entityType: MemberResponseDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Human-readable name of the member. */
-  name: string;
-  readonly roles: readonly RoleResponseDto[];
-  permissions: PermissionResponseDto[];
-  /** Whether this member is considered an owner of the system. */
-  isOwner: boolean;
-  /** Timestamp when this member record was last updated. */
-  updatedAt: string;
-}
-
-/**
- * Entity type discriminator. Always "Vote" for Vote entities.
- */
-export type VoteResponseDtoEntityType =
-  (typeof VoteResponseDtoEntityType)[keyof typeof VoteResponseDtoEntityType];
-
-export const VoteResponseDtoEntityType = {
-  Vote: 'Vote',
-} as const;
-
-export interface VoteResponseDto {
-  /**
-   * Globally unique identifier for this vote.
-   * @pattern ^Vote/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "Vote" for Vote entities. */
-  entityType: VoteResponseDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Timestamp when this vote record was last updated. */
-  updatedAt: string;
-  /**
-   * Identifier of the decision this vote participates in.
-   * @pattern ^Decision/[^/\s]+$
-   */
-  decisionId: string;
-  /**
-   * Identifier of the member who cast or owns this vote.
-   * @pattern ^Member/[^/\s]+$
-   */
-  memberId: string;
-  /** Vote value recorded for the decision, such as an implementation-defined choice or consent signal. */
-  value: string;
-  /**
-   * Identifier of the previous revision of this vote, if this vote amends an earlier vote.
-   * @pattern ^Vote/[^/\s]+$
-   */
-  previousRevisionId?: string;
-}
-
-/**
- * Entity type discriminator. Always "Rule" for Rule entities.
- */
-export type RuleResponseDtoEntityType =
-  (typeof RuleResponseDtoEntityType)[keyof typeof RuleResponseDtoEntityType];
-
-export const RuleResponseDtoEntityType = {
-  Rule: 'Rule',
-} as const;
-
-export interface RuleResponseDto {
-  /**
-   * Globally unique identifier for this rule.
-   * @pattern ^Rule/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "Rule" for Rule entities. */
-  entityType: RuleResponseDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Timestamp when this rule record was last updated. */
-  updatedAt: string;
-}
-
-/**
- * Entity type discriminator. Always "Decision" for Decision entities.
- */
-export type DecisionResponseDtoEntityType =
-  (typeof DecisionResponseDtoEntityType)[keyof typeof DecisionResponseDtoEntityType];
-
-export const DecisionResponseDtoEntityType = {
-  Decision: 'Decision',
-} as const;
-
-/**
- * Current lifecycle state of the decision.
- */
-export type DecisionResponseDtoState =
-  (typeof DecisionResponseDtoState)[keyof typeof DecisionResponseDtoState];
-
-export const DecisionResponseDtoState = {
-  open: 'open',
-  closed: 'closed',
-  rejected: 'rejected',
-  cancelled: 'cancelled',
-} as const;
-
-export interface DecisionResponseDto {
-  /**
-   * Globally unique identifier for this decision.
-   * @pattern ^Decision/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "Decision" for Decision entities. */
-  entityType: DecisionResponseDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /**
-   * ID of the object, proposal, rule, resource, or question being decided.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  subject: string;
-  /** Current lifecycle state of the decision. */
-  state: DecisionResponseDtoState;
-  /**
-   * Id of previous revision of this decision, If this decision is a modified version of another decision.
-   * @pattern ^Decision/[^/\s]+$
-   */
-  previousRevisionId?: string;
-  /** Current outcome of the decision, if the decision has produced an outcome at least once. */
-  previousRevision?: DecisionResponseDto;
-  /** Member entities eligible to participate in this decision. */
-  eligibleMembers: MemberResponseDto[];
-  /** Member entities affected by this decision under the IFS scope rule. */
-  affectedMembers: MemberResponseDto[];
-  /** Vote entities cast directly by members or by delegates acting on their behalf. */
-  votes: VoteResponseDto[];
-  /** Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision. */
-  rules?: RuleResponseDto[];
-  /**
-   * Snapshot count of members eligible to participate.
-   * @minimum 0
-   */
-  eligibleMemberCount: number;
-  /**
-   * Snapshot count of members affected by this decision.
-   * @minimum 0
-   */
-  affectedMemberCount: number;
-  /**
-   * Snapshot count of votes currently recorded for this decision.
-   * @minimum 0
-   */
-  voteCount: number;
-  /**
-   * Snapshot count of votes cast by delegates on behalf of eligible members.
-   * @minimum 0
-   */
-  delegateVoteCount?: number;
-  /** Timestamp when this decision opened for participation. */
-  openedAt: string;
-  /** Optional timestamp when this decision closed. */
-  closedAt?: string;
-  /** Optional timestamp when this decision was cancelled. */
-  cancelledAt?: string;
-  /** Optional timestamp when participation, vote data, or outcome was verified. */
-  verifiedAt?: string;
-  /** Optional timestamp when this decision produced an approved outcome. */
-  approvedAt?: string;
-  /** Optional timestamp when this decision was rejected or produced a rejected outcome. */
-  rejectedAt?: string;
-  /** Timestamp when this decision record was last updated. */
-  updatedAt: string;
-  /** Timestamp when this decision record was decided. */
-  decidedAt?: string;
-}
-
-/**
- * Entity type discriminator. Always "Comment" for Comment entities.
- */
-export type CommentResponseDtoEntityType =
-  (typeof CommentResponseDtoEntityType)[keyof typeof CommentResponseDtoEntityType];
-
-export const CommentResponseDtoEntityType = {
-  Comment: 'Comment',
-} as const;
-
-export interface CommentResponseDto {
-  /**
-   * Globally unique identifier for this comment.
-   * @pattern ^Comment/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "Comment" for Comment entities. */
-  entityType: CommentResponseDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Timestamp when this comment was last updated. */
-  updatedAt: string;
-}
-
-/**
- * Entity type discriminator. Always "ReviewComment" for ReviewComment entities.
- */
-export type ReviewCommentResponseDtoEntityType =
-  (typeof ReviewCommentResponseDtoEntityType)[keyof typeof ReviewCommentResponseDtoEntityType];
-
-export const ReviewCommentResponseDtoEntityType = {
-  ReviewComment: 'ReviewComment',
-} as const;
-
-export interface ReviewCommentResponseDto {
-  /**
-   * Globally unique identifier for this review comment.
-   * @pattern ^ReviewComment/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
-  entityType: ReviewCommentResponseDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Timestamp when this review comment was last updated. */
-  updatedAt: string;
-}
-
-/**
- * Entity type discriminator. Always "Change" for Change entities.
- */
-export type CreateChangeDtoEntityType =
-  (typeof CreateChangeDtoEntityType)[keyof typeof CreateChangeDtoEntityType];
-
-export const CreateChangeDtoEntityType = {
-  Change: 'Change',
-} as const;
-
-/**
- * Lifecycle status of the change.
- */
-export type CreateChangeDtoStatus =
-  (typeof CreateChangeDtoStatus)[keyof typeof CreateChangeDtoStatus];
-
-export const CreateChangeDtoStatus = {
-  drafted: 'drafted',
-  closed: 'closed',
-  open: 'open',
-  rejected: 'rejected',
-  approved: 'approved',
-  merged: 'merged',
-} as const;
-
-export interface CreateChangeDto {
-  /**
-   * Globally unique identifier for this change.
-   * @pattern ^Change/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "Change" for Change entities. */
-  entityType: CreateChangeDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Human-readable title summarizing the proposed change. */
-  title: string;
-  /** Detailed explanation of what this change proposes and why it is needed. */
-  description: string;
-  /** Short explanation of what this change proposes and why it is needed. */
-  summary?: string;
-  /** explanation of why this change is being proposed. */
-  reason: string;
-  /** ChangeItem entities describing each proposed object-level operation in this change. */
-  changes: ChangeItemResponseDto[];
-  /** Current decision about this change */
-  decision?: DecisionResponseDto;
-  /** Recent Comment entities for this change, such as the first page of comments. */
-  comments?: CommentResponseDto[];
-  /** URL where the full comment thread for this change can be fetched or viewed. */
-  commentsUrl?: string;
-  /** ReviewComment entities tied to changed objects, fields, records, or diff entries. */
-  reviewComments?: ReviewCommentResponseDto[];
-  /** Member entities that authored or co-authored this change. */
-  authors: MemberResponseDto[];
-  /**
-   * Identifier of the primary member responsible for this change.
-   * @pattern ^Member/[^/\s]+$
-   */
-  mainAuthorId: string;
-  /** Primary member responsible for this change. */
-  mainAuthor: MemberResponseDto;
-  /** Member entities requested or assigned to review this change. */
-  reviewers?: MemberResponseDto[];
-  /** Lifecycle status of the change. */
-  status: CreateChangeDtoStatus;
-  /** URL showing a diff for all changed objects, similar to a GitHub pull request diff. */
-  diffUrl?: string;
-  /**
-   * Human-friendly sequence number for this change inside the relevant system or scope.
-   * @minimum 1
-   */
-  number: number;
-  /** Label assigned to this change. */
-  labels?: string[];
-  /** Whether this change has been merged into the target system state. */
-  merged: boolean;
-  /** Whether this change currently conflicts with another change or with the target system state. */
-  hasConflict: boolean;
-  /** Any links related to this change. */
-  links?: string[];
-  /** Timestamp when this change was last updated. */
-  updatedAt: string;
-  /** Optional timestamp when this change was merged. */
-  mergedAt?: string;
-  /** Optional timestamp when this change was closed without being merged. */
-  closedAt?: string;
-}
-
-/**
- * Entity type discriminator. Always "Change" for Change entities.
- */
-export type ChangeResponseDtoEntityType =
-  (typeof ChangeResponseDtoEntityType)[keyof typeof ChangeResponseDtoEntityType];
-
-export const ChangeResponseDtoEntityType = {
-  Change: 'Change',
-} as const;
-
-/**
- * Lifecycle status of the change.
- */
-export type ChangeResponseDtoStatus =
-  (typeof ChangeResponseDtoStatus)[keyof typeof ChangeResponseDtoStatus];
-
-export const ChangeResponseDtoStatus = {
-  drafted: 'drafted',
-  closed: 'closed',
-  open: 'open',
-  rejected: 'rejected',
-  approved: 'approved',
-  merged: 'merged',
-} as const;
-
-export interface ChangeResponseDto {
-  /**
-   * Globally unique identifier for this change.
-   * @pattern ^Change/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "Change" for Change entities. */
-  entityType: ChangeResponseDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Human-readable title summarizing the proposed change. */
-  title: string;
-  /** Detailed explanation of what this change proposes and why it is needed. */
-  description: string;
-  /** Short explanation of what this change proposes and why it is needed. */
-  summary?: string;
-  /** explanation of why this change is being proposed. */
-  reason: string;
-  /** ChangeItem entities describing each proposed object-level operation in this change. */
-  changes: ChangeItemResponseDto[];
-  /** Current decision about this change */
-  decision?: DecisionResponseDto;
-  /** Recent Comment entities for this change, such as the first page of comments. */
-  comments?: CommentResponseDto[];
-  /** URL where the full comment thread for this change can be fetched or viewed. */
-  commentsUrl?: string;
-  /** ReviewComment entities tied to changed objects, fields, records, or diff entries. */
-  reviewComments?: ReviewCommentResponseDto[];
-  /** Member entities that authored or co-authored this change. */
-  authors: MemberResponseDto[];
-  /**
-   * Identifier of the primary member responsible for this change.
-   * @pattern ^Member/[^/\s]+$
-   */
-  mainAuthorId: string;
-  /** Primary member responsible for this change. */
-  mainAuthor: MemberResponseDto;
-  /** Member entities requested or assigned to review this change. */
-  reviewers?: MemberResponseDto[];
-  /** Lifecycle status of the change. */
-  status: ChangeResponseDtoStatus;
-  /** URL showing a diff for all changed objects, similar to a GitHub pull request diff. */
-  diffUrl?: string;
-  /**
-   * Human-friendly sequence number for this change inside the relevant system or scope.
-   * @minimum 1
-   */
-  number: number;
-  /** Label assigned to this change. */
-  labels?: string[];
-  /** Whether this change has been merged into the target system state. */
-  merged: boolean;
-  /** Whether this change currently conflicts with another change or with the target system state. */
-  hasConflict: boolean;
-  /** Any links related to this change. */
-  links?: string[];
-  /** Timestamp when this change was last updated. */
-  updatedAt: string;
-  /** Optional timestamp when this change was merged. */
-  mergedAt?: string;
-  /** Optional timestamp when this change was closed without being merged. */
-  closedAt?: string;
-}
-
-/**
- * Entity type discriminator. Always "Change" for Change entities.
- */
-export type UpdateChangeDtoEntityType =
-  (typeof UpdateChangeDtoEntityType)[keyof typeof UpdateChangeDtoEntityType];
-
-export const UpdateChangeDtoEntityType = {
-  Change: 'Change',
-} as const;
-
-/**
- * Lifecycle status of the change.
- */
-export type UpdateChangeDtoStatus =
-  (typeof UpdateChangeDtoStatus)[keyof typeof UpdateChangeDtoStatus];
-
-export const UpdateChangeDtoStatus = {
-  drafted: 'drafted',
-  closed: 'closed',
-  open: 'open',
-  rejected: 'rejected',
-  approved: 'approved',
-  merged: 'merged',
-} as const;
-
-export interface UpdateChangeDto {
-  /**
-   * Globally unique identifier for this change.
-   * @pattern ^Change/[^/\s]+$
-   */
-  id?: string & string;
-  /** Entity type discriminator. Always "Change" for Change entities. */
-  entityType?: UpdateChangeDtoEntityType;
+  entityType?: NestedChangeItemDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1094,176 +324,12 @@ export interface UpdateChangeDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
-  /** Human-readable title summarizing the proposed change. */
-  title?: string;
-  /** Detailed explanation of what this change proposes and why it is needed. */
-  description?: string;
-  /** Short explanation of what this change proposes and why it is needed. */
-  summary?: string;
-  /** explanation of why this change is being proposed. */
-  reason?: string;
-  /** ChangeItem entities describing each proposed object-level operation in this change. */
-  changes?: ChangeItemResponseDto[];
-  /** Current decision about this change */
-  decision?: DecisionResponseDto;
-  /** Recent Comment entities for this change, such as the first page of comments. */
-  comments?: CommentResponseDto[];
-  /** URL where the full comment thread for this change can be fetched or viewed. */
-  commentsUrl?: string;
-  /** ReviewComment entities tied to changed objects, fields, records, or diff entries. */
-  reviewComments?: ReviewCommentResponseDto[];
-  /** Member entities that authored or co-authored this change. */
-  authors?: MemberResponseDto[];
-  /**
-   * Identifier of the primary member responsible for this change.
-   * @pattern ^Member/[^/\s]+$
-   */
-  mainAuthorId?: string;
-  /** Primary member responsible for this change. */
-  mainAuthor?: MemberResponseDto;
-  /** Member entities requested or assigned to review this change. */
-  reviewers?: MemberResponseDto[];
-  /** Lifecycle status of the change. */
-  status?: UpdateChangeDtoStatus;
-  /** URL showing a diff for all changed objects, similar to a GitHub pull request diff. */
-  diffUrl?: string;
-  /**
-   * Human-friendly sequence number for this change inside the relevant system or scope.
-   * @minimum 1
-   */
-  number?: number;
-  /** Label assigned to this change. */
-  labels?: string[];
-  /** Whether this change has been merged into the target system state. */
-  merged?: boolean;
-  /** Whether this change currently conflicts with another change or with the target system state. */
-  hasConflict?: boolean;
-  /** Any links related to this change. */
-  links?: string[];
-  /** Timestamp when this change was last updated. */
-  updatedAt?: string;
-  /** Optional timestamp when this change was merged. */
-  mergedAt?: string;
-  /** Optional timestamp when this change was closed without being merged. */
-  closedAt?: string;
-}
-
-/**
- * Entity type discriminator. Always "ChangeItem" for ChangeItem entities.
- */
-export type CreateChangeItemDtoEntityType =
-  (typeof CreateChangeItemDtoEntityType)[keyof typeof CreateChangeItemDtoEntityType];
-
-export const CreateChangeItemDtoEntityType = {
-  ChangeItem: 'ChangeItem',
-} as const;
-
-/**
- * Type of operation this item proposes for the target object.
- */
-export type CreateChangeItemDtoOperation =
-  (typeof CreateChangeItemDtoOperation)[keyof typeof CreateChangeItemDtoOperation];
-
-export const CreateChangeItemDtoOperation = {
-  update: 'update',
-  create: 'create',
-  delete: 'delete',
-  replace: 'replace',
-} as const;
-
-export interface CreateChangeItemDto {
-  /**
-   * Globally unique identifier for this change item.
-   * @pattern ^ChangeItem/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
-  entityType: CreateChangeItemDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
-  resourceType: string;
-  /** Type of operation this item proposes for the target object. */
-  operation: CreateChangeItemDtoOperation;
-  /**
-   * ID of the logical object being changed. Null for create operations.
-   * @nullable
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  targetId: string | null;
-  /**
-   * ID of the active version observed when authored, for conflict detection. Null for create operations.
-   * @nullable
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  baseId: string | null;
-  /**
-   * ID of the proposed object or version. Null for delete operations.
-   * @nullable
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  proposedId: string | null;
-  /** Optional human-readable note explaining this specific item. */
-  description?: string;
-  /** Timestamp when this change item was last updated. */
-  updatedAt: string;
-}
-
-/**
- * Entity type discriminator. Always "ChangeItem" for ChangeItem entities.
- */
-export type UpdateChangeItemDtoEntityType =
-  (typeof UpdateChangeItemDtoEntityType)[keyof typeof UpdateChangeItemDtoEntityType];
-
-export const UpdateChangeItemDtoEntityType = {
-  ChangeItem: 'ChangeItem',
-} as const;
-
-/**
- * Type of operation this item proposes for the target object.
- */
-export type UpdateChangeItemDtoOperation =
-  (typeof UpdateChangeItemDtoOperation)[keyof typeof UpdateChangeItemDtoOperation];
-
-export const UpdateChangeItemDtoOperation = {
-  update: 'update',
-  create: 'create',
-  delete: 'delete',
-  replace: 'replace',
-} as const;
-
-export interface UpdateChangeItemDto {
-  /**
-   * Globally unique identifier for this change item.
-   * @pattern ^ChangeItem/[^/\s]+$
-   */
-  id?: string & string;
-  /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
-  entityType?: UpdateChangeItemDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl?: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
   resourceType?: string;
   /** Type of operation this item proposes for the target object. */
-  operation?: UpdateChangeItemDtoOperation;
+  operation?: NestedChangeItemDtoOperation;
   /**
    * ID of the logical object being changed. Null for create operations.
    * @nullable
@@ -1286,59 +352,45 @@ export interface UpdateChangeItemDto {
   description?: string;
   /** Timestamp when this change item was last updated. */
   updatedAt?: string;
+  [key: string]: unknown;
 }
 
 /**
- * Entity type discriminator. Always "Comment" for Comment entities.
+ * Entity type discriminator. Always "Action" for Action entities.
  */
-export type CreateCommentDtoEntityType =
-  (typeof CreateCommentDtoEntityType)[keyof typeof CreateCommentDtoEntityType];
+export type NestedActionDtoEntityType =
+  (typeof NestedActionDtoEntityType)[keyof typeof NestedActionDtoEntityType];
 
-export const CreateCommentDtoEntityType = {
-  Comment: 'Comment',
+export const NestedActionDtoEntityType = {
+  Action: 'Action',
 } as const;
-
-export interface CreateCommentDto {
-  /**
-   * Globally unique identifier for this comment.
-   * @pattern ^Comment/[^/\s]+$
-   */
-  id: string & string;
-  /** Entity type discriminator. Always "Comment" for Comment entities. */
-  entityType: CreateCommentDtoEntityType;
-  /**
-   * Id of the object this object is derived from.
-   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
-   */
-  basedOn?: string;
-  /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
-  /** URL for documentation about this object instance */
-  documentationUrl?: string;
-  /** Timestamp when this entity record was created. */
-  createdAt: string;
-  /** Timestamp when this comment was last updated. */
-  updatedAt: string;
-}
 
 /**
- * Entity type discriminator. Always "Comment" for Comment entities.
+ * Lifecycle state of the action.
  */
-export type UpdateCommentDtoEntityType =
-  (typeof UpdateCommentDtoEntityType)[keyof typeof UpdateCommentDtoEntityType];
+export type NestedActionDtoState =
+  (typeof NestedActionDtoState)[keyof typeof NestedActionDtoState];
 
-export const UpdateCommentDtoEntityType = {
-  Comment: 'Comment',
+export const NestedActionDtoState = {
+  drafted: 'drafted',
+  'under-review': 'under-review',
+  active: 'active',
+  suspended: 'suspended',
+  revoked: 'revoked',
+  deprecated: 'deprecated',
 } as const;
 
-export interface UpdateCommentDto {
+/**
+ * Action. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedActionDto {
   /**
-   * Globally unique identifier for this comment.
-   * @pattern ^Comment/[^/\s]+$
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
    */
-  id?: string & string;
-  /** Entity type discriminator. Always "Comment" for Comment entities. */
-  entityType?: UpdateCommentDtoEntityType;
+  id?: string | null;
+  /** Entity type discriminator. Always "Action" for Action entities. */
+  entityType?: NestedActionDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1350,143 +402,235 @@ export interface UpdateCommentDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
-  /** Timestamp when this comment was last updated. */
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Timestamp when this action record was last updated. */
   updatedAt?: string;
+  /** Human-readable name of the action. */
+  name?: string;
+  /** Stable unique name used by IFS implementations to identify this action. */
+  uniqueName?: string;
+  /** Whether a member or role must hold an applicable permission before performing this action. */
+  requiresPermission?: boolean;
+  /** Describes the action. */
+  description?: string;
+  /** Instructions for how to perform the action. */
+  instructions?: string;
+  /** Additional notes about this action. */
+  notes?: string;
+  /** Warnings, risks, or constraints to review before performing this action. */
+  warnings?: string;
+  /** Lifecycle state of the action. */
+  state?: NestedActionDtoState;
+  [key: string]: unknown;
 }
 
 /**
- * Entity type discriminator. Always "Decision" for Decision entities.
+ * Entity type discriminator. Always "Permission" for Permission entities.
  */
-export type CreateDecisionDtoEntityType =
-  (typeof CreateDecisionDtoEntityType)[keyof typeof CreateDecisionDtoEntityType];
+export type NestedPermissionDtoEntityType =
+  (typeof NestedPermissionDtoEntityType)[keyof typeof NestedPermissionDtoEntityType];
 
-export const CreateDecisionDtoEntityType = {
-  Decision: 'Decision',
+export const NestedPermissionDtoEntityType = {
+  Permission: 'Permission',
 } as const;
 
 /**
- * Current lifecycle state of the decision.
+ * Scope object describing the system, project, process, area, or other bounded context where this permission applies.
  */
-export type CreateDecisionDtoState =
-  (typeof CreateDecisionDtoState)[keyof typeof CreateDecisionDtoState];
+export type NestedPermissionDtoScope = { [key: string]: unknown };
 
-export const CreateDecisionDtoState = {
-  open: 'open',
-  closed: 'closed',
-  rejected: 'rejected',
-  cancelled: 'cancelled',
+/**
+ * Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked.
+ */
+export type NestedPermissionDtoState =
+  (typeof NestedPermissionDtoState)[keyof typeof NestedPermissionDtoState];
+
+export const NestedPermissionDtoState = {
+  granted: 'granted',
+  'under-review': 'under-review',
+  revoked: 'revoked',
+  drafted: 'drafted',
 } as const;
 
-export interface CreateDecisionDto {
+/**
+ * Permission. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedPermissionDto {
   /**
-   * Globally unique identifier for this decision.
-   * @pattern ^Decision/[^/\s]+$
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
    */
-  id: string & string;
-  /** Entity type discriminator. Always "Decision" for Decision entities. */
-  entityType: CreateDecisionDtoEntityType;
+  id?: string | null;
+  /** Entity type discriminator. Always "Permission" for Permission entities. */
+  entityType?: NestedPermissionDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   basedOn?: string;
   /** URL for documentation about this entity type. */
-  entityDocumentationUrl: string;
+  entityDocumentationUrl?: string;
   /** URL for documentation about this object instance */
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
-  createdAt: string;
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /**
-   * ID of the object, proposal, rule, resource, or question being decided.
+   * ID list of actions that this permission allows
+   * @items.pattern ^Action/[^/\s]+$
+   */
+  actionIds?: string[];
+  /** List of actions that this permission allows */
+  actions?: NestedActionDto[];
+  /**
+   * Identifier of the member receiving this permission.
+   * @pattern ^Member/[^/\s]+$
+   */
+  memberId?: string;
+  /**
+   * Identifier of the role receiving this permission.
+   * @pattern ^Role/[^/\s]+$
+   */
+  roleId?: string;
+  /**
+   * Identifier of the scope object where this permission applies.
+   * @pattern ^Scope/[^/\s]+$
+   */
+  scopeId?: string;
+  /** Scope object describing the system, project, process, area, or other bounded context where this permission applies. */
+  scope?: NestedPermissionDtoScope;
+  /** Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked. */
+  state?: NestedPermissionDtoState;
+  /** Timestamp when this permission record was last updated. */
+  updatedAt?: string;
+  /** Optional timestamp after which this permission no longer applies. */
+  expiresAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Member" for Member entities.
+ */
+export type NestedMemberDtoEntityType =
+  (typeof NestedMemberDtoEntityType)[keyof typeof NestedMemberDtoEntityType];
+
+export const NestedMemberDtoEntityType = {
+  Member: 'Member',
+} as const;
+
+/**
+ * Member. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedMemberDto {
+  /**
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "Member" for Member entities. */
+  entityType?: NestedMemberDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
-  subject: string;
-  /** Current lifecycle state of the decision. */
-  state: CreateDecisionDtoState;
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Human-readable name of the member. */
+  name?: string;
+  permissions?: NestedPermissionDto[];
+  /** Whether this member is considered an owner of the system. */
+  isOwner?: boolean;
+  /** Timestamp when this member record was last updated. */
+  updatedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Vote" for Vote entities.
+ */
+export type NestedVoteDtoEntityType =
+  (typeof NestedVoteDtoEntityType)[keyof typeof NestedVoteDtoEntityType];
+
+export const NestedVoteDtoEntityType = {
+  Vote: 'Vote',
+} as const;
+
+/**
+ * Vote. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedVoteDto {
   /**
-   * Id of previous revision of this decision, If this decision is a modified version of another decision.
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "Vote" for Vote entities. */
+  entityType?: NestedVoteDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Timestamp when this vote record was last updated. */
+  updatedAt?: string;
+  /**
+   * Identifier of the decision this vote participates in.
    * @pattern ^Decision/[^/\s]+$
+   */
+  decisionId?: string;
+  /**
+   * Identifier of the member who cast or owns this vote.
+   * @pattern ^Member/[^/\s]+$
+   */
+  memberId?: string;
+  /** Vote value recorded for the decision, such as an implementation-defined choice or consent signal. */
+  value?: string;
+  /**
+   * Identifier of the previous revision of this vote, if this vote amends an earlier vote.
+   * @pattern ^Vote/[^/\s]+$
    */
   previousRevisionId?: string;
-  /** Current outcome of the decision, if the decision has produced an outcome at least once. */
-  previousRevision?: DecisionResponseDto;
-  /** Member entities eligible to participate in this decision. */
-  eligibleMembers: MemberResponseDto[];
-  /** Member entities affected by this decision under the IFS scope rule. */
-  affectedMembers: MemberResponseDto[];
-  /** Vote entities cast directly by members or by delegates acting on their behalf. */
-  votes: VoteResponseDto[];
-  /** Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision. */
-  rules?: RuleResponseDto[];
-  /**
-   * Snapshot count of members eligible to participate.
-   * @minimum 0
-   */
-  eligibleMemberCount: number;
-  /**
-   * Snapshot count of members affected by this decision.
-   * @minimum 0
-   */
-  affectedMemberCount: number;
-  /**
-   * Snapshot count of votes currently recorded for this decision.
-   * @minimum 0
-   */
-  voteCount: number;
-  /**
-   * Snapshot count of votes cast by delegates on behalf of eligible members.
-   * @minimum 0
-   */
-  delegateVoteCount?: number;
-  /** Timestamp when this decision opened for participation. */
-  openedAt: string;
-  /** Optional timestamp when this decision closed. */
-  closedAt?: string;
-  /** Optional timestamp when this decision was cancelled. */
-  cancelledAt?: string;
-  /** Optional timestamp when participation, vote data, or outcome was verified. */
-  verifiedAt?: string;
-  /** Optional timestamp when this decision produced an approved outcome. */
-  approvedAt?: string;
-  /** Optional timestamp when this decision was rejected or produced a rejected outcome. */
-  rejectedAt?: string;
-  /** Timestamp when this decision record was last updated. */
-  updatedAt: string;
-  /** Timestamp when this decision record was decided. */
-  decidedAt?: string;
+  [key: string]: unknown;
 }
 
 /**
- * Entity type discriminator. Always "Decision" for Decision entities.
+ * Entity type discriminator. Always "Rule" for Rule entities.
  */
-export type UpdateDecisionDtoEntityType =
-  (typeof UpdateDecisionDtoEntityType)[keyof typeof UpdateDecisionDtoEntityType];
+export type NestedRuleDtoEntityType =
+  (typeof NestedRuleDtoEntityType)[keyof typeof NestedRuleDtoEntityType];
 
-export const UpdateDecisionDtoEntityType = {
-  Decision: 'Decision',
+export const NestedRuleDtoEntityType = {
+  Rule: 'Rule',
 } as const;
 
 /**
- * Current lifecycle state of the decision.
+ * Rule. Partial write; the complete resulting entity is validated before commit.
  */
-export type UpdateDecisionDtoState =
-  (typeof UpdateDecisionDtoState)[keyof typeof UpdateDecisionDtoState];
-
-export const UpdateDecisionDtoState = {
-  open: 'open',
-  closed: 'closed',
-  rejected: 'rejected',
-  cancelled: 'cancelled',
-} as const;
-
-export interface UpdateDecisionDto {
+export interface NestedRuleDto {
   /**
-   * Globally unique identifier for this decision.
-   * @pattern ^Decision/[^/\s]+$
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
    */
-  id?: string & string;
-  /** Entity type discriminator. Always "Decision" for Decision entities. */
-  entityType?: UpdateDecisionDtoEntityType;
+  id?: string | null;
+  /** Entity type discriminator. Always "Rule" for Rule entities. */
+  entityType?: NestedRuleDtoEntityType;
   /**
    * Id of the object this object is derived from.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1498,28 +642,82 @@ export interface UpdateDecisionDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Timestamp when this rule record was last updated. */
+  updatedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Decision" for Decision entities.
+ */
+export type NestedDecisionDtoEntityType =
+  (typeof NestedDecisionDtoEntityType)[keyof typeof NestedDecisionDtoEntityType];
+
+export const NestedDecisionDtoEntityType = {
+  Decision: 'Decision',
+} as const;
+
+/**
+ * Current lifecycle state of the decision.
+ */
+export type NestedDecisionDtoState =
+  (typeof NestedDecisionDtoState)[keyof typeof NestedDecisionDtoState];
+
+export const NestedDecisionDtoState = {
+  open: 'open',
+  closed: 'closed',
+  rejected: 'rejected',
+  cancelled: 'cancelled',
+} as const;
+
+/**
+ * Decision. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedDecisionDto {
+  /**
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "Decision" for Decision entities. */
+  entityType?: NestedDecisionDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /**
    * ID of the object, proposal, rule, resource, or question being decided.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
    */
   subject?: string;
   /** Current lifecycle state of the decision. */
-  state?: UpdateDecisionDtoState;
+  state?: NestedDecisionDtoState;
   /**
    * Id of previous revision of this decision, If this decision is a modified version of another decision.
    * @pattern ^Decision/[^/\s]+$
    */
   previousRevisionId?: string;
   /** Current outcome of the decision, if the decision has produced an outcome at least once. */
-  previousRevision?: DecisionResponseDto;
+  previousRevision?: NestedDecisionDto;
   /** Member entities eligible to participate in this decision. */
-  eligibleMembers?: MemberResponseDto[];
+  eligibleMembers?: NestedMemberDto[];
   /** Member entities affected by this decision under the IFS scope rule. */
-  affectedMembers?: MemberResponseDto[];
+  affectedMembers?: NestedMemberDto[];
   /** Vote entities cast directly by members or by delegates acting on their behalf. */
-  votes?: VoteResponseDto[];
+  votes?: NestedVoteDto[];
   /** Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision. */
-  rules?: RuleResponseDto[];
+  rules?: NestedRuleDto[];
   /**
    * Snapshot count of members eligible to participate.
    * @minimum 0
@@ -1556,6 +754,1663 @@ export interface UpdateDecisionDto {
   updatedAt?: string;
   /** Timestamp when this decision record was decided. */
   decidedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Comment" for Comment entities.
+ */
+export type NestedCommentDtoEntityType =
+  (typeof NestedCommentDtoEntityType)[keyof typeof NestedCommentDtoEntityType];
+
+export const NestedCommentDtoEntityType = {
+  Comment: 'Comment',
+} as const;
+
+/**
+ * Comment. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedCommentDto {
+  /**
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "Comment" for Comment entities. */
+  entityType?: NestedCommentDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Timestamp when this comment was last updated. */
+  updatedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "ReviewComment" for ReviewComment entities.
+ */
+export type NestedReviewCommentDtoEntityType =
+  (typeof NestedReviewCommentDtoEntityType)[keyof typeof NestedReviewCommentDtoEntityType];
+
+export const NestedReviewCommentDtoEntityType = {
+  ReviewComment: 'ReviewComment',
+} as const;
+
+/**
+ * ReviewComment. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedReviewCommentDto {
+  /**
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
+  entityType?: NestedReviewCommentDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Timestamp when this review comment was last updated. */
+  updatedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Change" for Change entities.
+ */
+export type CreateChangeDtoEntityType =
+  (typeof CreateChangeDtoEntityType)[keyof typeof CreateChangeDtoEntityType];
+
+export const CreateChangeDtoEntityType = {
+  Change: 'Change',
+} as const;
+
+/**
+ * Lifecycle status of the change.
+ */
+export type CreateChangeDtoStatus =
+  (typeof CreateChangeDtoStatus)[keyof typeof CreateChangeDtoStatus];
+
+export const CreateChangeDtoStatus = {
+  drafted: 'drafted',
+  closed: 'closed',
+  open: 'open',
+  rejected: 'rejected',
+  approved: 'approved',
+  merged: 'merged',
+} as const;
+
+export interface CreateChangeDto {
+  /**
+   * Globally unique identifier for this change.
+   * @pattern ^Change/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Change" for Change entities. */
+  entityType: CreateChangeDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Human-readable title summarizing the proposed change. */
+  title: string;
+  /** Detailed explanation of what this change proposes and why it is needed. */
+  description: string;
+  /** Short explanation of what this change proposes and why it is needed. */
+  summary?: string;
+  /** explanation of why this change is being proposed. */
+  reason: string;
+  /** ChangeItem entities describing each proposed object-level operation in this change. */
+  changes: NestedChangeItemDto[];
+  /** Current decision about this change */
+  decision?: NestedDecisionDto;
+  /** Recent Comment entities for this change, such as the first page of comments. */
+  comments?: NestedCommentDto[];
+  /** URL where the full comment thread for this change can be fetched or viewed. */
+  commentsUrl?: string;
+  /** ReviewComment entities tied to changed objects, fields, records, or diff entries. */
+  reviewComments?: NestedReviewCommentDto[];
+  /** Member entities that authored or co-authored this change. */
+  authors: NestedMemberDto[];
+  /**
+   * Identifier of the primary member responsible for this change.
+   * @pattern ^Member/[^/\s]+$
+   */
+  mainAuthorId: string;
+  /** Primary member responsible for this change. */
+  mainAuthor: NestedMemberDto;
+  /** Member entities requested or assigned to review this change. */
+  reviewers?: NestedMemberDto[];
+  /** Lifecycle status of the change. */
+  status: CreateChangeDtoStatus;
+  /** URL showing a diff for all changed objects, similar to a GitHub pull request diff. */
+  diffUrl?: string;
+  /**
+   * Human-friendly sequence number for this change inside the relevant system or scope.
+   * @minimum 1
+   */
+  number: number;
+  /** Label assigned to this change. */
+  labels?: string[];
+  /** Whether this change has been merged into the target system state. */
+  merged: boolean;
+  /** Whether this change currently conflicts with another change or with the target system state. */
+  hasConflict: boolean;
+  /** Any links related to this change. */
+  links?: string[];
+  /** Timestamp when this change was last updated. */
+  updatedAt: string;
+  /** Optional timestamp when this change was merged. */
+  mergedAt?: string;
+  /** Optional timestamp when this change was closed without being merged. */
+  closedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "ChangeItem" for ChangeItem entities.
+ */
+export type ChangeItemResponseDtoEntityType =
+  (typeof ChangeItemResponseDtoEntityType)[keyof typeof ChangeItemResponseDtoEntityType];
+
+export const ChangeItemResponseDtoEntityType = {
+  ChangeItem: 'ChangeItem',
+} as const;
+
+/**
+ * Type of operation this item proposes for the target object.
+ */
+export type ChangeItemResponseDtoOperation =
+  (typeof ChangeItemResponseDtoOperation)[keyof typeof ChangeItemResponseDtoOperation];
+
+export const ChangeItemResponseDtoOperation = {
+  update: 'update',
+  create: 'create',
+  delete: 'delete',
+  replace: 'replace',
+} as const;
+
+export type ChangeItemResponseDto = (
+  | unknown
+  | {
+      /** @nullable */
+      targetId?: string | null;
+      /** @nullable */
+      baseId?: string | null;
+      proposedId?: string;
+    }
+) &
+  (
+    | unknown
+    | {
+        targetId?: string;
+        baseId?: string;
+        /** @nullable */
+        proposedId?: string | null;
+      }
+  ) &
+  (
+    | unknown
+    | {
+        targetId?: string;
+        baseId?: string;
+        proposedId?: string;
+      }
+  ) & {
+    /**
+     * Globally unique identifier for this change item.
+     * @pattern ^ChangeItem/[^/\s]+$
+     */
+    id: string;
+    /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
+    entityType: ChangeItemResponseDtoEntityType;
+    /**
+     * Id of the object this object is derived from.
+     * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+     */
+    basedOn?: string;
+    /** URL for documentation about this entity type. */
+    entityDocumentationUrl: string;
+    /** URL for documentation about this object instance */
+    documentationUrl?: string;
+    /** Timestamp when this entity record was created. */
+    createdAt: string;
+    /** Label codes associated with this entity. */
+    labelCodes: string[];
+    /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
+    resourceType: string;
+    /** Type of operation this item proposes for the target object. */
+    operation: ChangeItemResponseDtoOperation;
+    /**
+     * ID of the logical object being changed. Null for create operations.
+     * @nullable
+     * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+     */
+    targetId: string | null;
+    /**
+     * ID of the active version observed when authored, for conflict detection. Null for create operations.
+     * @nullable
+     * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+     */
+    baseId: string | null;
+    /**
+     * ID of the proposed object or version. Null for delete operations.
+     * @nullable
+     * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+     */
+    proposedId: string | null;
+    /** Optional human-readable note explaining this specific item. */
+    description?: string;
+    /** Timestamp when this change item was last updated. */
+    updatedAt: string;
+    [key: string]: unknown;
+  };
+
+/**
+ * Entity type discriminator. Always "Scope" for Scope entities.
+ */
+export type ScopeResponseDtoEntityType =
+  (typeof ScopeResponseDtoEntityType)[keyof typeof ScopeResponseDtoEntityType];
+
+export const ScopeResponseDtoEntityType = {
+  Scope: 'Scope',
+} as const;
+
+/**
+ * Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific.
+ */
+export type ScopeResponseDtoBoundaryRules = { [key: string]: unknown };
+
+export type ScopeResponseDto = unknown & {
+  /**
+   * Globally unique identifier for this scope.
+   * @pattern ^Scope/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Scope" for Scope entities. */
+  entityType: ScopeResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Human-readable name of the scope. */
+  name: string;
+  /** Optional human-readable explanation of what this scope includes and excludes. */
+  description?: string;
+  /** Location identifiers or names included in this scope. Kept as strings for now. */
+  locations?: string[];
+  /** Group identifiers or names included in this scope. Kept as strings for now. */
+  groups?: string[];
+  /** Object identifiers or names included in this scope. Kept as strings for now. */
+  objects?: string[];
+  /** Entity identifiers or names included in this scope. Kept as strings for now. */
+  entities?: string[];
+  /**
+   * Identifier of a broader parent scope, when this scope is nested inside another scope.
+   * @pattern ^Scope/[^/\s]+$
+   */
+  parentScopeId?: string;
+  /**
+   * Identifiers of narrower child scopes contained by this scope.
+   * @items.pattern ^Scope/[^/\s]+$
+   */
+  childScopeIds?: string[];
+  /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
+  boundaryRules?: ScopeResponseDtoBoundaryRules;
+  /** Timestamp when this scope record was last updated. */
+  updatedAt: string;
+  [key: string]: unknown;
+};
+
+/**
+ * Entity type discriminator. Always "Permission" for Permission entities.
+ */
+export type PermissionResponseDtoEntityType =
+  (typeof PermissionResponseDtoEntityType)[keyof typeof PermissionResponseDtoEntityType];
+
+export const PermissionResponseDtoEntityType = {
+  Permission: 'Permission',
+} as const;
+
+export type PermissionResponseDtoActionsItem =
+  | ActionResponseDto
+  | {
+      /**
+       * Globally unique identifier for this action.
+       * @pattern ^Action/[^/\s]+$
+       */
+      id: string;
+    };
+
+/**
+ * Scope object describing the system, project, process, area, or other bounded context where this permission applies.
+ */
+export type PermissionResponseDtoScope = { [key: string]: unknown };
+
+/**
+ * Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked.
+ */
+export type PermissionResponseDtoState =
+  (typeof PermissionResponseDtoState)[keyof typeof PermissionResponseDtoState];
+
+export const PermissionResponseDtoState = {
+  granted: 'granted',
+  'under-review': 'under-review',
+  revoked: 'revoked',
+  drafted: 'drafted',
+} as const;
+
+export interface PermissionResponseDto {
+  /**
+   * Globally unique identifier for this permission.
+   * @pattern ^Permission/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Permission" for Permission entities. */
+  entityType: PermissionResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /**
+   * ID list of actions that this permission allows
+   * @items.pattern ^Action/[^/\s]+$
+   */
+  actionIds: string[];
+  /** List of actions that this permission allows */
+  actions?: PermissionResponseDtoActionsItem[];
+  /**
+   * Identifier of the member receiving this permission.
+   * @pattern ^Member/[^/\s]+$
+   */
+  memberId?: string;
+  /**
+   * Identifier of the role receiving this permission.
+   * @pattern ^Role/[^/\s]+$
+   */
+  roleId?: string;
+  /**
+   * Identifier of the scope object where this permission applies.
+   * @pattern ^Scope/[^/\s]+$
+   */
+  scopeId: string;
+  /** Scope object describing the system, project, process, area, or other bounded context where this permission applies. */
+  scope?: PermissionResponseDtoScope;
+  /** Lifecycle state of the permission. Example values may include drafted, under-review, active, suspended, or revoked. */
+  state: PermissionResponseDtoState;
+  /** Timestamp when this permission record was last updated. */
+  updatedAt?: string;
+  /** Optional timestamp after which this permission no longer applies. */
+  expiresAt: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Role" for Role entities.
+ */
+export type RoleResponseDtoEntityType =
+  (typeof RoleResponseDtoEntityType)[keyof typeof RoleResponseDtoEntityType];
+
+export const RoleResponseDtoEntityType = {
+  Role: 'Role',
+} as const;
+
+/**
+ * Scope entity describing where this role applies.
+ */
+export type RoleResponseDtoScope =
+  | ScopeResponseDto
+  | {
+      /**
+       * Globally unique identifier for this scope.
+       * @pattern ^Scope/[^/\s]+$
+       */
+      id: string;
+    };
+
+export type RoleResponseDtoPermissionsItem =
+  | PermissionResponseDto
+  | {
+      /**
+       * Globally unique identifier for this permission.
+       * @pattern ^Permission/[^/\s]+$
+       */
+      id: string;
+    };
+
+/**
+ * Lifecycle state of the role.
+ */
+export type RoleResponseDtoState =
+  (typeof RoleResponseDtoState)[keyof typeof RoleResponseDtoState];
+
+export const RoleResponseDtoState = {
+  drafted: 'drafted',
+  'under-review': 'under-review',
+  active: 'active',
+  suspended: 'suspended',
+  revoked: 'revoked',
+  expired: 'expired',
+} as const;
+
+export interface RoleResponseDto {
+  /**
+   * Globally unique identifier for this role.
+   * @pattern ^Role/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Role" for Role entities. */
+  entityType: RoleResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Human-readable name of the role. */
+  name: string;
+  /** Optional human-readable explanation of what this role is for. */
+  description?: string;
+  /**
+   * Identifier of the member acting through this role.
+   * @pattern ^Member/[^/\s]+$
+   */
+  memberId: string;
+  /**
+   * Identifier of the scope where this role has authority.
+   * @pattern ^Scope/[^/\s]+$
+   */
+  scopeId: string;
+  /** Scope entity describing where this role applies. */
+  scope: RoleResponseDtoScope;
+  /** Permission entities bundled into this role. */
+  permissions: RoleResponseDtoPermissionsItem[];
+  /** Lifecycle state of the role. */
+  state: RoleResponseDtoState;
+  /** Timestamp when this role record was last updated. */
+  updatedAt: string;
+  /** Optional timestamp after which this role no longer applies. */
+  expiresAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Member" for Member entities.
+ */
+export type MemberResponseDtoEntityType =
+  (typeof MemberResponseDtoEntityType)[keyof typeof MemberResponseDtoEntityType];
+
+export const MemberResponseDtoEntityType = {
+  Member: 'Member',
+} as const;
+
+export type MemberResponseDtoRolesItem =
+  | RoleResponseDto
+  | {
+      /**
+       * Globally unique identifier for this role.
+       * @pattern ^Role/[^/\s]+$
+       */
+      id: string;
+    };
+
+export type MemberResponseDtoPermissionsItem =
+  | PermissionResponseDto
+  | {
+      /**
+       * Globally unique identifier for this permission.
+       * @pattern ^Permission/[^/\s]+$
+       */
+      id: string;
+    };
+
+export interface MemberResponseDto {
+  /**
+   * Globally unique identifier for this member.
+   * @pattern ^Member/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Member" for Member entities. */
+  entityType: MemberResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Human-readable name of the member. */
+  name: string;
+  readonly roles: readonly MemberResponseDtoRolesItem[];
+  permissions: MemberResponseDtoPermissionsItem[];
+  /** Whether this member is considered an owner of the system. */
+  isOwner: boolean;
+  /** Timestamp when this member record was last updated. */
+  updatedAt: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Vote" for Vote entities.
+ */
+export type VoteResponseDtoEntityType =
+  (typeof VoteResponseDtoEntityType)[keyof typeof VoteResponseDtoEntityType];
+
+export const VoteResponseDtoEntityType = {
+  Vote: 'Vote',
+} as const;
+
+export interface VoteResponseDto {
+  /**
+   * Globally unique identifier for this vote.
+   * @pattern ^Vote/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Vote" for Vote entities. */
+  entityType: VoteResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Timestamp when this vote record was last updated. */
+  updatedAt: string;
+  /**
+   * Identifier of the decision this vote participates in.
+   * @pattern ^Decision/[^/\s]+$
+   */
+  decisionId: string;
+  /**
+   * Identifier of the member who cast or owns this vote.
+   * @pattern ^Member/[^/\s]+$
+   */
+  memberId: string;
+  /** Vote value recorded for the decision, such as an implementation-defined choice or consent signal. */
+  value: string;
+  /**
+   * Identifier of the previous revision of this vote, if this vote amends an earlier vote.
+   * @pattern ^Vote/[^/\s]+$
+   */
+  previousRevisionId?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Rule" for Rule entities.
+ */
+export type RuleResponseDtoEntityType =
+  (typeof RuleResponseDtoEntityType)[keyof typeof RuleResponseDtoEntityType];
+
+export const RuleResponseDtoEntityType = {
+  Rule: 'Rule',
+} as const;
+
+export interface RuleResponseDto {
+  /**
+   * Globally unique identifier for this rule.
+   * @pattern ^Rule/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Rule" for Rule entities. */
+  entityType: RuleResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Timestamp when this rule record was last updated. */
+  updatedAt: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Decision" for Decision entities.
+ */
+export type DecisionResponseDtoEntityType =
+  (typeof DecisionResponseDtoEntityType)[keyof typeof DecisionResponseDtoEntityType];
+
+export const DecisionResponseDtoEntityType = {
+  Decision: 'Decision',
+} as const;
+
+/**
+ * Current lifecycle state of the decision.
+ */
+export type DecisionResponseDtoState =
+  (typeof DecisionResponseDtoState)[keyof typeof DecisionResponseDtoState];
+
+export const DecisionResponseDtoState = {
+  open: 'open',
+  closed: 'closed',
+  rejected: 'rejected',
+  cancelled: 'cancelled',
+} as const;
+
+export type DecisionResponseDtoEligibleMembersItem =
+  | MemberResponseDto
+  | {
+      /**
+       * Globally unique identifier for this member.
+       * @pattern ^Member/[^/\s]+$
+       */
+      id: string;
+    };
+
+export type DecisionResponseDtoAffectedMembersItem =
+  | MemberResponseDto
+  | {
+      /**
+       * Globally unique identifier for this member.
+       * @pattern ^Member/[^/\s]+$
+       */
+      id: string;
+    };
+
+export type DecisionResponseDtoVotesItem =
+  | VoteResponseDto
+  | {
+      /**
+       * Globally unique identifier for this vote.
+       * @pattern ^Vote/[^/\s]+$
+       */
+      id: string;
+    };
+
+export type DecisionResponseDtoRulesItem =
+  | RuleResponseDto
+  | {
+      /**
+       * Globally unique identifier for this rule.
+       * @pattern ^Rule/[^/\s]+$
+       */
+      id: string;
+    };
+
+export interface DecisionResponseDto {
+  /**
+   * Globally unique identifier for this decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Decision" for Decision entities. */
+  entityType: DecisionResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /**
+   * ID of the object, proposal, rule, resource, or question being decided.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  subject: string;
+  /** Current lifecycle state of the decision. */
+  state: DecisionResponseDtoState;
+  /**
+   * Id of previous revision of this decision, If this decision is a modified version of another decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
+  previousRevisionId?: string;
+  /** Current outcome of the decision, if the decision has produced an outcome at least once. */
+  previousRevision?: DecisionResponseDtoPreviousRevision;
+  /** Member entities eligible to participate in this decision. */
+  eligibleMembers: DecisionResponseDtoEligibleMembersItem[];
+  /** Member entities affected by this decision under the IFS scope rule. */
+  affectedMembers: DecisionResponseDtoAffectedMembersItem[];
+  /** Vote entities cast directly by members or by delegates acting on their behalf. */
+  votes: DecisionResponseDtoVotesItem[];
+  /** Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision. */
+  rules?: DecisionResponseDtoRulesItem[];
+  /**
+   * Snapshot count of members eligible to participate.
+   * @minimum 0
+   */
+  eligibleMemberCount: number;
+  /**
+   * Snapshot count of members affected by this decision.
+   * @minimum 0
+   */
+  affectedMemberCount: number;
+  /**
+   * Snapshot count of votes currently recorded for this decision.
+   * @minimum 0
+   */
+  voteCount: number;
+  /**
+   * Snapshot count of votes cast by delegates on behalf of eligible members.
+   * @minimum 0
+   */
+  delegateVoteCount?: number;
+  /** Timestamp when this decision opened for participation. */
+  openedAt: string;
+  /** Optional timestamp when this decision closed. */
+  closedAt?: string;
+  /** Optional timestamp when this decision was cancelled. */
+  cancelledAt?: string;
+  /** Optional timestamp when participation, vote data, or outcome was verified. */
+  verifiedAt?: string;
+  /** Optional timestamp when this decision produced an approved outcome. */
+  approvedAt?: string;
+  /** Optional timestamp when this decision was rejected or produced a rejected outcome. */
+  rejectedAt?: string;
+  /** Timestamp when this decision record was last updated. */
+  updatedAt: string;
+  /** Timestamp when this decision record was decided. */
+  decidedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Current outcome of the decision, if the decision has produced an outcome at least once.
+ */
+export type DecisionResponseDtoPreviousRevision =
+  | DecisionResponseDto
+  | {
+      /**
+       * Globally unique identifier for this decision.
+       * @pattern ^Decision/[^/\s]+$
+       */
+      id: string;
+    };
+
+/**
+ * Entity type discriminator. Always "Comment" for Comment entities.
+ */
+export type CommentResponseDtoEntityType =
+  (typeof CommentResponseDtoEntityType)[keyof typeof CommentResponseDtoEntityType];
+
+export const CommentResponseDtoEntityType = {
+  Comment: 'Comment',
+} as const;
+
+export interface CommentResponseDto {
+  /**
+   * Globally unique identifier for this comment.
+   * @pattern ^Comment/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Comment" for Comment entities. */
+  entityType: CommentResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Timestamp when this comment was last updated. */
+  updatedAt: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "ReviewComment" for ReviewComment entities.
+ */
+export type ReviewCommentResponseDtoEntityType =
+  (typeof ReviewCommentResponseDtoEntityType)[keyof typeof ReviewCommentResponseDtoEntityType];
+
+export const ReviewCommentResponseDtoEntityType = {
+  ReviewComment: 'ReviewComment',
+} as const;
+
+export interface ReviewCommentResponseDto {
+  /**
+   * Globally unique identifier for this review comment.
+   * @pattern ^ReviewComment/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
+  entityType: ReviewCommentResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Timestamp when this review comment was last updated. */
+  updatedAt: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Change" for Change entities.
+ */
+export type ChangeResponseDtoEntityType =
+  (typeof ChangeResponseDtoEntityType)[keyof typeof ChangeResponseDtoEntityType];
+
+export const ChangeResponseDtoEntityType = {
+  Change: 'Change',
+} as const;
+
+export type ChangeResponseDtoChangesItem =
+  | ChangeItemResponseDto
+  | {
+      /**
+       * Globally unique identifier for this change item.
+       * @pattern ^ChangeItem/[^/\s]+$
+       */
+      id: string;
+    };
+
+/**
+ * Current decision about this change
+ */
+export type ChangeResponseDtoDecision =
+  | DecisionResponseDto
+  | {
+      /**
+       * Globally unique identifier for this decision.
+       * @pattern ^Decision/[^/\s]+$
+       */
+      id: string;
+    };
+
+export type ChangeResponseDtoCommentsItem =
+  | CommentResponseDto
+  | {
+      /**
+       * Globally unique identifier for this comment.
+       * @pattern ^Comment/[^/\s]+$
+       */
+      id: string;
+    };
+
+export type ChangeResponseDtoReviewCommentsItem =
+  | ReviewCommentResponseDto
+  | {
+      /**
+       * Globally unique identifier for this review comment.
+       * @pattern ^ReviewComment/[^/\s]+$
+       */
+      id: string;
+    };
+
+export type ChangeResponseDtoAuthorsItem =
+  | MemberResponseDto
+  | {
+      /**
+       * Globally unique identifier for this member.
+       * @pattern ^Member/[^/\s]+$
+       */
+      id: string;
+    };
+
+/**
+ * Primary member responsible for this change.
+ */
+export type ChangeResponseDtoMainAuthor =
+  | MemberResponseDto
+  | {
+      /**
+       * Globally unique identifier for this member.
+       * @pattern ^Member/[^/\s]+$
+       */
+      id: string;
+    };
+
+export type ChangeResponseDtoReviewersItem =
+  | MemberResponseDto
+  | {
+      /**
+       * Globally unique identifier for this member.
+       * @pattern ^Member/[^/\s]+$
+       */
+      id: string;
+    };
+
+/**
+ * Lifecycle status of the change.
+ */
+export type ChangeResponseDtoStatus =
+  (typeof ChangeResponseDtoStatus)[keyof typeof ChangeResponseDtoStatus];
+
+export const ChangeResponseDtoStatus = {
+  drafted: 'drafted',
+  closed: 'closed',
+  open: 'open',
+  rejected: 'rejected',
+  approved: 'approved',
+  merged: 'merged',
+} as const;
+
+export interface ChangeResponseDto {
+  /**
+   * Globally unique identifier for this change.
+   * @pattern ^Change/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Change" for Change entities. */
+  entityType: ChangeResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Human-readable title summarizing the proposed change. */
+  title: string;
+  /** Detailed explanation of what this change proposes and why it is needed. */
+  description: string;
+  /** Short explanation of what this change proposes and why it is needed. */
+  summary?: string;
+  /** explanation of why this change is being proposed. */
+  reason: string;
+  /** ChangeItem entities describing each proposed object-level operation in this change. */
+  changes: ChangeResponseDtoChangesItem[];
+  /** Current decision about this change */
+  decision?: ChangeResponseDtoDecision;
+  /** Recent Comment entities for this change, such as the first page of comments. */
+  comments?: ChangeResponseDtoCommentsItem[];
+  /** URL where the full comment thread for this change can be fetched or viewed. */
+  commentsUrl?: string;
+  /** ReviewComment entities tied to changed objects, fields, records, or diff entries. */
+  reviewComments?: ChangeResponseDtoReviewCommentsItem[];
+  /** Member entities that authored or co-authored this change. */
+  authors: ChangeResponseDtoAuthorsItem[];
+  /**
+   * Identifier of the primary member responsible for this change.
+   * @pattern ^Member/[^/\s]+$
+   */
+  mainAuthorId: string;
+  /** Primary member responsible for this change. */
+  mainAuthor: ChangeResponseDtoMainAuthor;
+  /** Member entities requested or assigned to review this change. */
+  reviewers?: ChangeResponseDtoReviewersItem[];
+  /** Lifecycle status of the change. */
+  status: ChangeResponseDtoStatus;
+  /** URL showing a diff for all changed objects, similar to a GitHub pull request diff. */
+  diffUrl?: string;
+  /**
+   * Human-friendly sequence number for this change inside the relevant system or scope.
+   * @minimum 1
+   */
+  number: number;
+  /** Label assigned to this change. */
+  labels?: string[];
+  /** Whether this change has been merged into the target system state. */
+  merged: boolean;
+  /** Whether this change currently conflicts with another change or with the target system state. */
+  hasConflict: boolean;
+  /** Any links related to this change. */
+  links?: string[];
+  /** Timestamp when this change was last updated. */
+  updatedAt: string;
+  /** Optional timestamp when this change was merged. */
+  mergedAt?: string;
+  /** Optional timestamp when this change was closed without being merged. */
+  closedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Change" for Change entities.
+ */
+export type UpdateChangeDtoEntityType =
+  (typeof UpdateChangeDtoEntityType)[keyof typeof UpdateChangeDtoEntityType];
+
+export const UpdateChangeDtoEntityType = {
+  Change: 'Change',
+} as const;
+
+/**
+ * Lifecycle status of the change.
+ */
+export type UpdateChangeDtoStatus =
+  (typeof UpdateChangeDtoStatus)[keyof typeof UpdateChangeDtoStatus];
+
+export const UpdateChangeDtoStatus = {
+  drafted: 'drafted',
+  closed: 'closed',
+  open: 'open',
+  rejected: 'rejected',
+  approved: 'approved',
+  merged: 'merged',
+} as const;
+
+/**
+ * Change. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface UpdateChangeDto {
+  /**
+   * Globally unique identifier for this change.
+   * @pattern ^Change/[^/\s]+$
+   */
+  id?: string;
+  /** Entity type discriminator. Always "Change" for Change entities. */
+  entityType?: UpdateChangeDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Human-readable title summarizing the proposed change. */
+  title?: string;
+  /** Detailed explanation of what this change proposes and why it is needed. */
+  description?: string;
+  /** Short explanation of what this change proposes and why it is needed. */
+  summary?: string;
+  /** explanation of why this change is being proposed. */
+  reason?: string;
+  /** ChangeItem entities describing each proposed object-level operation in this change. */
+  changes?: NestedChangeItemDto[];
+  /** Current decision about this change */
+  decision?: NestedDecisionDto;
+  /** Recent Comment entities for this change, such as the first page of comments. */
+  comments?: NestedCommentDto[];
+  /** URL where the full comment thread for this change can be fetched or viewed. */
+  commentsUrl?: string;
+  /** ReviewComment entities tied to changed objects, fields, records, or diff entries. */
+  reviewComments?: NestedReviewCommentDto[];
+  /** Member entities that authored or co-authored this change. */
+  authors?: NestedMemberDto[];
+  /**
+   * Identifier of the primary member responsible for this change.
+   * @pattern ^Member/[^/\s]+$
+   */
+  mainAuthorId?: string;
+  /** Primary member responsible for this change. */
+  mainAuthor?: NestedMemberDto;
+  /** Member entities requested or assigned to review this change. */
+  reviewers?: NestedMemberDto[];
+  /** Lifecycle status of the change. */
+  status?: UpdateChangeDtoStatus;
+  /** URL showing a diff for all changed objects, similar to a GitHub pull request diff. */
+  diffUrl?: string;
+  /**
+   * Human-friendly sequence number for this change inside the relevant system or scope.
+   * @minimum 1
+   */
+  number?: number;
+  /** Label assigned to this change. */
+  labels?: string[];
+  /** Whether this change has been merged into the target system state. */
+  merged?: boolean;
+  /** Whether this change currently conflicts with another change or with the target system state. */
+  hasConflict?: boolean;
+  /** Any links related to this change. */
+  links?: string[];
+  /** Timestamp when this change was last updated. */
+  updatedAt?: string;
+  /** Optional timestamp when this change was merged. */
+  mergedAt?: string;
+  /** Optional timestamp when this change was closed without being merged. */
+  closedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "ChangeItem" for ChangeItem entities.
+ */
+export type CreateChangeItemDtoEntityType =
+  (typeof CreateChangeItemDtoEntityType)[keyof typeof CreateChangeItemDtoEntityType];
+
+export const CreateChangeItemDtoEntityType = {
+  ChangeItem: 'ChangeItem',
+} as const;
+
+/**
+ * Type of operation this item proposes for the target object.
+ */
+export type CreateChangeItemDtoOperation =
+  (typeof CreateChangeItemDtoOperation)[keyof typeof CreateChangeItemDtoOperation];
+
+export const CreateChangeItemDtoOperation = {
+  update: 'update',
+  create: 'create',
+  delete: 'delete',
+  replace: 'replace',
+} as const;
+
+export type CreateChangeItemDto = (
+  | unknown
+  | {
+      /** @nullable */
+      targetId?: string | null;
+      /** @nullable */
+      baseId?: string | null;
+      proposedId?: string;
+    }
+) &
+  (
+    | unknown
+    | {
+        targetId?: string;
+        baseId?: string;
+        /** @nullable */
+        proposedId?: string | null;
+      }
+  ) &
+  (
+    | unknown
+    | {
+        targetId?: string;
+        baseId?: string;
+        proposedId?: string;
+      }
+  ) & {
+    /**
+     * Globally unique identifier for this change item.
+     * @pattern ^ChangeItem/[^/\s]+$
+     */
+    id: string;
+    /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
+    entityType: CreateChangeItemDtoEntityType;
+    /**
+     * Id of the object this object is derived from.
+     * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+     */
+    basedOn?: string;
+    /** URL for documentation about this entity type. */
+    entityDocumentationUrl: string;
+    /** URL for documentation about this object instance */
+    documentationUrl?: string;
+    /** Timestamp when this entity record was created. */
+    createdAt: string;
+    /** Label codes associated with this entity. */
+    labelCodes: string[];
+    /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
+    resourceType: string;
+    /** Type of operation this item proposes for the target object. */
+    operation: CreateChangeItemDtoOperation;
+    /**
+     * ID of the logical object being changed. Null for create operations.
+     * @nullable
+     * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+     */
+    targetId: string | null;
+    /**
+     * ID of the active version observed when authored, for conflict detection. Null for create operations.
+     * @nullable
+     * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+     */
+    baseId: string | null;
+    /**
+     * ID of the proposed object or version. Null for delete operations.
+     * @nullable
+     * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+     */
+    proposedId: string | null;
+    /** Optional human-readable note explaining this specific item. */
+    description?: string;
+    /** Timestamp when this change item was last updated. */
+    updatedAt: string;
+    [key: string]: unknown;
+  };
+
+/**
+ * Entity type discriminator. Always "ChangeItem" for ChangeItem entities.
+ */
+export type UpdateChangeItemDtoEntityType =
+  (typeof UpdateChangeItemDtoEntityType)[keyof typeof UpdateChangeItemDtoEntityType];
+
+export const UpdateChangeItemDtoEntityType = {
+  ChangeItem: 'ChangeItem',
+} as const;
+
+/**
+ * Type of operation this item proposes for the target object.
+ */
+export type UpdateChangeItemDtoOperation =
+  (typeof UpdateChangeItemDtoOperation)[keyof typeof UpdateChangeItemDtoOperation];
+
+export const UpdateChangeItemDtoOperation = {
+  update: 'update',
+  create: 'create',
+  delete: 'delete',
+  replace: 'replace',
+} as const;
+
+/**
+ * ChangeItem. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface UpdateChangeItemDto {
+  /**
+   * Globally unique identifier for this change item.
+   * @pattern ^ChangeItem/[^/\s]+$
+   */
+  id?: string;
+  /** Entity type discriminator. Always "ChangeItem" for ChangeItem entities. */
+  entityType?: UpdateChangeItemDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
+  resourceType?: string;
+  /** Type of operation this item proposes for the target object. */
+  operation?: UpdateChangeItemDtoOperation;
+  /**
+   * ID of the logical object being changed. Null for create operations.
+   * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  targetId?: string | null;
+  /**
+   * ID of the active version observed when authored, for conflict detection. Null for create operations.
+   * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  baseId?: string | null;
+  /**
+   * ID of the proposed object or version. Null for delete operations.
+   * @nullable
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  proposedId?: string | null;
+  /** Optional human-readable note explaining this specific item. */
+  description?: string;
+  /** Timestamp when this change item was last updated. */
+  updatedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Comment" for Comment entities.
+ */
+export type CreateCommentDtoEntityType =
+  (typeof CreateCommentDtoEntityType)[keyof typeof CreateCommentDtoEntityType];
+
+export const CreateCommentDtoEntityType = {
+  Comment: 'Comment',
+} as const;
+
+export interface CreateCommentDto {
+  /**
+   * Globally unique identifier for this comment.
+   * @pattern ^Comment/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Comment" for Comment entities. */
+  entityType: CreateCommentDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Timestamp when this comment was last updated. */
+  updatedAt: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Comment" for Comment entities.
+ */
+export type UpdateCommentDtoEntityType =
+  (typeof UpdateCommentDtoEntityType)[keyof typeof UpdateCommentDtoEntityType];
+
+export const UpdateCommentDtoEntityType = {
+  Comment: 'Comment',
+} as const;
+
+/**
+ * Comment. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface UpdateCommentDto {
+  /**
+   * Globally unique identifier for this comment.
+   * @pattern ^Comment/[^/\s]+$
+   */
+  id?: string;
+  /** Entity type discriminator. Always "Comment" for Comment entities. */
+  entityType?: UpdateCommentDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Timestamp when this comment was last updated. */
+  updatedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Decision" for Decision entities.
+ */
+export type CreateDecisionDtoEntityType =
+  (typeof CreateDecisionDtoEntityType)[keyof typeof CreateDecisionDtoEntityType];
+
+export const CreateDecisionDtoEntityType = {
+  Decision: 'Decision',
+} as const;
+
+/**
+ * Current lifecycle state of the decision.
+ */
+export type CreateDecisionDtoState =
+  (typeof CreateDecisionDtoState)[keyof typeof CreateDecisionDtoState];
+
+export const CreateDecisionDtoState = {
+  open: 'open',
+  closed: 'closed',
+  rejected: 'rejected',
+  cancelled: 'cancelled',
+} as const;
+
+export interface CreateDecisionDto {
+  /**
+   * Globally unique identifier for this decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Decision" for Decision entities. */
+  entityType: CreateDecisionDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /**
+   * ID of the object, proposal, rule, resource, or question being decided.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  subject: string;
+  /** Current lifecycle state of the decision. */
+  state: CreateDecisionDtoState;
+  /**
+   * Id of previous revision of this decision, If this decision is a modified version of another decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
+  previousRevisionId?: string;
+  /** Current outcome of the decision, if the decision has produced an outcome at least once. */
+  previousRevision?: NestedDecisionDto;
+  /** Member entities eligible to participate in this decision. */
+  eligibleMembers: NestedMemberDto[];
+  /** Member entities affected by this decision under the IFS scope rule. */
+  affectedMembers: NestedMemberDto[];
+  /** Vote entities cast directly by members or by delegates acting on their behalf. */
+  votes: NestedVoteDto[];
+  /** Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision. */
+  rules?: NestedRuleDto[];
+  /**
+   * Snapshot count of members eligible to participate.
+   * @minimum 0
+   */
+  eligibleMemberCount: number;
+  /**
+   * Snapshot count of members affected by this decision.
+   * @minimum 0
+   */
+  affectedMemberCount: number;
+  /**
+   * Snapshot count of votes currently recorded for this decision.
+   * @minimum 0
+   */
+  voteCount: number;
+  /**
+   * Snapshot count of votes cast by delegates on behalf of eligible members.
+   * @minimum 0
+   */
+  delegateVoteCount?: number;
+  /** Timestamp when this decision opened for participation. */
+  openedAt: string;
+  /** Optional timestamp when this decision closed. */
+  closedAt?: string;
+  /** Optional timestamp when this decision was cancelled. */
+  cancelledAt?: string;
+  /** Optional timestamp when participation, vote data, or outcome was verified. */
+  verifiedAt?: string;
+  /** Optional timestamp when this decision produced an approved outcome. */
+  approvedAt?: string;
+  /** Optional timestamp when this decision was rejected or produced a rejected outcome. */
+  rejectedAt?: string;
+  /** Timestamp when this decision record was last updated. */
+  updatedAt: string;
+  /** Timestamp when this decision record was decided. */
+  decidedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Decision" for Decision entities.
+ */
+export type UpdateDecisionDtoEntityType =
+  (typeof UpdateDecisionDtoEntityType)[keyof typeof UpdateDecisionDtoEntityType];
+
+export const UpdateDecisionDtoEntityType = {
+  Decision: 'Decision',
+} as const;
+
+/**
+ * Current lifecycle state of the decision.
+ */
+export type UpdateDecisionDtoState =
+  (typeof UpdateDecisionDtoState)[keyof typeof UpdateDecisionDtoState];
+
+export const UpdateDecisionDtoState = {
+  open: 'open',
+  closed: 'closed',
+  rejected: 'rejected',
+  cancelled: 'cancelled',
+} as const;
+
+/**
+ * Decision. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface UpdateDecisionDto {
+  /**
+   * Globally unique identifier for this decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
+  id?: string;
+  /** Entity type discriminator. Always "Decision" for Decision entities. */
+  entityType?: UpdateDecisionDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /**
+   * ID of the object, proposal, rule, resource, or question being decided.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  subject?: string;
+  /** Current lifecycle state of the decision. */
+  state?: UpdateDecisionDtoState;
+  /**
+   * Id of previous revision of this decision, If this decision is a modified version of another decision.
+   * @pattern ^Decision/[^/\s]+$
+   */
+  previousRevisionId?: string;
+  /** Current outcome of the decision, if the decision has produced an outcome at least once. */
+  previousRevision?: NestedDecisionDto;
+  /** Member entities eligible to participate in this decision. */
+  eligibleMembers?: NestedMemberDto[];
+  /** Member entities affected by this decision under the IFS scope rule. */
+  affectedMembers?: NestedMemberDto[];
+  /** Vote entities cast directly by members or by delegates acting on their behalf. */
+  votes?: NestedVoteDto[];
+  /** Rule entities that govern eligibility, delegation, quorum, thresholds, timing, or outcome calculation for this decision. */
+  rules?: NestedRuleDto[];
+  /**
+   * Snapshot count of members eligible to participate.
+   * @minimum 0
+   */
+  eligibleMemberCount?: number;
+  /**
+   * Snapshot count of members affected by this decision.
+   * @minimum 0
+   */
+  affectedMemberCount?: number;
+  /**
+   * Snapshot count of votes currently recorded for this decision.
+   * @minimum 0
+   */
+  voteCount?: number;
+  /**
+   * Snapshot count of votes cast by delegates on behalf of eligible members.
+   * @minimum 0
+   */
+  delegateVoteCount?: number;
+  /** Timestamp when this decision opened for participation. */
+  openedAt?: string;
+  /** Optional timestamp when this decision closed. */
+  closedAt?: string;
+  /** Optional timestamp when this decision was cancelled. */
+  cancelledAt?: string;
+  /** Optional timestamp when participation, vote data, or outcome was verified. */
+  verifiedAt?: string;
+  /** Optional timestamp when this decision produced an approved outcome. */
+  approvedAt?: string;
+  /** Optional timestamp when this decision was rejected or produced a rejected outcome. */
+  rejectedAt?: string;
+  /** Timestamp when this decision record was last updated. */
+  updatedAt?: string;
+  /** Timestamp when this decision record was decided. */
+  decidedAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -1585,7 +2440,7 @@ export interface CreateDelegationDto {
    * Globally unique identifier for this delegation.
    * @pattern ^Delegation/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Delegation" for Delegation entities. */
   entityType: CreateDelegationDtoEntityType;
   /**
@@ -1599,6 +2454,8 @@ export interface CreateDelegationDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this delegation record was last updated. */
   updatedAt?: string;
   /**
@@ -1607,7 +2464,7 @@ export interface CreateDelegationDto {
    */
   permissionId: string;
   /** Permission entity represented by permissionId when expanded by an implementation. */
-  permission?: PermissionResponseDto;
+  permission?: NestedPermissionDto;
   /**
    * ID of the role or member delegating the permission.
    * @pattern ^(Role|Member)/[^/\s]+$
@@ -1624,6 +2481,7 @@ export interface CreateDelegationDto {
   revokedAt?: string;
   /** Optional timestamp after which this delegation no longer applies. */
   expiresAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -1635,6 +2493,19 @@ export type DelegationResponseDtoEntityType =
 export const DelegationResponseDtoEntityType = {
   Delegation: 'Delegation',
 } as const;
+
+/**
+ * Permission entity represented by permissionId when expanded by an implementation.
+ */
+export type DelegationResponseDtoPermission =
+  | PermissionResponseDto
+  | {
+      /**
+       * Globally unique identifier for this permission.
+       * @pattern ^Permission/[^/\s]+$
+       */
+      id: string;
+    };
 
 /**
  * Lifecycle state of the delegation.
@@ -1653,7 +2524,7 @@ export interface DelegationResponseDto {
    * Globally unique identifier for this delegation.
    * @pattern ^Delegation/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Delegation" for Delegation entities. */
   entityType: DelegationResponseDtoEntityType;
   /**
@@ -1667,6 +2538,8 @@ export interface DelegationResponseDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this delegation record was last updated. */
   updatedAt?: string;
   /**
@@ -1675,7 +2548,7 @@ export interface DelegationResponseDto {
    */
   permissionId: string;
   /** Permission entity represented by permissionId when expanded by an implementation. */
-  permission?: PermissionResponseDto;
+  permission?: DelegationResponseDtoPermission;
   /**
    * ID of the role or member delegating the permission.
    * @pattern ^(Role|Member)/[^/\s]+$
@@ -1692,6 +2565,7 @@ export interface DelegationResponseDto {
   revokedAt?: string;
   /** Optional timestamp after which this delegation no longer applies. */
   expiresAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -1716,12 +2590,15 @@ export const UpdateDelegationDtoState = {
   expired: 'expired',
 } as const;
 
+/**
+ * Delegation. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateDelegationDto {
   /**
    * Globally unique identifier for this delegation.
    * @pattern ^Delegation/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Delegation" for Delegation entities. */
   entityType?: UpdateDelegationDtoEntityType;
   /**
@@ -1735,6 +2612,8 @@ export interface UpdateDelegationDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Timestamp when this delegation record was last updated. */
   updatedAt?: string;
   /**
@@ -1743,7 +2622,7 @@ export interface UpdateDelegationDto {
    */
   permissionId?: string;
   /** Permission entity represented by permissionId when expanded by an implementation. */
-  permission?: PermissionResponseDto;
+  permission?: NestedPermissionDto;
   /**
    * ID of the role or member delegating the permission.
    * @pattern ^(Role|Member)/[^/\s]+$
@@ -1760,6 +2639,7 @@ export interface UpdateDelegationDto {
   revokedAt?: string;
   /** Optional timestamp after which this delegation no longer applies. */
   expiresAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -1777,7 +2657,7 @@ export interface CreateGeographicAreaDto {
    * Globally unique identifier for this geographic area.
    * @pattern ^GeographicArea/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Geographic Area" for Geographic Area entities. */
   entityType: CreateGeographicAreaDtoEntityType;
   /**
@@ -1791,6 +2671,8 @@ export interface CreateGeographicAreaDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this geographic area record was last updated. */
   updatedAt: string;
   /**
@@ -1800,6 +2682,7 @@ export interface CreateGeographicAreaDto {
    * @items.items.items.maxItems 3
    */
   polygons: number[][][][];
+  [key: string]: unknown;
 }
 
 /**
@@ -1817,7 +2700,7 @@ export interface GeographicAreaResponseDto {
    * Globally unique identifier for this geographic area.
    * @pattern ^GeographicArea/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Geographic Area" for Geographic Area entities. */
   entityType: GeographicAreaResponseDtoEntityType;
   /**
@@ -1831,6 +2714,8 @@ export interface GeographicAreaResponseDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this geographic area record was last updated. */
   updatedAt: string;
   /**
@@ -1840,6 +2725,7 @@ export interface GeographicAreaResponseDto {
    * @items.items.items.maxItems 3
    */
   polygons: number[][][][];
+  [key: string]: unknown;
 }
 
 /**
@@ -1852,12 +2738,15 @@ export const UpdateGeographicAreaDtoEntityType = {
   Geographic_Area: 'Geographic Area',
 } as const;
 
+/**
+ * Geographic Area. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateGeographicAreaDto {
   /**
    * Globally unique identifier for this geographic area.
    * @pattern ^GeographicArea/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Geographic Area" for Geographic Area entities. */
   entityType?: UpdateGeographicAreaDtoEntityType;
   /**
@@ -1871,6 +2760,8 @@ export interface UpdateGeographicAreaDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Timestamp when this geographic area record was last updated. */
   updatedAt?: string;
   /**
@@ -1880,6 +2771,7 @@ export interface UpdateGeographicAreaDto {
    * @items.items.items.maxItems 3
    */
   polygons?: number[][][][];
+  [key: string]: unknown;
 }
 
 /**
@@ -1892,12 +2784,15 @@ export const CreateGroupDtoEntityType = {
   Group: 'Group',
 } as const;
 
+/**
+ * A named grouping of members, organizations, or subgroups. Direct membership and subgroup inclusion are recorded as Relationship objects, not embedded collections. Each relationship connects the included entity to this group using a RelationshipType that allows those endpoint types, with startedAt and optional endedAt recording its duration. Membership and containment alone do not grant delegated authority or imply transitive membership.
+ */
 export interface CreateGroupDto {
   /**
    * Globally unique identifier for this group.
    * @pattern ^Group/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Group" for Group entities. */
   entityType: CreateGroupDtoEntityType;
   /**
@@ -1911,6 +2806,8 @@ export interface CreateGroupDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /**
    * Human-readable name of this group.
    * @minLength 1
@@ -1920,6 +2817,7 @@ export interface CreateGroupDto {
   description?: string;
   /** Timestamp when this group record was last updated. */
   updatedAt: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -1932,12 +2830,15 @@ export const GroupResponseDtoEntityType = {
   Group: 'Group',
 } as const;
 
+/**
+ * A named grouping of members, organizations, or subgroups. Direct membership and subgroup inclusion are recorded as Relationship objects, not embedded collections. Each relationship connects the included entity to this group using a RelationshipType that allows those endpoint types, with startedAt and optional endedAt recording its duration. Membership and containment alone do not grant delegated authority or imply transitive membership.
+ */
 export interface GroupResponseDto {
   /**
    * Globally unique identifier for this group.
    * @pattern ^Group/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Group" for Group entities. */
   entityType: GroupResponseDtoEntityType;
   /**
@@ -1951,6 +2852,8 @@ export interface GroupResponseDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /**
    * Human-readable name of this group.
    * @minLength 1
@@ -1960,6 +2863,7 @@ export interface GroupResponseDto {
   description?: string;
   /** Timestamp when this group record was last updated. */
   updatedAt: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -1972,12 +2876,15 @@ export const UpdateGroupDtoEntityType = {
   Group: 'Group',
 } as const;
 
+/**
+ * A named grouping of members, organizations, or subgroups. Direct membership and subgroup inclusion are recorded as Relationship objects, not embedded collections. Each relationship connects the included entity to this group using a RelationshipType that allows those endpoint types, with startedAt and optional endedAt recording its duration. Membership and containment alone do not grant delegated authority or imply transitive membership.. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateGroupDto {
   /**
    * Globally unique identifier for this group.
    * @pattern ^Group/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Group" for Group entities. */
   entityType?: UpdateGroupDtoEntityType;
   /**
@@ -1991,6 +2898,8 @@ export interface UpdateGroupDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /**
    * Human-readable name of this group.
    * @minLength 1
@@ -2000,6 +2909,7 @@ export interface UpdateGroupDto {
   description?: string;
   /** Timestamp when this group record was last updated. */
   updatedAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2017,7 +2927,7 @@ export interface CreateLabelDto {
    * Globally unique identifier for this label.
    * @pattern ^Label/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Label" for Label entities. */
   entityType: CreateLabelDtoEntityType;
   /**
@@ -2031,8 +2941,19 @@ export interface CreateLabelDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Name of this label. */
+  name: string;
+  /** Descriptive text for this label. */
+  description: string;
+  /** Display color for this label. */
+  color?: string;
+  /** Code for this label. */
+  code?: string;
   /** Timestamp when this label was last updated. */
   updatedAt: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2050,7 +2971,7 @@ export interface LabelResponseDto {
    * Globally unique identifier for this label.
    * @pattern ^Label/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Label" for Label entities. */
   entityType: LabelResponseDtoEntityType;
   /**
@@ -2064,8 +2985,19 @@ export interface LabelResponseDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Name of this label. */
+  name: string;
+  /** Descriptive text for this label. */
+  description: string;
+  /** Display color for this label. */
+  color?: string;
+  /** Code for this label. */
+  code?: string;
   /** Timestamp when this label was last updated. */
   updatedAt: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2078,12 +3010,15 @@ export const UpdateLabelDtoEntityType = {
   Label: 'Label',
 } as const;
 
+/**
+ * Label. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateLabelDto {
   /**
    * Globally unique identifier for this label.
    * @pattern ^Label/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Label" for Label entities. */
   entityType?: UpdateLabelDtoEntityType;
   /**
@@ -2097,8 +3032,130 @@ export interface UpdateLabelDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Name of this label. */
+  name?: string;
+  /** Descriptive text for this label. */
+  description?: string;
+  /** Display color for this label. */
+  color?: string;
+  /** Code for this label. */
+  code?: string;
   /** Timestamp when this label was last updated. */
   updatedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "MeasurementMethod" for MeasurementMethod entities.
+ */
+export type CreateMeasurementMethodDtoEntityType =
+  (typeof CreateMeasurementMethodDtoEntityType)[keyof typeof CreateMeasurementMethodDtoEntityType];
+
+export const CreateMeasurementMethodDtoEntityType = {
+  MeasurementMethod: 'MeasurementMethod',
+} as const;
+
+/**
+ * Defines a method used to measure a metric.
+ */
+export interface CreateMeasurementMethodDto {
+  /**
+   * Globally unique identifier for this measurement method.
+   * @pattern ^MeasurementMethod/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "MeasurementMethod" for MeasurementMethod entities. */
+  entityType: CreateMeasurementMethodDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "MeasurementMethod" for MeasurementMethod entities.
+ */
+export type MeasurementMethodResponseDtoEntityType =
+  (typeof MeasurementMethodResponseDtoEntityType)[keyof typeof MeasurementMethodResponseDtoEntityType];
+
+export const MeasurementMethodResponseDtoEntityType = {
+  MeasurementMethod: 'MeasurementMethod',
+} as const;
+
+/**
+ * Defines a method used to measure a metric.
+ */
+export interface MeasurementMethodResponseDto {
+  /**
+   * Globally unique identifier for this measurement method.
+   * @pattern ^MeasurementMethod/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "MeasurementMethod" for MeasurementMethod entities. */
+  entityType: MeasurementMethodResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "MeasurementMethod" for MeasurementMethod entities.
+ */
+export type UpdateMeasurementMethodDtoEntityType =
+  (typeof UpdateMeasurementMethodDtoEntityType)[keyof typeof UpdateMeasurementMethodDtoEntityType];
+
+export const UpdateMeasurementMethodDtoEntityType = {
+  MeasurementMethod: 'MeasurementMethod',
+} as const;
+
+/**
+ * Defines a method used to measure a metric.. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface UpdateMeasurementMethodDto {
+  /**
+   * Globally unique identifier for this measurement method.
+   * @pattern ^MeasurementMethod/[^/\s]+$
+   */
+  id?: string;
+  /** Entity type discriminator. Always "MeasurementMethod" for MeasurementMethod entities. */
+  entityType?: UpdateMeasurementMethodDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  [key: string]: unknown;
 }
 
 /**
@@ -2116,7 +3173,7 @@ export interface CreateMemberDto {
    * Globally unique identifier for this member.
    * @pattern ^Member/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Member" for Member entities. */
   entityType: CreateMemberDtoEntityType;
   /**
@@ -2130,13 +3187,16 @@ export interface CreateMemberDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Human-readable name of the member. */
   name: string;
-  permissions: PermissionResponseDto[];
+  permissions: NestedPermissionDto[];
   /** Whether this member is considered an owner of the system. */
   isOwner: boolean;
   /** Timestamp when this member record was last updated. */
   updatedAt: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2149,12 +3209,15 @@ export const UpdateMemberDtoEntityType = {
   Member: 'Member',
 } as const;
 
+/**
+ * Member. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateMemberDto {
   /**
    * Globally unique identifier for this member.
    * @pattern ^Member/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Member" for Member entities. */
   entityType?: UpdateMemberDtoEntityType;
   /**
@@ -2168,13 +3231,420 @@ export interface UpdateMemberDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Human-readable name of the member. */
   name?: string;
-  permissions?: PermissionResponseDto[];
+  permissions?: NestedPermissionDto[];
   /** Whether this member is considered an owner of the system. */
   isOwner?: boolean;
   /** Timestamp when this member record was last updated. */
   updatedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "MeasurementMethod" for MeasurementMethod entities.
+ */
+export type NestedMeasurementMethodDtoEntityType =
+  (typeof NestedMeasurementMethodDtoEntityType)[keyof typeof NestedMeasurementMethodDtoEntityType];
+
+export const NestedMeasurementMethodDtoEntityType = {
+  MeasurementMethod: 'MeasurementMethod',
+} as const;
+
+/**
+ * Defines a method used to measure a metric.. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedMeasurementMethodDto {
+  /**
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "MeasurementMethod" for MeasurementMethod entities. */
+  entityType?: NestedMeasurementMethodDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Metric" for Metric entities.
+ */
+export type NestedMetricDtoEntityType =
+  (typeof NestedMetricDtoEntityType)[keyof typeof NestedMetricDtoEntityType];
+
+export const NestedMetricDtoEntityType = {
+  Metric: 'Metric',
+} as const;
+
+/**
+ * Way in which measurement is performed.
+ */
+export type NestedMetricDtoMeasurementWay =
+  (typeof NestedMetricDtoMeasurementWay)[keyof typeof NestedMetricDtoMeasurementWay];
+
+export const NestedMetricDtoMeasurementWay = {
+  manual: 'manual',
+  function: 'function',
+  intelligence: 'intelligence',
+} as const;
+
+/**
+ * Type of measurement defined by this metric.
+ */
+export type NestedMetricDtoMeasurementType =
+  (typeof NestedMetricDtoMeasurementType)[keyof typeof NestedMetricDtoMeasurementType];
+
+export const NestedMetricDtoMeasurementType = {
+  count: 'count',
+  ratio: 'ratio',
+  rate: 'rate',
+  duration: 'duration',
+  score: 'score',
+  composite: 'composite',
+} as const;
+
+/**
+ * Defines what is measured and how measurement is performed within the system.. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedMetricDto {
+  /**
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "Metric" for Metric entities. */
+  entityType?: NestedMetricDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Timestamp when this metric record was last updated. */
+  updatedAt?: string;
+  /** Name of the metric. */
+  name?: string;
+  /** Description of the metric. */
+  description?: string;
+  /** Way in which measurement is performed. */
+  measurementWay?: NestedMetricDtoMeasurementWay;
+  /** Type of measurement defined by this metric. */
+  measurementType?: NestedMetricDtoMeasurementType;
+  /**
+   * Component metrics. Required for composite measurements; nonempty when supplied.
+   * @minItems 1
+   */
+  compositionItems?: NestedMetricDto[];
+  /** Method used to measure this metric. */
+  method?: NestedMeasurementMethodDto;
+  /**
+   * IDs of entities to which this metric applies, in EntityType/ID form.
+   * @items.pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  applicableEntityIds?: string[];
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Metric" for Metric entities.
+ */
+export type CreateMetricDtoEntityType =
+  (typeof CreateMetricDtoEntityType)[keyof typeof CreateMetricDtoEntityType];
+
+export const CreateMetricDtoEntityType = {
+  Metric: 'Metric',
+} as const;
+
+/**
+ * Way in which measurement is performed.
+ */
+export type CreateMetricDtoMeasurementWay =
+  (typeof CreateMetricDtoMeasurementWay)[keyof typeof CreateMetricDtoMeasurementWay];
+
+export const CreateMetricDtoMeasurementWay = {
+  manual: 'manual',
+  function: 'function',
+  intelligence: 'intelligence',
+} as const;
+
+/**
+ * Type of measurement defined by this metric.
+ */
+export type CreateMetricDtoMeasurementType =
+  (typeof CreateMetricDtoMeasurementType)[keyof typeof CreateMetricDtoMeasurementType];
+
+export const CreateMetricDtoMeasurementType = {
+  count: 'count',
+  ratio: 'ratio',
+  rate: 'rate',
+  duration: 'duration',
+  score: 'score',
+  composite: 'composite',
+} as const;
+
+/**
+ * Defines what is measured and how measurement is performed within the system.
+ */
+export type CreateMetricDto = unknown & {
+  /**
+   * Globally unique identifier for this metric.
+   * @pattern ^Metric/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Metric" for Metric entities. */
+  entityType: CreateMetricDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Timestamp when this metric record was last updated. */
+  updatedAt?: string;
+  /** Name of the metric. */
+  name: string;
+  /** Description of the metric. */
+  description: string;
+  /** Way in which measurement is performed. */
+  measurementWay: CreateMetricDtoMeasurementWay;
+  /** Type of measurement defined by this metric. */
+  measurementType: CreateMetricDtoMeasurementType;
+  /**
+   * Component metrics. Required for composite measurements; nonempty when supplied.
+   * @minItems 1
+   */
+  compositionItems?: NestedMetricDto[];
+  /** Method used to measure this metric. */
+  method: NestedMeasurementMethodDto;
+  /**
+   * IDs of entities to which this metric applies, in EntityType/ID form.
+   * @items.pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  applicableEntityIds?: string[];
+  [key: string]: unknown;
+};
+
+/**
+ * Entity type discriminator. Always "Metric" for Metric entities.
+ */
+export type MetricResponseDtoEntityType =
+  (typeof MetricResponseDtoEntityType)[keyof typeof MetricResponseDtoEntityType];
+
+export const MetricResponseDtoEntityType = {
+  Metric: 'Metric',
+} as const;
+
+/**
+ * Way in which measurement is performed.
+ */
+export type MetricResponseDtoMeasurementWay =
+  (typeof MetricResponseDtoMeasurementWay)[keyof typeof MetricResponseDtoMeasurementWay];
+
+export const MetricResponseDtoMeasurementWay = {
+  manual: 'manual',
+  function: 'function',
+  intelligence: 'intelligence',
+} as const;
+
+/**
+ * Type of measurement defined by this metric.
+ */
+export type MetricResponseDtoMeasurementType =
+  (typeof MetricResponseDtoMeasurementType)[keyof typeof MetricResponseDtoMeasurementType];
+
+export const MetricResponseDtoMeasurementType = {
+  count: 'count',
+  ratio: 'ratio',
+  rate: 'rate',
+  duration: 'duration',
+  score: 'score',
+  composite: 'composite',
+} as const;
+
+/**
+ * Method used to measure this metric.
+ */
+export type MetricResponseDtoMethod =
+  | MeasurementMethodResponseDto
+  | {
+      /**
+       * Globally unique identifier for this measurement method.
+       * @pattern ^MeasurementMethod/[^/\s]+$
+       */
+      id: string;
+    };
+
+/**
+ * Defines what is measured and how measurement is performed within the system.
+ */
+export type MetricResponseDto = unknown & {
+  /**
+   * Globally unique identifier for this metric.
+   * @pattern ^Metric/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Metric" for Metric entities. */
+  entityType: MetricResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /** Timestamp when this metric record was last updated. */
+  updatedAt?: string;
+  /** Name of the metric. */
+  name: string;
+  /** Description of the metric. */
+  description: string;
+  /** Way in which measurement is performed. */
+  measurementWay: MetricResponseDtoMeasurementWay;
+  /** Type of measurement defined by this metric. */
+  measurementType: MetricResponseDtoMeasurementType;
+  /**
+   * Component metrics. Required for composite measurements; nonempty when supplied.
+   * @minItems 1
+   */
+  compositionItems?: MetricResponseDtoCompositionItemsItem[];
+  /** Method used to measure this metric. */
+  method: MetricResponseDtoMethod;
+  /**
+   * IDs of entities to which this metric applies, in EntityType/ID form.
+   * @items.pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  applicableEntityIds?: string[];
+  [key: string]: unknown;
+};
+
+export type MetricResponseDtoCompositionItemsItem =
+  | MetricResponseDto
+  | {
+      /**
+       * Globally unique identifier for this metric.
+       * @pattern ^Metric/[^/\s]+$
+       */
+      id: string;
+    };
+
+/**
+ * Entity type discriminator. Always "Metric" for Metric entities.
+ */
+export type UpdateMetricDtoEntityType =
+  (typeof UpdateMetricDtoEntityType)[keyof typeof UpdateMetricDtoEntityType];
+
+export const UpdateMetricDtoEntityType = {
+  Metric: 'Metric',
+} as const;
+
+/**
+ * Way in which measurement is performed.
+ */
+export type UpdateMetricDtoMeasurementWay =
+  (typeof UpdateMetricDtoMeasurementWay)[keyof typeof UpdateMetricDtoMeasurementWay];
+
+export const UpdateMetricDtoMeasurementWay = {
+  manual: 'manual',
+  function: 'function',
+  intelligence: 'intelligence',
+} as const;
+
+/**
+ * Type of measurement defined by this metric.
+ */
+export type UpdateMetricDtoMeasurementType =
+  (typeof UpdateMetricDtoMeasurementType)[keyof typeof UpdateMetricDtoMeasurementType];
+
+export const UpdateMetricDtoMeasurementType = {
+  count: 'count',
+  ratio: 'ratio',
+  rate: 'rate',
+  duration: 'duration',
+  score: 'score',
+  composite: 'composite',
+} as const;
+
+/**
+ * Defines what is measured and how measurement is performed within the system.. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface UpdateMetricDto {
+  /**
+   * Globally unique identifier for this metric.
+   * @pattern ^Metric/[^/\s]+$
+   */
+  id?: string;
+  /** Entity type discriminator. Always "Metric" for Metric entities. */
+  entityType?: UpdateMetricDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Timestamp when this metric record was last updated. */
+  updatedAt?: string;
+  /** Name of the metric. */
+  name?: string;
+  /** Description of the metric. */
+  description?: string;
+  /** Way in which measurement is performed. */
+  measurementWay?: UpdateMetricDtoMeasurementWay;
+  /** Type of measurement defined by this metric. */
+  measurementType?: UpdateMetricDtoMeasurementType;
+  /**
+   * Component metrics. Required for composite measurements; nonempty when supplied.
+   * @minItems 1
+   */
+  compositionItems?: NestedMetricDto[];
+  /** Method used to measure this metric. */
+  method?: NestedMeasurementMethodDto;
+  /**
+   * IDs of entities to which this metric applies, in EntityType/ID form.
+   * @items.pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  applicableEntityIds?: string[];
+  [key: string]: unknown;
 }
 
 /**
@@ -2192,7 +3662,7 @@ export interface CreateObservationDto {
    * Globally unique identifier for this observation.
    * @pattern ^Observation/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Observation" for Observation entities. */
   entityType: CreateObservationDtoEntityType;
   /**
@@ -2206,6 +3676,8 @@ export interface CreateObservationDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this observation record was last updated. */
   updatedAt: string;
   /** Description of what was observed. */
@@ -2215,7 +3687,8 @@ export interface CreateObservationDto {
   /** Date and time when the observation occurred. */
   timeOfObservation: string;
   /** Member who made the report about what they observed. */
-  observer: MemberResponseDto;
+  observer: NestedMemberDto;
+  [key: string]: unknown;
 }
 
 /**
@@ -2228,12 +3701,25 @@ export const ObservationResponseDtoEntityType = {
   Observation: 'Observation',
 } as const;
 
+/**
+ * Member who made the report about what they observed.
+ */
+export type ObservationResponseDtoObserver =
+  | MemberResponseDto
+  | {
+      /**
+       * Globally unique identifier for this member.
+       * @pattern ^Member/[^/\s]+$
+       */
+      id: string;
+    };
+
 export interface ObservationResponseDto {
   /**
    * Globally unique identifier for this observation.
    * @pattern ^Observation/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Observation" for Observation entities. */
   entityType: ObservationResponseDtoEntityType;
   /**
@@ -2247,6 +3733,8 @@ export interface ObservationResponseDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this observation record was last updated. */
   updatedAt: string;
   /** Description of what was observed. */
@@ -2256,7 +3744,8 @@ export interface ObservationResponseDto {
   /** Date and time when the observation occurred. */
   timeOfObservation: string;
   /** Member who made the report about what they observed. */
-  observer: MemberResponseDto;
+  observer: ObservationResponseDtoObserver;
+  [key: string]: unknown;
 }
 
 /**
@@ -2269,12 +3758,15 @@ export const UpdateObservationDtoEntityType = {
   Observation: 'Observation',
 } as const;
 
+/**
+ * Observation. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateObservationDto {
   /**
    * Globally unique identifier for this observation.
    * @pattern ^Observation/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Observation" for Observation entities. */
   entityType?: UpdateObservationDtoEntityType;
   /**
@@ -2288,6 +3780,8 @@ export interface UpdateObservationDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Timestamp when this observation record was last updated. */
   updatedAt?: string;
   /** Description of what was observed. */
@@ -2297,7 +3791,149 @@ export interface UpdateObservationDto {
   /** Date and time when the observation occurred. */
   timeOfObservation?: string;
   /** Member who made the report about what they observed. */
-  observer?: MemberResponseDto;
+  observer?: NestedMemberDto;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Occurrence" for Occurrence entities.
+ */
+export type CreateOccurrenceDtoEntityType =
+  (typeof CreateOccurrenceDtoEntityType)[keyof typeof CreateOccurrenceDtoEntityType];
+
+export const CreateOccurrenceDtoEntityType = {
+  Occurrence: 'Occurrence',
+} as const;
+
+/**
+ * An individually scheduled event time associated with a When schedule.
+ */
+export interface CreateOccurrenceDto {
+  /**
+   * Globally unique identifier for this occurrence.
+   * @pattern ^Occurrence/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Occurrence" for Occurrence entities. */
+  entityType: CreateOccurrenceDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /**
+   * UTC timestamp when the event starts.
+   * @pattern Z$
+   */
+  startsAt: string;
+  /**
+   * Nonnegative ISO 8601 event duration overriding When.duration; omission inherits the schedule default.
+   * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+   */
+  duration?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Occurrence" for Occurrence entities.
+ */
+export type OccurrenceResponseDtoEntityType =
+  (typeof OccurrenceResponseDtoEntityType)[keyof typeof OccurrenceResponseDtoEntityType];
+
+export const OccurrenceResponseDtoEntityType = {
+  Occurrence: 'Occurrence',
+} as const;
+
+/**
+ * An individually scheduled event time associated with a When schedule.
+ */
+export interface OccurrenceResponseDto {
+  /**
+   * Globally unique identifier for this occurrence.
+   * @pattern ^Occurrence/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Occurrence" for Occurrence entities. */
+  entityType: OccurrenceResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /**
+   * UTC timestamp when the event starts.
+   * @pattern Z$
+   */
+  startsAt: string;
+  /**
+   * Nonnegative ISO 8601 event duration overriding When.duration; omission inherits the schedule default.
+   * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+   */
+  duration?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Occurrence" for Occurrence entities.
+ */
+export type UpdateOccurrenceDtoEntityType =
+  (typeof UpdateOccurrenceDtoEntityType)[keyof typeof UpdateOccurrenceDtoEntityType];
+
+export const UpdateOccurrenceDtoEntityType = {
+  Occurrence: 'Occurrence',
+} as const;
+
+/**
+ * An individually scheduled event time associated with a When schedule.. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface UpdateOccurrenceDto {
+  /**
+   * Globally unique identifier for this occurrence.
+   * @pattern ^Occurrence/[^/\s]+$
+   */
+  id?: string;
+  /** Entity type discriminator. Always "Occurrence" for Occurrence entities. */
+  entityType?: UpdateOccurrenceDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /**
+   * UTC timestamp when the event starts.
+   * @pattern Z$
+   */
+  startsAt?: string;
+  /**
+   * Nonnegative ISO 8601 event duration overriding When.duration; omission inherits the schedule default.
+   * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+   */
+  duration?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2310,12 +3946,15 @@ export const CreateOrganizationDtoEntityType = {
   Organization: 'Organization',
 } as const;
 
+/**
+ * An organization that may belong to a group. This basic schema defines only common entity properties.
+ */
 export interface CreateOrganizationDto {
   /**
    * Globally unique identifier for this organization.
    * @pattern ^Organization/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Organization" for Organization entities. */
   entityType: CreateOrganizationDtoEntityType;
   /**
@@ -2329,8 +3968,11 @@ export interface CreateOrganizationDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this organization record was last updated. */
   updatedAt: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2343,12 +3985,15 @@ export const OrganizationResponseDtoEntityType = {
   Organization: 'Organization',
 } as const;
 
+/**
+ * An organization that may belong to a group. This basic schema defines only common entity properties.
+ */
 export interface OrganizationResponseDto {
   /**
    * Globally unique identifier for this organization.
    * @pattern ^Organization/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Organization" for Organization entities. */
   entityType: OrganizationResponseDtoEntityType;
   /**
@@ -2362,8 +4007,11 @@ export interface OrganizationResponseDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this organization record was last updated. */
   updatedAt: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2376,12 +4024,15 @@ export const UpdateOrganizationDtoEntityType = {
   Organization: 'Organization',
 } as const;
 
+/**
+ * An organization that may belong to a group. This basic schema defines only common entity properties.. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateOrganizationDto {
   /**
    * Globally unique identifier for this organization.
    * @pattern ^Organization/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Organization" for Organization entities. */
   entityType?: UpdateOrganizationDtoEntityType;
   /**
@@ -2395,8 +4046,11 @@ export interface UpdateOrganizationDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Timestamp when this organization record was last updated. */
   updatedAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2432,7 +4086,7 @@ export interface CreatePermissionDto {
    * Globally unique identifier for this permission.
    * @pattern ^Permission/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Permission" for Permission entities. */
   entityType: CreatePermissionDtoEntityType;
   /**
@@ -2446,10 +4100,15 @@ export interface CreatePermissionDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
-  /** ID list of actions that this permission allows */
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  /**
+   * ID list of actions that this permission allows
+   * @items.pattern ^Action/[^/\s]+$
+   */
   actionIds: string[];
   /** List of actions that this permission allows */
-  actions?: ActionResponseDto[];
+  actions?: NestedActionDto[];
   /**
    * Identifier of the member receiving this permission.
    * @pattern ^Member/[^/\s]+$
@@ -2473,6 +4132,7 @@ export interface CreatePermissionDto {
   updatedAt?: string;
   /** Optional timestamp after which this permission no longer applies. */
   expiresAt: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2503,12 +4163,15 @@ export const UpdatePermissionDtoState = {
   drafted: 'drafted',
 } as const;
 
+/**
+ * Permission. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdatePermissionDto {
   /**
    * Globally unique identifier for this permission.
    * @pattern ^Permission/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Permission" for Permission entities. */
   entityType?: UpdatePermissionDtoEntityType;
   /**
@@ -2522,10 +4185,15 @@ export interface UpdatePermissionDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
-  /** ID list of actions that this permission allows */
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /**
+   * ID list of actions that this permission allows
+   * @items.pattern ^Action/[^/\s]+$
+   */
   actionIds?: string[];
   /** List of actions that this permission allows */
-  actions?: ActionResponseDto[];
+  actions?: NestedActionDto[];
   /**
    * Identifier of the member receiving this permission.
    * @pattern ^Member/[^/\s]+$
@@ -2549,6 +4217,197 @@ export interface UpdatePermissionDto {
   updatedAt?: string;
   /** Optional timestamp after which this permission no longer applies. */
   expiresAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Geographic Area" for Geographic Area entities.
+ */
+export type NestedGeographicAreaDtoEntityType =
+  (typeof NestedGeographicAreaDtoEntityType)[keyof typeof NestedGeographicAreaDtoEntityType];
+
+export const NestedGeographicAreaDtoEntityType = {
+  Geographic_Area: 'Geographic Area',
+} as const;
+
+/**
+ * Geographic Area. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedGeographicAreaDto {
+  /**
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "Geographic Area" for Geographic Area entities. */
+  entityType?: NestedGeographicAreaDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Timestamp when this geographic area record was last updated. */
+  updatedAt?: string;
+  /**
+   * Polygon geometries making up this area. Separate polygons can represent disconnected regions. Coordinates use [longitude, latitude, optional altitude] positions.
+   * @items.items.minItems 4
+   * @items.items.items.minItems 2
+   * @items.items.items.maxItems 3
+   */
+  polygons?: number[][][][];
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Scope" for Scope entities.
+ */
+export type NestedScopeDtoEntityType =
+  (typeof NestedScopeDtoEntityType)[keyof typeof NestedScopeDtoEntityType];
+
+export const NestedScopeDtoEntityType = {
+  Scope: 'Scope',
+} as const;
+
+/**
+ * Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific.
+ */
+export type NestedScopeDtoBoundaryRules = { [key: string]: unknown };
+
+/**
+ * Scope. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedScopeDto {
+  /**
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "Scope" for Scope entities. */
+  entityType?: NestedScopeDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Human-readable name of the scope. */
+  name?: string;
+  /** Optional human-readable explanation of what this scope includes and excludes. */
+  description?: string;
+  /** Location identifiers or names included in this scope. Kept as strings for now. */
+  locations?: string[];
+  /** Group identifiers or names included in this scope. Kept as strings for now. */
+  groups?: string[];
+  /** Object identifiers or names included in this scope. Kept as strings for now. */
+  objects?: string[];
+  /** Entity identifiers or names included in this scope. Kept as strings for now. */
+  entities?: string[];
+  /**
+   * Identifier of a broader parent scope, when this scope is nested inside another scope.
+   * @pattern ^Scope/[^/\s]+$
+   */
+  parentScopeId?: string;
+  /**
+   * Identifiers of narrower child scopes contained by this scope.
+   * @items.pattern ^Scope/[^/\s]+$
+   */
+  childScopeIds?: string[];
+  /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
+  boundaryRules?: NestedScopeDtoBoundaryRules;
+  /** Timestamp when this scope record was last updated. */
+  updatedAt?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Role" for Role entities.
+ */
+export type NestedRoleDtoEntityType =
+  (typeof NestedRoleDtoEntityType)[keyof typeof NestedRoleDtoEntityType];
+
+export const NestedRoleDtoEntityType = {
+  Role: 'Role',
+} as const;
+
+/**
+ * Lifecycle state of the role.
+ */
+export type NestedRoleDtoState =
+  (typeof NestedRoleDtoState)[keyof typeof NestedRoleDtoState];
+
+export const NestedRoleDtoState = {
+  drafted: 'drafted',
+  'under-review': 'under-review',
+  active: 'active',
+  suspended: 'suspended',
+  revoked: 'revoked',
+  expired: 'expired',
+} as const;
+
+/**
+ * Role. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedRoleDto {
+  /**
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "Role" for Role entities. */
+  entityType?: NestedRoleDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /** Human-readable name of the role. */
+  name?: string;
+  /** Optional human-readable explanation of what this role is for. */
+  description?: string;
+  /**
+   * Identifier of the member acting through this role.
+   * @pattern ^Member/[^/\s]+$
+   */
+  memberId?: string;
+  /**
+   * Identifier of the scope where this role has authority.
+   * @pattern ^Scope/[^/\s]+$
+   */
+  scopeId?: string;
+  /** Scope entity describing where this role applies. */
+  scope?: NestedScopeDto;
+  /** Permission entities bundled into this role. */
+  permissions?: NestedPermissionDto[];
+  /** Lifecycle state of the role. */
+  state?: NestedRoleDtoState;
+  /** Timestamp when this role record was last updated. */
+  updatedAt?: string;
+  /** Optional timestamp after which this role no longer applies. */
+  expiresAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2561,12 +4420,15 @@ export const CreatePlaceDtoEntityType = {
   Place: 'Place',
 } as const;
 
+/**
+ * A real-world place. Ownership is recorded as Relationship objects from each owning entity to this place, using an ownership RelationshipType that allows those endpoint types, with startedAt and optional endedAt recording its duration. Ownership relationships alone do not grant permissions; authority is defined through roles, permissions, and delegations.
+ */
 export interface CreatePlaceDto {
   /**
    * Globally unique identifier for this place.
    * @pattern ^Place/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Place" for Place entities. */
   entityType: CreatePlaceDtoEntityType;
   /**
@@ -2580,6 +4442,8 @@ export interface CreatePlaceDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this place record was last updated. */
   updatedAt: string;
   /** Human-readable name of the real-world place. */
@@ -2587,9 +4451,10 @@ export interface CreatePlaceDto {
   /** Optional latitude, longitude, and altitude location, represented as a comma-separated string. */
   coordinate: string;
   /** Geographic area occupied by this place, including disconnected areas when applicable. */
-  geographicArea?: GeographicAreaResponseDto;
+  geographicArea?: NestedGeographicAreaDto;
   /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
-  roles?: RoleResponseDto[];
+  roles?: NestedRoleDto[];
+  [key: string]: unknown;
 }
 
 /**
@@ -2602,12 +4467,38 @@ export const PlaceResponseDtoEntityType = {
   Place: 'Place',
 } as const;
 
+/**
+ * Geographic area occupied by this place, including disconnected areas when applicable.
+ */
+export type PlaceResponseDtoGeographicArea =
+  | GeographicAreaResponseDto
+  | {
+      /**
+       * Globally unique identifier for this geographic area.
+       * @pattern ^GeographicArea/[^/\s]+$
+       */
+      id: string;
+    };
+
+export type PlaceResponseDtoRolesItem =
+  | RoleResponseDto
+  | {
+      /**
+       * Globally unique identifier for this role.
+       * @pattern ^Role/[^/\s]+$
+       */
+      id: string;
+    };
+
+/**
+ * A real-world place. Ownership is recorded as Relationship objects from each owning entity to this place, using an ownership RelationshipType that allows those endpoint types, with startedAt and optional endedAt recording its duration. Ownership relationships alone do not grant permissions; authority is defined through roles, permissions, and delegations.
+ */
 export interface PlaceResponseDto {
   /**
    * Globally unique identifier for this place.
    * @pattern ^Place/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Place" for Place entities. */
   entityType: PlaceResponseDtoEntityType;
   /**
@@ -2621,6 +4512,8 @@ export interface PlaceResponseDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this place record was last updated. */
   updatedAt: string;
   /** Human-readable name of the real-world place. */
@@ -2628,9 +4521,10 @@ export interface PlaceResponseDto {
   /** Optional latitude, longitude, and altitude location, represented as a comma-separated string. */
   coordinate: string;
   /** Geographic area occupied by this place, including disconnected areas when applicable. */
-  geographicArea?: GeographicAreaResponseDto;
+  geographicArea?: PlaceResponseDtoGeographicArea;
   /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
-  roles?: RoleResponseDto[];
+  roles?: PlaceResponseDtoRolesItem[];
+  [key: string]: unknown;
 }
 
 /**
@@ -2643,12 +4537,15 @@ export const UpdatePlaceDtoEntityType = {
   Place: 'Place',
 } as const;
 
+/**
+ * A real-world place. Ownership is recorded as Relationship objects from each owning entity to this place, using an ownership RelationshipType that allows those endpoint types, with startedAt and optional endedAt recording its duration. Ownership relationships alone do not grant permissions; authority is defined through roles, permissions, and delegations.. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdatePlaceDto {
   /**
    * Globally unique identifier for this place.
    * @pattern ^Place/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Place" for Place entities. */
   entityType?: UpdatePlaceDtoEntityType;
   /**
@@ -2662,6 +4559,8 @@ export interface UpdatePlaceDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Timestamp when this place record was last updated. */
   updatedAt?: string;
   /** Human-readable name of the real-world place. */
@@ -2669,9 +4568,10 @@ export interface UpdatePlaceDto {
   /** Optional latitude, longitude, and altitude location, represented as a comma-separated string. */
   coordinate?: string;
   /** Geographic area occupied by this place, including disconnected areas when applicable. */
-  geographicArea?: GeographicAreaResponseDto;
+  geographicArea?: NestedGeographicAreaDto;
   /** Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc. */
-  roles?: RoleResponseDto[];
+  roles?: NestedRoleDto[];
+  [key: string]: unknown;
 }
 
 /**
@@ -2689,7 +4589,7 @@ export interface CreateProtocolDto {
    * identifier protocol.
    * @pattern ^Protocol/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Protocol" for Protocol entities. */
   entityType: CreateProtocolDtoEntityType;
   /**
@@ -2703,6 +4603,9 @@ export interface CreateProtocolDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  [key: string]: unknown;
 }
 
 /**
@@ -2720,7 +4623,7 @@ export interface ProtocolResponseDto {
    * identifier protocol.
    * @pattern ^Protocol/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Protocol" for Protocol entities. */
   entityType: ProtocolResponseDtoEntityType;
   /**
@@ -2734,6 +4637,9 @@ export interface ProtocolResponseDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
+  [key: string]: unknown;
 }
 
 /**
@@ -2746,12 +4652,15 @@ export const UpdateProtocolDtoEntityType = {
   Protocol: 'Protocol',
 } as const;
 
+/**
+ * Protocol. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateProtocolDto {
   /**
    * identifier protocol.
    * @pattern ^Protocol/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Protocol" for Protocol entities. */
   entityType?: UpdateProtocolDtoEntityType;
   /**
@@ -2765,6 +4674,252 @@ export interface UpdateProtocolDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Recurrence" for Recurrence entities.
+ */
+export type CreateRecurrenceDtoEntityType =
+  (typeof CreateRecurrenceDtoEntityType)[keyof typeof CreateRecurrenceDtoEntityType];
+
+export const CreateRecurrenceDtoEntityType = {
+  Recurrence: 'Recurrence',
+} as const;
+
+export type CreateRecurrenceDtoDaysOfWeekItem =
+  (typeof CreateRecurrenceDtoDaysOfWeekItem)[keyof typeof CreateRecurrenceDtoDaysOfWeekItem];
+
+export const CreateRecurrenceDtoDaysOfWeekItem = {
+  monday: 'monday',
+  tuesday: 'tuesday',
+  wednesday: 'wednesday',
+  thursday: 'thursday',
+  friday: 'friday',
+  saturday: 'saturday',
+  sunday: 'sunday',
+} as const;
+
+/**
+ * A repeating event schedule calculated in UTC. Named frequencies use UTC calendar units; ISO 8601 frequencies specify a repeating duration. Interval multiplies either frequency form and is treated as 1 when omitted. At least one of interval or daysOfWeek is required; daysOfWeek requires weekly frequency. Events start on or after startsAt and, when supplied, on or before endsAt; endsAt must not precede startsAt.
+ */
+export type CreateRecurrenceDto = (
+  | unknown
+  | {
+      frequency?: 'weekly';
+    }
+) &
+  (unknown & {
+    /**
+     * Globally unique identifier for this recurrence.
+     * @pattern ^Recurrence/[^/\s]+$
+     */
+    id: string;
+    /** Entity type discriminator. Always "Recurrence" for Recurrence entities. */
+    entityType: CreateRecurrenceDtoEntityType;
+    /**
+     * Id of the object this object is derived from.
+     * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+     */
+    basedOn?: string;
+    /** URL for documentation about this entity type. */
+    entityDocumentationUrl: string;
+    /** URL for documentation about this object instance */
+    documentationUrl?: string;
+    /** Timestamp when this entity record was created. */
+    createdAt: string;
+    /** Label codes associated with this entity. */
+    labelCodes: string[];
+    /**
+     * UTC timestamp anchoring the recurrence and its earliest permitted event start.
+     * @pattern Z$
+     */
+    startsAt: string;
+    /**
+     * Inclusive UTC limit on event start times; omission leaves the recurrence unbounded.
+     * @pattern Z$
+     */
+    endsAt?: string;
+    /** Named UTC calendar frequency or a strictly positive ISO 8601 repeating duration. */
+    frequency: string;
+    /**
+     * Positive multiplier applied to the frequency; treated as 1 when omitted.
+     * @minimum 1
+     */
+    interval?: number;
+    /**
+     * UTC weekday filter for weekly event starts; requires weekly frequency. Weeks begin on Monday.
+     * @minItems 1
+     */
+    daysOfWeek?: CreateRecurrenceDtoDaysOfWeekItem[];
+    /**
+     * Event duration overriding When.duration; omission inherits the schedule default, not frequency.
+     * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+     */
+    duration?: string;
+    [key: string]: unknown;
+  });
+
+/**
+ * Entity type discriminator. Always "Recurrence" for Recurrence entities.
+ */
+export type RecurrenceResponseDtoEntityType =
+  (typeof RecurrenceResponseDtoEntityType)[keyof typeof RecurrenceResponseDtoEntityType];
+
+export const RecurrenceResponseDtoEntityType = {
+  Recurrence: 'Recurrence',
+} as const;
+
+export type RecurrenceResponseDtoDaysOfWeekItem =
+  (typeof RecurrenceResponseDtoDaysOfWeekItem)[keyof typeof RecurrenceResponseDtoDaysOfWeekItem];
+
+export const RecurrenceResponseDtoDaysOfWeekItem = {
+  monday: 'monday',
+  tuesday: 'tuesday',
+  wednesday: 'wednesday',
+  thursday: 'thursday',
+  friday: 'friday',
+  saturday: 'saturday',
+  sunday: 'sunday',
+} as const;
+
+/**
+ * A repeating event schedule calculated in UTC. Named frequencies use UTC calendar units; ISO 8601 frequencies specify a repeating duration. Interval multiplies either frequency form and is treated as 1 when omitted. At least one of interval or daysOfWeek is required; daysOfWeek requires weekly frequency. Events start on or after startsAt and, when supplied, on or before endsAt; endsAt must not precede startsAt.
+ */
+export type RecurrenceResponseDto = (
+  | unknown
+  | {
+      frequency?: 'weekly';
+    }
+) &
+  (unknown & {
+    /**
+     * Globally unique identifier for this recurrence.
+     * @pattern ^Recurrence/[^/\s]+$
+     */
+    id: string;
+    /** Entity type discriminator. Always "Recurrence" for Recurrence entities. */
+    entityType: RecurrenceResponseDtoEntityType;
+    /**
+     * Id of the object this object is derived from.
+     * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+     */
+    basedOn?: string;
+    /** URL for documentation about this entity type. */
+    entityDocumentationUrl: string;
+    /** URL for documentation about this object instance */
+    documentationUrl?: string;
+    /** Timestamp when this entity record was created. */
+    createdAt: string;
+    /** Label codes associated with this entity. */
+    labelCodes: string[];
+    /**
+     * UTC timestamp anchoring the recurrence and its earliest permitted event start.
+     * @pattern Z$
+     */
+    startsAt: string;
+    /**
+     * Inclusive UTC limit on event start times; omission leaves the recurrence unbounded.
+     * @pattern Z$
+     */
+    endsAt?: string;
+    /** Named UTC calendar frequency or a strictly positive ISO 8601 repeating duration. */
+    frequency: string;
+    /**
+     * Positive multiplier applied to the frequency; treated as 1 when omitted.
+     * @minimum 1
+     */
+    interval?: number;
+    /**
+     * UTC weekday filter for weekly event starts; requires weekly frequency. Weeks begin on Monday.
+     * @minItems 1
+     */
+    daysOfWeek?: RecurrenceResponseDtoDaysOfWeekItem[];
+    /**
+     * Event duration overriding When.duration; omission inherits the schedule default, not frequency.
+     * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+     */
+    duration?: string;
+    [key: string]: unknown;
+  });
+
+/**
+ * Entity type discriminator. Always "Recurrence" for Recurrence entities.
+ */
+export type UpdateRecurrenceDtoEntityType =
+  (typeof UpdateRecurrenceDtoEntityType)[keyof typeof UpdateRecurrenceDtoEntityType];
+
+export const UpdateRecurrenceDtoEntityType = {
+  Recurrence: 'Recurrence',
+} as const;
+
+export type UpdateRecurrenceDtoDaysOfWeekItem =
+  (typeof UpdateRecurrenceDtoDaysOfWeekItem)[keyof typeof UpdateRecurrenceDtoDaysOfWeekItem];
+
+export const UpdateRecurrenceDtoDaysOfWeekItem = {
+  monday: 'monday',
+  tuesday: 'tuesday',
+  wednesday: 'wednesday',
+  thursday: 'thursday',
+  friday: 'friday',
+  saturday: 'saturday',
+  sunday: 'sunday',
+} as const;
+
+/**
+ * A repeating event schedule calculated in UTC. Named frequencies use UTC calendar units; ISO 8601 frequencies specify a repeating duration. Interval multiplies either frequency form and is treated as 1 when omitted. At least one of interval or daysOfWeek is required; daysOfWeek requires weekly frequency. Events start on or after startsAt and, when supplied, on or before endsAt; endsAt must not precede startsAt.. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface UpdateRecurrenceDto {
+  /**
+   * Globally unique identifier for this recurrence.
+   * @pattern ^Recurrence/[^/\s]+$
+   */
+  id?: string;
+  /** Entity type discriminator. Always "Recurrence" for Recurrence entities. */
+  entityType?: UpdateRecurrenceDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /**
+   * UTC timestamp anchoring the recurrence and its earliest permitted event start.
+   * @pattern Z$
+   */
+  startsAt?: string;
+  /**
+   * Inclusive UTC limit on event start times; omission leaves the recurrence unbounded.
+   * @pattern Z$
+   */
+  endsAt?: string;
+  /** Named UTC calendar frequency or a strictly positive ISO 8601 repeating duration. */
+  frequency?: string;
+  /**
+   * Positive multiplier applied to the frequency; treated as 1 when omitted.
+   * @minimum 1
+   */
+  interval?: number;
+  /**
+   * UTC weekday filter for weekly event starts; requires weekly frequency. Weeks begin on Monday.
+   * @minItems 1
+   */
+  daysOfWeek?: UpdateRecurrenceDtoDaysOfWeekItem[];
+  /**
+   * Event duration overriding When.duration; omission inherits the schedule default, not frequency.
+   * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+   */
+  duration?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2777,12 +4932,15 @@ export const CreateRelationshipDtoEntityType = {
   Relationship: 'Relationship',
 } as const;
 
+/**
+ * Records a directed relationship between two IFS entity objects.
+ */
 export interface CreateRelationshipDto {
   /**
    * Globally unique identifier for this relationship.
    * @pattern ^Relationship/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Relationship" for Relationship entities. */
   entityType: CreateRelationshipDtoEntityType;
   /**
@@ -2796,6 +4954,8 @@ export interface CreateRelationshipDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this relationship record was last updated. */
   updatedAt: string;
   /**
@@ -2827,6 +4987,7 @@ export interface CreateRelationshipDto {
   startedAt: string;
   /** Optional calendar date when this relationship ended; must not precede startedAt. */
   endedAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2839,12 +5000,15 @@ export const UpdateRelationshipDtoEntityType = {
   Relationship: 'Relationship',
 } as const;
 
+/**
+ * Records a directed relationship between two IFS entity objects.. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateRelationshipDto {
   /**
    * Globally unique identifier for this relationship.
    * @pattern ^Relationship/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Relationship" for Relationship entities. */
   entityType?: UpdateRelationshipDtoEntityType;
   /**
@@ -2858,6 +5022,8 @@ export interface UpdateRelationshipDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Timestamp when this relationship record was last updated. */
   updatedAt?: string;
   /**
@@ -2879,6 +5045,7 @@ export interface UpdateRelationshipDto {
   startedAt?: string;
   /** Optional calendar date when this relationship ended; must not precede startedAt. */
   endedAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2891,12 +5058,15 @@ export const CreateRelationshipTypeDtoEntityType = {
   RelationshipType: 'RelationshipType',
 } as const;
 
+/**
+ * Defines a type of relationship allowed between IFS entity objects.
+ */
 export interface CreateRelationshipTypeDto {
   /**
    * Globally unique identifier for this relationship type.
    * @pattern ^RelationshipType/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "RelationshipType" for RelationshipType entities. */
   entityType: CreateRelationshipTypeDtoEntityType;
   /**
@@ -2910,6 +5080,8 @@ export interface CreateRelationshipTypeDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this relationship type was last updated. */
   updatedAt: string;
   /**
@@ -2922,11 +5094,13 @@ export interface CreateRelationshipTypeDto {
   /**
    * Entity type names allowed as sources of relationships of this type.
    * @minItems 1
+   * @items.minLength 1
    */
   sourceTypes: string[];
   /**
    * Entity type names allowed as targets of relationships of this type.
    * @minItems 1
+   * @items.minLength 1
    */
   targetTypes: string[];
   /** Whether swapping source and target preserves the relationship meaning, such as partnered. */
@@ -2936,6 +5110,7 @@ export interface CreateRelationshipTypeDto {
    * @minLength 1
    */
   inverseType: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -2948,12 +5123,15 @@ export const RelationshipTypeResponseDtoEntityType = {
   RelationshipType: 'RelationshipType',
 } as const;
 
+/**
+ * Defines a type of relationship allowed between IFS entity objects.
+ */
 export interface RelationshipTypeResponseDto {
   /**
    * Globally unique identifier for this relationship type.
    * @pattern ^RelationshipType/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "RelationshipType" for RelationshipType entities. */
   entityType: RelationshipTypeResponseDtoEntityType;
   /**
@@ -2967,6 +5145,8 @@ export interface RelationshipTypeResponseDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this relationship type was last updated. */
   updatedAt: string;
   /**
@@ -2979,11 +5159,13 @@ export interface RelationshipTypeResponseDto {
   /**
    * Entity type names allowed as sources of relationships of this type.
    * @minItems 1
+   * @items.minLength 1
    */
   sourceTypes: string[];
   /**
    * Entity type names allowed as targets of relationships of this type.
    * @minItems 1
+   * @items.minLength 1
    */
   targetTypes: string[];
   /** Whether swapping source and target preserves the relationship meaning, such as partnered. */
@@ -2993,6 +5175,7 @@ export interface RelationshipTypeResponseDto {
    * @minLength 1
    */
   inverseType: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -3005,12 +5188,15 @@ export const UpdateRelationshipTypeDtoEntityType = {
   RelationshipType: 'RelationshipType',
 } as const;
 
+/**
+ * Defines a type of relationship allowed between IFS entity objects.. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateRelationshipTypeDto {
   /**
    * Globally unique identifier for this relationship type.
    * @pattern ^RelationshipType/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "RelationshipType" for RelationshipType entities. */
   entityType?: UpdateRelationshipTypeDtoEntityType;
   /**
@@ -3024,6 +5210,8 @@ export interface UpdateRelationshipTypeDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Timestamp when this relationship type was last updated. */
   updatedAt?: string;
   /**
@@ -3036,11 +5224,13 @@ export interface UpdateRelationshipTypeDto {
   /**
    * Entity type names allowed as sources of relationships of this type.
    * @minItems 1
+   * @items.minLength 1
    */
   sourceTypes?: string[];
   /**
    * Entity type names allowed as targets of relationships of this type.
    * @minItems 1
+   * @items.minLength 1
    */
   targetTypes?: string[];
   /** Whether swapping source and target preserves the relationship meaning, such as partnered. */
@@ -3050,6 +5240,7 @@ export interface UpdateRelationshipTypeDto {
    * @minLength 1
    */
   inverseType?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -3067,7 +5258,7 @@ export interface CreateReviewCommentDto {
    * Globally unique identifier for this review comment.
    * @pattern ^ReviewComment/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
   entityType: CreateReviewCommentDtoEntityType;
   /**
@@ -3081,8 +5272,11 @@ export interface CreateReviewCommentDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this review comment was last updated. */
   updatedAt: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -3095,12 +5289,15 @@ export const UpdateReviewCommentDtoEntityType = {
   ReviewComment: 'ReviewComment',
 } as const;
 
+/**
+ * ReviewComment. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateReviewCommentDto {
   /**
    * Globally unique identifier for this review comment.
    * @pattern ^ReviewComment/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "ReviewComment" for ReviewComment entities. */
   entityType?: UpdateReviewCommentDtoEntityType;
   /**
@@ -3114,8 +5311,11 @@ export interface UpdateReviewCommentDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Timestamp when this review comment was last updated. */
   updatedAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -3148,7 +5348,7 @@ export interface CreateRoleDto {
    * Globally unique identifier for this role.
    * @pattern ^Role/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Role" for Role entities. */
   entityType: CreateRoleDtoEntityType;
   /**
@@ -3162,6 +5362,8 @@ export interface CreateRoleDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Human-readable name of the role. */
   name: string;
   /** Optional human-readable explanation of what this role is for. */
@@ -3177,15 +5379,16 @@ export interface CreateRoleDto {
    */
   scopeId: string;
   /** Scope entity describing where this role applies. */
-  scope: ScopeResponseDto;
+  scope: NestedScopeDto;
   /** Permission entities bundled into this role. */
-  permissions: PermissionResponseDto[];
+  permissions: NestedPermissionDto[];
   /** Lifecycle state of the role. */
   state: CreateRoleDtoState;
   /** Timestamp when this role record was last updated. */
   updatedAt: string;
   /** Optional timestamp after which this role no longer applies. */
   expiresAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -3213,12 +5416,15 @@ export const UpdateRoleDtoState = {
   expired: 'expired',
 } as const;
 
+/**
+ * Role. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateRoleDto {
   /**
    * Globally unique identifier for this role.
    * @pattern ^Role/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Role" for Role entities. */
   entityType?: UpdateRoleDtoEntityType;
   /**
@@ -3232,6 +5438,8 @@ export interface UpdateRoleDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Human-readable name of the role. */
   name?: string;
   /** Optional human-readable explanation of what this role is for. */
@@ -3247,15 +5455,16 @@ export interface UpdateRoleDto {
    */
   scopeId?: string;
   /** Scope entity describing where this role applies. */
-  scope?: ScopeResponseDto;
+  scope?: NestedScopeDto;
   /** Permission entities bundled into this role. */
-  permissions?: PermissionResponseDto[];
+  permissions?: NestedPermissionDto[];
   /** Lifecycle state of the role. */
   state?: UpdateRoleDtoState;
   /** Timestamp when this role record was last updated. */
   updatedAt?: string;
   /** Optional timestamp after which this role no longer applies. */
   expiresAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -3273,7 +5482,7 @@ export interface CreateRuleDto {
    * Globally unique identifier for this rule.
    * @pattern ^Rule/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Rule" for Rule entities. */
   entityType: CreateRuleDtoEntityType;
   /**
@@ -3287,8 +5496,11 @@ export interface CreateRuleDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this rule record was last updated. */
   updatedAt: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -3301,12 +5513,15 @@ export const UpdateRuleDtoEntityType = {
   Rule: 'Rule',
 } as const;
 
+/**
+ * Rule. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateRuleDto {
   /**
    * Globally unique identifier for this rule.
    * @pattern ^Rule/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Rule" for Rule entities. */
   entityType?: UpdateRuleDtoEntityType;
   /**
@@ -3320,8 +5535,11 @@ export interface UpdateRuleDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Timestamp when this rule record was last updated. */
   updatedAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -3339,12 +5557,12 @@ export const CreateScopeDtoEntityType = {
  */
 export type CreateScopeDtoBoundaryRules = { [key: string]: unknown };
 
-export interface CreateScopeDto {
+export type CreateScopeDto = unknown & {
   /**
    * Globally unique identifier for this scope.
    * @pattern ^Scope/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Scope" for Scope entities. */
   entityType: CreateScopeDtoEntityType;
   /**
@@ -3358,6 +5576,8 @@ export interface CreateScopeDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Human-readable name of the scope. */
   name: string;
   /** Optional human-readable explanation of what this scope includes and excludes. */
@@ -3375,13 +5595,17 @@ export interface CreateScopeDto {
    * @pattern ^Scope/[^/\s]+$
    */
   parentScopeId?: string;
-  /** Identifiers of narrower child scopes contained by this scope. */
+  /**
+   * Identifiers of narrower child scopes contained by this scope.
+   * @items.pattern ^Scope/[^/\s]+$
+   */
   childScopeIds?: string[];
   /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
   boundaryRules?: CreateScopeDtoBoundaryRules;
   /** Timestamp when this scope record was last updated. */
   updatedAt: string;
-}
+  [key: string]: unknown;
+};
 
 /**
  * Entity type discriminator. Always "Scope" for Scope entities.
@@ -3398,12 +5622,15 @@ export const UpdateScopeDtoEntityType = {
  */
 export type UpdateScopeDtoBoundaryRules = { [key: string]: unknown };
 
+/**
+ * Scope. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateScopeDto {
   /**
    * Globally unique identifier for this scope.
    * @pattern ^Scope/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Scope" for Scope entities. */
   entityType?: UpdateScopeDtoEntityType;
   /**
@@ -3417,6 +5644,8 @@ export interface UpdateScopeDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Human-readable name of the scope. */
   name?: string;
   /** Optional human-readable explanation of what this scope includes and excludes. */
@@ -3434,12 +5663,16 @@ export interface UpdateScopeDto {
    * @pattern ^Scope/[^/\s]+$
    */
   parentScopeId?: string;
-  /** Identifiers of narrower child scopes contained by this scope. */
+  /**
+   * Identifiers of narrower child scopes contained by this scope.
+   * @items.pattern ^Scope/[^/\s]+$
+   */
   childScopeIds?: string[];
   /** Embedded scope-local rules for inclusion, exclusion, inheritance, or conflict resolution. This is not a referenced entity because boundary logic may be implementation-specific. */
   boundaryRules?: UpdateScopeDtoBoundaryRules;
   /** Timestamp when this scope record was last updated. */
   updatedAt?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -3457,7 +5690,7 @@ export interface CreateVoteDto {
    * Globally unique identifier for this vote.
    * @pattern ^Vote/[^/\s]+$
    */
-  id: string & string;
+  id: string;
   /** Entity type discriminator. Always "Vote" for Vote entities. */
   entityType: CreateVoteDtoEntityType;
   /**
@@ -3471,6 +5704,8 @@ export interface CreateVoteDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes: string[];
   /** Timestamp when this vote record was last updated. */
   updatedAt: string;
   /**
@@ -3490,6 +5725,7 @@ export interface CreateVoteDto {
    * @pattern ^Vote/[^/\s]+$
    */
   previousRevisionId?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -3502,12 +5738,15 @@ export const UpdateVoteDtoEntityType = {
   Vote: 'Vote',
 } as const;
 
+/**
+ * Vote. Partial write; the complete resulting entity is validated before commit.
+ */
 export interface UpdateVoteDto {
   /**
    * Globally unique identifier for this vote.
    * @pattern ^Vote/[^/\s]+$
    */
-  id?: string & string;
+  id?: string;
   /** Entity type discriminator. Always "Vote" for Vote entities. */
   entityType?: UpdateVoteDtoEntityType;
   /**
@@ -3521,6 +5760,8 @@ export interface UpdateVoteDto {
   documentationUrl?: string;
   /** Timestamp when this entity record was created. */
   createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
   /** Timestamp when this vote record was last updated. */
   updatedAt?: string;
   /**
@@ -3540,6 +5781,417 @@ export interface UpdateVoteDto {
    * @pattern ^Vote/[^/\s]+$
    */
   previousRevisionId?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Occurrence" for Occurrence entities.
+ */
+export type NestedOccurrenceDtoEntityType =
+  (typeof NestedOccurrenceDtoEntityType)[keyof typeof NestedOccurrenceDtoEntityType];
+
+export const NestedOccurrenceDtoEntityType = {
+  Occurrence: 'Occurrence',
+} as const;
+
+/**
+ * An individually scheduled event time associated with a When schedule.. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedOccurrenceDto {
+  /**
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "Occurrence" for Occurrence entities. */
+  entityType?: NestedOccurrenceDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /**
+   * UTC timestamp when the event starts.
+   * @pattern Z$
+   */
+  startsAt?: string;
+  /**
+   * Nonnegative ISO 8601 event duration overriding When.duration; omission inherits the schedule default.
+   * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+   */
+  duration?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Recurrence" for Recurrence entities.
+ */
+export type NestedRecurrenceDtoEntityType =
+  (typeof NestedRecurrenceDtoEntityType)[keyof typeof NestedRecurrenceDtoEntityType];
+
+export const NestedRecurrenceDtoEntityType = {
+  Recurrence: 'Recurrence',
+} as const;
+
+export type NestedRecurrenceDtoDaysOfWeekItem =
+  (typeof NestedRecurrenceDtoDaysOfWeekItem)[keyof typeof NestedRecurrenceDtoDaysOfWeekItem];
+
+export const NestedRecurrenceDtoDaysOfWeekItem = {
+  monday: 'monday',
+  tuesday: 'tuesday',
+  wednesday: 'wednesday',
+  thursday: 'thursday',
+  friday: 'friday',
+  saturday: 'saturday',
+  sunday: 'sunday',
+} as const;
+
+/**
+ * A repeating event schedule calculated in UTC. Named frequencies use UTC calendar units; ISO 8601 frequencies specify a repeating duration. Interval multiplies either frequency form and is treated as 1 when omitted. At least one of interval or daysOfWeek is required; daysOfWeek requires weekly frequency. Events start on or after startsAt and, when supplied, on or before endsAt; endsAt must not precede startsAt.. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface NestedRecurrenceDto {
+  /**
+   * Existing ID, or omit/use null or an empty string to create a new entity. ID-only objects link existing entities; supplied fields are merged or created.
+   * @nullable
+   */
+  id?: string | null;
+  /** Entity type discriminator. Always "Recurrence" for Recurrence entities. */
+  entityType?: NestedRecurrenceDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /**
+   * UTC timestamp anchoring the recurrence and its earliest permitted event start.
+   * @pattern Z$
+   */
+  startsAt?: string;
+  /**
+   * Inclusive UTC limit on event start times; omission leaves the recurrence unbounded.
+   * @pattern Z$
+   */
+  endsAt?: string;
+  /** Named UTC calendar frequency or a strictly positive ISO 8601 repeating duration. */
+  frequency?: string;
+  /**
+   * Positive multiplier applied to the frequency; treated as 1 when omitted.
+   * @minimum 1
+   */
+  interval?: number;
+  /**
+   * UTC weekday filter for weekly event starts; requires weekly frequency. Weeks begin on Monday.
+   * @minItems 1
+   */
+  daysOfWeek?: NestedRecurrenceDtoDaysOfWeekItem[];
+  /**
+   * Event duration overriding When.duration; omission inherits the schedule default, not frequency.
+   * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+   */
+  duration?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "When" for When entities.
+ */
+export type CreateWhenDtoEntityType =
+  (typeof CreateWhenDtoEntityType)[keyof typeof CreateWhenDtoEntityType];
+
+export const CreateWhenDtoEntityType = {
+  When: 'When',
+} as const;
+
+/**
+ * An event schedule with individual occurrences and repeating recurrences. Scheduled timestamps and recurrence calculations use UTC; timezone is display metadata. Child durations override the default duration.
+ */
+export type CreateWhenDto =
+  | ({
+      /** @minItems 1 */
+      occurrences?: unknown[];
+    } & {
+      /**
+       * Globally unique identifier for this schedule.
+       * @pattern ^When/[^/\s]+$
+       */
+      id: string;
+      /** Entity type discriminator. Always "When" for When entities. */
+      entityType: CreateWhenDtoEntityType;
+      /**
+       * Id of the object this object is derived from.
+       * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+       */
+      basedOn?: string;
+      /** URL for documentation about this entity type. */
+      entityDocumentationUrl: string;
+      /** URL for documentation about this object instance */
+      documentationUrl?: string;
+      /** Timestamp when this entity record was created. */
+      createdAt: string;
+      /** Label codes associated with this entity. */
+      labelCodes: string[];
+      /**
+       * UTC timestamp when this schedule record was last updated.
+       * @pattern Z$
+       */
+      updatedAt: string;
+      /**
+       * IANA timezone name for displaying UTC schedule timestamps; does not change recurrence timing.
+       * @minLength 1
+       */
+      timezone: string;
+      /**
+       * Nonnegative ISO 8601 event duration used when a child entity omits its duration.
+       * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+       */
+      duration: string;
+      /** Occurrence entities defining individual scheduled event times. */
+      occurrences: NestedOccurrenceDto[];
+      /** Recurrence entities defining repeating event schedules. */
+      recurrences: NestedRecurrenceDto[];
+      [key: string]: unknown;
+    })
+  | ({
+      /** @minItems 1 */
+      recurrences?: unknown[];
+    } & {
+      /**
+       * Globally unique identifier for this schedule.
+       * @pattern ^When/[^/\s]+$
+       */
+      id: string;
+      /** Entity type discriminator. Always "When" for When entities. */
+      entityType: CreateWhenDtoEntityType;
+      /**
+       * Id of the object this object is derived from.
+       * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+       */
+      basedOn?: string;
+      /** URL for documentation about this entity type. */
+      entityDocumentationUrl: string;
+      /** URL for documentation about this object instance */
+      documentationUrl?: string;
+      /** Timestamp when this entity record was created. */
+      createdAt: string;
+      /** Label codes associated with this entity. */
+      labelCodes: string[];
+      /**
+       * UTC timestamp when this schedule record was last updated.
+       * @pattern Z$
+       */
+      updatedAt: string;
+      /**
+       * IANA timezone name for displaying UTC schedule timestamps; does not change recurrence timing.
+       * @minLength 1
+       */
+      timezone: string;
+      /**
+       * Nonnegative ISO 8601 event duration used when a child entity omits its duration.
+       * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+       */
+      duration: string;
+      /** Occurrence entities defining individual scheduled event times. */
+      occurrences: NestedOccurrenceDto[];
+      /** Recurrence entities defining repeating event schedules. */
+      recurrences: NestedRecurrenceDto[];
+      [key: string]: unknown;
+    });
+
+/**
+ * Entity type discriminator. Always "When" for When entities.
+ */
+export type WhenResponseDtoEntityType =
+  (typeof WhenResponseDtoEntityType)[keyof typeof WhenResponseDtoEntityType];
+
+export const WhenResponseDtoEntityType = {
+  When: 'When',
+} as const;
+
+export type WhenResponseDtoOccurrencesItem =
+  | OccurrenceResponseDto
+  | {
+      /**
+       * Globally unique identifier for this occurrence.
+       * @pattern ^Occurrence/[^/\s]+$
+       */
+      id: string;
+    };
+
+export type WhenResponseDtoRecurrencesItem =
+  | RecurrenceResponseDto
+  | {
+      /**
+       * Globally unique identifier for this recurrence.
+       * @pattern ^Recurrence/[^/\s]+$
+       */
+      id: string;
+    };
+
+/**
+ * An event schedule with individual occurrences and repeating recurrences. Scheduled timestamps and recurrence calculations use UTC; timezone is display metadata. Child durations override the default duration.
+ */
+export type WhenResponseDto =
+  | ({
+      /** @minItems 1 */
+      occurrences?: unknown[];
+    } & {
+      /**
+       * Globally unique identifier for this schedule.
+       * @pattern ^When/[^/\s]+$
+       */
+      id: string;
+      /** Entity type discriminator. Always "When" for When entities. */
+      entityType: WhenResponseDtoEntityType;
+      /**
+       * Id of the object this object is derived from.
+       * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+       */
+      basedOn?: string;
+      /** URL for documentation about this entity type. */
+      entityDocumentationUrl: string;
+      /** URL for documentation about this object instance */
+      documentationUrl?: string;
+      /** Timestamp when this entity record was created. */
+      createdAt: string;
+      /** Label codes associated with this entity. */
+      labelCodes: string[];
+      /**
+       * UTC timestamp when this schedule record was last updated.
+       * @pattern Z$
+       */
+      updatedAt: string;
+      /**
+       * IANA timezone name for displaying UTC schedule timestamps; does not change recurrence timing.
+       * @minLength 1
+       */
+      timezone: string;
+      /**
+       * Nonnegative ISO 8601 event duration used when a child entity omits its duration.
+       * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+       */
+      duration: string;
+      /** Occurrence entities defining individual scheduled event times. */
+      occurrences: WhenResponseDtoOccurrencesItem[];
+      /** Recurrence entities defining repeating event schedules. */
+      recurrences: WhenResponseDtoRecurrencesItem[];
+      [key: string]: unknown;
+    })
+  | ({
+      /** @minItems 1 */
+      recurrences?: unknown[];
+    } & {
+      /**
+       * Globally unique identifier for this schedule.
+       * @pattern ^When/[^/\s]+$
+       */
+      id: string;
+      /** Entity type discriminator. Always "When" for When entities. */
+      entityType: WhenResponseDtoEntityType;
+      /**
+       * Id of the object this object is derived from.
+       * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+       */
+      basedOn?: string;
+      /** URL for documentation about this entity type. */
+      entityDocumentationUrl: string;
+      /** URL for documentation about this object instance */
+      documentationUrl?: string;
+      /** Timestamp when this entity record was created. */
+      createdAt: string;
+      /** Label codes associated with this entity. */
+      labelCodes: string[];
+      /**
+       * UTC timestamp when this schedule record was last updated.
+       * @pattern Z$
+       */
+      updatedAt: string;
+      /**
+       * IANA timezone name for displaying UTC schedule timestamps; does not change recurrence timing.
+       * @minLength 1
+       */
+      timezone: string;
+      /**
+       * Nonnegative ISO 8601 event duration used when a child entity omits its duration.
+       * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+       */
+      duration: string;
+      /** Occurrence entities defining individual scheduled event times. */
+      occurrences: WhenResponseDtoOccurrencesItem[];
+      /** Recurrence entities defining repeating event schedules. */
+      recurrences: WhenResponseDtoRecurrencesItem[];
+      [key: string]: unknown;
+    });
+
+/**
+ * Entity type discriminator. Always "When" for When entities.
+ */
+export type UpdateWhenDtoEntityType =
+  (typeof UpdateWhenDtoEntityType)[keyof typeof UpdateWhenDtoEntityType];
+
+export const UpdateWhenDtoEntityType = {
+  When: 'When',
+} as const;
+
+/**
+ * An event schedule with individual occurrences and repeating recurrences. Scheduled timestamps and recurrence calculations use UTC; timezone is display metadata. Child durations override the default duration.. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface UpdateWhenDto {
+  /**
+   * Globally unique identifier for this schedule.
+   * @pattern ^When/[^/\s]+$
+   */
+  id?: string;
+  /** Entity type discriminator. Always "When" for When entities. */
+  entityType?: UpdateWhenDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /**
+   * UTC timestamp when this schedule record was last updated.
+   * @pattern Z$
+   */
+  updatedAt?: string;
+  /**
+   * IANA timezone name for displaying UTC schedule timestamps; does not change recurrence timing.
+   * @minLength 1
+   */
+  timezone?: string;
+  /**
+   * Nonnegative ISO 8601 event duration used when a child entity omits its duration.
+   * @pattern ^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$
+   */
+  duration?: string;
+  /** Occurrence entities defining individual scheduled event times. */
+  occurrences?: NestedOccurrenceDto[];
+  /** Recurrence entities defining repeating event schedules. */
+  recurrences?: NestedRecurrenceDto[];
+  [key: string]: unknown;
 }
 
 export type ListActionRelationsParams = {
@@ -3722,6 +6374,26 @@ export const ListLabelRelationsDirection = {
   outgoing: 'outgoing',
 } as const;
 
+export type ListMeasurementMethodRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListMeasurementMethodRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListMeasurementMethodRelationsDirection =
+  (typeof ListMeasurementMethodRelationsDirection)[keyof typeof ListMeasurementMethodRelationsDirection];
+
+export const ListMeasurementMethodRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
 export type ListMemberRelationsParams = {
   /**
    * Which endpoint must match the requested object.
@@ -3742,6 +6414,26 @@ export const ListMemberRelationsDirection = {
   outgoing: 'outgoing',
 } as const;
 
+export type ListMetricRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListMetricRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListMetricRelationsDirection =
+  (typeof ListMetricRelationsDirection)[keyof typeof ListMetricRelationsDirection];
+
+export const ListMetricRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
 export type ListObservationRelationsParams = {
   /**
    * Which endpoint must match the requested object.
@@ -3757,6 +6449,26 @@ export type ListObservationRelationsDirection =
   (typeof ListObservationRelationsDirection)[keyof typeof ListObservationRelationsDirection];
 
 export const ListObservationRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListOccurrenceRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListOccurrenceRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListOccurrenceRelationsDirection =
+  (typeof ListOccurrenceRelationsDirection)[keyof typeof ListOccurrenceRelationsDirection];
+
+export const ListOccurrenceRelationsDirection = {
   both: 'both',
   incoming: 'incoming',
   outgoing: 'outgoing',
@@ -3837,6 +6549,26 @@ export type ListProtocolRelationsDirection =
   (typeof ListProtocolRelationsDirection)[keyof typeof ListProtocolRelationsDirection];
 
 export const ListProtocolRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListRecurrenceRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListRecurrenceRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListRecurrenceRelationsDirection =
+  (typeof ListRecurrenceRelationsDirection)[keyof typeof ListRecurrenceRelationsDirection];
+
+export const ListRecurrenceRelationsDirection = {
   both: 'both',
   incoming: 'incoming',
   outgoing: 'outgoing',
@@ -3977,6 +6709,26 @@ export type ListVoteRelationsDirection =
   (typeof ListVoteRelationsDirection)[keyof typeof ListVoteRelationsDirection];
 
 export const ListVoteRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
+export type ListWhenRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListWhenRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListWhenRelationsDirection =
+  (typeof ListWhenRelationsDirection)[keyof typeof ListWhenRelationsDirection];
+
+export const ListWhenRelationsDirection = {
   both: 'both',
   incoming: 'incoming',
   outgoing: 'outgoing',
@@ -4394,7 +7146,7 @@ export const getCreateChangeUrl = () => {
  * @summary Create a Change.
  */
 export const createChange = async (
-  createChangeDto: NonReadonly<CreateChangeDto>,
+  createChangeDto: CreateChangeDto,
   options?: RequestInit,
 ): Promise<createChangeResponse> => {
   const getHeaders = (
@@ -4555,7 +7307,7 @@ export const getUpdateChangeUrl = (id: string) => {
  */
 export const updateChange = async (
   id: string,
-  updateChangeDto: NonReadonly<UpdateChangeDto>,
+  updateChangeDto: UpdateChangeDto,
   options?: RequestInit,
 ): Promise<updateChangeResponse> => {
   const getHeaders = (
@@ -5453,7 +8205,7 @@ export const getCreateDecisionUrl = () => {
  * @summary Create a Decision.
  */
 export const createDecision = async (
-  createDecisionDto: NonReadonly<CreateDecisionDto>,
+  createDecisionDto: CreateDecisionDto,
   options?: RequestInit,
 ): Promise<createDecisionResponse> => {
   const getHeaders = (
@@ -5614,7 +8366,7 @@ export const getUpdateDecisionUrl = (id: string) => {
  */
 export const updateDecision = async (
   id: string,
-  updateDecisionDto: NonReadonly<UpdateDecisionDto>,
+  updateDecisionDto: UpdateDecisionDto,
   options?: RequestInit,
 ): Promise<updateDecisionResponse> => {
   const getHeaders = (
@@ -7186,6 +9938,378 @@ export const listLabelRelations = async (
   } as listLabelRelationsResponse;
 };
 
+export type createMeasurementMethodResponse201 = {
+  data: MeasurementMethodResponseDto;
+  status: 201;
+};
+
+export type createMeasurementMethodResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type createMeasurementMethodResponseSuccess =
+  createMeasurementMethodResponse201 & {
+    headers: Headers;
+  };
+export type createMeasurementMethodResponseError =
+  createMeasurementMethodResponse400 & {
+    headers: Headers;
+  };
+
+export type createMeasurementMethodResponse =
+  createMeasurementMethodResponseSuccess | createMeasurementMethodResponseError;
+
+export const getCreateMeasurementMethodUrl = () => {
+  return `${getApiBaseUrl()}/measurement-methods`;
+};
+
+/**
+ * @summary Create a MeasurementMethod.
+ */
+export const createMeasurementMethod = async (
+  createMeasurementMethodDto: CreateMeasurementMethodDto,
+  options?: RequestInit,
+): Promise<createMeasurementMethodResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateMeasurementMethodUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createMeasurementMethodDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createMeasurementMethodResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createMeasurementMethodResponse;
+};
+
+export type listMeasurementMethodsResponse200 = {
+  data: MeasurementMethodResponseDto[];
+  status: 200;
+};
+
+export type listMeasurementMethodsResponseSuccess =
+  listMeasurementMethodsResponse200 & {
+    headers: Headers;
+  };
+export type listMeasurementMethodsResponse =
+  listMeasurementMethodsResponseSuccess;
+
+export const getListMeasurementMethodsUrl = () => {
+  return `${getApiBaseUrl()}/measurement-methods`;
+};
+
+/**
+ * @summary List MeasurementMethod records.
+ */
+export const listMeasurementMethods = async (
+  options?: RequestInit,
+): Promise<listMeasurementMethodsResponse> => {
+  const res = await fetch(getListMeasurementMethodsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listMeasurementMethodsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listMeasurementMethodsResponse;
+};
+
+export type getMeasurementMethodResponse200 = {
+  data: MeasurementMethodResponseDto;
+  status: 200;
+};
+
+export type getMeasurementMethodResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getMeasurementMethodResponseSuccess =
+  getMeasurementMethodResponse200 & {
+    headers: Headers;
+  };
+export type getMeasurementMethodResponseError =
+  getMeasurementMethodResponse404 & {
+    headers: Headers;
+  };
+
+export type getMeasurementMethodResponse =
+  getMeasurementMethodResponseSuccess | getMeasurementMethodResponseError;
+
+export const getGetMeasurementMethodUrl = (id: string) => {
+  return `${getApiBaseUrl()}/measurement-methods/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Get a MeasurementMethod by ID.
+ */
+export const getMeasurementMethod = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getMeasurementMethodResponse> => {
+  const res = await fetch(getGetMeasurementMethodUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getMeasurementMethodResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getMeasurementMethodResponse;
+};
+
+export type updateMeasurementMethodResponse200 = {
+  data: MeasurementMethodResponseDto;
+  status: 200;
+};
+
+export type updateMeasurementMethodResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type updateMeasurementMethodResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateMeasurementMethodResponseSuccess =
+  updateMeasurementMethodResponse200 & {
+    headers: Headers;
+  };
+export type updateMeasurementMethodResponseError = (
+  updateMeasurementMethodResponse400 | updateMeasurementMethodResponse404
+) & {
+  headers: Headers;
+};
+
+export type updateMeasurementMethodResponse =
+  updateMeasurementMethodResponseSuccess | updateMeasurementMethodResponseError;
+
+export const getUpdateMeasurementMethodUrl = (id: string) => {
+  return `${getApiBaseUrl()}/measurement-methods/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Update a MeasurementMethod.
+ */
+export const updateMeasurementMethod = async (
+  id: string,
+  updateMeasurementMethodDto: UpdateMeasurementMethodDto,
+  options?: RequestInit,
+): Promise<updateMeasurementMethodResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateMeasurementMethodUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateMeasurementMethodDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateMeasurementMethodResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateMeasurementMethodResponse;
+};
+
+export type deleteMeasurementMethodResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteMeasurementMethodResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteMeasurementMethodResponseSuccess =
+  deleteMeasurementMethodResponse204 & {
+    headers: Headers;
+  };
+export type deleteMeasurementMethodResponseError =
+  deleteMeasurementMethodResponse404 & {
+    headers: Headers;
+  };
+
+export type deleteMeasurementMethodResponse =
+  deleteMeasurementMethodResponseSuccess | deleteMeasurementMethodResponseError;
+
+export const getDeleteMeasurementMethodUrl = (id: string) => {
+  return `${getApiBaseUrl()}/measurement-methods/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Delete a MeasurementMethod.
+ */
+export const deleteMeasurementMethod = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteMeasurementMethodResponse> => {
+  const res = await fetch(getDeleteMeasurementMethodUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteMeasurementMethodResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteMeasurementMethodResponse;
+};
+
+export type listMeasurementMethodRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listMeasurementMethodRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listMeasurementMethodRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listMeasurementMethodRelationsResponseSuccess =
+  listMeasurementMethodRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listMeasurementMethodRelationsResponseError = (
+  | listMeasurementMethodRelationsResponse400
+  | listMeasurementMethodRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listMeasurementMethodRelationsResponse =
+  | listMeasurementMethodRelationsResponseSuccess
+  | listMeasurementMethodRelationsResponseError;
+
+export const getListMeasurementMethodRelationsUrl = (
+  id: string,
+  params?: ListMeasurementMethodRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/measurement-methods/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/measurement-methods/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a MeasurementMethod.
+ */
+export const listMeasurementMethodRelations = async (
+  id: string,
+  params?: ListMeasurementMethodRelationsParams,
+  options?: RequestInit,
+): Promise<listMeasurementMethodRelationsResponse> => {
+  const res = await fetch(getListMeasurementMethodRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listMeasurementMethodRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listMeasurementMethodRelationsResponse;
+};
+
 export type createMemberResponse201 = {
   data: MemberResponseDto;
   status: 201;
@@ -7539,6 +10663,359 @@ export const listMemberRelations = async (
   } as listMemberRelationsResponse;
 };
 
+export type createMetricResponse201 = {
+  data: MetricResponseDto;
+  status: 201;
+};
+
+export type createMetricResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type createMetricResponseSuccess = createMetricResponse201 & {
+  headers: Headers;
+};
+export type createMetricResponseError = createMetricResponse400 & {
+  headers: Headers;
+};
+
+export type createMetricResponse =
+  createMetricResponseSuccess | createMetricResponseError;
+
+export const getCreateMetricUrl = () => {
+  return `${getApiBaseUrl()}/metrics`;
+};
+
+/**
+ * @summary Create a Metric.
+ */
+export const createMetric = async (
+  createMetricDto: CreateMetricDto,
+  options?: RequestInit,
+): Promise<createMetricResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateMetricUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createMetricDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createMetricResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createMetricResponse;
+};
+
+export type listMetricsResponse200 = {
+  data: MetricResponseDto[];
+  status: 200;
+};
+
+export type listMetricsResponseSuccess = listMetricsResponse200 & {
+  headers: Headers;
+};
+export type listMetricsResponse = listMetricsResponseSuccess;
+
+export const getListMetricsUrl = () => {
+  return `${getApiBaseUrl()}/metrics`;
+};
+
+/**
+ * @summary List Metric records.
+ */
+export const listMetrics = async (
+  options?: RequestInit,
+): Promise<listMetricsResponse> => {
+  const res = await fetch(getListMetricsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listMetricsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listMetricsResponse;
+};
+
+export type getMetricResponse200 = {
+  data: MetricResponseDto;
+  status: 200;
+};
+
+export type getMetricResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getMetricResponseSuccess = getMetricResponse200 & {
+  headers: Headers;
+};
+export type getMetricResponseError = getMetricResponse404 & {
+  headers: Headers;
+};
+
+export type getMetricResponse =
+  getMetricResponseSuccess | getMetricResponseError;
+
+export const getGetMetricUrl = (id: string) => {
+  return `${getApiBaseUrl()}/metrics/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Get a Metric by ID.
+ */
+export const getMetric = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getMetricResponse> => {
+  const res = await fetch(getGetMetricUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getMetricResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getMetricResponse;
+};
+
+export type updateMetricResponse200 = {
+  data: MetricResponseDto;
+  status: 200;
+};
+
+export type updateMetricResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type updateMetricResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateMetricResponseSuccess = updateMetricResponse200 & {
+  headers: Headers;
+};
+export type updateMetricResponseError = (
+  updateMetricResponse400 | updateMetricResponse404
+) & {
+  headers: Headers;
+};
+
+export type updateMetricResponse =
+  updateMetricResponseSuccess | updateMetricResponseError;
+
+export const getUpdateMetricUrl = (id: string) => {
+  return `${getApiBaseUrl()}/metrics/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Update a Metric.
+ */
+export const updateMetric = async (
+  id: string,
+  updateMetricDto: UpdateMetricDto,
+  options?: RequestInit,
+): Promise<updateMetricResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateMetricUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateMetricDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateMetricResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateMetricResponse;
+};
+
+export type deleteMetricResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteMetricResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteMetricResponseSuccess = deleteMetricResponse204 & {
+  headers: Headers;
+};
+export type deleteMetricResponseError = deleteMetricResponse404 & {
+  headers: Headers;
+};
+
+export type deleteMetricResponse =
+  deleteMetricResponseSuccess | deleteMetricResponseError;
+
+export const getDeleteMetricUrl = (id: string) => {
+  return `${getApiBaseUrl()}/metrics/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Delete a Metric.
+ */
+export const deleteMetric = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteMetricResponse> => {
+  const res = await fetch(getDeleteMetricUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteMetricResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteMetricResponse;
+};
+
+export type listMetricRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listMetricRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listMetricRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listMetricRelationsResponseSuccess =
+  listMetricRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listMetricRelationsResponseError = (
+  listMetricRelationsResponse400 | listMetricRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listMetricRelationsResponse =
+  listMetricRelationsResponseSuccess | listMetricRelationsResponseError;
+
+export const getListMetricRelationsUrl = (
+  id: string,
+  params?: ListMetricRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/metrics/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/metrics/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Metric.
+ */
+export const listMetricRelations = async (
+  id: string,
+  params?: ListMetricRelationsParams,
+  options?: RequestInit,
+): Promise<listMetricRelationsResponse> => {
+  const res = await fetch(getListMetricRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listMetricRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listMetricRelationsResponse;
+};
+
 export type createObservationResponse201 = {
   data: ObservationResponseDto;
   status: 201;
@@ -7567,7 +11044,7 @@ export const getCreateObservationUrl = () => {
  * @summary Create a Observation.
  */
 export const createObservation = async (
-  createObservationDto: NonReadonly<CreateObservationDto>,
+  createObservationDto: CreateObservationDto,
   options?: RequestInit,
 ): Promise<createObservationResponse> => {
   const getHeaders = (
@@ -7728,7 +11205,7 @@ export const getUpdateObservationUrl = (id: string) => {
  */
 export const updateObservation = async (
   id: string,
-  updateObservationDto: NonReadonly<UpdateObservationDto>,
+  updateObservationDto: UpdateObservationDto,
   options?: RequestInit,
 ): Promise<updateObservationResponse> => {
   const getHeaders = (
@@ -7891,6 +11368,359 @@ export const listObservationRelations = async (
     status: res.status,
     headers: res.headers,
   } as listObservationRelationsResponse;
+};
+
+export type createOccurrenceResponse201 = {
+  data: OccurrenceResponseDto;
+  status: 201;
+};
+
+export type createOccurrenceResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type createOccurrenceResponseSuccess = createOccurrenceResponse201 & {
+  headers: Headers;
+};
+export type createOccurrenceResponseError = createOccurrenceResponse400 & {
+  headers: Headers;
+};
+
+export type createOccurrenceResponse =
+  createOccurrenceResponseSuccess | createOccurrenceResponseError;
+
+export const getCreateOccurrenceUrl = () => {
+  return `${getApiBaseUrl()}/occurrences`;
+};
+
+/**
+ * @summary Create a Occurrence.
+ */
+export const createOccurrence = async (
+  createOccurrenceDto: CreateOccurrenceDto,
+  options?: RequestInit,
+): Promise<createOccurrenceResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateOccurrenceUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createOccurrenceDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createOccurrenceResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createOccurrenceResponse;
+};
+
+export type listOccurrencesResponse200 = {
+  data: OccurrenceResponseDto[];
+  status: 200;
+};
+
+export type listOccurrencesResponseSuccess = listOccurrencesResponse200 & {
+  headers: Headers;
+};
+export type listOccurrencesResponse = listOccurrencesResponseSuccess;
+
+export const getListOccurrencesUrl = () => {
+  return `${getApiBaseUrl()}/occurrences`;
+};
+
+/**
+ * @summary List Occurrence records.
+ */
+export const listOccurrences = async (
+  options?: RequestInit,
+): Promise<listOccurrencesResponse> => {
+  const res = await fetch(getListOccurrencesUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listOccurrencesResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listOccurrencesResponse;
+};
+
+export type getOccurrenceResponse200 = {
+  data: OccurrenceResponseDto;
+  status: 200;
+};
+
+export type getOccurrenceResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getOccurrenceResponseSuccess = getOccurrenceResponse200 & {
+  headers: Headers;
+};
+export type getOccurrenceResponseError = getOccurrenceResponse404 & {
+  headers: Headers;
+};
+
+export type getOccurrenceResponse =
+  getOccurrenceResponseSuccess | getOccurrenceResponseError;
+
+export const getGetOccurrenceUrl = (id: string) => {
+  return `${getApiBaseUrl()}/occurrences/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Get a Occurrence by ID.
+ */
+export const getOccurrence = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getOccurrenceResponse> => {
+  const res = await fetch(getGetOccurrenceUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getOccurrenceResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getOccurrenceResponse;
+};
+
+export type updateOccurrenceResponse200 = {
+  data: OccurrenceResponseDto;
+  status: 200;
+};
+
+export type updateOccurrenceResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type updateOccurrenceResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateOccurrenceResponseSuccess = updateOccurrenceResponse200 & {
+  headers: Headers;
+};
+export type updateOccurrenceResponseError = (
+  updateOccurrenceResponse400 | updateOccurrenceResponse404
+) & {
+  headers: Headers;
+};
+
+export type updateOccurrenceResponse =
+  updateOccurrenceResponseSuccess | updateOccurrenceResponseError;
+
+export const getUpdateOccurrenceUrl = (id: string) => {
+  return `${getApiBaseUrl()}/occurrences/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Update a Occurrence.
+ */
+export const updateOccurrence = async (
+  id: string,
+  updateOccurrenceDto: UpdateOccurrenceDto,
+  options?: RequestInit,
+): Promise<updateOccurrenceResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateOccurrenceUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateOccurrenceDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateOccurrenceResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateOccurrenceResponse;
+};
+
+export type deleteOccurrenceResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteOccurrenceResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteOccurrenceResponseSuccess = deleteOccurrenceResponse204 & {
+  headers: Headers;
+};
+export type deleteOccurrenceResponseError = deleteOccurrenceResponse404 & {
+  headers: Headers;
+};
+
+export type deleteOccurrenceResponse =
+  deleteOccurrenceResponseSuccess | deleteOccurrenceResponseError;
+
+export const getDeleteOccurrenceUrl = (id: string) => {
+  return `${getApiBaseUrl()}/occurrences/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Delete a Occurrence.
+ */
+export const deleteOccurrence = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteOccurrenceResponse> => {
+  const res = await fetch(getDeleteOccurrenceUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteOccurrenceResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteOccurrenceResponse;
+};
+
+export type listOccurrenceRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listOccurrenceRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listOccurrenceRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listOccurrenceRelationsResponseSuccess =
+  listOccurrenceRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listOccurrenceRelationsResponseError = (
+  listOccurrenceRelationsResponse400 | listOccurrenceRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listOccurrenceRelationsResponse =
+  listOccurrenceRelationsResponseSuccess | listOccurrenceRelationsResponseError;
+
+export const getListOccurrenceRelationsUrl = (
+  id: string,
+  params?: ListOccurrenceRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/occurrences/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/occurrences/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Occurrence.
+ */
+export const listOccurrenceRelations = async (
+  id: string,
+  params?: ListOccurrenceRelationsParams,
+  options?: RequestInit,
+): Promise<listOccurrenceRelationsResponse> => {
+  const res = await fetch(getListOccurrenceRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listOccurrenceRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listOccurrenceRelationsResponse;
 };
 
 export type createOrganizationResponse201 = {
@@ -9298,6 +13128,359 @@ export const listProtocolRelations = async (
     status: res.status,
     headers: res.headers,
   } as listProtocolRelationsResponse;
+};
+
+export type createRecurrenceResponse201 = {
+  data: RecurrenceResponseDto;
+  status: 201;
+};
+
+export type createRecurrenceResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type createRecurrenceResponseSuccess = createRecurrenceResponse201 & {
+  headers: Headers;
+};
+export type createRecurrenceResponseError = createRecurrenceResponse400 & {
+  headers: Headers;
+};
+
+export type createRecurrenceResponse =
+  createRecurrenceResponseSuccess | createRecurrenceResponseError;
+
+export const getCreateRecurrenceUrl = () => {
+  return `${getApiBaseUrl()}/recurrences`;
+};
+
+/**
+ * @summary Create a Recurrence.
+ */
+export const createRecurrence = async (
+  createRecurrenceDto: CreateRecurrenceDto,
+  options?: RequestInit,
+): Promise<createRecurrenceResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateRecurrenceUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createRecurrenceDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createRecurrenceResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createRecurrenceResponse;
+};
+
+export type listRecurrencesResponse200 = {
+  data: RecurrenceResponseDto[];
+  status: 200;
+};
+
+export type listRecurrencesResponseSuccess = listRecurrencesResponse200 & {
+  headers: Headers;
+};
+export type listRecurrencesResponse = listRecurrencesResponseSuccess;
+
+export const getListRecurrencesUrl = () => {
+  return `${getApiBaseUrl()}/recurrences`;
+};
+
+/**
+ * @summary List Recurrence records.
+ */
+export const listRecurrences = async (
+  options?: RequestInit,
+): Promise<listRecurrencesResponse> => {
+  const res = await fetch(getListRecurrencesUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listRecurrencesResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listRecurrencesResponse;
+};
+
+export type getRecurrenceResponse200 = {
+  data: RecurrenceResponseDto;
+  status: 200;
+};
+
+export type getRecurrenceResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getRecurrenceResponseSuccess = getRecurrenceResponse200 & {
+  headers: Headers;
+};
+export type getRecurrenceResponseError = getRecurrenceResponse404 & {
+  headers: Headers;
+};
+
+export type getRecurrenceResponse =
+  getRecurrenceResponseSuccess | getRecurrenceResponseError;
+
+export const getGetRecurrenceUrl = (id: string) => {
+  return `${getApiBaseUrl()}/recurrences/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Get a Recurrence by ID.
+ */
+export const getRecurrence = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getRecurrenceResponse> => {
+  const res = await fetch(getGetRecurrenceUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getRecurrenceResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as getRecurrenceResponse;
+};
+
+export type updateRecurrenceResponse200 = {
+  data: RecurrenceResponseDto;
+  status: 200;
+};
+
+export type updateRecurrenceResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type updateRecurrenceResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateRecurrenceResponseSuccess = updateRecurrenceResponse200 & {
+  headers: Headers;
+};
+export type updateRecurrenceResponseError = (
+  updateRecurrenceResponse400 | updateRecurrenceResponse404
+) & {
+  headers: Headers;
+};
+
+export type updateRecurrenceResponse =
+  updateRecurrenceResponseSuccess | updateRecurrenceResponseError;
+
+export const getUpdateRecurrenceUrl = (id: string) => {
+  return `${getApiBaseUrl()}/recurrences/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Update a Recurrence.
+ */
+export const updateRecurrence = async (
+  id: string,
+  updateRecurrenceDto: UpdateRecurrenceDto,
+  options?: RequestInit,
+): Promise<updateRecurrenceResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateRecurrenceUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateRecurrenceDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateRecurrenceResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateRecurrenceResponse;
+};
+
+export type deleteRecurrenceResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteRecurrenceResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteRecurrenceResponseSuccess = deleteRecurrenceResponse204 & {
+  headers: Headers;
+};
+export type deleteRecurrenceResponseError = deleteRecurrenceResponse404 & {
+  headers: Headers;
+};
+
+export type deleteRecurrenceResponse =
+  deleteRecurrenceResponseSuccess | deleteRecurrenceResponseError;
+
+export const getDeleteRecurrenceUrl = (id: string) => {
+  return `${getApiBaseUrl()}/recurrences/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Delete a Recurrence.
+ */
+export const deleteRecurrence = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteRecurrenceResponse> => {
+  const res = await fetch(getDeleteRecurrenceUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteRecurrenceResponse['data'] = body
+    ? JSON.parse(body)
+    : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteRecurrenceResponse;
+};
+
+export type listRecurrenceRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listRecurrenceRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listRecurrenceRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listRecurrenceRelationsResponseSuccess =
+  listRecurrenceRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listRecurrenceRelationsResponseError = (
+  listRecurrenceRelationsResponse400 | listRecurrenceRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listRecurrenceRelationsResponse =
+  listRecurrenceRelationsResponseSuccess | listRecurrenceRelationsResponseError;
+
+export const getListRecurrenceRelationsUrl = (
+  id: string,
+  params?: ListRecurrenceRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/recurrences/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/recurrences/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Recurrence.
+ */
+export const listRecurrenceRelations = async (
+  id: string,
+  params?: ListRecurrenceRelationsParams,
+  options?: RequestInit,
+): Promise<listRecurrenceRelationsResponse> => {
+  const res = await fetch(getListRecurrenceRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listRecurrenceRelationsResponse['data'] = body
+    ? JSON.parse(body)
+    : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listRecurrenceRelationsResponse;
 };
 
 export type createRelationshipResponse201 = {
@@ -11764,4 +15947,347 @@ export const listVoteRelations = async (
     status: res.status,
     headers: res.headers,
   } as listVoteRelationsResponse;
+};
+
+export type createWhenResponse201 = {
+  data: WhenResponseDto;
+  status: 201;
+};
+
+export type createWhenResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type createWhenResponseSuccess = createWhenResponse201 & {
+  headers: Headers;
+};
+export type createWhenResponseError = createWhenResponse400 & {
+  headers: Headers;
+};
+
+export type createWhenResponse =
+  createWhenResponseSuccess | createWhenResponseError;
+
+export const getCreateWhenUrl = () => {
+  return `${getApiBaseUrl()}/whens`;
+};
+
+/**
+ * @summary Create a When.
+ */
+export const createWhen = async (
+  createWhenDto: CreateWhenDto,
+  options?: RequestInit,
+): Promise<createWhenResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateWhenUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createWhenDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createWhenResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createWhenResponse;
+};
+
+export type listWhensResponse200 = {
+  data: WhenResponseDto[];
+  status: 200;
+};
+
+export type listWhensResponseSuccess = listWhensResponse200 & {
+  headers: Headers;
+};
+export type listWhensResponse = listWhensResponseSuccess;
+
+export const getListWhensUrl = () => {
+  return `${getApiBaseUrl()}/whens`;
+};
+
+/**
+ * @summary List When records.
+ */
+export const listWhens = async (
+  options?: RequestInit,
+): Promise<listWhensResponse> => {
+  const res = await fetch(getListWhensUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listWhensResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listWhensResponse;
+};
+
+export type getWhenResponse200 = {
+  data: WhenResponseDto;
+  status: 200;
+};
+
+export type getWhenResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getWhenResponseSuccess = getWhenResponse200 & {
+  headers: Headers;
+};
+export type getWhenResponseError = getWhenResponse404 & {
+  headers: Headers;
+};
+
+export type getWhenResponse = getWhenResponseSuccess | getWhenResponseError;
+
+export const getGetWhenUrl = (id: string) => {
+  return `${getApiBaseUrl()}/whens/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Get a When by ID.
+ */
+export const getWhen = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getWhenResponse> => {
+  const res = await fetch(getGetWhenUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getWhenResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as getWhenResponse;
+};
+
+export type updateWhenResponse200 = {
+  data: WhenResponseDto;
+  status: 200;
+};
+
+export type updateWhenResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type updateWhenResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateWhenResponseSuccess = updateWhenResponse200 & {
+  headers: Headers;
+};
+export type updateWhenResponseError = (
+  updateWhenResponse400 | updateWhenResponse404
+) & {
+  headers: Headers;
+};
+
+export type updateWhenResponse =
+  updateWhenResponseSuccess | updateWhenResponseError;
+
+export const getUpdateWhenUrl = (id: string) => {
+  return `${getApiBaseUrl()}/whens/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Update a When.
+ */
+export const updateWhen = async (
+  id: string,
+  updateWhenDto: UpdateWhenDto,
+  options?: RequestInit,
+): Promise<updateWhenResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateWhenUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateWhenDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateWhenResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateWhenResponse;
+};
+
+export type deleteWhenResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteWhenResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteWhenResponseSuccess = deleteWhenResponse204 & {
+  headers: Headers;
+};
+export type deleteWhenResponseError = deleteWhenResponse404 & {
+  headers: Headers;
+};
+
+export type deleteWhenResponse =
+  deleteWhenResponseSuccess | deleteWhenResponseError;
+
+export const getDeleteWhenUrl = (id: string) => {
+  return `${getApiBaseUrl()}/whens/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Delete a When.
+ */
+export const deleteWhen = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteWhenResponse> => {
+  const res = await fetch(getDeleteWhenUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteWhenResponse['data'] = body ? JSON.parse(body) : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteWhenResponse;
+};
+
+export type listWhenRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listWhenRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listWhenRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listWhenRelationsResponseSuccess = listWhenRelationsResponse200 & {
+  headers: Headers;
+};
+export type listWhenRelationsResponseError = (
+  listWhenRelationsResponse400 | listWhenRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listWhenRelationsResponse =
+  listWhenRelationsResponseSuccess | listWhenRelationsResponseError;
+
+export const getListWhenRelationsUrl = (
+  id: string,
+  params?: ListWhenRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/whens/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/whens/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a When.
+ */
+export const listWhenRelations = async (
+  id: string,
+  params?: ListWhenRelationsParams,
+  options?: RequestInit,
+): Promise<listWhenRelationsResponse> => {
+  const res = await fetch(getListWhenRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listWhenRelationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listWhenRelationsResponse;
 };

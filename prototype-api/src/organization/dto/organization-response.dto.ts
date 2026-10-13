@@ -51,6 +51,12 @@ export class OrganizationResponseDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description: 'Timestamp when this organization record was last updated.',
     format: 'date-time',
   })

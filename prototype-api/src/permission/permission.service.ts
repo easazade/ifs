@@ -23,7 +23,7 @@ export class PermissionService {
 
   create(data: CreatePermissionDto): Promise<PermissionResponseDto> {
     assertEntityType(data, 'Permission');
-    return this.database.create('permission', data, relations);
+    return this.database.createEntity('permission', data, relations);
   }
 
   findAll(): Promise<PermissionResponseDto[]> {
@@ -46,7 +46,7 @@ export class PermissionService {
     data: UpdatePermissionDto,
   ): Promise<PermissionResponseDto> {
     assertEntityType(data, 'Permission', true);
-    return this.database.update('permission', id, data, relations);
+    return this.database.updateEntity('permission', id, data, relations);
   }
 
   remove(id: string): Promise<PermissionResponseDto> {

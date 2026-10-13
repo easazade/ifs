@@ -16,7 +16,7 @@ export class ScopeService {
 
   create(data: CreateScopeDto): Promise<ScopeResponseDto> {
     assertEntityType(data, 'Scope');
-    return this.database.create('scope', data, relations);
+    return this.database.createEntity('scope', data, relations);
   }
 
   findAll(): Promise<ScopeResponseDto[]> {
@@ -36,7 +36,7 @@ export class ScopeService {
 
   update(id: string, data: UpdateScopeDto): Promise<ScopeResponseDto> {
     assertEntityType(data, 'Scope', true);
-    return this.database.update('scope', id, data, relations);
+    return this.database.updateEntity('scope', id, data, relations);
   }
 
   remove(id: string): Promise<ScopeResponseDto> {

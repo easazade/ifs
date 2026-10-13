@@ -9,12 +9,16 @@ import { DelegationModule } from './delegation/delegation.module.js';
 import { GeographicAreaModule } from './geographic-area/geographic-area.module.js';
 import { GroupModule } from './group/group.module.js';
 import { LabelModule } from './label/label.module.js';
+import { MeasurementMethodModule } from './measurement-method/measurement-method.module.js';
 import { MemberModule } from './member/member.module.js';
+import { MetricModule } from './metric/metric.module.js';
 import { ObservationModule } from './observation/observation.module.js';
+import { OccurrenceModule } from './occurrence/occurrence.module.js';
 import { OrganizationModule } from './organization/organization.module.js';
 import { PermissionModule } from './permission/permission.module.js';
 import { PlaceModule } from './place/place.module.js';
 import { ProtocolModule } from './protocol/protocol.module.js';
+import { RecurrenceModule } from './recurrence/recurrence.module.js';
 import { RelationshipModule } from './relationship/relationship.module.js';
 import { RelationshipTypeModule } from './relationship-type/relationship-type.module.js';
 import { ReviewCommentModule } from './review-comment/review-comment.module.js';
@@ -22,6 +26,7 @@ import { RoleModule } from './role/role.module.js';
 import { RuleModule } from './rule/rule.module.js';
 import { ScopeModule } from './scope/scope.module.js';
 import { VoteModule } from './vote/vote.module.js';
+import { WhenModule } from './when/when.module.js';
 
 @Module({
   imports: [
@@ -34,12 +39,16 @@ import { VoteModule } from './vote/vote.module.js';
     GeographicAreaModule,
     GroupModule,
     LabelModule,
+    MeasurementMethodModule,
     MemberModule,
+    MetricModule,
     ObservationModule,
+    OccurrenceModule,
     OrganizationModule,
     PermissionModule,
     PlaceModule,
     ProtocolModule,
+    RecurrenceModule,
     RelationshipModule,
     RelationshipTypeModule,
     ReviewCommentModule,
@@ -47,6 +56,7 @@ import { VoteModule } from './vote/vote.module.js';
     RuleModule,
     ScopeModule,
     VoteModule,
+    WhenModule,
   ],
 })
 export class GeneratedResourcesModule {}

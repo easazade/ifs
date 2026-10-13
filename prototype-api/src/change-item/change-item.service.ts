@@ -16,7 +16,7 @@ export class ChangeItemService {
 
   create(data: CreateChangeItemDto): Promise<ChangeItemResponseDto> {
     assertEntityType(data, 'ChangeItem');
-    return this.database.create('change_item', data, relations);
+    return this.database.createEntity('change_item', data, relations);
   }
 
   findAll(): Promise<ChangeItemResponseDto[]> {
@@ -39,7 +39,7 @@ export class ChangeItemService {
     data: UpdateChangeItemDto,
   ): Promise<ChangeItemResponseDto> {
     assertEntityType(data, 'ChangeItem', true);
-    return this.database.update('change_item', id, data, relations);
+    return this.database.updateEntity('change_item', id, data, relations);
   }
 
   remove(id: string): Promise<ChangeItemResponseDto> {

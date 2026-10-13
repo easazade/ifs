@@ -1,5 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { applyEntityContracts } from './schema-openapi.js';
 
 export function createOpenApiDocument(app: INestApplication) {
   const config = new DocumentBuilder()
@@ -8,7 +9,7 @@ export function createOpenApiDocument(app: INestApplication) {
     .setVersion('0.0.1')
     .build();
 
-  return SwaggerModule.createDocument(app, config);
+  return applyEntityContracts(SwaggerModule.createDocument(app, config));
 }
 
 export function setupSwagger(app: INestApplication) {

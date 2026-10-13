@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { PermissionResponseDto } from '../../permission/dto/permission-response.dto.js';
+import { NestedPermissionDto } from '../../permission/dto/nested-permission.dto.js';
 
 export class CreateMemberDto {
   @ApiProperty({
@@ -51,11 +51,17 @@ export class CreateMemberDto {
   })
   createdAt: string;
 
+  @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
   @ApiProperty({ description: 'Human-readable name of the member.' })
   name: string;
 
-  @ApiProperty({ type: () => [PermissionResponseDto] })
-  permissions: Array<PermissionResponseDto>;
+  @ApiProperty({ type: () => [NestedPermissionDto] })
+  permissions: Array<NestedPermissionDto>;
 
   @ApiProperty({
     description: 'Whether this member is considered an owner of the system.',

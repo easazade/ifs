@@ -50,6 +50,12 @@ export class CreateScopeDto {
   })
   createdAt: string;
 
+  @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
   @ApiProperty({ description: 'Human-readable name of the scope.' })
   name: string;
 

@@ -29,7 +29,7 @@ export class PlaceService {
 
   create(data: CreatePlaceDto): Promise<PlaceResponseDto> {
     assertEntityType(data, 'Place');
-    return this.database.create('place', data, relations);
+    return this.database.createEntity('place', data, relations);
   }
 
   findAll(): Promise<PlaceResponseDto[]> {
@@ -49,7 +49,7 @@ export class PlaceService {
 
   update(id: string, data: UpdatePlaceDto): Promise<PlaceResponseDto> {
     assertEntityType(data, 'Place', true);
-    return this.database.update('place', id, data, relations);
+    return this.database.updateEntity('place', id, data, relations);
   }
 
   remove(id: string): Promise<PlaceResponseDto> {

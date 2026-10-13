@@ -47,7 +47,7 @@ export class DecisionService {
 
   create(data: CreateDecisionDto): Promise<DecisionResponseDto> {
     assertEntityType(data, 'Decision');
-    return this.database.create('decision', data, relations);
+    return this.database.createEntity('decision', data, relations);
   }
 
   findAll(): Promise<DecisionResponseDto[]> {
@@ -67,7 +67,7 @@ export class DecisionService {
 
   update(id: string, data: UpdateDecisionDto): Promise<DecisionResponseDto> {
     assertEntityType(data, 'Decision', true);
-    return this.database.update('decision', id, data, relations);
+    return this.database.updateEntity('decision', id, data, relations);
   }
 
   remove(id: string): Promise<DecisionResponseDto> {

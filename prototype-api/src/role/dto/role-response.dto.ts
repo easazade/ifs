@@ -51,6 +51,12 @@ export class RoleResponseDto {
   })
   createdAt: string;
 
+  @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
   @ApiProperty({ description: 'Human-readable name of the role.' })
   name: string;
 
@@ -76,13 +82,13 @@ export class RoleResponseDto {
     description: 'Scope entity describing where this role applies.',
     type: () => ScopeResponseDto,
   })
-  scope: ScopeResponseDto;
+  scope: ScopeResponseDto | { id: string };
 
   @ApiProperty({
     description: 'Permission entities bundled into this role.',
     type: () => [PermissionResponseDto],
   })
-  permissions: Array<PermissionResponseDto>;
+  permissions: Array<PermissionResponseDto | { id: string }>;
 
   @ApiProperty({
     description: 'Lifecycle state of the role.',

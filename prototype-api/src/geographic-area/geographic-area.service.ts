@@ -16,7 +16,7 @@ export class GeographicAreaService {
 
   create(data: CreateGeographicAreaDto): Promise<GeographicAreaResponseDto> {
     assertEntityType(data, 'Geographic Area');
-    return this.database.create('geographic_area', data, relations);
+    return this.database.createEntity('geographic_area', data, relations);
   }
 
   findAll(): Promise<GeographicAreaResponseDto[]> {
@@ -39,7 +39,7 @@ export class GeographicAreaService {
     data: UpdateGeographicAreaDto,
   ): Promise<GeographicAreaResponseDto> {
     assertEntityType(data, 'Geographic Area', true);
-    return this.database.update('geographic_area', id, data, relations);
+    return this.database.updateEntity('geographic_area', id, data, relations);
   }
 
   remove(id: string): Promise<GeographicAreaResponseDto> {

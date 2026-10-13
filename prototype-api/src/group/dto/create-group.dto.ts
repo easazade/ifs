@@ -51,6 +51,12 @@ export class CreateGroupDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description: 'Human-readable name of this group.',
     minLength: 1,
   })

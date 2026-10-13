@@ -23,7 +23,7 @@ export class DelegationService {
 
   create(data: CreateDelegationDto): Promise<DelegationResponseDto> {
     assertEntityType(data, 'Delegation');
-    return this.database.create('delegation', data, relations);
+    return this.database.createEntity('delegation', data, relations);
   }
 
   findAll(): Promise<DelegationResponseDto[]> {
@@ -46,7 +46,7 @@ export class DelegationService {
     data: UpdateDelegationDto,
   ): Promise<DelegationResponseDto> {
     assertEntityType(data, 'Delegation', true);
-    return this.database.update('delegation', id, data, relations);
+    return this.database.updateEntity('delegation', id, data, relations);
   }
 
   remove(id: string): Promise<DelegationResponseDto> {

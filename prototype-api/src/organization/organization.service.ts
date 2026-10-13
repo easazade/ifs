@@ -16,7 +16,7 @@ export class OrganizationService {
 
   create(data: CreateOrganizationDto): Promise<OrganizationResponseDto> {
     assertEntityType(data, 'Organization');
-    return this.database.create('organization', data, relations);
+    return this.database.createEntity('organization', data, relations);
   }
 
   findAll(): Promise<OrganizationResponseDto[]> {
@@ -39,7 +39,7 @@ export class OrganizationService {
     data: UpdateOrganizationDto,
   ): Promise<OrganizationResponseDto> {
     assertEntityType(data, 'Organization', true);
-    return this.database.update('organization', id, data, relations);
+    return this.database.updateEntity('organization', id, data, relations);
   }
 
   remove(id: string): Promise<OrganizationResponseDto> {

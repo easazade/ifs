@@ -9,12 +9,16 @@ export const entityTables: Record<string, string> = {
   GeographicArea: 'geographic_area',
   Group: 'group',
   Label: 'label',
+  MeasurementMethod: 'measurement_method',
   Member: 'member',
+  Metric: 'metric',
   Observation: 'observation',
+  Occurrence: 'occurrence',
   Organization: 'organization',
   Permission: 'permission',
   Place: 'place',
   Protocol: 'protocol',
+  Recurrence: 'recurrence',
   Relationship: 'relationship',
   RelationshipType: 'relationship_type',
   ReviewComment: 'review_comment',
@@ -22,4 +26,203 @@ export const entityTables: Record<string, string> = {
   Rule: 'rule',
   Scope: 'scope',
   Vote: 'vote',
+  When: 'when',
+};
+
+export const entityRelations: Record<
+  string,
+  readonly {
+    property: string;
+    table: string;
+    isArray: boolean;
+    readOnly: boolean;
+  }[]
+> = {
+  action: [],
+  change: [
+    {
+      property: 'changes',
+      table: 'change_item',
+      isArray: true,
+      readOnly: false,
+    },
+    {
+      property: 'decision',
+      table: 'decision',
+      isArray: false,
+      readOnly: false,
+    },
+    {
+      property: 'comments',
+      table: 'comment',
+      isArray: true,
+      readOnly: false,
+    },
+    {
+      property: 'reviewComments',
+      table: 'review_comment',
+      isArray: true,
+      readOnly: false,
+    },
+    {
+      property: 'authors',
+      table: 'member',
+      isArray: true,
+      readOnly: false,
+    },
+    {
+      property: 'mainAuthor',
+      table: 'member',
+      isArray: false,
+      readOnly: false,
+    },
+    {
+      property: 'reviewers',
+      table: 'member',
+      isArray: true,
+      readOnly: false,
+    },
+  ],
+  change_item: [],
+  comment: [],
+  decision: [
+    {
+      property: 'previousRevision',
+      table: 'decision',
+      isArray: false,
+      readOnly: false,
+    },
+    {
+      property: 'eligibleMembers',
+      table: 'member',
+      isArray: true,
+      readOnly: false,
+    },
+    {
+      property: 'affectedMembers',
+      table: 'member',
+      isArray: true,
+      readOnly: false,
+    },
+    {
+      property: 'votes',
+      table: 'vote',
+      isArray: true,
+      readOnly: false,
+    },
+    {
+      property: 'rules',
+      table: 'rule',
+      isArray: true,
+      readOnly: false,
+    },
+  ],
+  delegation: [
+    {
+      property: 'permission',
+      table: 'permission',
+      isArray: false,
+      readOnly: false,
+    },
+  ],
+  geographic_area: [],
+  group: [],
+  label: [],
+  measurement_method: [],
+  member: [
+    {
+      property: 'roles',
+      table: 'role',
+      isArray: true,
+      readOnly: true,
+    },
+    {
+      property: 'permissions',
+      table: 'permission',
+      isArray: true,
+      readOnly: false,
+    },
+  ],
+  metric: [
+    {
+      property: 'compositionItems',
+      table: 'metric',
+      isArray: true,
+      readOnly: false,
+    },
+    {
+      property: 'method',
+      table: 'measurement_method',
+      isArray: false,
+      readOnly: false,
+    },
+  ],
+  observation: [
+    {
+      property: 'observer',
+      table: 'member',
+      isArray: false,
+      readOnly: false,
+    },
+  ],
+  occurrence: [],
+  organization: [],
+  permission: [
+    {
+      property: 'actions',
+      table: 'action',
+      isArray: true,
+      readOnly: false,
+    },
+  ],
+  place: [
+    {
+      property: 'geographicArea',
+      table: 'geographic_area',
+      isArray: false,
+      readOnly: false,
+    },
+    {
+      property: 'roles',
+      table: 'role',
+      isArray: true,
+      readOnly: false,
+    },
+  ],
+  protocol: [],
+  recurrence: [],
+  relationship: [],
+  relationship_type: [],
+  review_comment: [],
+  role: [
+    {
+      property: 'scope',
+      table: 'scope',
+      isArray: false,
+      readOnly: false,
+    },
+    {
+      property: 'permissions',
+      table: 'permission',
+      isArray: true,
+      readOnly: false,
+    },
+  ],
+  rule: [],
+  scope: [],
+  vote: [],
+  when: [
+    {
+      property: 'occurrences',
+      table: 'occurrence',
+      isArray: true,
+      readOnly: false,
+    },
+    {
+      property: 'recurrences',
+      table: 'recurrence',
+      isArray: true,
+      readOnly: false,
+    },
+  ],
 };

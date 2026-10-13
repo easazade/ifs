@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { GeographicAreaResponseDto } from '../../geographic-area/dto/geographic-area-response.dto.js';
-import { RoleResponseDto } from '../../role/dto/role-response.dto.js';
+import { NestedGeographicAreaDto } from '../../geographic-area/dto/nested-geographic-area.dto.js';
+import { NestedRoleDto } from '../../role/dto/nested-role.dto.js';
 
 export class CreatePlaceDto {
   @ApiProperty({
@@ -53,6 +53,12 @@ export class CreatePlaceDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description: 'Timestamp when this place record was last updated.',
     format: 'date-time',
   })
@@ -70,16 +76,16 @@ export class CreatePlaceDto {
   @ApiPropertyOptional({
     description:
       'Geographic area occupied by this place, including disconnected areas when applicable.',
-    type: () => GeographicAreaResponseDto,
+    type: () => NestedGeographicAreaDto,
   })
-  geographicArea?: GeographicAreaResponseDto;
+  geographicArea?: NestedGeographicAreaDto;
 
   @ApiPropertyOptional({
     description:
       'Role entities held by parties with responsibilities or authority regarding this place, such as stewardship, protection, management, improvement, construction, promotion, etc.',
-    type: () => [RoleResponseDto],
+    type: () => [NestedRoleDto],
   })
-  roles?: Array<RoleResponseDto>;
+  roles?: Array<NestedRoleDto>;
 
   [key: string]: unknown;
 }

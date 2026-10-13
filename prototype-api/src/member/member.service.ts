@@ -29,7 +29,7 @@ export class MemberService {
 
   create(data: CreateMemberDto): Promise<MemberResponseDto> {
     assertEntityType(data, 'Member');
-    return this.database.create('member', data, relations);
+    return this.database.createEntity('member', data, relations);
   }
 
   findAll(): Promise<MemberResponseDto[]> {
@@ -49,7 +49,7 @@ export class MemberService {
 
   update(id: string, data: UpdateMemberDto): Promise<MemberResponseDto> {
     assertEntityType(data, 'Member', true);
-    return this.database.update('member', id, data, relations);
+    return this.database.updateEntity('member', id, data, relations);
   }
 
   remove(id: string): Promise<MemberResponseDto> {

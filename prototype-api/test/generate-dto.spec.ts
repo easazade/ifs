@@ -49,6 +49,11 @@ function fixture() {
     'permission',
     'scope',
     'geographic-area',
+    'recurrence',
+    'occurrence',
+    'when',
+    'metric',
+    'measurement-method',
   ]) {
     const target = join(root, 'ifs-standards/src/entities', entity);
     mkdirSync(target, { recursive: true });
@@ -111,6 +116,38 @@ describe('DTO generator', () => {
       '"items":{"type":"array","minItems":4,"items":{"type":"array","minItems":2,"maxItems":3,"items":{"type":"number"}}}',
     );
   });
+  it('generates separate nested write contracts with optional nullable IDs', () => {
+    const api = fixture();
+    run(api, 'occurrence');
+    run(api, 'recurrence');
+    run(api, 'when');
+    const create = source(api, 'when', 'create-when.dto.ts');
+    const response = source(api, 'when', 'when-response.dto.ts');
+    expect(create).toContain('occurrences: Array<NestedOccurrenceDto>');
+    expect(create).toContain('recurrences: Array<NestedRecurrenceDto>');
+    expect(response).toContain(
+      'occurrences: Array<OccurrenceResponseDto | { id: string }>',
+    );
+    const nested = source(api, 'occurrence', 'nested-occurrence.dto.ts');
+    expect(nested).toContain('id?: string | null;');
+    expect(nested).toContain('startsAt?: string;');
+    expect(nested).toContain('entityType?: "Occurrence";');
+    expect(nested).toContain('nullable: true');
+    expect(nested).not.toContain('PartialType');
+    expect(source(api, 'occurrence', 'create-occurrence.dto.ts')).toContain(
+      'id: string;',
+    );
+  });
+  it('supports recursive nested DTOs without eager inheritance cycles', () => {
+    const api = fixture();
+    run(api, 'measurement-method');
+    run(api, 'metric');
+    const nested = source(api, 'metric', 'nested-metric.dto.ts');
+    expect(nested).toContain('compositionItems?: Array<NestedMetricDto>');
+    expect(nested).toContain('type: () => [NestedMetricDto]');
+    expect(nested).not.toContain("from './nested-metric.dto.js'");
+    expect(nested).not.toContain('extends');
+  });
   it('fails before writing when related response DTOs are missing', () => {
     const api = fixture();
     const result = spawnSync(
@@ -131,8 +168,12 @@ describe('DTO generator', () => {
     const create = source(api, 'member', 'create-member.dto.ts');
     const response = source(api, 'member', 'member-response.dto.ts');
     expect(create).not.toContain('\n  roles:');
-    expect(response).toContain('roles: Array<RoleResponseDto>');
-    expect(response).toContain('permissions: Array<PermissionResponseDto>');
+    expect(response).toContain(
+      'roles: Array<RoleResponseDto | { id: string }>',
+    );
+    expect(response).toContain(
+      'permissions: Array<PermissionResponseDto | { id: string }>',
+    );
     run(api);
     expect(source(api, 'member', 'member-response.dto.ts')).toBe(response);
     expect(source(api, 'member', 'create-member.dto.ts')).toBe(create);
@@ -154,6 +195,96 @@ describe('DTO generator', () => {
       expect(dto).toContain('[key: string]: unknown;');
     }
   });
+  it('resolves recurrence duration references and retains frequency constraints', () => {
+    const api = fixture();
+    run(api, 'recurrence');
+    const schema = JSON.parse(
+      readFileSync(
+        join(
+          api,
+          '../ifs-standards/src/entities/recurrence/recurrence.schema.json',
+        ),
+        'utf8',
+      ),
+    );
+    for (const file of [
+      'create-recurrence.dto.ts',
+      'recurrence-response.dto.ts',
+    ]) {
+      const dto = source(api, 'recurrence', file);
+      expect(dto).toContain('duration?: string;');
+      expect(dto).toContain('frequency: string;');
+      expect(dto).toContain(
+        `pattern: ${JSON.stringify(schema.$defs.duration.pattern)}`,
+      );
+      expect(dto).toContain(schema.properties.duration.description);
+      expect(dto).toContain('anyOf:');
+      expect(dto).toContain(
+        '"enum":["hourly","daily","weekly","monthly","yearly"]',
+      );
+      expect(dto).toContain('"pattern":"^P(?=.*[1-9])"');
+      expect(dto).toContain('"allOf":[{"type":"string"');
+      expect(dto).not.toContain('#/$defs/');
+    }
+  });
+  it('resolves chained local references in arrays and nested objects', () => {
+    const api = fixture();
+    const path = join(
+      api,
+      '../ifs-standards/src/entities/recurrence/recurrence.schema.json',
+    );
+    const schema = JSON.parse(readFileSync(path, 'utf8'));
+    schema.$defs['duration/value~'] = { $ref: '#/$defs/duration' };
+    schema.properties.durations = {
+      type: 'array',
+      items: { $ref: '#/$defs/duration~1value~0' },
+    };
+    schema.properties.events = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { duration: { $ref: '#/$defs/duration' } },
+      },
+    };
+    writeFileSync(path, JSON.stringify(schema));
+    run(api, 'recurrence');
+    const dto = source(api, 'recurrence', 'create-recurrence.dto.ts');
+    expect(dto).toContain('durations?: Array<string>;');
+    expect(dto).toContain('"properties":{"duration":{"type":"string"');
+    expect(dto).not.toContain('#/$defs/');
+  });
+  it.each([
+    [
+      'missing',
+      { $ref: '#/$defs/missing' },
+      'Unknown or unsupported local schema reference',
+    ],
+    [
+      'circular',
+      { $ref: '#/$defs/duration' },
+      'Circular local schema reference',
+    ],
+  ])(
+    'rejects %s local references before writing',
+    (_name, definition, message) => {
+      const api = fixture();
+      const path = join(
+        api,
+        '../ifs-standards/src/entities/recurrence/recurrence.schema.json',
+      );
+      const schema = JSON.parse(readFileSync(path, 'utf8'));
+      schema.$defs.duration = definition;
+      writeFileSync(path, JSON.stringify(schema));
+      const result = spawnSync(
+        process.execPath,
+        ['scripts/generate-dto.mjs', 'recurrence', '--skip-format'],
+        { cwd: api, encoding: 'utf8' },
+      );
+      expect(result.status).toBe(1);
+      expect(result.stderr).toContain(message);
+      expect(existsSync(join(api, 'src/recurrence'))).toBe(false);
+    },
+  );
   it('rejects the abstract base before writing DTOs', () => {
     const api = fixture();
     const result = spawnSync(

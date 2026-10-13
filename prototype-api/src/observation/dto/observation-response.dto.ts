@@ -52,6 +52,12 @@ export class ObservationResponseDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description: 'Timestamp when this observation record was last updated.',
     format: 'date-time',
   })
@@ -77,7 +83,7 @@ export class ObservationResponseDto {
     description: 'Member who made the report about what they observed.',
     type: () => MemberResponseDto,
   })
-  observer: MemberResponseDto;
+  observer: MemberResponseDto | { id: string };
 
   [key: string]: unknown;
 }

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ActionResponseDto } from '../../action/dto/action-response.dto.js';
+import { NestedActionDto } from '../../action/dto/nested-action.dto.js';
 
 export class CreatePermissionDto {
   @ApiProperty({
@@ -52,6 +52,12 @@ export class CreatePermissionDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description: 'ID list of actions that this permission allows',
     type: [String],
   })
@@ -59,9 +65,9 @@ export class CreatePermissionDto {
 
   @ApiPropertyOptional({
     description: 'List of actions that this permission allows',
-    type: () => [ActionResponseDto],
+    type: () => [NestedActionDto],
   })
-  actions?: Array<ActionResponseDto>;
+  actions?: Array<NestedActionDto>;
 
   @ApiPropertyOptional({
     description: 'Identifier of the member receiving this permission.',

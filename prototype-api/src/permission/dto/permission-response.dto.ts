@@ -52,6 +52,12 @@ export class PermissionResponseDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description: 'ID list of actions that this permission allows',
     type: [String],
   })
@@ -61,7 +67,7 @@ export class PermissionResponseDto {
     description: 'List of actions that this permission allows',
     type: () => [ActionResponseDto],
   })
-  actions?: Array<ActionResponseDto>;
+  actions?: Array<ActionResponseDto | { id: string }>;
 
   @ApiPropertyOptional({
     description: 'Identifier of the member receiving this permission.',

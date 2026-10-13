@@ -51,6 +51,12 @@ export class DelegationResponseDto {
   })
   createdAt: string;
 
+  @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
   @ApiPropertyOptional({
     description: 'Timestamp when this delegation record was last updated.',
     format: 'date-time',
@@ -69,7 +75,7 @@ export class DelegationResponseDto {
       'Permission entity represented by permissionId when expanded by an implementation.',
     type: () => PermissionResponseDto,
   })
-  permission?: PermissionResponseDto;
+  permission?: PermissionResponseDto | { id: string };
 
   @ApiProperty({
     description: 'ID of the role or member delegating the permission.',

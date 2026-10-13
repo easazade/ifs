@@ -51,6 +51,12 @@ export class ReviewCommentResponseDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description: 'Timestamp when this review comment was last updated.',
     format: 'date-time',
   })

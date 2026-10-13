@@ -1,9 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ChangeItemResponseDto } from '../../change-item/dto/change-item-response.dto.js';
-import { CommentResponseDto } from '../../comment/dto/comment-response.dto.js';
-import { DecisionResponseDto } from '../../decision/dto/decision-response.dto.js';
-import { MemberResponseDto } from '../../member/dto/member-response.dto.js';
-import { ReviewCommentResponseDto } from '../../review-comment/dto/review-comment-response.dto.js';
+import { NestedChangeItemDto } from '../../change-item/dto/nested-change-item.dto.js';
+import { NestedCommentDto } from '../../comment/dto/nested-comment.dto.js';
+import { NestedDecisionDto } from '../../decision/dto/nested-decision.dto.js';
+import { NestedMemberDto } from '../../member/dto/nested-member.dto.js';
+import { NestedReviewCommentDto } from '../../review-comment/dto/nested-review-comment.dto.js';
 
 export class CreateChangeDto {
   @ApiProperty({
@@ -56,6 +56,12 @@ export class CreateChangeDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description: 'Human-readable title summarizing the proposed change.',
   })
   title: string;
@@ -80,22 +86,22 @@ export class CreateChangeDto {
   @ApiProperty({
     description:
       'ChangeItem entities describing each proposed object-level operation in this change.',
-    type: () => [ChangeItemResponseDto],
+    type: () => [NestedChangeItemDto],
   })
-  changes: Array<ChangeItemResponseDto>;
+  changes: Array<NestedChangeItemDto>;
 
   @ApiPropertyOptional({
     description: 'Current decision about this change',
-    type: () => DecisionResponseDto,
+    type: () => NestedDecisionDto,
   })
-  decision?: DecisionResponseDto;
+  decision?: NestedDecisionDto;
 
   @ApiPropertyOptional({
     description:
       'Recent Comment entities for this change, such as the first page of comments.',
-    type: () => [CommentResponseDto],
+    type: () => [NestedCommentDto],
   })
-  comments?: Array<CommentResponseDto>;
+  comments?: Array<NestedCommentDto>;
 
   @ApiPropertyOptional({
     description:
@@ -107,15 +113,15 @@ export class CreateChangeDto {
   @ApiPropertyOptional({
     description:
       'ReviewComment entities tied to changed objects, fields, records, or diff entries.',
-    type: () => [ReviewCommentResponseDto],
+    type: () => [NestedReviewCommentDto],
   })
-  reviewComments?: Array<ReviewCommentResponseDto>;
+  reviewComments?: Array<NestedReviewCommentDto>;
 
   @ApiProperty({
     description: 'Member entities that authored or co-authored this change.',
-    type: () => [MemberResponseDto],
+    type: () => [NestedMemberDto],
   })
-  authors: Array<MemberResponseDto>;
+  authors: Array<NestedMemberDto>;
 
   @ApiProperty({
     description:
@@ -126,15 +132,15 @@ export class CreateChangeDto {
 
   @ApiProperty({
     description: 'Primary member responsible for this change.',
-    type: () => MemberResponseDto,
+    type: () => NestedMemberDto,
   })
-  mainAuthor: MemberResponseDto;
+  mainAuthor: NestedMemberDto;
 
   @ApiPropertyOptional({
     description: 'Member entities requested or assigned to review this change.',
-    type: () => [MemberResponseDto],
+    type: () => [NestedMemberDto],
   })
-  reviewers?: Array<MemberResponseDto>;
+  reviewers?: Array<NestedMemberDto>;
 
   @ApiProperty({
     description: 'Lifecycle status of the change.',

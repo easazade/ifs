@@ -16,7 +16,7 @@ export class GroupService {
 
   create(data: CreateGroupDto): Promise<GroupResponseDto> {
     assertEntityType(data, 'Group');
-    return this.database.create('group', data, relations);
+    return this.database.createEntity('group', data, relations);
   }
 
   findAll(): Promise<GroupResponseDto[]> {
@@ -36,7 +36,7 @@ export class GroupService {
 
   update(id: string, data: UpdateGroupDto): Promise<GroupResponseDto> {
     assertEntityType(data, 'Group', true);
-    return this.database.update('group', id, data, relations);
+    return this.database.updateEntity('group', id, data, relations);
   }
 
   remove(id: string): Promise<GroupResponseDto> {

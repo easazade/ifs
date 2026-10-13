@@ -23,7 +23,7 @@ export class ObservationService {
 
   create(data: CreateObservationDto): Promise<ObservationResponseDto> {
     assertEntityType(data, 'Observation');
-    return this.database.create('observation', data, relations);
+    return this.database.createEntity('observation', data, relations);
   }
 
   findAll(): Promise<ObservationResponseDto[]> {
@@ -46,7 +46,7 @@ export class ObservationService {
     data: UpdateObservationDto,
   ): Promise<ObservationResponseDto> {
     assertEntityType(data, 'Observation', true);
-    return this.database.update('observation', id, data, relations);
+    return this.database.updateEntity('observation', id, data, relations);
   }
 
   remove(id: string): Promise<ObservationResponseDto> {

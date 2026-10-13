@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { PermissionResponseDto } from '../../permission/dto/permission-response.dto.js';
-import { ScopeResponseDto } from '../../scope/dto/scope-response.dto.js';
+import { NestedPermissionDto } from '../../permission/dto/nested-permission.dto.js';
+import { NestedScopeDto } from '../../scope/dto/nested-scope.dto.js';
 
 export class CreateRoleDto {
   @ApiProperty({
@@ -51,6 +51,12 @@ export class CreateRoleDto {
   })
   createdAt: string;
 
+  @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
   @ApiProperty({ description: 'Human-readable name of the role.' })
   name: string;
 
@@ -74,15 +80,15 @@ export class CreateRoleDto {
 
   @ApiProperty({
     description: 'Scope entity describing where this role applies.',
-    type: () => ScopeResponseDto,
+    type: () => NestedScopeDto,
   })
-  scope: ScopeResponseDto;
+  scope: NestedScopeDto;
 
   @ApiProperty({
     description: 'Permission entities bundled into this role.',
-    type: () => [PermissionResponseDto],
+    type: () => [NestedPermissionDto],
   })
-  permissions: Array<PermissionResponseDto>;
+  permissions: Array<NestedPermissionDto>;
 
   @ApiProperty({
     description: 'Lifecycle state of the role.',

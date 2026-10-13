@@ -16,7 +16,7 @@ export class CommentService {
 
   create(data: CreateCommentDto): Promise<CommentResponseDto> {
     assertEntityType(data, 'Comment');
-    return this.database.create('comment', data, relations);
+    return this.database.createEntity('comment', data, relations);
   }
 
   findAll(): Promise<CommentResponseDto[]> {
@@ -36,7 +36,7 @@ export class CommentService {
 
   update(id: string, data: UpdateCommentDto): Promise<CommentResponseDto> {
     assertEntityType(data, 'Comment', true);
-    return this.database.update('comment', id, data, relations);
+    return this.database.updateEntity('comment', id, data, relations);
   }
 
   remove(id: string): Promise<CommentResponseDto> {

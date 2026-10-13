@@ -59,7 +59,7 @@ export class ChangeService {
 
   create(data: CreateChangeDto): Promise<ChangeResponseDto> {
     assertEntityType(data, 'Change');
-    return this.database.create('change', data, relations);
+    return this.database.createEntity('change', data, relations);
   }
 
   findAll(): Promise<ChangeResponseDto[]> {
@@ -79,7 +79,7 @@ export class ChangeService {
 
   update(id: string, data: UpdateChangeDto): Promise<ChangeResponseDto> {
     assertEntityType(data, 'Change', true);
-    return this.database.update('change', id, data, relations);
+    return this.database.updateEntity('change', id, data, relations);
   }
 
   remove(id: string): Promise<ChangeResponseDto> {

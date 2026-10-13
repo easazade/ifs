@@ -16,7 +16,7 @@ export class RuleService {
 
   create(data: CreateRuleDto): Promise<RuleResponseDto> {
     assertEntityType(data, 'Rule');
-    return this.database.create('rule', data, relations);
+    return this.database.createEntity('rule', data, relations);
   }
 
   findAll(): Promise<RuleResponseDto[]> {
@@ -36,7 +36,7 @@ export class RuleService {
 
   update(id: string, data: UpdateRuleDto): Promise<RuleResponseDto> {
     assertEntityType(data, 'Rule', true);
-    return this.database.update('rule', id, data, relations);
+    return this.database.updateEntity('rule', id, data, relations);
   }
 
   remove(id: string): Promise<RuleResponseDto> {

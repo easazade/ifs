@@ -16,7 +16,7 @@ export class ReviewCommentService {
 
   create(data: CreateReviewCommentDto): Promise<ReviewCommentResponseDto> {
     assertEntityType(data, 'ReviewComment');
-    return this.database.create('review_comment', data, relations);
+    return this.database.createEntity('review_comment', data, relations);
   }
 
   findAll(): Promise<ReviewCommentResponseDto[]> {
@@ -39,7 +39,7 @@ export class ReviewCommentService {
     data: UpdateReviewCommentDto,
   ): Promise<ReviewCommentResponseDto> {
     assertEntityType(data, 'ReviewComment', true);
-    return this.database.update('review_comment', id, data, relations);
+    return this.database.updateEntity('review_comment', id, data, relations);
   }
 
   remove(id: string): Promise<ReviewCommentResponseDto> {

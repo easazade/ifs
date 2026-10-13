@@ -6,10 +6,25 @@ import {
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
-import { AlreadyExistsError, RecordId, Surreal, Table } from 'surrealdb';
+import {
+  AlreadyExistsError,
+  QueryError,
+  RecordId,
+  Surreal,
+  Table,
+} from 'surrealdb';
+import type { SurrealQueryable } from 'surrealdb';
 import { getDatabaseConfig } from './database.config.js';
+import { EntityValidator, validateStoredGraph } from './entity-validation.js';
+import { entityContracts } from './entity-schemas.generated.js';
+import { assertEntityType } from './entity-type.js';
 import { graphEdges } from './entity-storage.js';
-import { entityTables } from './entity-tables.generated.js';
+import { entityRelations, entityTables } from './entity-tables.generated.js';
+import {
+  missingNestedReference,
+  missingNestedRoot,
+  planNestedWrite,
+} from './nested-write.js';
 import { RelationsQueryDto } from './relations-query.dto.js';
 
 export interface Relation {
@@ -36,11 +51,17 @@ function normalize(value: unknown): unknown {
 @Injectable()
 export class SurrealService implements OnModuleInit, OnModuleDestroy {
   readonly client = new Surreal();
+  private readonly validator = new EntityValidator();
 
   async onModuleInit(): Promise<void> {
     const { endpoint, ...options } = getDatabaseConfig();
+    // The SDK's interactive transactions require WebSocket RPC. Keep the configured
+    // host/path/database, converting HTTP(S) to its WebSocket equivalent for the API.
+    const rpcUrl = new URL(endpoint);
+    if (rpcUrl.protocol === 'http:') rpcUrl.protocol = 'ws:';
+    if (rpcUrl.protocol === 'https:') rpcUrl.protocol = 'wss:';
     try {
-      await this.client.connect(endpoint, options);
+      await this.client.connect(rpcUrl.href, options);
     } catch (error) {
       await this.client.close();
       throw error;
@@ -78,6 +99,212 @@ export class SurrealService implements OnModuleInit, OnModuleDestroy {
         result[property] = isArray ? [] : null;
     }
     return result as T;
+  }
+
+  private async expand(
+    record: Document,
+    relations: readonly Relation[],
+    ancestors = new Set<string>(),
+  ): Promise<Document> {
+    const identity =
+      record.id instanceof RecordId ? String(record.id) : undefined;
+    if (identity && ancestors.has(identity))
+      return { id: normalize(record.id) };
+    if (ancestors.size >= 32) return { id: normalize(record.id) };
+    const next = new Set(ancestors);
+    if (identity) next.add(identity);
+    const result = { ...record };
+    for (const { property, table, isArray } of relations) {
+      const value = result[property];
+      if (value === undefined || value === null) continue;
+      const expandChild = async (child: unknown): Promise<unknown> => {
+        const document =
+          child instanceof RecordId
+            ? await this.client.select<Document>(child)
+            : child;
+        if (!document || typeof document !== 'object') return document;
+        return this.expand(
+          document as Document,
+          entityRelations[table] ?? [],
+          next,
+        );
+      };
+      result[property] =
+        isArray && Array.isArray(value)
+          ? await Promise.all(value.map(expandChild))
+          : await expandChild(value);
+    }
+    return result;
+  }
+
+  private async executeWrite(
+    client: SurrealQueryable,
+    sql: string,
+    bindings: Record<string, unknown>,
+  ): Promise<void> {
+    const responses = await client.query(sql, bindings).responses();
+    const errors = responses.flatMap((response) =>
+      response.success ? [] : [response.error],
+    );
+    const failure =
+      errors.find(
+        (error) => !(error instanceof QueryError && error.isNotExecuted),
+      ) ?? errors[0];
+    if (failure) throw failure;
+  }
+
+  // Generated HTTP resources use these validated entry points. Raw CRUD below is
+  // the low-level storage adapter, also used by persistence tests and provisioning.
+  async createEntity<T>(
+    table: string,
+    data: object,
+    relations: readonly Relation[] = entityRelations[table] ?? [],
+  ): Promise<T> {
+    this.assertWriteType(table, data, false);
+    const id = (data as Document).id;
+    if (typeof id !== 'string' || !id.trim())
+      throw new BadRequestException('A nonempty string ID is required.');
+    return this.writeEntity<T>(table, id, data, relations, false);
+  }
+
+  async updateEntity<T>(
+    table: string,
+    id: string,
+    data: object,
+    relations: readonly Relation[] = entityRelations[table] ?? [],
+  ): Promise<T> {
+    this.assertWriteType(table, data, true);
+    const suppliedId = (data as Document).id;
+    if (suppliedId !== undefined && suppliedId !== id)
+      throw new BadRequestException('Record IDs cannot be changed.');
+    return this.writeEntity<T>(table, id, data, relations, true);
+  }
+
+  private assertWriteType(table: string, data: object, partial: boolean): void {
+    const contract = Object.hasOwn(entityContracts, table)
+      ? entityContracts[table]
+      : undefined;
+    if (!contract)
+      throw new BadRequestException(`Unknown entity table: ${table}.`);
+    const discriminator = (
+      contract.properties as Record<string, { const: string }>
+    ).entityType.const;
+    assertEntityType(data, discriminator, partial);
+  }
+
+  private async writeEntity<T>(
+    table: string,
+    id: string,
+    data: object,
+    relations: readonly Relation[],
+    update: boolean,
+  ): Promise<T> {
+    if (
+      table in graphEdges &&
+      [...graphEdges.relationship.immutable, 'in', 'out'].some((key) =>
+        Object.hasOwn(data, key),
+      ) &&
+      update
+    )
+      throw new BadRequestException(
+        'Relationship endpoints are immutable; delete and recreate the edge.',
+      );
+    if (
+      table in graphEdges &&
+      (Object.hasOwn(data, 'in') || Object.hasOwn(data, 'out'))
+    )
+      throw new BadRequestException(
+        'Use sourceId and targetId, not database edge fields.',
+      );
+    const transaction = await this.client.beginTransaction();
+    try {
+      const record = new RecordId(table, id);
+      if (update && !(await transaction.select(record)))
+        throw new NotFoundException(`${table} not found.`);
+      let records: RecordId[];
+      if (table in graphEdges) {
+        const current = update
+          ? await transaction.select<Document>(record)
+          : undefined;
+        const publicCurrent = current
+          ? this.response<Document>(current, relations)
+          : {};
+        const { source, target } = await this.validateEdge(
+          { ...publicCurrent, ...data },
+          transaction,
+        );
+        const content = { ...data } as Document;
+        delete content.id;
+        delete content.sourceId;
+        delete content.targetId;
+        await this.executeWrite(
+          transaction,
+          update
+            ? 'UPDATE $record MERGE $data;'
+            : 'RELATE $source->relationship->$target CONTENT $data;',
+          {
+            record,
+            source,
+            target,
+            data: update ? content : { ...content, id: record },
+          },
+        );
+        records = [record];
+      } else {
+        const plan = planNestedWrite(table, id, data, relations, update);
+        await this.executeWrite(
+          transaction,
+          plan.transactionSql,
+          plan.bindings,
+        );
+        records = plan.records;
+      }
+      await validateStoredGraph(transaction, records, this.validator);
+      await transaction.commit();
+    } catch (error) {
+      await transaction.cancel().catch(() => undefined);
+      const message = error instanceof Error ? error.message : String(error);
+      if (message.includes(missingNestedReference))
+        throw new BadRequestException(
+          'An ID-only nested reference does not exist.',
+        );
+      if (message.includes(missingNestedRoot))
+        throw new NotFoundException(`${table} not found.`);
+      if (error instanceof AlreadyExistsError)
+        throw new ConflictException(`${table} ${id} already exists.`);
+      throw error;
+    }
+    return (await this.findOne<T>(table, id, relations))!;
+  }
+
+  private async writeNested(
+    table: string,
+    id: string,
+    data: object,
+    relations: readonly Relation[],
+    update: boolean,
+  ): Promise<void> {
+    const { sql, bindings } = planNestedWrite(
+      table,
+      id,
+      data,
+      relations,
+      update,
+    );
+    try {
+      await this.executeWrite(this.client, sql, bindings);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (message.includes(missingNestedReference))
+        throw new BadRequestException(
+          'An ID-only nested reference does not exist.',
+        );
+      if (message.includes(missingNestedRoot))
+        throw new NotFoundException(`${table} not found.`);
+      if (error instanceof AlreadyExistsError)
+        throw new ConflictException(`${table} ${id} already exists.`);
+      throw error;
+    }
   }
 
   private async content(
@@ -126,7 +353,11 @@ export class SurrealService implements OnModuleInit, OnModuleDestroy {
       `SELECT * FROM $table${this.fetchClause(relations)};`,
       { table: new Table(table) },
     );
-    return records.map((record) => this.response<T>(record, relations));
+    return Promise.all(
+      records.map(async (record) =>
+        this.response<T>(await this.expand(record, relations), relations),
+      ),
+    );
   }
 
   async findOne<T>(
@@ -138,7 +369,9 @@ export class SurrealService implements OnModuleInit, OnModuleDestroy {
       `SELECT * FROM $record${this.fetchClause(relations)};`,
       { record: new RecordId(table, id) },
     );
-    return records[0] ? this.response<T>(records[0], relations) : null;
+    return records[0]
+      ? this.response<T>(await this.expand(records[0], relations), relations)
+      : null;
   }
 
   async findRelations<T>(
@@ -232,6 +465,7 @@ export class SurrealService implements OnModuleInit, OnModuleDestroy {
 
   private async validateEdge(
     data: Document,
+    client: SurrealQueryable = this.client,
   ): Promise<{ source: RecordId; target: RecordId }> {
     const source = this.entityRecord(data.sourceId);
     const target = this.entityRecord(data.targetId);
@@ -240,9 +474,9 @@ export class SurrealService implements OnModuleInit, OnModuleDestroy {
       'RelationshipType',
     );
     const [sourceEntity, targetEntity, relationshipType] = await Promise.all([
-      this.client.select(source),
-      this.client.select(target),
-      this.client.select<Document>(typeRecord),
+      client.select(source),
+      client.select(target),
+      client.select<Document>(typeRecord),
     ]);
     if (!sourceEntity || !targetEntity || !relationshipType) {
       throw new BadRequestException(
@@ -333,6 +567,10 @@ export class SurrealService implements OnModuleInit, OnModuleDestroy {
     if (typeof id !== 'string' || !id.trim()) {
       throw new BadRequestException('A nonempty string ID is required.');
     }
+    if (relations.some((relation) => !relation.readOnly)) {
+      await this.writeNested(table, id, data, relations, false);
+      return (await this.findOne<T>(table, id, relations))!;
+    }
     try {
       await this.client.query('CREATE $record CONTENT $data;', {
         record: new RecordId(table, id),
@@ -366,6 +604,10 @@ export class SurrealService implements OnModuleInit, OnModuleDestroy {
     const suppliedId = (data as Document).id;
     if (suppliedId !== undefined && suppliedId !== id) {
       throw new BadRequestException('Record IDs cannot be changed.');
+    }
+    if (relations.some((relation) => !relation.readOnly)) {
+      await this.writeNested(table, id, data, relations, true);
+      return (await this.findOne<T>(table, id, relations))!;
     }
     // UPDATE (not UPSERT) must never create a missing record.
     const [records] = await this.client.query<[Document[]]>(

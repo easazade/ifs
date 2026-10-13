@@ -56,6 +56,12 @@ export class ChangeResponseDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({
     description: 'Human-readable title summarizing the proposed change.',
   })
   title: string;
@@ -82,20 +88,20 @@ export class ChangeResponseDto {
       'ChangeItem entities describing each proposed object-level operation in this change.',
     type: () => [ChangeItemResponseDto],
   })
-  changes: Array<ChangeItemResponseDto>;
+  changes: Array<ChangeItemResponseDto | { id: string }>;
 
   @ApiPropertyOptional({
     description: 'Current decision about this change',
     type: () => DecisionResponseDto,
   })
-  decision?: DecisionResponseDto;
+  decision?: DecisionResponseDto | { id: string };
 
   @ApiPropertyOptional({
     description:
       'Recent Comment entities for this change, such as the first page of comments.',
     type: () => [CommentResponseDto],
   })
-  comments?: Array<CommentResponseDto>;
+  comments?: Array<CommentResponseDto | { id: string }>;
 
   @ApiPropertyOptional({
     description:
@@ -109,13 +115,13 @@ export class ChangeResponseDto {
       'ReviewComment entities tied to changed objects, fields, records, or diff entries.',
     type: () => [ReviewCommentResponseDto],
   })
-  reviewComments?: Array<ReviewCommentResponseDto>;
+  reviewComments?: Array<ReviewCommentResponseDto | { id: string }>;
 
   @ApiProperty({
     description: 'Member entities that authored or co-authored this change.',
     type: () => [MemberResponseDto],
   })
-  authors: Array<MemberResponseDto>;
+  authors: Array<MemberResponseDto | { id: string }>;
 
   @ApiProperty({
     description:
@@ -128,13 +134,13 @@ export class ChangeResponseDto {
     description: 'Primary member responsible for this change.',
     type: () => MemberResponseDto,
   })
-  mainAuthor: MemberResponseDto;
+  mainAuthor: MemberResponseDto | { id: string };
 
   @ApiPropertyOptional({
     description: 'Member entities requested or assigned to review this change.',
     type: () => [MemberResponseDto],
   })
-  reviewers?: Array<MemberResponseDto>;
+  reviewers?: Array<MemberResponseDto | { id: string }>;
 
   @ApiProperty({
     description: 'Lifecycle status of the change.',

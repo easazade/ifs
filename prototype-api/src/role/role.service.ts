@@ -29,7 +29,7 @@ export class RoleService {
 
   create(data: CreateRoleDto): Promise<RoleResponseDto> {
     assertEntityType(data, 'Role');
-    return this.database.create('role', data, relations);
+    return this.database.createEntity('role', data, relations);
   }
 
   findAll(): Promise<RoleResponseDto[]> {
@@ -49,7 +49,7 @@ export class RoleService {
 
   update(id: string, data: UpdateRoleDto): Promise<RoleResponseDto> {
     assertEntityType(data, 'Role', true);
-    return this.database.update('role', id, data, relations);
+    return this.database.updateEntity('role', id, data, relations);
   }
 
   remove(id: string): Promise<RoleResponseDto> {

@@ -51,6 +51,24 @@ export class LabelResponseDto {
   createdAt: string;
 
   @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
+  @ApiProperty({ description: 'Name of this label.' })
+  name: string;
+
+  @ApiProperty({ description: 'Descriptive text for this label.' })
+  description: string;
+
+  @ApiPropertyOptional({ description: 'Display color for this label.' })
+  color?: string;
+
+  @ApiPropertyOptional({ description: 'Code for this label.' })
+  code?: string;
+
+  @ApiProperty({
     description: 'Timestamp when this label was last updated.',
     format: 'date-time',
   })

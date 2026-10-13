@@ -1,0 +1,109 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { NestedPermissionDto } from '../../permission/dto/nested-permission.dto.js';
+import { NestedScopeDto } from '../../scope/dto/nested-scope.dto.js';
+
+export class NestedRoleDto {
+  @ApiPropertyOptional({
+    description:
+      'Existing entity ID, or omit/use null or an empty string to create a new entity. An ID-only object links an existing entity; other supplied fields are merged or created.',
+    nullable: true,
+  })
+  id?: string | null;
+
+  @ApiPropertyOptional({
+    description: 'Entity type discriminator. Always "Role" for Role entities.',
+    enum: ['Role'],
+  })
+  entityType?: 'Role';
+
+  @ApiPropertyOptional({
+    description: 'Id of the object this object is derived from.',
+    pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
+  })
+  basedOn?: string;
+
+  @ApiPropertyOptional({
+    description: 'URL for documentation about this entity type.',
+    format: 'uri',
+  })
+  entityDocumentationUrl?: string;
+
+  @ApiPropertyOptional({
+    description: 'URL for documentation about this object instance',
+    format: 'uri',
+  })
+  documentationUrl?: string;
+
+  @ApiPropertyOptional({
+    description: 'Timestamp when this entity record was created.',
+    format: 'date-time',
+  })
+  createdAt?: string;
+
+  @ApiPropertyOptional({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes?: Array<string>;
+
+  @ApiPropertyOptional({ description: 'Human-readable name of the role.' })
+  name?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Optional human-readable explanation of what this role is for.',
+  })
+  description?: string;
+
+  @ApiPropertyOptional({
+    description: 'Identifier of the member acting through this role.',
+    pattern: '^Member/[^/\\s]+$',
+  })
+  memberId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Identifier of the scope where this role has authority.',
+    pattern: '^Scope/[^/\\s]+$',
+  })
+  scopeId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Scope entity describing where this role applies.',
+    type: () => NestedScopeDto,
+  })
+  scope?: NestedScopeDto;
+
+  @ApiPropertyOptional({
+    description: 'Permission entities bundled into this role.',
+    type: () => [NestedPermissionDto],
+  })
+  permissions?: Array<NestedPermissionDto>;
+
+  @ApiPropertyOptional({
+    description: 'Lifecycle state of the role.',
+    enum: [
+      'drafted',
+      'under-review',
+      'active',
+      'suspended',
+      'revoked',
+      'expired',
+    ],
+  })
+  state?:
+    'drafted' | 'under-review' | 'active' | 'suspended' | 'revoked' | 'expired';
+
+  @ApiPropertyOptional({
+    description: 'Timestamp when this role record was last updated.',
+    format: 'date-time',
+  })
+  updatedAt?: string;
+
+  @ApiPropertyOptional({
+    description: 'Optional timestamp after which this role no longer applies.',
+    format: 'date-time',
+  })
+  expiresAt?: string;
+
+  [key: string]: unknown;
+}

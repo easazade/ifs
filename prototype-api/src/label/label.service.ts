@@ -16,7 +16,7 @@ export class LabelService {
 
   create(data: CreateLabelDto): Promise<LabelResponseDto> {
     assertEntityType(data, 'Label');
-    return this.database.create('label', data, relations);
+    return this.database.createEntity('label', data, relations);
   }
 
   findAll(): Promise<LabelResponseDto[]> {
@@ -36,7 +36,7 @@ export class LabelService {
 
   update(id: string, data: UpdateLabelDto): Promise<LabelResponseDto> {
     assertEntityType(data, 'Label', true);
-    return this.database.update('label', id, data, relations);
+    return this.database.updateEntity('label', id, data, relations);
   }
 
   remove(id: string): Promise<LabelResponseDto> {

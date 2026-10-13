@@ -147,10 +147,10 @@ describe('resource generator', () => {
       'utf8',
     );
     expect(edge).toContain(
-      "this.database.createEdge('relationship', data, relations)",
+      "this.database.createEntity('relationship', data, relations)",
     );
     expect(edge).toContain(
-      "this.database.updateEdge('relationship', id, data, relations)",
+      "this.database.updateEntity('relationship', id, data, relations)",
     );
     expect(run(api, 'relationship-type').status).toBe(0);
     expect(
@@ -158,7 +158,9 @@ describe('resource generator', () => {
         join(api, 'src/relationship-type/relationship-type.service.ts'),
         'utf8',
       ),
-    ).toContain("this.database.create('relationship_type', data, relations)");
+    ).toContain(
+      "this.database.createEntity('relationship_type', data, relations)",
+    );
     expect(
       readFileSync(join(api, 'src/surreal/entity-tables.generated.ts'), 'utf8'),
     ).toContain('"RelationshipType": "relationship_type"');
@@ -295,10 +297,10 @@ describe('resource generator', () => {
     expect(firstSource).toContain('"property": "roles"');
     expect(firstSource).toContain('"readOnly": true');
     expect(firstSource).toContain(
-      "this.database.create('member', data, relations)",
+      "this.database.createEntity('member', data, relations)",
     );
     expect(firstSource).toContain(
-      "this.database.update('member', id, data, relations)",
+      "this.database.updateEntity('member', id, data, relations)",
     );
 
     const controllerSource = readFileSync(

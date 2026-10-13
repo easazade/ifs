@@ -52,14 +52,20 @@ export class MemberResponseDto {
   })
   createdAt: string;
 
+  @ApiProperty({
+    description: 'Label codes associated with this entity.',
+    type: [String],
+  })
+  labelCodes: Array<string>;
+
   @ApiProperty({ description: 'Human-readable name of the member.' })
   name: string;
 
   @ApiProperty({ readOnly: true, type: () => [RoleResponseDto] })
-  roles: Array<RoleResponseDto>;
+  roles: Array<RoleResponseDto | { id: string }>;
 
   @ApiProperty({ type: () => [PermissionResponseDto] })
-  permissions: Array<PermissionResponseDto>;
+  permissions: Array<PermissionResponseDto | { id: string }>;
 
   @ApiProperty({
     description: 'Whether this member is considered an owner of the system.',
