@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/occurrence.schema.json",
+  "title": "Occurrence",
+  "description": "An individually scheduled event time associated with a When schedule.",
+  "type": "object",
+  "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" }],
+  "properties": {
+    "id": {
+      "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Occurrence/[^/\\s]+$",
+      "description": "Globally unique identifier for this occurrence."
+    },
+    "entityType": {
+      "type": "string",
+      "const": "Occurrence",
+      "description": "Entity type discriminator. Always \"Occurrence\" for Occurrence entities."
+    },
+    "startsAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$",
+      "description": "UTC timestamp when the event starts."
+    },
+    "duration": {
+      "type": "string",
+      "pattern": "^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$",
+      "description": "Nonnegative ISO 8601 event duration overriding When.duration; omission inherits the schedule default."
+    }
+  },
+  "required": ["startsAt"],
+  "x-ifs-relationships": []
+}

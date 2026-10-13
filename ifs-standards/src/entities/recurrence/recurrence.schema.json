@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/recurrence.schema.json",
+  "title": "Recurrence",
+  "description": "A repeating event schedule calculated in UTC. Named frequencies use UTC calendar units; ISO 8601 frequencies specify a repeating duration. Interval multiplies either frequency form and is treated as 1 when omitted. At least one of interval or daysOfWeek is required; daysOfWeek requires weekly frequency. Events start on or after startsAt and, when supplied, on or before endsAt; endsAt must not precede startsAt.",
+  "type": "object",
+  "additionalProperties": true,
+  "allOf": [
+    { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" },
+    { "if": { "required": ["daysOfWeek"] }, "then": { "properties": { "frequency": { "const": "weekly" } } } }
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Recurrence/[^/\\s]+$",
+      "description": "Globally unique identifier for this recurrence."
+    },
+    "entityType": {
+      "type": "string",
+      "const": "Recurrence",
+      "description": "Entity type discriminator. Always \"Recurrence\" for Recurrence entities."
+    },
+    "startsAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$",
+      "description": "UTC timestamp anchoring the recurrence and its earliest permitted event start."
+    },
+    "endsAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$",
+      "description": "Inclusive UTC limit on event start times; omission leaves the recurrence unbounded."
+    },
+    "frequency": {
+      "type": "string",
+      "anyOf": [
+        { "enum": ["hourly", "daily", "weekly", "monthly", "yearly"] },
+        { "$ref": "#/$defs/duration", "pattern": "^P(?=.*[1-9])" }
+      ],
+      "description": "Named UTC calendar frequency or a strictly positive ISO 8601 repeating duration."
+    },
+    "interval": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Positive multiplier applied to the frequency; treated as 1 when omitted."
+    },
+    "daysOfWeek": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+      },
+      "description": "UTC weekday filter for weekly event starts; requires weekly frequency. Weeks begin on Monday."
+    },
+    "duration": {
+      "$ref": "#/$defs/duration",
+      "description": "Event duration overriding When.duration; omission inherits the schedule default, not frequency."
+    }
+  },
+  "required": ["startsAt", "frequency"],
+  "anyOf": [{ "required": ["interval"] }, { "required": ["daysOfWeek"] }],
+  "$defs": {
+    "duration": {
+      "type": "string",
+      "pattern": "^P(?!.*[.,][0-9]+[YMWDHS].*[0-9])(?=[0-9]|T[0-9])(?:[0-9]+(?:[.,][0-9]+)?W|(?:[0-9]+(?:[.,][0-9]+)?Y)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?D)?(?:T(?=[0-9])(?:[0-9]+(?:[.,][0-9]+)?H)?(?:[0-9]+(?:[.,][0-9]+)?M)?(?:[0-9]+(?:[.,][0-9]+)?S)?)?)$",
+      "description": "Nonnegative ISO 8601 duration in component notation; fractions occur only on the smallest unit."
+    }
+  },
+  "x-ifs-relationships": []
+}

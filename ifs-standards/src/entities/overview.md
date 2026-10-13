@@ -219,6 +219,17 @@ erDiagram
     timeOfObservation string "required, date-time"
     observer object FK "required, Member"
   }
+  OCCURRENCE {
+    id string PK "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    documentationUrl string "uri"
+    createdAt string "required, date-time"
+    labelCodes array "required"
+    startsAt string "required, date-time"
+    duration string "optional"
+  }
   ORGANIZATION {
     id string PK "required"
     entityType string "required"
@@ -269,6 +280,21 @@ erDiagram
     documentationUrl string "uri"
     createdAt string "required, date-time"
     labelCodes array "required"
+  }
+  RECURRENCE {
+    id string PK "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    documentationUrl string "uri"
+    createdAt string "required, date-time"
+    labelCodes array "required"
+    startsAt string "required, date-time"
+    endsAt string "date-time"
+    frequency string "required"
+    interval int "optional"
+    daysOfWeek array "optional"
+    duration object "optional"
   }
   RELATIONSHIP {
     id string PK "required"
@@ -374,6 +400,20 @@ erDiagram
     value string "required"
     previousRevisionId string "optional"
   }
+  WHEN {
+    id string PK "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    documentationUrl string "uri"
+    createdAt string "required, date-time"
+    labelCodes array "required"
+    updatedAt string "required, date-time"
+    timezone string "required"
+    duration string "required"
+    occurrences array FK "required, Occurrence[]"
+    recurrences array FK "required, Recurrence[]"
+  }
   CHANGE ||--o{ CHANGEITEM : changes
   CHANGE ||--o{ COMMENT : comments
   CHANGE ||--|| DECISION : decision
@@ -398,6 +438,8 @@ erDiagram
   ROLE ||--|| SCOPE : scope_fk_scopeId
   SCOPE ||--o{ SCOPE : childScopeIds_fk_parentScopeId
   VOTE ||--|| MEMBER : memberId
+  WHEN ||--o{ OCCURRENCE : occurrences
+  WHEN ||--o{ RECURRENCE : recurrences
 ```
 
 ## Relation fields
@@ -439,3 +481,5 @@ erDiagram
 - `Scope.parentScopeId` → `Scope` (id, one)
 - `Scope.childScopeIds` → `Scope` (id, many)
 - `Vote.memberId` → `Member` (id, one)
+- `When.occurrences` → `Occurrence` ($ref, many)
+- `When.recurrences` → `Recurrence` ($ref, many)
