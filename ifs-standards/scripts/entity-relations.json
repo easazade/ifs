@@ -22,9 +22,14 @@
   "Geographic Area": [],
   "Group": [],
   "Label": [],
+  "MeasurementMethod": [],
   "Member": [
     { "property": "permissions", "type": "Permission" },
     { "property": "roles", "type": "Role" }
+  ],
+  "Metric": [
+    { "property": "compositionItems", "type": "Metric" },
+    { "property": "method", "type": "MeasurementMethod" }
   ],
   "Observation": [{ "property": "observer", "type": "Member" }],
   "Organization": [],

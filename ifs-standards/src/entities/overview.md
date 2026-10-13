@@ -165,6 +165,15 @@ erDiagram
     code string "optional"
     updatedAt string "required, date-time"
   }
+  MEASUREMENTMETHOD {
+    id string PK "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    documentationUrl string "uri"
+    createdAt string "required, date-time"
+    labelCodes array "required"
+  }
   MEMBER {
     id string PK "required"
     entityType string "required"
@@ -178,6 +187,23 @@ erDiagram
     permissions array FK "required, Permission[]"
     isOwner boolean "required"
     updatedAt string "required, date-time"
+  }
+  METRIC {
+    id string PK "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    documentationUrl string "uri"
+    createdAt string "required, date-time"
+    labelCodes array "required"
+    updatedAt string "date-time"
+    name string "required"
+    description string "required"
+    measurementWay string "required"
+    measurementType string "required"
+    compositionItems array FK "Metric[]"
+    method object FK "required, MeasurementMethod"
+    applicableEntityIds array "optional"
   }
   OBSERVATION {
     id string PK "required"
@@ -360,6 +386,8 @@ erDiagram
   DELEGATION ||--|| PERMISSION : permission_fk_permissionId
   MEMBER ||--o{ PERMISSION : permissions_fk_memberId
   MEMBER ||--o{ ROLE : roles_fk_memberId
+  METRIC ||--|| MEASUREMENTMETHOD : method
+  METRIC ||--o{ METRIC : compositionItems
   OBSERVATION ||--|| MEMBER : observer
   PERMISSION ||--o{ ACTION : actions_fk_actionIds
   PERMISSION ||--|| SCOPE : scopeId
@@ -395,6 +423,8 @@ erDiagram
 - `Permission.memberId` → `Member` (id, one)
 - `Member.roles` → `Role` ($ref, many)
 - `Role.memberId` → `Member` (id, one)
+- `Metric.method` → `MeasurementMethod` ($ref, one)
+- `Metric.compositionItems` → `Metric` ($ref, many)
 - `Observation.observer` → `Member` ($ref, one)
 - `Permission.actions` → `Action` ($ref, many)
 - `Permission.actionIds` → `Action` (id, many)

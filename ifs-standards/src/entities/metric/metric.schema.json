@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/metric.schema.json",
+  "title": "Metric",
+  "description": "Defines what is measured and how measurement is performed within the system.",
+  "type": "object",
+  "additionalProperties": true,
+  "allOf": [
+    { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" },
+    {
+      "if": { "properties": { "measurementType": { "const": "composite" } }, "required": ["measurementType"] },
+      "then": { "required": ["compositionItems"] }
+    }
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Metric/[^/\\s]+$",
+      "description": "Globally unique identifier for this metric."
+    },
+    "entityType": {
+      "type": "string",
+      "const": "Metric",
+      "description": "Entity type discriminator. Always \"Metric\" for Metric entities."
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when this metric record was last updated."
+    },
+    "name": { "type": "string", "description": "Name of the metric." },
+    "description": { "type": "string", "description": "Description of the metric." },
+    "measurementWay": {
+      "type": "string",
+      "enum": ["manual", "function", "intelligence"],
+      "description": "Way in which measurement is performed."
+    },
+    "measurementType": {
+      "type": "string",
+      "enum": ["count", "ratio", "rate", "duration", "score", "composite"],
+      "description": "Type of measurement defined by this metric."
+    },
+    "compositionItems": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "https://ifs-standards.org/v0.1/schemas/entities/metric.schema.json" },
+      "description": "Component metrics. Required for composite measurements; nonempty when supplied."
+    },
+    "method": {
+      "$ref": "https://ifs-standards.org/v0.1/schemas/entities/measurement-method.schema.json",
+      "description": "Method used to measure this metric."
+    },
+    "applicableEntityIds": {
+      "type": "array",
+      "items": { "type": "string", "x-ifs-id": true, "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$" },
+      "description": "IDs of entities to which this metric applies, in EntityType/ID form."
+    }
+  },
+  "required": ["name", "description", "measurementWay", "measurementType", "method"],
+  "x-ifs-relationships": []
+}

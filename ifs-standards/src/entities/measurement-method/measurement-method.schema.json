@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/measurement-method.schema.json",
+  "title": "MeasurementMethod",
+  "description": "Defines a method used to measure a metric.",
+  "type": "object",
+  "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" }],
+  "properties": {
+    "id": {
+      "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^MeasurementMethod/[^/\\s]+$",
+      "description": "Globally unique identifier for this measurement method."
+    },
+    "entityType": {
+      "type": "string",
+      "const": "MeasurementMethod",
+      "description": "Entity type discriminator. Always \"MeasurementMethod\" for MeasurementMethod entities."
+    }
+  },
+  "required": [],
+  "x-ifs-relationships": []
+}
