@@ -49,11 +49,11 @@ export class VoteResponseDto {
   })
   createdAt: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Label codes associated with this entity.',
     type: [String],
   })
-  labelCodes: Array<string>;
+  labelCodes?: Array<string>;
 
   @ApiProperty({
     description: 'Timestamp when this vote record was last updated.',

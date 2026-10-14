@@ -6379,7 +6379,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "name",
           "uniqueName",
@@ -6495,7 +6494,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "name",
           "uniqueName",
@@ -6607,7 +6605,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "relationshipTypeId",
           "type",
@@ -7660,7 +7657,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "title",
           "description",
           "reason",
@@ -7778,7 +7774,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "resourceType",
           "operation",
           "targetId",
@@ -8034,7 +8029,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "name",
           "updatedAt"
         ],
@@ -8208,7 +8202,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "actionIds",
           "scopeId",
           "state",
@@ -8392,7 +8385,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "name",
           "memberId",
           "scopeId",
@@ -8550,7 +8542,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "name",
           "roles",
           "permissions",
@@ -8644,7 +8635,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "decisionId",
           "memberId",
@@ -8718,7 +8708,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt"
         ]
       },
@@ -9050,7 +9039,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "subject",
           "state",
           "eligibleMembers",
@@ -9130,7 +9118,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt"
         ]
       },
@@ -9201,7 +9188,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt"
         ]
       },
@@ -9616,7 +9602,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "title",
           "description",
           "reason",
@@ -9932,7 +9917,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "resourceType",
           "operation",
           "targetId",
@@ -10234,7 +10218,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt"
         ]
       },
@@ -10480,7 +10463,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "subject",
           "state",
           "eligibleMembers",
@@ -10777,7 +10759,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "permissionId",
           "delegatorId",
           "delegateId",
@@ -10923,7 +10904,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "permissionId",
           "delegatorId",
           "delegateId",
@@ -11123,7 +11103,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "polygons"
         ]
@@ -11215,7 +11194,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "polygons"
         ]
@@ -11381,7 +11359,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "name",
           "updatedAt"
         ]
@@ -11463,7 +11440,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "name",
           "updatedAt"
         ]
@@ -11624,7 +11600,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "name",
           "description"
@@ -11713,7 +11688,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "name",
           "description"
@@ -11861,8 +11835,7 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
-          "createdAt",
-          "labelCodes"
+          "createdAt"
         ]
       },
       "MeasurementMethodResponseDto": {
@@ -11927,8 +11900,7 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
-          "createdAt",
-          "labelCodes"
+          "createdAt"
         ]
       },
       "UpdateMeasurementMethodDto": {
@@ -12071,7 +12043,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "name",
           "permissions",
           "isOwner",
@@ -12454,7 +12425,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "name",
           "description",
           "measurementWay",
@@ -12668,7 +12638,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "name",
           "description",
           "measurementWay",
@@ -12884,7 +12853,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "description",
           "locations",
@@ -13013,7 +12981,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "description",
           "locations",
@@ -13183,7 +13150,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "startsAt"
         ]
       },
@@ -13261,7 +13227,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "startsAt"
         ]
       },
@@ -13403,7 +13368,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt"
         ]
       },
@@ -13475,7 +13439,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt"
         ]
       },
@@ -13660,7 +13623,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "actionIds",
           "scopeId",
           "state",
@@ -14152,7 +14114,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "name",
           "coordinate"
@@ -14309,7 +14270,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "name",
           "coordinate"
@@ -14463,8 +14423,7 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
-          "createdAt",
-          "labelCodes"
+          "createdAt"
         ]
       },
       "ProtocolResponseDto": {
@@ -14528,8 +14487,7 @@
           "id",
           "entityType",
           "entityDocumentationUrl",
-          "createdAt",
-          "labelCodes"
+          "createdAt"
         ]
       },
       "UpdateProtocolDto": {
@@ -14746,7 +14704,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "startsAt",
           "frequency"
         ],
@@ -14918,7 +14875,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "startsAt",
           "frequency"
         ],
@@ -15167,7 +15123,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "relationshipTypeId",
           "type",
@@ -15372,7 +15327,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "type",
           "description",
@@ -15488,7 +15442,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "type",
           "description",
@@ -15667,7 +15620,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt"
         ]
       },
@@ -15852,7 +15804,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "name",
           "memberId",
           "scopeId",
@@ -16043,7 +15994,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt"
         ]
       },
@@ -16232,7 +16182,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "name",
           "updatedAt"
         ],
@@ -16463,7 +16412,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "decisionId",
           "memberId",
@@ -16821,7 +16769,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "timezone",
           "duration",
@@ -17000,7 +16947,6 @@
           "entityType",
           "entityDocumentationUrl",
           "createdAt",
-          "labelCodes",
           "updatedAt",
           "timezone",
           "duration",

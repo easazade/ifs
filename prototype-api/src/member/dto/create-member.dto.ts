@@ -51,11 +51,11 @@ export class CreateMemberDto {
   })
   createdAt: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Label codes associated with this entity.',
     type: [String],
   })
-  labelCodes: Array<string>;
+  labelCodes?: Array<string>;
 
   @ApiProperty({ description: 'Human-readable name of the member.' })
   name: string;

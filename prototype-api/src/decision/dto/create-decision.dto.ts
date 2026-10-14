@@ -54,11 +54,11 @@ export class CreateDecisionDto {
   })
   createdAt: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Label codes associated with this entity.',
     type: [String],
   })
-  labelCodes: Array<string>;
+  labelCodes?: Array<string>;
 
   @ApiProperty({
     description:

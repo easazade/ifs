@@ -51,11 +51,11 @@ export class DelegationResponseDto {
   })
   createdAt: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Label codes associated with this entity.',
     type: [String],
   })
-  labelCodes: Array<string>;
+  labelCodes?: Array<string>;
 
   @ApiPropertyOptional({
     description: 'Timestamp when this delegation record was last updated.',

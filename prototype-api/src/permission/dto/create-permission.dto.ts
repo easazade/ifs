@@ -51,11 +51,11 @@ export class CreatePermissionDto {
   })
   createdAt: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Label codes associated with this entity.',
     type: [String],
   })
-  labelCodes: Array<string>;
+  labelCodes?: Array<string>;
 
   @ApiProperty({
     description: 'ID list of actions that this permission allows',

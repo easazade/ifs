@@ -55,11 +55,11 @@ export class CreateChangeDto {
   })
   createdAt: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Label codes associated with this entity.',
     type: [String],
   })
-  labelCodes: Array<string>;
+  labelCodes?: Array<string>;
 
   @ApiProperty({
     description: 'Human-readable title summarizing the proposed change.',

@@ -51,11 +51,11 @@ export class RoleResponseDto {
   })
   createdAt: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Label codes associated with this entity.',
     type: [String],
   })
-  labelCodes: Array<string>;
+  labelCodes?: Array<string>;
 
   @ApiProperty({ description: 'Human-readable name of the role.' })
   name: string;

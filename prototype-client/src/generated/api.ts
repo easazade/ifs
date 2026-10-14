@@ -52,7 +52,7 @@ export interface CreateActionDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this action record was last updated. */
   updatedAt: string;
   /** Human-readable name of the action. */
@@ -119,7 +119,7 @@ export interface ActionResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this action record was last updated. */
   updatedAt: string;
   /** Human-readable name of the action. */
@@ -174,7 +174,7 @@ export interface RelationshipResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this relationship record was last updated. */
   updatedAt: string;
   /**
@@ -880,7 +880,7 @@ export interface CreateChangeDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Human-readable title summarizing the proposed change. */
   title: string;
   /** Detailed explanation of what this change proposes and why it is needed. */
@@ -1005,7 +1005,7 @@ export type ChangeItemResponseDto = (
     /** Timestamp when this entity record was created. */
     createdAt: string;
     /** Label codes associated with this entity. */
-    labelCodes: string[];
+    labelCodes?: string[];
     /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
     resourceType: string;
     /** Type of operation this item proposes for the target object. */
@@ -1070,7 +1070,7 @@ export type ScopeResponseDto = unknown & {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Human-readable name of the scope. */
   name: string;
   /** Optional human-readable explanation of what this scope includes and excludes. */
@@ -1158,7 +1158,7 @@ export interface PermissionResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /**
    * ID list of actions that this permission allows
    * @items.pattern ^Action/[^/\s]+$
@@ -1260,7 +1260,7 @@ export interface RoleResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Human-readable name of the role. */
   name: string;
   /** Optional human-readable explanation of what this role is for. */
@@ -1338,7 +1338,7 @@ export interface MemberResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Human-readable name of the member. */
   name: string;
   readonly roles: readonly MemberResponseDtoRolesItem[];
@@ -1380,7 +1380,7 @@ export interface VoteResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this vote record was last updated. */
   updatedAt: string;
   /**
@@ -1433,7 +1433,7 @@ export interface RuleResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this rule record was last updated. */
   updatedAt: string;
   [key: string]: unknown;
@@ -1522,7 +1522,7 @@ export interface DecisionResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /**
    * ID of the object, proposal, rule, resource, or question being decided.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -1627,7 +1627,7 @@ export interface CommentResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this comment was last updated. */
   updatedAt: string;
   [key: string]: unknown;
@@ -1663,7 +1663,7 @@ export interface ReviewCommentResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this review comment was last updated. */
   updatedAt: string;
   [key: string]: unknown;
@@ -1790,7 +1790,7 @@ export interface ChangeResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Human-readable title summarizing the proposed change. */
   title: string;
   /** Detailed explanation of what this change proposes and why it is needed. */
@@ -2019,7 +2019,7 @@ export type CreateChangeItemDto = (
     /** Timestamp when this entity record was created. */
     createdAt: string;
     /** Label codes associated with this entity. */
-    labelCodes: string[];
+    labelCodes?: string[];
     /** Resource category for this change item, such as rule, scope, protocol, record, or resource. */
     resourceType: string;
     /** Type of operation this item proposes for the target object. */
@@ -2155,7 +2155,7 @@ export interface CreateCommentDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this comment was last updated. */
   updatedAt: string;
   [key: string]: unknown;
@@ -2243,7 +2243,7 @@ export interface CreateDecisionDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /**
    * ID of the object, proposal, rule, resource, or question being decided.
    * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
@@ -2455,7 +2455,7 @@ export interface CreateDelegationDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this delegation record was last updated. */
   updatedAt?: string;
   /**
@@ -2539,7 +2539,7 @@ export interface DelegationResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this delegation record was last updated. */
   updatedAt?: string;
   /**
@@ -2672,7 +2672,7 @@ export interface CreateGeographicAreaDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this geographic area record was last updated. */
   updatedAt: string;
   /**
@@ -2715,7 +2715,7 @@ export interface GeographicAreaResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this geographic area record was last updated. */
   updatedAt: string;
   /**
@@ -2807,7 +2807,7 @@ export interface CreateGroupDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /**
    * Human-readable name of this group.
    * @minLength 1
@@ -2853,7 +2853,7 @@ export interface GroupResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /**
    * Human-readable name of this group.
    * @minLength 1
@@ -2942,7 +2942,7 @@ export interface CreateLabelDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Name of this label. */
   name: string;
   /** Descriptive text for this label. */
@@ -2986,7 +2986,7 @@ export interface LabelResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Name of this label. */
   name: string;
   /** Descriptive text for this label. */
@@ -3080,7 +3080,7 @@ export interface CreateMeasurementMethodDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   [key: string]: unknown;
 }
 
@@ -3117,7 +3117,7 @@ export interface MeasurementMethodResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   [key: string]: unknown;
 }
 
@@ -3188,7 +3188,7 @@ export interface CreateMemberDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Human-readable name of the member. */
   name: string;
   permissions: NestedPermissionDto[];
@@ -3426,7 +3426,7 @@ export type CreateMetricDto = unknown & {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this metric record was last updated. */
   updatedAt?: string;
   /** Name of the metric. */
@@ -3525,7 +3525,7 @@ export type MetricResponseDto = unknown & {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this metric record was last updated. */
   updatedAt?: string;
   /** Name of the metric. */
@@ -3677,7 +3677,7 @@ export interface CreateObservationDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this observation record was last updated. */
   updatedAt: string;
   /** Description of what was observed. */
@@ -3734,7 +3734,7 @@ export interface ObservationResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this observation record was last updated. */
   updatedAt: string;
   /** Description of what was observed. */
@@ -3828,7 +3828,7 @@ export interface CreateOccurrenceDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /**
    * UTC timestamp when the event starts.
    * @pattern Z$
@@ -3875,7 +3875,7 @@ export interface OccurrenceResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /**
    * UTC timestamp when the event starts.
    * @pattern Z$
@@ -3969,7 +3969,7 @@ export interface CreateOrganizationDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this organization record was last updated. */
   updatedAt: string;
   [key: string]: unknown;
@@ -4008,7 +4008,7 @@ export interface OrganizationResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this organization record was last updated. */
   updatedAt: string;
   [key: string]: unknown;
@@ -4101,7 +4101,7 @@ export interface CreatePermissionDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /**
    * ID list of actions that this permission allows
    * @items.pattern ^Action/[^/\s]+$
@@ -4443,7 +4443,7 @@ export interface CreatePlaceDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this place record was last updated. */
   updatedAt: string;
   /** Human-readable name of the real-world place. */
@@ -4513,7 +4513,7 @@ export interface PlaceResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this place record was last updated. */
   updatedAt: string;
   /** Human-readable name of the real-world place. */
@@ -4604,7 +4604,7 @@ export interface CreateProtocolDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   [key: string]: unknown;
 }
 
@@ -4638,7 +4638,7 @@ export interface ProtocolResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   [key: string]: unknown;
 }
 
@@ -4731,7 +4731,7 @@ export type CreateRecurrenceDto = (
     /** Timestamp when this entity record was created. */
     createdAt: string;
     /** Label codes associated with this entity. */
-    labelCodes: string[];
+    labelCodes?: string[];
     /**
      * UTC timestamp anchoring the recurrence and its earliest permitted event start.
      * @pattern Z$
@@ -4814,7 +4814,7 @@ export type RecurrenceResponseDto = (
     /** Timestamp when this entity record was created. */
     createdAt: string;
     /** Label codes associated with this entity. */
-    labelCodes: string[];
+    labelCodes?: string[];
     /**
      * UTC timestamp anchoring the recurrence and its earliest permitted event start.
      * @pattern Z$
@@ -4955,7 +4955,7 @@ export interface CreateRelationshipDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this relationship record was last updated. */
   updatedAt: string;
   /**
@@ -5081,7 +5081,7 @@ export interface CreateRelationshipTypeDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this relationship type was last updated. */
   updatedAt: string;
   /**
@@ -5146,7 +5146,7 @@ export interface RelationshipTypeResponseDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this relationship type was last updated. */
   updatedAt: string;
   /**
@@ -5273,7 +5273,7 @@ export interface CreateReviewCommentDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this review comment was last updated. */
   updatedAt: string;
   [key: string]: unknown;
@@ -5363,7 +5363,7 @@ export interface CreateRoleDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Human-readable name of the role. */
   name: string;
   /** Optional human-readable explanation of what this role is for. */
@@ -5497,7 +5497,7 @@ export interface CreateRuleDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this rule record was last updated. */
   updatedAt: string;
   [key: string]: unknown;
@@ -5577,7 +5577,7 @@ export type CreateScopeDto = unknown & {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Human-readable name of the scope. */
   name: string;
   /** Optional human-readable explanation of what this scope includes and excludes. */
@@ -5705,7 +5705,7 @@ export interface CreateVoteDto {
   /** Timestamp when this entity record was created. */
   createdAt: string;
   /** Label codes associated with this entity. */
-  labelCodes: string[];
+  labelCodes?: string[];
   /** Timestamp when this vote record was last updated. */
   updatedAt: string;
   /**
@@ -5945,7 +5945,7 @@ export type CreateWhenDto =
       /** Timestamp when this entity record was created. */
       createdAt: string;
       /** Label codes associated with this entity. */
-      labelCodes: string[];
+      labelCodes?: string[];
       /**
        * UTC timestamp when this schedule record was last updated.
        * @pattern Z$
@@ -5990,7 +5990,7 @@ export type CreateWhenDto =
       /** Timestamp when this entity record was created. */
       createdAt: string;
       /** Label codes associated with this entity. */
-      labelCodes: string[];
+      labelCodes?: string[];
       /**
        * UTC timestamp when this schedule record was last updated.
        * @pattern Z$
@@ -6070,7 +6070,7 @@ export type WhenResponseDto =
       /** Timestamp when this entity record was created. */
       createdAt: string;
       /** Label codes associated with this entity. */
-      labelCodes: string[];
+      labelCodes?: string[];
       /**
        * UTC timestamp when this schedule record was last updated.
        * @pattern Z$
@@ -6115,7 +6115,7 @@ export type WhenResponseDto =
       /** Timestamp when this entity record was created. */
       createdAt: string;
       /** Label codes associated with this entity. */
-      labelCodes: string[];
+      labelCodes?: string[];
       /**
        * UTC timestamp when this schedule record was last updated.
        * @pattern Z$

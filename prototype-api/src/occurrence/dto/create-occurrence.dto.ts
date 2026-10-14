@@ -50,11 +50,11 @@ export class CreateOccurrenceDto {
   })
   createdAt: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Label codes associated with this entity.',
     type: [String],
   })
-  labelCodes: Array<string>;
+  labelCodes?: Array<string>;
 
   @ApiProperty({
     description: 'UTC timestamp when the event starts.',

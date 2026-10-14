@@ -52,11 +52,11 @@ export class CreateMetricDto {
   })
   createdAt: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Label codes associated with this entity.',
     type: [String],
   })
-  labelCodes: Array<string>;
+  labelCodes?: Array<string>;
 
   @ApiPropertyOptional({
     description: 'Timestamp when this metric record was last updated.',
