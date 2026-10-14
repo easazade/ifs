@@ -731,6 +731,45 @@ export const entitySchemas: Record<string, Record<string, unknown>> = {
     },
     required: ['id', 'entityType', 'entityDocumentationUrl', 'createdAt'],
   },
+  'https://ifs-standards.org/v0.1/schemas/entities/forum.schema.json': {
+    $schema: 'https://json-schema.org/draft/2020-12/schema',
+    $id: 'https://ifs-standards.org/v0.1/schemas/entities/forum.schema.json',
+    title: 'Forum',
+    description:
+      'A named space for discussion about an IFS subject. Discussion participation does not itself grant decision-making authority.',
+    type: 'object',
+    additionalProperties: true,
+    allOf: [
+      {
+        $ref: 'https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json',
+      },
+    ],
+    properties: {
+      id: {
+        type: 'string',
+        'x-ifs-id': true,
+        pattern: '^Forum/[^/\\s]+$',
+        description: 'Globally unique identifier for this forum.',
+      },
+      entityType: {
+        type: 'string',
+        const: 'Forum',
+        description:
+          'Entity type discriminator. Always "Forum" for Forum entities.',
+      },
+      name: {
+        type: 'string',
+        minLength: 1,
+        description: 'Human-readable name of this forum.',
+      },
+      description: {
+        type: 'string',
+        description: 'Purpose and scope of discussion in this forum.',
+      },
+    },
+    required: ['name'],
+    'x-ifs-relationships': [],
+  },
   'https://ifs-standards.org/v0.1/schemas/entities/geographic-area.schema.json':
     {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -3179,6 +3218,89 @@ export const entityContracts: Record<string, Record<string, unknown>> = {
       'delegatorId',
       'delegateId',
       'state',
+    ],
+    'x-ifs-relationships': [],
+  },
+  forum: {
+    $schema: 'https://json-schema.org/draft/2020-12/schema',
+    $id: 'https://ifs-standards.org/v0.1/schemas/entities/forum.schema.json',
+    title: 'Forum',
+    description:
+      'A named space for discussion about an IFS subject. Discussion participation does not itself grant decision-making authority.',
+    type: 'object',
+    additionalProperties: true,
+    properties: {
+      id: {
+        type: 'string',
+        'x-ifs-id': true,
+        pattern: '^Forum/[^/\\s]+$',
+        description: 'Globally unique identifier for this forum.',
+        allOf: [
+          {
+            type: 'string',
+            'x-ifs-id': true,
+            pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
+            description:
+              'Globally unique entity identifier in EntityType/ID form.',
+          },
+          {
+            type: 'string',
+            'x-ifs-id': true,
+            pattern: '^Forum/[^/\\s]+$',
+            description: 'Globally unique identifier for this forum.',
+          },
+        ],
+      },
+      entityType: {
+        type: 'string',
+        description:
+          'Entity type discriminator. Always "Forum" for Forum entities.',
+        const: 'Forum',
+      },
+      basedOn: {
+        type: 'string',
+        'x-ifs-id': true,
+        pattern: '^[A-Z][A-Za-z0-9]*/[^/\\s]+$',
+        description: 'Id of the object this object is derived from.',
+      },
+      entityDocumentationUrl: {
+        type: 'string',
+        format: 'uri',
+        description: 'URL for documentation about this entity type.',
+      },
+      documentationUrl: {
+        type: 'string',
+        format: 'uri',
+        description: 'URL for documentation about this object instance',
+      },
+      createdAt: {
+        type: 'string',
+        format: 'date-time',
+        description: 'Timestamp when this entity record was created.',
+      },
+      labelCodes: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+        description: 'Label codes associated with this entity.',
+      },
+      name: {
+        type: 'string',
+        minLength: 1,
+        description: 'Human-readable name of this forum.',
+      },
+      description: {
+        type: 'string',
+        description: 'Purpose and scope of discussion in this forum.',
+      },
+    },
+    required: [
+      'id',
+      'entityType',
+      'entityDocumentationUrl',
+      'createdAt',
+      'name',
     ],
     'x-ifs-relationships': [],
   },

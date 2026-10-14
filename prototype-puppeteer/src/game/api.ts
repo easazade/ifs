@@ -49,6 +49,14 @@ import {
   type CreateDelegationDto,
   type UpdateDelegationDto,
   type DelegationResponseDto,
+  createForum,
+  deleteForum,
+  getForum,
+  listForums,
+  updateForum,
+  type CreateForumDto,
+  type UpdateForumDto,
+  type ForumResponseDto,
   createGeographicArea,
   deleteGeographicArea,
   getGeographicArea,
@@ -375,6 +383,30 @@ export class Api {
 
   async deleteDelegation(id: string): Promise<void> {
     await deleteDelegation(id);
+  }
+
+  async createForum(input: CreateForumDto): Promise<ForumResponseDto | void> {
+    const response = await createForum(input);
+    return response.data;
+  }
+
+  async listForums(): Promise<ForumResponseDto[]> {
+    const response = await listForums();
+    return response.data;
+  }
+
+  async getForum(id: string): Promise<ForumResponseDto | void> {
+    const response = await getForum(id);
+    return response.data;
+  }
+
+  async updateForum(id: string, input: UpdateForumDto): Promise<ForumResponseDto | void> {
+    const response = await updateForum(id, input);
+    return response.data;
+  }
+
+  async deleteForum(id: string): Promise<void> {
+    await deleteForum(id);
   }
 
   async createGeographicArea(input: CreateGeographicAreaDto): Promise<GeographicAreaResponseDto | void> {

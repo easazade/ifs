@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ifs-standards.org/v0.1/schemas/entities/invariant.schema.json",
+  "title": "Invariant",
+  "description": "A fundamental, system-wide rule that applies to every part of IFS and takes precedence over all other rules, decisions, and authorities. Invariants protect individual freedom and form the foundation of the system's integrity. Individual Sovereignty and Equal Freedom are permanent, immutable foundational invariants: they can never be removed, modified, suspended, weakened, or overridden under any circumstances. Adding an invariant establishes a new system-wide constraint with the highest authority and requires exceptional scrutiny. A proposed invariant must never directly or indirectly conflict with, undermine, restrict, or weaken either foundational invariant. Not every individual violation threatens system integrity. A threat arises when actions, policies, or practices seek to undermine, weaken, or bypass invariants. An integrity breach occurs when the system itself violates an invariant, authorizes its violation, or systematically fails to uphold it. Integrity remains intact as long as the system continues to uphold and enforce its invariants, even when individual violations occur.",
+  "type": "object",
+  "additionalProperties": true,
+  "allOf": [{ "$ref": "https://ifs-standards.org/v0.1/schemas/entities/entity.schema.json" }],
+  "properties": {
+    "id": {
+      "type": "string",
+      "x-ifs-id": true,
+      "pattern": "^Invariant/[^/\\s]+$",
+      "description": "Globally unique identifier for this invariant."
+    },
+    "entityType": {
+      "type": "string",
+      "const": "Invariant",
+      "description": "Entity type discriminator. Always \"Invariant\" for Invariant entities."
+    },
+    "name": { "type": "string", "description": "Human-readable name of the invariant." },
+    "statement": { "type": "string", "description": "The actual principle that must always be upheld." },
+    "description": { "type": "string", "description": "Detailed explanation of the principle and its meaning." },
+    "rationale": { "type": "string", "description": "Why the invariant exists and what it protects." }
+  },
+  "x-ifs-relationships": []
+}

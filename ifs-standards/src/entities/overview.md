@@ -128,6 +128,17 @@ erDiagram
     revokedAt string "date-time"
     expiresAt string "date-time"
   }
+  FORUM {
+    id string PK "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    documentationUrl string "uri"
+    createdAt string "required, date-time"
+    labelCodes array "optional"
+    name string "required"
+    description string "optional"
+  }
   GEOGRAPHICAREA {
     id string PK "required"
     entityType string "required"
@@ -150,6 +161,19 @@ erDiagram
     name string "required"
     description string "optional"
     updatedAt string "required, date-time"
+  }
+  INVARIANT {
+    id string PK "required"
+    entityType string "required"
+    basedOn string "optional"
+    entityDocumentationUrl string "required, uri"
+    documentationUrl string "uri"
+    createdAt string "required, date-time"
+    labelCodes array "optional"
+    name string "optional"
+    statement string "optional"
+    description string "optional"
+    rationale string "optional"
   }
   LABEL {
     id string PK "required"

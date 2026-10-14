@@ -1410,6 +1410,237 @@
         ]
       }
     },
+    "/forums": {
+      "post": {
+        "operationId": "createForum",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateForumDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForumResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "entityType must match the entity schema title."
+          }
+        },
+        "summary": "Create a Forum.",
+        "tags": [
+          "forums"
+        ]
+      },
+      "get": {
+        "operationId": "listForums",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ForumResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Forum records.",
+        "tags": [
+          "forums"
+        ]
+      }
+    },
+    "/forums/{id}": {
+      "get": {
+        "operationId": "getForum",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Forum ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForumResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Forum not found."
+          }
+        },
+        "summary": "Get a Forum by ID.",
+        "tags": [
+          "forums"
+        ]
+      },
+      "patch": {
+        "operationId": "updateForum",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Forum ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateForumDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForumResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "entityType cannot change from the entity schema title."
+          },
+          "404": {
+            "description": "Forum not found."
+          }
+        },
+        "summary": "Update a Forum.",
+        "tags": [
+          "forums"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteForum",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Forum ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Forum deleted."
+          },
+          "404": {
+            "description": "Forum not found."
+          }
+        },
+        "summary": "Delete a Forum.",
+        "tags": [
+          "forums"
+        ]
+      }
+    },
+    "/forums/{id}/relations": {
+      "get": {
+        "operationId": "listForumRelations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Forum ID (URL-encode slashes).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Which endpoint must match the requested object.",
+            "schema": {
+              "default": "both",
+              "type": "string",
+              "enum": [
+                "both",
+                "incoming",
+                "outgoing"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.",
+            "schema": {
+              "example": "{\"type\":\"has member\",\"out.entityType\":\"Member\"}",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid direction or equality filters."
+          },
+          "404": {
+            "description": "Forum not found."
+          }
+        },
+        "summary": "Query relationships associated with a Forum.",
+        "tags": [
+          "forums"
+        ]
+      }
+    },
     "/geographic-areas": {
       "post": {
         "operationId": "createGeographicArea",
@@ -11015,6 +11246,224 @@
           }
         },
         "description": "Delegation. Partial write; the complete resulting entity is validated before commit."
+      },
+      "CreateForumDto": {
+        "title": "Forum",
+        "description": "A named space for discussion about an IFS subject. Discussion participation does not itself grant decision-making authority.",
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^Forum/[^/\\s]+$",
+            "description": "Globally unique identifier for this forum.",
+            "allOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+                "description": "Globally unique entity identifier in EntityType/ID form."
+              },
+              {
+                "type": "string",
+                "pattern": "^Forum/[^/\\s]+$",
+                "description": "Globally unique identifier for this forum."
+              }
+            ]
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Forum\" for Forum entities.",
+            "enum": [
+              "Forum"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL for documentation about this entity type."
+          },
+          "documentationUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL for documentation about this object instance"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when this entity record was created."
+          },
+          "labelCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Label codes associated with this entity."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Human-readable name of this forum."
+          },
+          "description": {
+            "type": "string",
+            "description": "Purpose and scope of discussion in this forum."
+          }
+        },
+        "required": [
+          "id",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "name"
+        ]
+      },
+      "ForumResponseDto": {
+        "title": "Forum",
+        "description": "A named space for discussion about an IFS subject. Discussion participation does not itself grant decision-making authority.",
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^Forum/[^/\\s]+$",
+            "description": "Globally unique identifier for this forum.",
+            "allOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+                "description": "Globally unique entity identifier in EntityType/ID form."
+              },
+              {
+                "type": "string",
+                "pattern": "^Forum/[^/\\s]+$",
+                "description": "Globally unique identifier for this forum."
+              }
+            ]
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Forum\" for Forum entities.",
+            "enum": [
+              "Forum"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL for documentation about this entity type."
+          },
+          "documentationUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL for documentation about this object instance"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when this entity record was created."
+          },
+          "labelCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Label codes associated with this entity."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Human-readable name of this forum."
+          },
+          "description": {
+            "type": "string",
+            "description": "Purpose and scope of discussion in this forum."
+          }
+        },
+        "required": [
+          "id",
+          "entityType",
+          "entityDocumentationUrl",
+          "createdAt",
+          "name"
+        ]
+      },
+      "UpdateForumDto": {
+        "title": "Forum",
+        "description": "A named space for discussion about an IFS subject. Discussion participation does not itself grant decision-making authority.. Partial write; the complete resulting entity is validated before commit.",
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^Forum/[^/\\s]+$",
+            "description": "Globally unique identifier for this forum.",
+            "allOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+                "description": "Globally unique entity identifier in EntityType/ID form."
+              },
+              {
+                "type": "string",
+                "pattern": "^Forum/[^/\\s]+$",
+                "description": "Globally unique identifier for this forum."
+              }
+            ]
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Entity type discriminator. Always \"Forum\" for Forum entities.",
+            "enum": [
+              "Forum"
+            ]
+          },
+          "basedOn": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Za-z0-9]*/[^/\\s]+$",
+            "description": "Id of the object this object is derived from."
+          },
+          "entityDocumentationUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL for documentation about this entity type."
+          },
+          "documentationUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL for documentation about this object instance"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when this entity record was created."
+          },
+          "labelCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Label codes associated with this entity."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Human-readable name of this forum."
+          },
+          "description": {
+            "type": "string",
+            "description": "Purpose and scope of discussion in this forum."
+          }
+        }
       },
       "CreateGeographicAreaDto": {
         "title": "Geographic Area",

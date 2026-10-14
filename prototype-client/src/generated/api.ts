@@ -2643,6 +2643,138 @@ export interface UpdateDelegationDto {
 }
 
 /**
+ * Entity type discriminator. Always "Forum" for Forum entities.
+ */
+export type CreateForumDtoEntityType =
+  (typeof CreateForumDtoEntityType)[keyof typeof CreateForumDtoEntityType];
+
+export const CreateForumDtoEntityType = {
+  Forum: 'Forum',
+} as const;
+
+/**
+ * A named space for discussion about an IFS subject. Discussion participation does not itself grant decision-making authority.
+ */
+export interface CreateForumDto {
+  /**
+   * Globally unique identifier for this forum.
+   * @pattern ^Forum/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Forum" for Forum entities. */
+  entityType: CreateForumDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /**
+   * Human-readable name of this forum.
+   * @minLength 1
+   */
+  name: string;
+  /** Purpose and scope of discussion in this forum. */
+  description?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Forum" for Forum entities.
+ */
+export type ForumResponseDtoEntityType =
+  (typeof ForumResponseDtoEntityType)[keyof typeof ForumResponseDtoEntityType];
+
+export const ForumResponseDtoEntityType = {
+  Forum: 'Forum',
+} as const;
+
+/**
+ * A named space for discussion about an IFS subject. Discussion participation does not itself grant decision-making authority.
+ */
+export interface ForumResponseDto {
+  /**
+   * Globally unique identifier for this forum.
+   * @pattern ^Forum/[^/\s]+$
+   */
+  id: string;
+  /** Entity type discriminator. Always "Forum" for Forum entities. */
+  entityType: ForumResponseDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /**
+   * Human-readable name of this forum.
+   * @minLength 1
+   */
+  name: string;
+  /** Purpose and scope of discussion in this forum. */
+  description?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Entity type discriminator. Always "Forum" for Forum entities.
+ */
+export type UpdateForumDtoEntityType =
+  (typeof UpdateForumDtoEntityType)[keyof typeof UpdateForumDtoEntityType];
+
+export const UpdateForumDtoEntityType = {
+  Forum: 'Forum',
+} as const;
+
+/**
+ * A named space for discussion about an IFS subject. Discussion participation does not itself grant decision-making authority.. Partial write; the complete resulting entity is validated before commit.
+ */
+export interface UpdateForumDto {
+  /**
+   * Globally unique identifier for this forum.
+   * @pattern ^Forum/[^/\s]+$
+   */
+  id?: string;
+  /** Entity type discriminator. Always "Forum" for Forum entities. */
+  entityType?: UpdateForumDtoEntityType;
+  /**
+   * Id of the object this object is derived from.
+   * @pattern ^[A-Z][A-Za-z0-9]*\/[^/\s]+$
+   */
+  basedOn?: string;
+  /** URL for documentation about this entity type. */
+  entityDocumentationUrl?: string;
+  /** URL for documentation about this object instance */
+  documentationUrl?: string;
+  /** Timestamp when this entity record was created. */
+  createdAt?: string;
+  /** Label codes associated with this entity. */
+  labelCodes?: string[];
+  /**
+   * Human-readable name of this forum.
+   * @minLength 1
+   */
+  name?: string;
+  /** Purpose and scope of discussion in this forum. */
+  description?: string;
+  [key: string]: unknown;
+}
+
+/**
  * Entity type discriminator. Always "Geographic Area" for Geographic Area entities.
  */
 export type CreateGeographicAreaDtoEntityType =
@@ -6314,6 +6446,26 @@ export const ListDelegationRelationsDirection = {
   outgoing: 'outgoing',
 } as const;
 
+export type ListForumRelationsParams = {
+  /**
+   * Which endpoint must match the requested object.
+   */
+  direction?: ListForumRelationsDirection;
+  /**
+   * JSON object of equality filters, ANDed together. Keys are relation fields or dotted endpoint fields (in.name, out.entityType). in/out, in.id/out.id and sourceId/targetId accept canonical EntityType/id strings. id accepts a canonical Relationship/id. Values are JSON values; null matches null, not missing fields.
+   */
+  filter?: string;
+};
+
+export type ListForumRelationsDirection =
+  (typeof ListForumRelationsDirection)[keyof typeof ListForumRelationsDirection];
+
+export const ListForumRelationsDirection = {
+  both: 'both',
+  incoming: 'incoming',
+  outgoing: 'outgoing',
+} as const;
+
 export type ListGeographicAreaRelationsParams = {
   /**
    * Which endpoint must match the requested object.
@@ -8881,6 +9033,350 @@ export const listDelegationRelations = async (
     status: res.status,
     headers: res.headers,
   } as listDelegationRelationsResponse;
+};
+
+export type createForumResponse201 = {
+  data: ForumResponseDto;
+  status: 201;
+};
+
+export type createForumResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type createForumResponseSuccess = createForumResponse201 & {
+  headers: Headers;
+};
+export type createForumResponseError = createForumResponse400 & {
+  headers: Headers;
+};
+
+export type createForumResponse =
+  createForumResponseSuccess | createForumResponseError;
+
+export const getCreateForumUrl = () => {
+  return `${getApiBaseUrl()}/forums`;
+};
+
+/**
+ * @summary Create a Forum.
+ */
+export const createForum = async (
+  createForumDto: CreateForumDto,
+  options?: RequestInit,
+): Promise<createForumResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getCreateForumUrl(), {
+    ...options,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createForumDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: createForumResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as createForumResponse;
+};
+
+export type listForumsResponse200 = {
+  data: ForumResponseDto[];
+  status: 200;
+};
+
+export type listForumsResponseSuccess = listForumsResponse200 & {
+  headers: Headers;
+};
+export type listForumsResponse = listForumsResponseSuccess;
+
+export const getListForumsUrl = () => {
+  return `${getApiBaseUrl()}/forums`;
+};
+
+/**
+ * @summary List Forum records.
+ */
+export const listForums = async (
+  options?: RequestInit,
+): Promise<listForumsResponse> => {
+  const res = await fetch(getListForumsUrl(), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listForumsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listForumsResponse;
+};
+
+export type getForumResponse200 = {
+  data: ForumResponseDto;
+  status: 200;
+};
+
+export type getForumResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type getForumResponseSuccess = getForumResponse200 & {
+  headers: Headers;
+};
+export type getForumResponseError = getForumResponse404 & {
+  headers: Headers;
+};
+
+export type getForumResponse = getForumResponseSuccess | getForumResponseError;
+
+export const getGetForumUrl = (id: string) => {
+  return `${getApiBaseUrl()}/forums/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Get a Forum by ID.
+ */
+export const getForum = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getForumResponse> => {
+  const res = await fetch(getGetForumUrl(id), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: getForumResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as getForumResponse;
+};
+
+export type updateForumResponse200 = {
+  data: ForumResponseDto;
+  status: 200;
+};
+
+export type updateForumResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type updateForumResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type updateForumResponseSuccess = updateForumResponse200 & {
+  headers: Headers;
+};
+export type updateForumResponseError = (
+  updateForumResponse400 | updateForumResponse404
+) & {
+  headers: Headers;
+};
+
+export type updateForumResponse =
+  updateForumResponseSuccess | updateForumResponseError;
+
+export const getUpdateForumUrl = (id: string) => {
+  return `${getApiBaseUrl()}/forums/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Update a Forum.
+ */
+export const updateForum = async (
+  id: string,
+  updateForumDto: UpdateForumDto,
+  options?: RequestInit,
+): Promise<updateForumResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit['headers']>,
+  ): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+  const res = await fetch(getUpdateForumUrl(id), {
+    ...options,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(updateForumDto),
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: updateForumResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as updateForumResponse;
+};
+
+export type deleteForumResponse204 = {
+  data: void;
+  status: 204;
+};
+
+export type deleteForumResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type deleteForumResponseSuccess = deleteForumResponse204 & {
+  headers: Headers;
+};
+export type deleteForumResponseError = deleteForumResponse404 & {
+  headers: Headers;
+};
+
+export type deleteForumResponse =
+  deleteForumResponseSuccess | deleteForumResponseError;
+
+export const getDeleteForumUrl = (id: string) => {
+  return `${getApiBaseUrl()}/forums/${encodeURIComponent(String(id))}`;
+};
+
+/**
+ * @summary Delete a Forum.
+ */
+export const deleteForum = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteForumResponse> => {
+  const res = await fetch(getDeleteForumUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: deleteForumResponse['data'] = body ? JSON.parse(body) : undefined;
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as deleteForumResponse;
+};
+
+export type listForumRelationsResponse200 = {
+  data: RelationshipResponseDto[];
+  status: 200;
+};
+
+export type listForumRelationsResponse400 = {
+  data: void;
+  status: 400;
+};
+
+export type listForumRelationsResponse404 = {
+  data: void;
+  status: 404;
+};
+
+export type listForumRelationsResponseSuccess =
+  listForumRelationsResponse200 & {
+    headers: Headers;
+  };
+export type listForumRelationsResponseError = (
+  listForumRelationsResponse400 | listForumRelationsResponse404
+) & {
+  headers: Headers;
+};
+
+export type listForumRelationsResponse =
+  listForumRelationsResponseSuccess | listForumRelationsResponseError;
+
+export const getListForumRelationsUrl = (
+  id: string,
+  params?: ListForumRelationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `${getApiBaseUrl()}/forums/${encodeURIComponent(String(id))}/relations?${stringifiedParams}`
+    : `${getApiBaseUrl()}/forums/${encodeURIComponent(String(id))}/relations`;
+};
+
+/**
+ * @summary Query relationships associated with a Forum.
+ */
+export const listForumRelations = async (
+  id: string,
+  params?: ListForumRelationsParams,
+  options?: RequestInit,
+): Promise<listForumRelationsResponse> => {
+  const res = await fetch(getListForumRelationsUrl(id, params), {
+    ...options,
+    method: 'GET',
+  });
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: listForumRelationsResponse['data'] = body ? JSON.parse(body) : {};
+  return {
+    data,
+    status: res.status,
+    headers: res.headers,
+  } as listForumRelationsResponse;
 };
 
 export type createGeographicAreaResponse201 = {

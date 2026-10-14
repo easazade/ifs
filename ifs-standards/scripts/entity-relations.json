@@ -19,8 +19,10 @@
     { "property": "votes", "type": "Vote" }
   ],
   "Delegation": [{ "property": "permission", "type": "Permission" }],
+  "Forum": [],
   "Geographic Area": [],
   "Group": [],
+  "Invariant": [],
   "Label": [],
   "MeasurementMethod": [],
   "Member": [

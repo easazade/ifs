@@ -6,6 +6,7 @@ import { ChangeItemModule } from './change-item/change-item.module.js';
 import { CommentModule } from './comment/comment.module.js';
 import { DecisionModule } from './decision/decision.module.js';
 import { DelegationModule } from './delegation/delegation.module.js';
+import { ForumModule } from './forum/forum.module.js';
 import { GeographicAreaModule } from './geographic-area/geographic-area.module.js';
 import { GroupModule } from './group/group.module.js';
 import { LabelModule } from './label/label.module.js';
@@ -36,6 +37,7 @@ import { WhenModule } from './when/when.module.js';
     CommentModule,
     DecisionModule,
     DelegationModule,
+    ForumModule,
     GeographicAreaModule,
     GroupModule,
     LabelModule,
